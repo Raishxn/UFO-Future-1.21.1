@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.raishxn.ufo.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AccessorBuiltInModelHooks",
+    "MixinCPUSelectionList"
+  ],
+  "client": [
+    "MixinModelBakery"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
