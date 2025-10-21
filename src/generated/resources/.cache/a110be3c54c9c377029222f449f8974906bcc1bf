@@ -1,0 +1,14 @@
+// 1.21.1	2025-10-19T02:08:48.4107633	Tags for minecraft:item mod id ufo
+cd1839d8449292f44c642dfdc879ce6688b062e3 data/minecraft/tags/item/axes.json
+ca820b7ef979b3f4b977fabd7cd9e82cc2987fc1 data/minecraft/tags/item/chest_armor.json
+a53ed7eeab4d0bf465c7b4006f710181b0b341d0 data/minecraft/tags/item/enchantable/bow.json
+3d0ef734872d2b5b67675b23537f7d88730a3fd6 data/minecraft/tags/item/enchantable/fishing.json
+5df4aa7ead38255c948811471cf88c0e5329747b data/minecraft/tags/item/foot_armor.json
+df0a029e7a4974d3fe956ac86ce34b007dce0f1c data/minecraft/tags/item/head_armor.json
+9a0132edca136ea4a5afc7caf549d8cb4ca4a94c data/minecraft/tags/item/hoes.json
+4d0b10bfa56c2fb6483f219828fbcc3f7e73bc34 data/minecraft/tags/item/leg_armor.json
+9f15143472adb5b889be706b69863112e60d6a24 data/minecraft/tags/item/pickaxes.json
+3f2875d31f614485ecc707dd0488677005e67a20 data/minecraft/tags/item/shovels.json
+b7b7c42892ad293dc95c65ca1149ee455ee91769 data/minecraft/tags/item/swords.json
+889594d5e91c9b95ecc36817b3b5463d80a29ad2 data/ufo/tags/item/staff.json
+13bf5111f79583f9c52af3b2267832a9ed0f2c37 data/ufo/tags/item/transformable_items.json

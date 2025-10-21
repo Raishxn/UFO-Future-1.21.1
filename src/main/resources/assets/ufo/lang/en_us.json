@@ -1,0 +1,38 @@
+{
+  "item.ufo.ufo_hammer": "[HAMMER]",
+  "item.ufo.ufo_sword": "[SWORD]",
+  "item.ufo.ufo_hoe": "[HOE]",
+  "item.ufo.ufo_axe": "[AXE]",
+  "item.ufo.ufo_pickaxe": "[PICKAXE]",
+  "item.ufo.ufo_staff": "[STAFF]",
+  "item.ufo.ufo_shovel": "[SHOVEL",
+  "item.ufo.ufo_greatsword": "[GREATSWORD]",
+  "item.ufo.ufo_bow": "[BOW]",
+
+
+  "item.ufo.ufo_helmet": "[UFO HELMET]",
+  "item.ufo.ufo_chestplate": "[UFO CHESTPLATE]",
+  "item.ufo.ufo_leggings": "[UFO LEGGINGS]",
+  "item.ufo.ufo_boots": "[UFO BOOTS]",
+
+
+  "item.ufo.ufo_hammer.mode_change": "Hammer Mode Set to: %sx%s",
+  "item.ufo.ufo_hoe.tooltip": "Area: %sx%s",
+  "tooltip.ufo.area_mode": "Area: %s",
+  "tooltip.ufo.press_shift": "Press <SHIFT> for details",
+  "tooltip.ufo.mode.fast": "Fast",
+  "tooltip.ufo.mode.normal": "Normal",
+  "tooltip.ufo.mode_change": "Tool Mode Changed For: %s",
+  "tooltip.ufo.mode_change_generic": "Tool Mode Changed For: %s",
+  "tooltip.ufo.current_mode": "Current Mode: %s",
+  "key.category.ufo": "UFO Mod",
+  "key.ufo.cycle_tool_forward": "Change Tool (Next)",
+  "key.ufo.cycle_tool_backward": "Change Tool (Previous)",
+  "key.ufo.cycle_mode": "Change Tool Mode",
+
+  "block.ufo.1b_mega_crafting_storage": "1B ME MEGA Crafting Storage",
+  "block.ufo.50b_mega_crafting_storage": "50B ME MEGA Crafting Storage",
+  "block.ufo.1t_mega_crafting_storage": "1T ME MEGA Crafting Storage",
+  "block.ufo.250t_mega_crafting_storage": "250T ME MEGA Crafting Storage",
+  "block.ufo.1qd_mega_crafting_storage": "1QD ME MEGA Crafting Storage"
+}

@@ -1,0 +1,8 @@
+{
+  "remove": [
+    "#ufo:needs_ufo_tool"
+  ],
+  "values": [
+    "#minecraft:incorrect_for_iron_tool"
+  ]
+}
