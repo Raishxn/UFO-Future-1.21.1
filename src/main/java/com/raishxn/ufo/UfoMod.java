@@ -7,9 +7,11 @@ import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.item.ModCreativeModeTabs;
 import com.raishxn.ufo.item.ModItems;
+import com.raishxn.ufo.item.UFORegistryHandler;
 import com.raishxn.ufo.network.ModPackets;
 import com.raishxn.ufo.network.packet.CycleModeKeyPacket;
 import com.raishxn.ufo.network.packet.CycleToolKeyPacket;
+import com.raishxn.ufo.util.LazyInits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
@@ -18,8 +20,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -30,34 +35,56 @@ public class UfoMod {
     public static final String MOD_ID = "ufo";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static ResourceLocation asResource(String path) {
+    /**
+     * Método utilitário para criar um ResourceLocation com o ID do seu mod.
+     */
+    public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
     public UfoMod(IEventBus modEventBus, ModContainer modContainer) {
+        // --- Registros do Mod (usando DeferredRegister) ---
         ModCreativeModeTabs.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModDataComponents.register(modEventBus);
         ModBlockEntities.register(modEventBus);
 
-        // Adiciona os listeners para os eventos corretos
-        modEventBus.addListener(this::commonSetup);
-        modEventBus.addListener(this::registerPackets); // Corrigido
+        // Registra o arquivo de configuração do mod (para o custo de energia das células, etc.)
+        modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
 
+        // --- Listeners do Ciclo de Vida do Mod ---
+        modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::loadComplete);
+        modEventBus.addListener(this::registerPackets);
+
+        // Registra os eventos do jogo (como input de teclas)
         NeoForge.EVENT_BUS.register(this);
     }
 
-    // Método para registrar os pacotes de rede corretamente
     private void registerPackets(final RegisterPayloadHandlersEvent event) {
         ModPackets.register(event);
     }
 
+    /**
+     * Chamado após o registro de todos os itens. Ideal para interagir com outros mods.
+     */
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            // Lógica de associação do BlockEntity já está em ModBlockEntities.java
-            // Deixe este método vazio por enquanto.
+            // Registra os handlers da Infinity Cell na API do Applied Energistics 2
+            UFORegistryHandler.INSTANCE.onInit();
+            // Executa outras tarefas de inicialização comuns
+            LazyInits.initCommon();
         });
+    }
+
+    /**
+     * Chamado após todos os mods serem carregados. Ideal para tarefas que dependem de
+     * itens ou blocos de outros mods.
+     */
+    private void loadComplete(final FMLLoadCompleteEvent event) {
+        // Executa as inicializações finais, como obter as AEKeys para as Infinity Cells
+        event.enqueueWork(LazyInits::initFinal);
     }
 
     @SubscribeEvent

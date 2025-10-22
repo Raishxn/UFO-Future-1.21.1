@@ -1,5 +1,22 @@
-// 1.21.1	2025-10-19T02:17:18.8338301	Item Models: ufo
+// 1.21.1	2025-10-22T21:06:48.6094322	Item Models: ufo
 5b7661e3ed5dba7c93228705294756443e065fb3 assets/ufo/models/item/bismuth.json
+ee11d9a1459d2233b209a533cfb7cdff0b567879 assets/ufo/models/item/cosmic_string_component_matrix.json
+1fe6a098a6a5d83cf8be9495d3a600bf83c11455 assets/ufo/models/item/dimensional_processor.json
+1c799ae32066af1ab5dec32f5b595ac90f18ab4c assets/ufo/models/item/dimensional_processor_press.json
+cce2ed7ca6b38b9d8ef8b3bd3f909500c93cf5d2 assets/ufo/models/item/event_horizon_component_matrix.json
+167bbe219993de746ad4eed09661f81bcce7851f assets/ufo/models/item/hyper_dense_component_matrix.json
+0b481d6793cc9d4fcb117cd69419007d77c79a57 assets/ufo/models/item/infinity_antimatter_pellet_cell.json
+2344dd2e284439c2d1d08e8ba26b9ef60952a545 assets/ufo/models/item/infinity_cobbled_deepslate_cell.json
+080b92cb80b5d60f712851bd204a7d27c178e2df assets/ufo/models/item/infinity_cobblestone_cell.json
+431d6b50a7460fff2fb29f1f22b9b3fb0c8550a6 assets/ufo/models/item/infinity_end_stone_cell.json
+d8985248521127b65790d126cba470e61c10f3fa assets/ufo/models/item/infinity_lava_cell.json
+1fd20553986fe57a2af0ba1cbe7f1ecadf26e5f0 assets/ufo/models/item/infinity_netherrack_cell.json
+dc08aa74759631b92aa844984bd7892660c30d9b assets/ufo/models/item/infinity_sand_cell.json
+b8adc171396a71b8a7c4e7a00a58f4fb43ea55c0 assets/ufo/models/item/infinity_sky_stone_cell.json
+f036495a7f5263bce8b5ef02e301c2b936904ffa assets/ufo/models/item/infinity_water_cell.json
+9ffab18b083b0edd00dc4c3bc3dd6ff2e0a5f981 assets/ufo/models/item/phase_shift_component_matrix.json
+75fb43d829328d7e5fd5f71d87bc5914ea867f79 assets/ufo/models/item/printed_dimensional_processor.json
+55d445877e012b422ceaa15e84dcc5a41bc07782 assets/ufo/models/item/tesseract_component_matrix.json
 059b061461bb2f2e35b1e59a956829b9f58a040c assets/ufo/models/item/ufo_axe.json
 55ba6b14f4484470e976d9a5dc7c79cad484994f assets/ufo/models/item/ufo_boots.json
 3b1260b5a9a27b24c6613849b596ecb78fa81d5a assets/ufo/models/item/ufo_chestplate.json
@@ -13,3 +30,4 @@ bfa0d28f8568f61d157504f3ee49393fc0ecd8f9 assets/ufo/models/item/ufo_pickaxe.json
 b81da0bbc3a68341ac2a7f70aed0b340205282a5 assets/ufo/models/item/ufo_shovel.json
 d98b0caae37e299b256cfec627dd243320d60582 assets/ufo/models/item/ufo_staff.json
 e4d8ffdec1dcc94e7c38d9479cc2e03936571a94 assets/ufo/models/item/ufo_sword.json
+692dc5d97938303f31440f60555c6e5826a4013e assets/ufo/models/item/white_dwarf_fragment_ingot.json

@@ -19,22 +19,30 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(BlockTags.MINEABLE_WITH_PICKAXE);
+        // --- INÍCIO DA CORREÇÃO ---
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(ModBlocks.QUANTUM_LATTICE_FRAME.get())         // <<-- ADICIONE .get() AQUI
+                .add(ModBlocks.GRAVITON_PLATED_CASING.get())       // <<-- E AQUI
+                .add(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get());  // <<-- E AQUI
 
 
-        tag(BlockTags.NEEDS_IRON_TOOL);
+        tag(BlockTags.NEEDS_DIAMOND_TOOL)
+                .add(ModBlocks.QUANTUM_LATTICE_FRAME.get())         // <<-- ADICIONE .get() AQUI
+                .add(ModBlocks.GRAVITON_PLATED_CASING.get())       // <<-- E AQUI
+                .add(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get());  // <<-- E AQUI
+        // --- FIM DA CORREÇÃO ---
 
 
         tag(BlockTags.NEEDS_DIAMOND_TOOL);
 
 
-
         tag(ModTags.Blocks.NEEDS_UFO_TOOL)
-
-                .addTag(BlockTags.NEEDS_IRON_TOOL);
+                .addTag(BlockTags.NEEDS_IRON_TOOL)
+                .addTag(BlockTags.NEEDS_DIAMOND_TOOL);
 
         tag(ModTags.Blocks.INCORRECT_FOR_UFO_TOOL)
                 .addTag(BlockTags.INCORRECT_FOR_IRON_TOOL)
+                .addTag(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)
                 .remove(ModTags.Blocks.NEEDS_UFO_TOOL);
     }
 }

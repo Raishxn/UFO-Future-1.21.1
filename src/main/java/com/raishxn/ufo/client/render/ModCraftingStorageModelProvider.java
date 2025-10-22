@@ -70,7 +70,8 @@ public class ModCraftingStorageModelProvider extends AbstractCraftingUnitModelPr
     }
 
     private static Material texture(String name) {
-        var material = new Material(InventoryMenu.BLOCK_ATLAS, UfoMod.asResource("block/" + name));
+        // A LINHA CORRIGIDA FICA ASSIM:
+        var material = new Material(InventoryMenu.BLOCK_ATLAS, UfoMod.id("block/" + name));
         if (!MATERIALS.contains(material)) {
             MATERIALS.add(material);
         }

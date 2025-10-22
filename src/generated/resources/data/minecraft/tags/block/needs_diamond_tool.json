@@ -1,3 +1,7 @@
 {
-  "values": []
+  "values": [
+    "ufo:quantum_lattice_frame",
+    "ufo:graviton_plated_casing",
+    "ufo:white_dwarf_fragment_block"
+  ]
 }

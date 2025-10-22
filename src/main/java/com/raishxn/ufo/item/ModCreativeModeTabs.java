@@ -17,20 +17,47 @@ public class ModCreativeModeTabs {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, UfoMod.MOD_ID);
 
     public static final Supplier<CreativeModeTab> UFO_ITEMS_TAB = CREATIVE_MODE_TAB.register("ufo_items_tab",
-            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.BISMUTH.get()))
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get()))
                     .title(Component.translatable("creativetab.ufomod.ufo_items"))
                     .displayItems((itemDisplayParameters, output) -> {
-                        output.accept(ModItems.BISMUTH);
+                        output.accept(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
+                        output.accept(ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
+                        output.accept(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
+                        output.accept(ModItems.TESSERACT_COMPONENT_MATRIX.get());
+                        output.accept(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
 
                         output.accept(ModItems.UFO_HELMET.get());
                         output.accept(ModItems.UFO_CHESTPLATE.get());
                         output.accept(ModItems.UFO_LEGGINGS.get());
                         output.accept(ModItems.UFO_BOOTS.get());
                         output.accept(ModItems.UFO_STAFF);
-
-                        ModBlocks.CRAFTING_STORAGE_BLOCKS.values().forEach(block -> output.accept(block.get()));
+                        output.accept(ModItems.DIMENSIONAL_PROCESSOR_PRESS.get());
+                        output.accept(ModItems.DIMENSIONAL_PROCESSOR.get());
+                        output.accept(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get());
+                        output.accept(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get());
+                        output.accept(ModItems.INFINITY_COBBLED_DEEPSLATE_CELL.get());
+                        output.accept(ModItems.INFINITY_END_STONE_CELL.get());
+                        output.accept(ModItems.INFINITY_NETHERRACK_CELL.get());
+                        output.accept(ModItems.INFINITY_SAND_CELL.get());
+                        output.accept(ModItems.INFINITY_LAVA_CELL.get());
+                        output.accept(ModItems.INFINITY_SKY_STONE_CELL.get());
+                        output.accept(ModItems.INFINITY_ANTIMATTER_PELLET_CELL.get());
 
                     }).build());
+
+    public static final Supplier<CreativeModeTab> UFO_BLOCKS_TAB = CREATIVE_MODE_TAB.register("ufo_blocks_tab",
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get()))
+                    .title(Component.translatable("creativetab.ufomod.ufo_blocks"))
+                    .displayItems((itemDisplayParameters, output) -> {
+                        output.accept(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get());
+                        output.accept(ModBlocks.GRAVITON_PLATED_CASING.get());
+                        output.accept(ModBlocks.QUANTUM_LATTICE_FRAME.get());
+                        ModBlocks.CRAFTING_STORAGE_BLOCKS.values().forEach(block -> output.accept(block.get()));
+                        ModBlocks.CO_PROCESSOR_BLOCKS.values().forEach(block -> output.accept(block.get()));
+
+                    }).build());
+
+
 
 
     public static void register(IEventBus eventBus) {

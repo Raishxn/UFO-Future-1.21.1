@@ -3,6 +3,8 @@ package com.raishxn.ufo.datagen;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.item.ModItems;
 import com.raishxn.ufo.util.ModTags;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.TagConventionLogWarning;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -53,5 +55,6 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(ModItems.UFO_LEGGINGS.get());
         tag(ItemTags.FOOT_ARMOR)
                 .add(ModItems.UFO_BOOTS.get());
+
     }
 }

@@ -21,6 +21,26 @@ public class ModItemModelProvider extends ItemModelProvider {
         @Override
         protected void registerModels() {
         basicItem(ModItems.BISMUTH.get());
+        basicItem(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
+        basicItem(ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
+        basicItem(ModItems.TESSERACT_COMPONENT_MATRIX.get());
+        basicItem(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
+        basicItem(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
+        basicItem(ModItems.DIMENSIONAL_PROCESSOR_PRESS.get());
+        basicItem(ModItems.DIMENSIONAL_PROCESSOR.get());
+        basicItem(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get());
+        basicItem(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get());
+
+            basicItem(ModItems.INFINITY_WATER_CELL.get());
+            basicItem(ModItems.INFINITY_COBBLESTONE_CELL.get());
+            basicItem(ModItems.INFINITY_COBBLED_DEEPSLATE_CELL.get());
+            basicItem(ModItems.INFINITY_END_STONE_CELL.get());
+            basicItem(ModItems.INFINITY_NETHERRACK_CELL.get());
+            basicItem(ModItems.INFINITY_SAND_CELL.get());
+            basicItem(ModItems.INFINITY_LAVA_CELL.get());
+            basicItem(ModItems.INFINITY_SKY_STONE_CELL.get());
+            basicItem(ModItems.INFINITY_ANTIMATTER_PELLET_CELL.get());
+
         handheldItem(ModItems.UFO_AXE);
         handheldItem(ModItems.UFO_HOE);
        // handheldItem(ModItems.UFO_BOW);

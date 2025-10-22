@@ -30,6 +30,7 @@
   "key.ufo.cycle_tool_backward": "Change Tool (Previous)",
   "key.ufo.cycle_mode": "Change Tool Mode",
   "creativetab.ufomod.ufo_items": "Ufo Items",
+  "creativetab.ufomod.ufo_blocks": "Ufo Blocks",
 
   "block.ufo.1b_mega_crafting_storage": "Event Horizon Crafting Storage",
   "block.ufo.50b_mega_crafting_storage": "Quantum Drive Matrix Crafting Storage",
@@ -37,6 +38,31 @@
   "block.ufo.250t_mega_crafting_storage": "Dimensional Storage Cube Crafting Storage",
   "block.ufo.1qd_mega_crafting_storage": "Hyper-Dense Stellar Crafting Storage",
 
+  "block.ufo.50m_mega_co_processor": "Singularity Accelerator",
+  "block.ufo.150m_mega_co_processor": "Qubit Co-Processor",
+  "block.ufo.300m_mega_co_processor": "Tesseract Logic Unit",
+  "block.ufo.750m_mega_co_processor": "Subspace Co-Processor",
+  "block.ufo.2b_mega_co_processor": "Galactic Core Co-Processor",
+
   "tooltip.ufo.capacity": "Capacity: %s",
-  "tooltip.ufo.capacity_exact": "Exact Capacity: %s"
+  "tooltip.ufo.capacity_exact": "Exact Capacity: %s",
+  "tooltip.ufo.accelerator_threads": "Co-Processors: %s Threads",
+  "item.ufo.infinity_cell_tooltip": "Provides an infinite amount of a single item or fluid.",
+
+  "item.ufo.phase_shift_component_matrix": "Phase-Shift Component Matrix",
+  "item.ufo.hyper_dense_component_matrix": "Hyper-Dense Component Matrix",
+  "item.ufo.tesseract_component_matrix": "Tesseract Component Matrix",
+  "item.ufo.event_horizon_component_matrix": "Event Horizon Component Matrix",
+  "item.ufo.cosmic_string_component_matrix": "Cosmic String Component Matrix",
+  "item.ufo.dimensional_processor_press": "Dimensional Processor Press",
+  "item.ufo.printed_dimensional_processor": "Printed Dimensional Processor",
+  "item.ufo.dimensional_processor": "Dimensional Processor",
+  "item.ufo.white_dwarf_fragment_ingot": "White Dwarf Fragment Ingot",
+  "item.ufo.infinity_cell_name": "Infinity %s Cell",
+  "item.ufo.infinity_cell_name_invalid": "Invalid Infinity Cell",
+
+
+  "block.ufo.quantum_lattice_frame": "Quantum-Lattice Frame",
+  "block.ufo.graviton_plated_casing": "Graviton-Plated Casing",
+  "block.ufo.white_dwarf_fragment_block": "White Dwarf Fragment Block"
 }
