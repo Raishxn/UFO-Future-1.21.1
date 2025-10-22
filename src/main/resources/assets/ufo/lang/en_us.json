@@ -29,10 +29,14 @@
   "key.ufo.cycle_tool_forward": "Change Tool (Next)",
   "key.ufo.cycle_tool_backward": "Change Tool (Previous)",
   "key.ufo.cycle_mode": "Change Tool Mode",
+  "creativetab.ufomod.ufo_items": "Ufo Items",
 
-  "block.ufo.1b_mega_crafting_storage": "1B ME MEGA Crafting Storage",
-  "block.ufo.50b_mega_crafting_storage": "50B ME MEGA Crafting Storage",
-  "block.ufo.1t_mega_crafting_storage": "1T ME MEGA Crafting Storage",
-  "block.ufo.250t_mega_crafting_storage": "250T ME MEGA Crafting Storage",
-  "block.ufo.1qd_mega_crafting_storage": "1QD ME MEGA Crafting Storage"
+  "block.ufo.1b_mega_crafting_storage": "Event Horizon Crafting Storage",
+  "block.ufo.50b_mega_crafting_storage": "Quantum Drive Matrix Crafting Storage",
+  "block.ufo.1t_mega_crafting_storage": "Tesseract Unit Crafting Storage",
+  "block.ufo.250t_mega_crafting_storage": "Dimensional Storage Cube Crafting Storage",
+  "block.ufo.1qd_mega_crafting_storage": "Hyper-Dense Stellar Crafting Storage",
+
+  "tooltip.ufo.capacity": "Capacity: %s",
+  "tooltip.ufo.capacity_exact": "Exact Capacity: %s"
 }
