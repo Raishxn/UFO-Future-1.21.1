@@ -1,0 +1,12 @@
+{
+  "type": "extendedae:circuit_cutter",
+  "input": {
+    "ingredient": {
+      "item": "ufo:white_dwarf_fragment_block"
+    }
+  },
+  "output": {
+    "count": 9,
+    "id": "ufo:printed_dimensional_processor"
+  }
+}

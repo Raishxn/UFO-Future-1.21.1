@@ -1,0 +1,33 @@
+{
+  "type": "extendedae:crystal_assembler",
+  "input_fluid": {
+    "amount": 2000,
+    "ingredient": {
+      "fluid": "minecraft:lava"
+    }
+  },
+  "input_items": [
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:printed_dimensional_processor"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "extendedae:concurrent_processor_print"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "extendedae:entro_dust"
+      }
+    }
+  ],
+  "output": {
+    "count": 2,
+    "id": "ufo:dimensional_processor"
+  }
+}

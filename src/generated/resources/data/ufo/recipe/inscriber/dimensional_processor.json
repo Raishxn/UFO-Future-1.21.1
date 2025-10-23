@@ -1,0 +1,19 @@
+{
+  "type": "ae2:inscriber",
+  "ingredients": {
+    "bottom": {
+      "item": "ae2:printed_silicon"
+    },
+    "middle": {
+      "item": "ae2:fluix_dust"
+    },
+    "top": {
+      "item": "ufo:printed_dimensional_processor"
+    }
+  },
+  "mode": "press",
+  "result": {
+    "count": 1,
+    "id": "ufo:dimensional_processor"
+  }
+}
