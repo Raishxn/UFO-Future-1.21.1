@@ -24,20 +24,24 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.slf4j.Logger;
+
+import java.io.IOException;
 
 @Mod(UfoMod.MOD_ID)
 public class UfoMod {
     public static final String MOD_ID = "ufo";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    /**
-     * Método utilitário para criar um ResourceLocation com o ID do seu mod.
-     */
+
+    public static ResourceLocation rl(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
@@ -47,8 +51,8 @@ public class UfoMod {
         ModCreativeModeTabs.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
-        ModDataComponents.register(modEventBus);
         ModBlockEntities.register(modEventBus);
+        ModDataComponents.DATA_COMPONENT_TYPES.register(modEventBus);
 
         // Registra o arquivo de configuração do mod (para o custo de energia das células, etc.)
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
@@ -87,6 +91,8 @@ public class UfoMod {
         event.enqueueWork(LazyInits::initFinal);
     }
 
+    // O método registerShaders foi MOVIDO para a classe ClientModEvents abaixo.
+
     @SubscribeEvent
     public void onKeyInput(InputEvent.Key event) {
         Minecraft mc = Minecraft.getInstance();
@@ -115,6 +121,18 @@ public class UfoMod {
             event.register(ModKeyBindings.CYCLE_TOOL_FORWARD);
             event.register(ModKeyBindings.CYCLE_TOOL_BACKWARD);
             event.register(ModKeyBindings.CYCLE_MODE);
+        }
+
+        // --- CORREÇÃO APLICADA AQUI ---
+        // O método foi movido para esta classe e marcado como static.
+        // Esta classe escuta o "Mod Event Bus", que é o local correto para este evento.
+        @SubscribeEvent
+        public static void registerShaders(RegisterShadersEvent event) {
+            try {
+                com.raishxn.ufo.client.render.shader.UFOShieldShader.registerShaders(event);
+            } catch (IOException e) {
+                UfoMod.LOGGER.error("Failed to register UFO shield shader", e);
+            }
         }
     }
 }

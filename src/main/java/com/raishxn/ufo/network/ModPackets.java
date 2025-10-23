@@ -23,7 +23,7 @@ public class ModPackets {
                 ModPackets::handleCycleToolKey);
         registrar.playToServer(CycleModeKeyPacket.TYPE, CycleModeKeyPacket.STREAM_CODEC,
                 ModPackets::handleCycleModeKey);
-    }
+           }
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {
         context.enqueueWork(() -> {

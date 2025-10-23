@@ -14,7 +14,7 @@
       "conditions": {
         "items": [
           {
-            "items": "ufo:printed_dimensional_processor"
+            "items": "ufo:dimensional_processor_press"
           }
         ]
       },

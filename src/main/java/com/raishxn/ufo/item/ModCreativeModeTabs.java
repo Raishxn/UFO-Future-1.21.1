@@ -2,9 +2,10 @@ package com.raishxn.ufo.item;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.ModBlocks;
+import com.raishxn.ufo.item.custom.UfoArmorItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
@@ -26,10 +27,24 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.TESSERACT_COMPONENT_MATRIX.get());
                         output.accept(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
 
-                        output.accept(ModItems.UFO_HELMET.get());
-                        output.accept(ModItems.UFO_CHESTPLATE.get());
-                        output.accept(ModItems.UFO_LEGGINGS.get());
-                        output.accept(ModItems.UFO_BOOTS.get());
+                        // --- LÓGICA DE ARMADURA CORRIGIDA ---
+                        ItemStack helmet = new ItemStack(ModItems.UFO_HELMET.get());
+                        ItemStack chestplate = new ItemStack(ModItems.UFO_CHESTPLATE.get());
+                        ItemStack leggings = new ItemStack(ModItems.UFO_LEGGINGS.get());
+                        ItemStack boots = new ItemStack(ModItems.UFO_BOOTS.get());
+
+                        // A CORREÇÃO: Usamos .holders() para obter o provider que o método espera.
+                        UfoArmorItem.addGodEnchantments(helmet, ArmorItem.Type.HELMET, itemDisplayParameters.holders());
+                        UfoArmorItem.addGodEnchantments(chestplate, ArmorItem.Type.CHESTPLATE, itemDisplayParameters.holders());
+                        UfoArmorItem.addGodEnchantments(leggings, ArmorItem.Type.LEGGINGS, itemDisplayParameters.holders());
+                        UfoArmorItem.addGodEnchantments(boots, ArmorItem.Type.BOOTS, itemDisplayParameters.holders());
+
+                        output.accept(helmet);
+                        output.accept(chestplate);
+                        output.accept(leggings);
+                        output.accept(boots);
+                        // --- FIM DA LÓGICA DE ARMADURA ---
+
                         output.accept(ModItems.UFO_STAFF);
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR_PRESS.get());
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR.get());
@@ -42,6 +57,30 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.INFINITY_LAVA_CELL.get());
                         output.accept(ModItems.INFINITY_SKY_STONE_CELL.get());
                         output.accept(ModItems.INFINITY_ANTIMATTER_PELLET_CELL.get());
+                        output.accept(ModItems.INFINITY_PLUTONIUM_PELLET_CELL.get());
+                        output.accept(ModItems.INFINITY_POLONIUM_PELLET_CELL.get());
+                        output.accept(ModItems.INFINITY_HDPE_PELLET_CELL.get());
+                        output.accept(ModItems.INFINITY_OBSIDIAN_CELL.get());
+                        output.accept(ModItems.INFINITY_GRAVEL_CELL.get());
+                        output.accept(ModItems.INFINITY_OAK_LOG_CELL.get());
+                        output.accept(ModItems.INFINITY_GLASS_CELL.get());
+                        output.accept(ModItems.INFINITY_AMETHYST_SHARD_CELL.get());
+                        output.accept(ModItems.INFINITY_WHITE_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_ORANGE_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_MAGENTA_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_LIGHT_BLUE_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_YELLOW_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_LIME_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_PINK_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_GRAY_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_LIGHT_GRAY_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_CYAN_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_PURPLE_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_BLUE_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_BROWN_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_GREEN_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_RED_DYE_CELL.get());
+                        output.accept(ModItems.INFINITY_BLACK_DYE_CELL.get());
 
                     }).build());
 
@@ -56,9 +95,6 @@ public class ModCreativeModeTabs {
                         ModBlocks.CO_PROCESSOR_BLOCKS.values().forEach(block -> output.accept(block.get()));
 
                     }).build());
-
-
-
 
     public static void register(IEventBus eventBus) {
         CREATIVE_MODE_TAB.register(eventBus);

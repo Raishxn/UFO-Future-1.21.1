@@ -90,5 +90,8 @@ public class ClientForgeEvents {
             // Desenha o texto com uma sombra para melhor visibilidade
             guiGraphics.drawString(Minecraft.getInstance().font, hudText, x, y, 0xFFFFFF, true);
         }
+
+
+
     }
 }

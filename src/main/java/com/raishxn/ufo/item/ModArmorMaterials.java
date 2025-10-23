@@ -4,9 +4,10 @@ import com.raishxn.ufo.UfoMod;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
@@ -17,6 +18,12 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class ModArmorMaterials {
+
+    private static final ResourceKey<SoundEvent> SILENT_SOUND_KEY = ResourceKey.create(
+            Registries.SOUND_EVENT, ResourceLocation.withDefaultNamespace("intentionally_empty")
+    );
+    // 2. Usamos a chave para pegar o Holder (referência) para o som.
+    private static final Holder<SoundEvent> SILENT_EQUIP_SOUND = BuiltInRegistries.SOUND_EVENT.getHolderOrThrow(SILENT_SOUND_KEY);
 
     public static final Holder<ArmorMaterial> UFO = register("ufo",
             new EnumMap<>(java.util.Map.of(
@@ -29,10 +36,10 @@ public class ModArmorMaterials {
             25,
             // --- CORREÇÃO APLICADA AQUI ---
             // Passamos o Holder diretamente, sem o .get()
-            SoundEvents.ARMOR_EQUIP_NETHERITE,
+            SILENT_EQUIP_SOUND,
             4.0f,
             0.2f,
-            () -> ModItems.BISMUTH.get()
+            () -> ModItems.WHITE_DWARF_FRAGMENT_INGOT.get()
     );
 
     private static Holder<ArmorMaterial> register(String name, EnumMap<ArmorItem.Type, Integer> defense,
