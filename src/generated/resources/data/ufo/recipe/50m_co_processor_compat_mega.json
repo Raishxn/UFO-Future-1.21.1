@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ae2:logic_processor"
+    },
+    {
+      "item": "ae2:engineering_processor"
+    },
+    {
+      "item": "ae2:calculation_processor"
+    },
+    {
+      "item": "ufo:dimensional_processor"
+    },
+    {
+      "item": "megacells:accumulation_processor"
+    },
+    {
+      "item": "ufo:quantum_lattice_frame"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:50m_mega_co_processor"
+  }
+}
