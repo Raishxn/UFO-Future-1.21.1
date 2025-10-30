@@ -4,7 +4,6 @@ import appeng.api.stacks.AEKeyType;
 import appeng.items.materials.StorageComponentItem;
 import appeng.items.storage.StorageTier;
 import com.raishxn.ufo.UfoMod;
-import com.raishxn.ufo.item.custom.cell.InfinityModCellItem;
 import com.raishxn.ufo.item.custom.cell.ModCellItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
@@ -40,13 +39,11 @@ public final class ModCellItems {
     public static final DeferredHolder<Item, ModCellItem> ITEM_CELL_100M = ITEMS.register("white_dwarf_cell_beaco", () -> new ModCellItem(TIER_100M, 5 * 1024, AEKeyType.items()));
     public static final DeferredHolder<Item, ModCellItem> ITEM_CELL_250M = ITEMS.register("white_dwarf_cell_nexus", () -> new ModCellItem(TIER_250M, 10 * 1024, AEKeyType.items()));
     public static final DeferredHolder<Item, ModCellItem> ITEM_CELL_750M = ITEMS.register("white_dwarf_cell_core", () -> new ModCellItem(TIER_750M, 25 * 1024, AEKeyType.items()));
-    public static final DeferredHolder<Item, InfinityModCellItem> ITEM_CELL_INFINITY = ITEMS.register("white_dwarf_cell_singularity", () -> new InfinityModCellItem(new Item.Properties().stacksTo(1), TIER_INFINITY.idleDrain()));
     // Fluid Cells: Neutron Star Reservoir
     public static final DeferredHolder<Item, ModCellItem> FLUID_CELL_40M = ITEMS.register("neutron_star_reservoir_echo", () -> new ModCellItem(TIER_40M, 1024, AEKeyType.fluids()));
     public static final DeferredHolder<Item, ModCellItem> FLUID_CELL_100M = ITEMS.register("neutron_star_reservoir_beaco", () -> new ModCellItem(TIER_100M, 5 * 1024, AEKeyType.fluids()));
     public static final DeferredHolder<Item, ModCellItem> FLUID_CELL_250M = ITEMS.register("neutron_star_reservoir_nexus", () -> new ModCellItem(TIER_250M, 10 * 1024, AEKeyType.fluids()));
     public static final DeferredHolder<Item, ModCellItem> FLUID_CELL_750M = ITEMS.register("neutron_star_reservoir_core", () -> new ModCellItem(TIER_750M, 25 * 1024, AEKeyType.fluids()));
-    public static final DeferredHolder<Item, InfinityModCellItem> FLUID_CELL_INFINITY = ITEMS.register("neutron_star_reservoir_singularity", () -> new InfinityModCellItem(new Item.Properties().stacksTo(1), TIER_INFINITY.idleDrain()));
     // --- Helper Methods ---
 
     // CORRIGIDO para retornar DeferredHolder<Item, Item>

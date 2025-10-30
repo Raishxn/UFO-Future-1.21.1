@@ -6,11 +6,13 @@ import com.raishxn.ufo.client.render.ModCoProcessorModelProvider; // <<-- NOVO I
 import com.raishxn.ufo.client.render.ModCraftingStorageModelProvider;
 import com.raishxn.ufo.core.MegaCoProcessorTier; // <<-- NOVO IMPORT
 import com.raishxn.ufo.core.MegaCraftingStorageTier;
+import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.event.ModTooltipEventHandler;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(value = UfoMod.MOD_ID, dist = Dist.CLIENT)
@@ -19,6 +21,13 @@ public class UfoModClient {
     public UfoModClient(IEventBus eventBus) {
         eventBus.addListener(this::onClientSetup);
         NeoForge.EVENT_BUS.register(ModTooltipEventHandler.class);
+        eventBus.addListener(this::onRegisterKeyMappings);
+    }
+
+    private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+        event.register(ModKeyBindings.CYCLE_TOOL_FORWARD);
+        event.register(ModKeyBindings.CYCLE_TOOL_BACKWARD);
+        event.register(ModKeyBindings.CYCLE_MODE);
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {

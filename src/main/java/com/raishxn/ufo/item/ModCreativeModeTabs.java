@@ -93,14 +93,12 @@ public class ModCreativeModeTabs {
                         output.accept(ModCellItems.ITEM_CELL_100M.get());
                         output.accept(ModCellItems.ITEM_CELL_250M.get());
                         output.accept(ModCellItems.ITEM_CELL_750M.get());
-                        output.accept(ModCellItems.ITEM_CELL_INFINITY.get());
 
                         // --- FLUID CELLS: NEUTRON STAR RESERVOIR (de ModCellItems) ---
                         output.accept(ModCellItems.FLUID_CELL_40M.get());
                         output.accept(ModCellItems.FLUID_CELL_100M.get());
                         output.accept(ModCellItems.FLUID_CELL_250M.get());
                         output.accept(ModCellItems.FLUID_CELL_750M.get());
-                        output.accept(ModCellItems.FLUID_CELL_INFINITY.get());
 
                     }).build());
 
