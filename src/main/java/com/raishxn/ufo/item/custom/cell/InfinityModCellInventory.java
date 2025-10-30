@@ -1,4 +1,4 @@
-// Em: src/main/java/com/raishxn/ufo/item/custom/cell/InfinityModCellInventory.java
+// Local: src/main/java/com/raishxn/ufo/item/custom/cell/InfinityModCellInventory.java
 package com.raishxn.ufo.item.custom.cell;
 
 import appeng.api.config.Actionable;
@@ -38,7 +38,7 @@ public class InfinityModCellInventory implements StorageCell {
 
     @Override
     public double getIdleDrain() {
-        if(stack.getItem() instanceof IInfinityCell cell) {
+        if (stack.getItem() instanceof IInfinityCell cell) {
             return cell.getIdleDrain();
         }
         return 0;
@@ -47,22 +47,23 @@ public class InfinityModCellInventory implements StorageCell {
     private void updateItemStackTooltipData() {
         BigInteger usedBytes = BigInteger.ZERO;
         for (var entry : storage.entrySet()) {
-            long apb = Math.max(1, entry.getKey().getType().getAmountPerByte());
             BigInteger amount = entry.getValue();
-            if (amount.signum() > 0) {
+            if (amount != null && amount.signum() > 0) {
+                long apb = Math.max(1, entry.getKey().getType().getAmountPerByte());
                 usedBytes = usedBytes.add(amount.add(BigInteger.valueOf(apb - 1)).divide(BigInteger.valueOf(apb)));
             }
         }
 
         IInfinityCell.setUsedBytes(stack, usedBytes);
-        IInfinityCell.setUsedTypes(stack, storage.size());
+        IInfinityCell.setUsedTypes(stack, (int) storage.keySet().stream().filter(key -> storage.get(key).signum() > 0).count());
 
         List<GenericStack> show = new ArrayList<>(5);
         int count = 0;
         for (var e : storage.entrySet()) {
-            long amount = e.getValue().min(BigInteger.valueOf(Long.MAX_VALUE)).longValue();
-            if (amount > 0) {
-                show.add(new GenericStack(e.getKey(), amount));
+            BigInteger amount = e.getValue();
+            if(amount != null && amount.signum() > 0) {
+                long shownAmount = amount.min(BigInteger.valueOf(Long.MAX_VALUE)).longValue();
+                show.add(new GenericStack(e.getKey(), shownAmount));
                 if (++count >= 5) break;
             }
         }

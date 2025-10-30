@@ -1,6 +1,7 @@
-// Em: src/main/java/com/raishxn/ufo/item/custom/cell/InfinityModCellItem.java
+// Local: src/main/java/com/raishxn/ufo/item/custom/cell/InfinityModCellItem.java
 package com.raishxn.ufo.item.custom.cell;
 
+import appeng.api.implementations.blockentities.IChestOrDrive;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
@@ -51,9 +52,8 @@ public class InfinityModCellItem extends Item implements IInfinityCell {
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
         List<GenericStack> content = new ArrayList<>(IInfinityCell.getTooltipShowStacks(stack));
-        // A tooltip do AE2 mostra no máximo 5 itens. Se tivermos mais, informamos.
         boolean hasMore = content.size() > 5;
-        if(hasMore) {
+        if (hasMore) {
             content = content.subList(0, 5);
         }
         return Optional.of(new StorageCellTooltipComponent(List.of(), content, hasMore, true));
@@ -70,8 +70,11 @@ public class InfinityModCellItem extends Item implements IInfinityCell {
         @Nullable
         @Override
         public StorageCell getCellInventory(ItemStack is, @Nullable ISaveProvider host) {
+            // A verificação mais segura é se o host é um BlockEntity.
+            // IChestOrDrive é implementado por BlockEntities como o ME Drive.
             if (host instanceof BlockEntity be) {
-                Level level = be.getLevel();
+                Level level = be.getLevel(); // BlockEntity SEMPRE tem getLevel()
+
                 if (level != null && !level.isClientSide()) {
                     var customData = is.getOrDefault(net.minecraft.core.component.DataComponents.CUSTOM_DATA, net.minecraft.world.item.component.CustomData.EMPTY);
                     var tag = customData.copyTag();

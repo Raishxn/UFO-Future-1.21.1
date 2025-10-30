@@ -91,5 +91,8 @@
   "item.ufo.neutron_star_reservoir_beaco": "Neutron Star Reservoir — Beacon",
   "item.ufo.neutron_star_reservoir_nexus": "Neutron Star Reservoir — Nexus",
   "item.ufo.neutron_star_reservoir_core": "Neutron Star Reservoir — Core",
-  "item.ufo.neutron_star_reservoir_singularity": "Neutron Star Reservoir — Singularity"
+  "item.ufo.neutron_star_reservoir_singularity": "Neutron Star Reservoir — Singularity",
+
+  "item.ufo.bytes_used": "%s Bytes Used",
+  "item.ufo.types_used": "%s / %s Types"
 }

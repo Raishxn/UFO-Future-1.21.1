@@ -1,7 +1,8 @@
-// Crie este NOVO ficheiro em: src/main/java/com/raishxn/ufo/item/custom/cell/IInfinityCell.java
+// Local: src/main/java/com/raishxn/ufo/item/custom/cell/IInfinityCell.java
 package com.raishxn.ufo.item.custom.cell;
 
 import appeng.api.stacks.GenericStack;
+import appeng.api.upgrades.IUpgradeableItem;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import net.minecraft.world.item.ItemStack;
 
@@ -9,7 +10,7 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
-public interface IInfinityCell {
+public interface IInfinityCell extends IUpgradeableItem {
 
     double getIdleDrain();
 
@@ -19,7 +20,7 @@ public interface IInfinityCell {
     }
 
     static void setUsedBytes(ItemStack stack, BigInteger usedBytes) {
-        if (usedBytes.signum() <= 0) {
+        if (usedBytes == null || usedBytes.signum() <= 0) {
             stack.remove(ModDataComponents.CELL_BYTES_BIG);
         } else {
             stack.set(ModDataComponents.CELL_BYTES_BIG, usedBytes.toString());
