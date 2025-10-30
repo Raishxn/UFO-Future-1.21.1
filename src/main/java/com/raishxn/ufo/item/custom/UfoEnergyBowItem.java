@@ -132,6 +132,7 @@ public class UfoEnergyBowItem extends BowItem implements IEnergyTool, IHasModeHU
         Component modeText = newMode ?
                 Component.translatable("tooltip.ufo.mode.fast").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)) :
                 Component.translatable("tooltip.ufo.mode.normal").setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
+        player.sendSystemMessage(Component.translatable("tooltip.ufo.mode_changed_to", modeText));
     }
 
     @Override

@@ -2,10 +2,9 @@ package com.raishxn.ufo.item;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.ModBlocks;
-import com.raishxn.ufo.item.custom.UfoArmorItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
@@ -27,29 +26,17 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.TESSERACT_COMPONENT_MATRIX.get());
                         output.accept(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
 
-                        // --- LÓGICA DE ARMADURA CORRIGIDA ---
-                        ItemStack helmet = new ItemStack(ModItems.UFO_HELMET.get());
-                        ItemStack chestplate = new ItemStack(ModItems.UFO_CHESTPLATE.get());
-                        ItemStack leggings = new ItemStack(ModItems.UFO_LEGGINGS.get());
-                        ItemStack boots = new ItemStack(ModItems.UFO_BOOTS.get());
-
-                        // A CORREÇÃO: Usamos .holders() para obter o provider que o método espera.
-                        UfoArmorItem.addGodEnchantments(helmet, ArmorItem.Type.HELMET, itemDisplayParameters.holders());
-                        UfoArmorItem.addGodEnchantments(chestplate, ArmorItem.Type.CHESTPLATE, itemDisplayParameters.holders());
-                        UfoArmorItem.addGodEnchantments(leggings, ArmorItem.Type.LEGGINGS, itemDisplayParameters.holders());
-                        UfoArmorItem.addGodEnchantments(boots, ArmorItem.Type.BOOTS, itemDisplayParameters.holders());
-
-                        output.accept(helmet);
-                        output.accept(chestplate);
-                        output.accept(leggings);
-                        output.accept(boots);
-                        // --- FIM DA LÓGICA DE ARMADURA ---
-
+                        output.accept(ModItems.UFO_HELMET.get());
+                        output.accept(ModItems.UFO_CHESTPLATE.get());
+                        output.accept(ModItems.UFO_LEGGINGS.get());
+                        output.accept(ModItems.UFO_BOOTS.get());
                         output.accept(ModItems.UFO_STAFF);
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR_PRESS.get());
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR.get());
                         output.accept(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get());
                         output.accept(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get());
+                        output.accept(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get());
+                        output.accept(ModItems.PULSAR_FRAGMENT_INGOT.get());
                         output.accept(ModItems.INFINITY_COBBLED_DEEPSLATE_CELL.get());
                         output.accept(ModItems.INFINITY_END_STONE_CELL.get());
                         output.accept(ModItems.INFINITY_NETHERRACK_CELL.get());
@@ -57,6 +44,18 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.INFINITY_LAVA_CELL.get());
                         output.accept(ModItems.INFINITY_SKY_STONE_CELL.get());
                         output.accept(ModItems.INFINITY_ANTIMATTER_PELLET_CELL.get());
+
+                        output.accept(ModItems.INFINITY_COBBLED_DEEPSLATE_CELL.get());
+                        output.accept(ModItems.INFINITY_END_STONE_CELL.get());
+                        output.accept(ModItems.INFINITY_NETHERRACK_CELL.get());
+                        output.accept(ModItems.INFINITY_SAND_CELL.get());
+                        output.accept(ModItems.INFINITY_LAVA_CELL.get());
+                        output.accept(ModItems.INFINITY_SKY_STONE_CELL.get());
+                        output.accept(ModItems.INFINITY_ANTIMATTER_PELLET_CELL.get());
+
+                        // --- NOVAS CÉLULAS INFINITAS (adicionais que você criou) ---
+                        output.accept(ModItems.INFINITY_WATER_CELL.get());
+                        output.accept(ModItems.INFINITY_COBBLESTONE_CELL.get());
                         output.accept(ModItems.INFINITY_PLUTONIUM_PELLET_CELL.get());
                         output.accept(ModItems.INFINITY_POLONIUM_PELLET_CELL.get());
                         output.accept(ModItems.INFINITY_HDPE_PELLET_CELL.get());
@@ -65,6 +64,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.INFINITY_OAK_LOG_CELL.get());
                         output.accept(ModItems.INFINITY_GLASS_CELL.get());
                         output.accept(ModItems.INFINITY_AMETHYST_SHARD_CELL.get());
+                        // Cells de corante
                         output.accept(ModItems.INFINITY_WHITE_DYE_CELL.get());
                         output.accept(ModItems.INFINITY_ORANGE_DYE_CELL.get());
                         output.accept(ModItems.INFINITY_MAGENTA_DYE_CELL.get());
@@ -82,6 +82,33 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.INFINITY_RED_DYE_CELL.get());
                         output.accept(ModItems.INFINITY_BLACK_DYE_CELL.get());
 
+
+                        // --- HOUSINGS DE CÉLULAS (de ModCellItems) ---
+                        output.accept(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get());
+                        output.accept(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get());
+                        output.accept(ModCellItems.PULSAR_CELL_HOUSING.get());
+
+                        // --- STORAGE COMPONENTS (de ModCellItems) ---
+                        output.accept(ModCellItems.CELL_COMPONENT_40M.get());
+                        output.accept(ModCellItems.CELL_COMPONENT_100M.get());
+                        output.accept(ModCellItems.CELL_COMPONENT_250M.get());
+                        output.accept(ModCellItems.CELL_COMPONENT_750M.get());
+                        output.accept(ModCellItems.CELL_COMPONENT_INFINITY.get());
+
+                        // --- ITEM CELLS: WHITE DWARF (de ModCellItems) ---
+                        output.accept(ModCellItems.ITEM_CELL_40M.get());
+                        output.accept(ModCellItems.ITEM_CELL_100M.get());
+                        output.accept(ModCellItems.ITEM_CELL_250M.get());
+                        output.accept(ModCellItems.ITEM_CELL_750M.get());
+                        output.accept(ModCellItems.ITEM_CELL_INFINITY.get());
+
+                        // --- FLUID CELLS: NEUTRON STAR RESERVOIR (de ModCellItems) ---
+                        output.accept(ModCellItems.FLUID_CELL_40M.get());
+                        output.accept(ModCellItems.FLUID_CELL_100M.get());
+                        output.accept(ModCellItems.FLUID_CELL_250M.get());
+                        output.accept(ModCellItems.FLUID_CELL_750M.get());
+                        output.accept(ModCellItems.FLUID_CELL_INFINITY.get());
+
                     }).build());
 
     public static final Supplier<CreativeModeTab> UFO_BLOCKS_TAB = CREATIVE_MODE_TAB.register("ufo_blocks_tab",
@@ -91,10 +118,15 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get());
                         output.accept(ModBlocks.GRAVITON_PLATED_CASING.get());
                         output.accept(ModBlocks.QUANTUM_LATTICE_FRAME.get());
+                        output.accept(ModBlocks.NEUTRON_STAR_FRAGMENT_BLOCK.get());
+                        output.accept(ModBlocks.PULSAR_FRAGMENT_BLOCK.get());
                         ModBlocks.CRAFTING_STORAGE_BLOCKS.values().forEach(block -> output.accept(block.get()));
                         ModBlocks.CO_PROCESSOR_BLOCKS.values().forEach(block -> output.accept(block.get()));
 
                     }).build());
+
+
+
 
     public static void register(IEventBus eventBus) {
         CREATIVE_MODE_TAB.register(eventBus);

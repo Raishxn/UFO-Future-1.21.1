@@ -18,6 +18,8 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.EnumMap;
 
+import static net.minecraft.world.item.Items.registerBlock;
+
 public class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS =
             DeferredRegister.createBlocks(UfoMod.MOD_ID);
@@ -33,6 +35,12 @@ public class ModBlocks {
             () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
 
     public static final DeferredBlock<Block> WHITE_DWARF_FRAGMENT_BLOCK = registerBlockWithAnimatedItem("white_dwarf_fragment_block",
+            () -> new Block(BlockBehaviour.Properties.of().strength(6.0f).requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> PULSAR_FRAGMENT_BLOCK = PulsarBlockWithAnimatedItem("pulsar_fragment_block",
+            () -> new Block(BlockBehaviour.Properties.of().strength(6.0f).requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> NEUTRON_STAR_FRAGMENT_BLOCK = NeutronStarBlockWithAnimatedItem("neutron_star_fragment_block",
             () -> new Block(BlockBehaviour.Properties.of().strength(6.0f).requiresCorrectToolForDrops()));
 
     static {
@@ -59,6 +67,29 @@ public class ModBlocks {
                 ChatFormatting.BLACK,
                 ChatFormatting.DARK_GRAY,
                 ChatFormatting.GRAY));
+        return block;
+    }
+
+    private static <T extends Block> DeferredBlock<T> PulsarBlockWithAnimatedItem(String name, java.util.function.Supplier<T> blockSupplier) {
+        // Registra o bloco em si
+        DeferredBlock<T> block = BLOCKS.register(name, blockSupplier);
+        // Registra o item do bloco usando a classe AnimatedNameBlockItem
+        ModItems.ITEMS.register(name, () -> new AnimatedNameBlockItem(block.get(), new Item.Properties(),
+                ChatFormatting.WHITE,
+                ChatFormatting.GREEN,
+                ChatFormatting.DARK_GREEN));
+        return block;
+    }
+
+    private static <T extends Block> DeferredBlock<T> NeutronStarBlockWithAnimatedItem(String name, java.util.function.Supplier<T> blockSupplier) {
+        // Registra o bloco em si
+        DeferredBlock<T> block = BLOCKS.register(name, blockSupplier);
+        // Registra o item do bloco usando a classe AnimatedNameBlockItem
+        ModItems.ITEMS.register(name, () -> new AnimatedNameBlockItem(block.get(), new Item.Properties(),
+                ChatFormatting.WHITE,
+                ChatFormatting.BLUE,
+                ChatFormatting.DARK_BLUE,
+                ChatFormatting.AQUA));
         return block;
     }
 

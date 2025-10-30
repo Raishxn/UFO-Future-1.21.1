@@ -6,7 +6,6 @@
   "item.ufo.ufo_pickaxe": "[PICKAXE]",
   "item.ufo.ufo_staff": "[STAFF]",
   "item.ufo.ufo_shovel": "[SHOVEL",
-  "item.ufo.ufo_fishing_rod": "[FISHING ROD",
   "item.ufo.ufo_greatsword": "[GREATSWORD]",
   "item.ufo.ufo_bow": "[BOW]",
 
@@ -59,11 +58,38 @@
   "item.ufo.printed_dimensional_processor": "Printed Dimensional Processor",
   "item.ufo.dimensional_processor": "Dimensional Processor",
   "item.ufo.white_dwarf_fragment_ingot": "White Dwarf Fragment Ingot",
+  "item.ufo.neutron_star_fragment_ingot": "Neutron Star Fragment Ingot",
+  "item.ufo.pulsar_fragment_ingot": "Pulsar Fragment Ingot",
   "item.ufo.infinity_cell_name": "Infinity %s Cell",
   "item.ufo.infinity_cell_name_invalid": "Invalid Infinity Cell",
 
 
   "block.ufo.quantum_lattice_frame": "Quantum-Lattice Frame",
   "block.ufo.graviton_plated_casing": "Graviton-Plated Casing",
-  "block.ufo.white_dwarf_fragment_block": "White Dwarf Fragment Block"
+  "block.ufo.white_dwarf_fragment_block": "White Dwarf Fragment Block",
+  "block.ufo.neutron_star_fragment_block": "Neutron Star Fragment Block",
+  "block.ufo.pulsar_fragment_block": "Pulsar Fragment Block",
+
+
+  "item.ufo.white_dwarf_item_cell_housing": "White Dwarf Item Cell Housing",
+  "item.ufo.neutron_fluid_cell_housing": "Neutron Star Reservoir Housing",
+  "item.ufo.pulsar_cell_housing": "Pulsar Chamber Housing",
+
+  "item.ufo.storage_cell_side_40m": "40M Storage Component",
+  "item.ufo.storage_cell_side_100m": "100M Storage Component",
+  "item.ufo.storage_cell_side_250m": "250M Storage Component",
+  "item.ufo.storage_cell_side_750m": "750M Storage Component",
+  "item.ufo.storage_cell_side_infinity": "Infinity Storage Component",
+
+  "item.ufo.white_dwarf_cell_echo": "White Dwarf Cell — Echo",
+  "item.ufo.white_dwarf_cell_beaco": "White Dwarf Cell — Beacon",
+  "item.ufo.white_dwarf_cell_nexus": "White Dwarf Cell — Nexus",
+  "item.ufo.white_dwarf_cell_core": "White Dwarf Cell — Core",
+  "item.ufo.white_dwarf_cell_singularity": "White Dwarf Cell — Singularity",
+
+  "item.ufo.neutron_star_reservoir_echo": "Neutron Star Reservoir — Echo",
+  "item.ufo.neutron_star_reservoir_beaco": "Neutron Star Reservoir — Beacon",
+  "item.ufo.neutron_star_reservoir_nexus": "Neutron Star Reservoir — Nexus",
+  "item.ufo.neutron_star_reservoir_core": "Neutron Star Reservoir — Core",
+  "item.ufo.neutron_star_reservoir_singularity": "Neutron Star Reservoir — Singularity"
 }

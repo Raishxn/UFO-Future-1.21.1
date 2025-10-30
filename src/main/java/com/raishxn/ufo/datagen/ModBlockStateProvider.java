@@ -25,6 +25,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlockWithItem(ModBlocks.QUANTUM_LATTICE_FRAME);
         simpleBlockWithItem(ModBlocks.GRAVITON_PLATED_CASING);
         simpleBlockWithItem(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK);
+        simpleBlockWithItem(ModBlocks.PULSAR_FRAGMENT_BLOCK);
+        simpleBlockWithItem(ModBlocks.NEUTRON_STAR_FRAGMENT_BLOCK);
 
 
         // --- 2. REGISTRO DOS BLOCOS COMPLEXOS (COM VARIANTES) ---
