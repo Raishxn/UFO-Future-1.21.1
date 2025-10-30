@@ -1,3 +1,5 @@
+// Conteúdo de src/main/java/com/raishxn/ufo/item/custom/cell/ModCellItem.java
+
 package com.raishxn.ufo.item.custom.cell;
 
 import appeng.api.stacks.AEKeyType;
@@ -15,7 +17,7 @@ public class ModCellItem extends BasicStorageCell {
         super(
                 new Item.Properties().stacksTo(1),
                 tier.idleDrain(),
-                calculateKibiBytes(tier), // Corrigido para retornar int
+                calculateKibiBytes(tier),
                 calculateBytesPerType(tier),
                 maxTypes,
                 keyType
@@ -28,15 +30,17 @@ public class ModCellItem extends BasicStorageCell {
             return Integer.MAX_VALUE;
         }
         // Para as outras tiers, o valor cabe em um int, então fazemos a conversão.
-        return tier.bytes() / 1024;
+        return (int) (tier.bytes() / 1024);
     }
 
     private static int calculateBytesPerType(StorageTier tier) {
         if (tier == ModCellItems.TIER_INFINITY) {
-            // Um valor alto, similar a outras células de grande capacidade
+            // Manter o valor original para o overhead da célula infinita, pois sua lógica é separada.
             return 262144;
         }
-        // O cálculo padrão do AE2.
-        return tier.bytes() / 128;
+        // CORREÇÃO PARA O PROBLEMA DO USO EXCESSIVO (5859376 bytes used)
+        // A divisão original resultava em um número muito grande devido à alta capacidade do tier.
+        // Devemos retornar o custo de overhead por tipo para um valor pequeno (1 byte para itens).
+        return 1;
     }
 }

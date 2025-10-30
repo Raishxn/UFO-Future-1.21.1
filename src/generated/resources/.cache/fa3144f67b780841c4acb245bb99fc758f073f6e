@@ -1,4 +1,4 @@
-// 1.21.1	2025-10-22T12:31:43.6898003	Block States: ufo
+// 1.21.1	2025-10-29T23:33:59.8461447	Block States: ufo
 69293416073dbd99798343145db9756641321663 assets/ufo/blockstates/150m_mega_co_processor.json
 4a94fb489b7a997f738f10e05252f01c4bd984ab assets/ufo/blockstates/1b_mega_crafting_storage.json
 a6330df476a03cc6c616786ed69474c38443ddb7 assets/ufo/blockstates/1qd_mega_crafting_storage.json
@@ -10,6 +10,8 @@ b47d88959b9efe28fbeed5dd2ef530b52d67b9d6 assets/ufo/blockstates/2b_mega_co_proce
 d0793fc570dd50a7c2b75afa099c4892877b96b1 assets/ufo/blockstates/50m_mega_co_processor.json
 242d29eb8a0a12c7d06b0598ff7a8fda9d385795 assets/ufo/blockstates/750m_mega_co_processor.json
 386e46140723cf2424722fa1cda0d5a2e9a79d1b assets/ufo/blockstates/graviton_plated_casing.json
+c8c9a3c33a55defd0fc852bef5cc8cc01e687b32 assets/ufo/blockstates/neutron_star_fragment_block.json
+fc08ccb8ffd4a8e7207bdecd673a5dfdb5d12a33 assets/ufo/blockstates/pulsar_fragment_block.json
 2eca9ba7b54f545e83f02e7b262b4a48c1632d84 assets/ufo/blockstates/quantum_lattice_frame.json
 f814cf4e582fa26b516ba790ecac44306d8038e5 assets/ufo/blockstates/white_dwarf_fragment_block.json
 400690fe5f8d32de99d569842f50681a94ab7d4e assets/ufo/models/block/150m_mega_co_processor.json
@@ -33,6 +35,8 @@ bf21a9e8fbc5a3846fb05b4fa0859e0917b2202f assets/ufo/models/block/50m_mega_co_pro
 e1859b2141105b29c3429e84f4ae36acff8ec17c assets/ufo/models/block/750m_mega_co_processor.json
 bf21a9e8fbc5a3846fb05b4fa0859e0917b2202f assets/ufo/models/block/750m_mega_co_processor_formed.json
 60b876aa5fc077aef33eb2f60f5e4610d3e1ad9a assets/ufo/models/block/graviton_plated_casing.json
+b5993c143926ec646d3252f3e4ea570ed95e2cc6 assets/ufo/models/block/neutron_star_fragment_block.json
+5a66c11e42d1a5592706e7c8a8f23096ee8506bd assets/ufo/models/block/pulsar_fragment_block.json
 0b2d73a7c97864be3636988fe4e68219b94287f6 assets/ufo/models/block/quantum_lattice_frame.json
 e603c48e5df838847e02df2fc5d5f1302d87f69d assets/ufo/models/block/white_dwarf_fragment_block.json
 4a36705db7e28b96ee1c7ac32d044745b467bbb7 assets/ufo/models/item/150m_mega_co_processor.json
@@ -46,5 +50,7 @@ e603c48e5df838847e02df2fc5d5f1302d87f69d assets/ufo/models/block/white_dwarf_fra
 6ace5289086485820268b0b00e4a7385e274651c assets/ufo/models/item/50m_mega_co_processor.json
 288c5422b01ca7116cdb74306d24507dd6e5e38f assets/ufo/models/item/750m_mega_co_processor.json
 b57a699c7702fef612cfa469b41f590c0bcb22cc assets/ufo/models/item/graviton_plated_casing.json
+fb8cd0bfa661a79cf0a90cce7131228b7dc2effd assets/ufo/models/item/neutron_star_fragment_block.json
+5e40ef47b5d0d92c612f239229f1ec712035b85d assets/ufo/models/item/pulsar_fragment_block.json
 c84b1ca781442cce2ebe59cb0df53e99045d756a assets/ufo/models/item/quantum_lattice_frame.json
 1c1ee828a6d90a391e494d3f0341531a47899955 assets/ufo/models/item/white_dwarf_fragment_block.json

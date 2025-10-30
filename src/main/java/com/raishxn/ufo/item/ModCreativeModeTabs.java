@@ -88,13 +88,6 @@ public class ModCreativeModeTabs {
                         output.accept(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get());
                         output.accept(ModCellItems.PULSAR_CELL_HOUSING.get());
 
-                        // --- STORAGE COMPONENTS (de ModCellItems) ---
-                        output.accept(ModCellItems.CELL_COMPONENT_40M.get());
-                        output.accept(ModCellItems.CELL_COMPONENT_100M.get());
-                        output.accept(ModCellItems.CELL_COMPONENT_250M.get());
-                        output.accept(ModCellItems.CELL_COMPONENT_750M.get());
-                        output.accept(ModCellItems.CELL_COMPONENT_INFINITY.get());
-
                         // --- ITEM CELLS: WHITE DWARF (de ModCellItems) ---
                         output.accept(ModCellItems.ITEM_CELL_40M.get());
                         output.accept(ModCellItems.ITEM_CELL_100M.get());

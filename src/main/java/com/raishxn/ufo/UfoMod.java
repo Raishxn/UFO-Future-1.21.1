@@ -9,6 +9,7 @@ import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModCreativeModeTabs;
 import com.raishxn.ufo.item.ModItems;
 import com.raishxn.ufo.item.UFORegistryHandler;
+import com.raishxn.ufo.item.custom.cell.InfinityModCellItem;
 import com.raishxn.ufo.network.ModPackets;
 import com.raishxn.ufo.network.packet.CycleModeKeyPacket;
 import com.raishxn.ufo.network.packet.CycleToolKeyPacket;
@@ -36,15 +37,11 @@ public class UfoMod {
     public static final String MOD_ID = "ufo";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    /**
-     * Método utilitário para criar um ResourceLocation com o ID do seu mod.
-     */
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
     public UfoMod(IEventBus modEventBus, ModContainer modContainer) {
-        // --- Registros do Mod (usando DeferredRegister) ---
         ModCreativeModeTabs.register(modEventBus);
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
@@ -52,16 +49,12 @@ public class UfoMod {
         ModBlockEntities.register(modEventBus);
         ModCellItems.register(modEventBus);
 
-
-        // Registra o arquivo de configuração do mod (para o custo de energia das células, etc.)
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
 
-        // --- Listeners do Ciclo de Vida do Mod ---
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::loadComplete);
         modEventBus.addListener(this::registerPackets);
 
-        // Registra os eventos do jogo (como input de teclas)
         NeoForge.EVENT_BUS.register(this);
     }
 
@@ -69,24 +62,15 @@ public class UfoMod {
         ModPackets.register(event);
     }
 
-    /**
-     * Chamado após o registro de todos os itens. Ideal para interagir com outros mods.
-     */
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            // Registra os handlers da Infinity Cell na API do Applied Energistics 2
             UFORegistryHandler.INSTANCE.onInit();
-            // Executa outras tarefas de inicialização comuns
             LazyInits.initCommon();
+            appeng.api.storage.StorageCells.addCellHandler(InfinityModCellItem.HANDLER);
         });
     }
 
-    /**
-     * Chamado após todos os mods serem carregados. Ideal para tarefas que dependem de
-     * itens ou blocos de outros mods.
-     */
     private void loadComplete(final FMLLoadCompleteEvent event) {
-        // Executa as inicializações finais, como obter as AEKeys para as Infinity Cells
         event.enqueueWork(LazyInits::initFinal);
     }
 
@@ -111,7 +95,6 @@ public class UfoMod {
         }
     }
 
-    @EventBusSubscriber(modid = UfoMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onRegisterKeys(RegisterKeyMappingsEvent event) {
