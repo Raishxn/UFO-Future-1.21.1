@@ -27,7 +27,7 @@ public class ModCellItem extends BasicStorageCell {
     private static int calculateKibiBytes(StorageTier tier) {
         // Para a tier infinita, usamos o maior valor de int possível.
         if (tier == ModCellItems.TIER_INFINITY) {
-            return Integer.MAX_VALUE;
+            return Integer.MAX_VALUE /  1024;
         }
         // Para as outras tiers, o valor cabe em um int, então fazemos a conversão.
         return (int) (tier.bytes() / 1024);

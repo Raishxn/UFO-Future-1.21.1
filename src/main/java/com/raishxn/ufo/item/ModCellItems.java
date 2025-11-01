@@ -4,6 +4,7 @@ import appeng.api.stacks.AEKeyType;
 import appeng.items.materials.StorageComponentItem;
 import appeng.items.storage.StorageTier;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.item.custom.cell.AEBigIntegerCellItem;
 import com.raishxn.ufo.item.custom.cell.ModCellItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
@@ -39,12 +40,14 @@ public final class ModCellItems {
     public static final DeferredHolder<Item, ModCellItem> ITEM_CELL_100M = ITEMS.register("white_dwarf_cell_beaco", () -> new ModCellItem(TIER_100M, 5 * 1024, AEKeyType.items()));
     public static final DeferredHolder<Item, ModCellItem> ITEM_CELL_250M = ITEMS.register("white_dwarf_cell_nexus", () -> new ModCellItem(TIER_250M, 10 * 1024, AEKeyType.items()));
     public static final DeferredHolder<Item, ModCellItem> ITEM_CELL_750M = ITEMS.register("white_dwarf_cell_core", () -> new ModCellItem(TIER_750M, 25 * 1024, AEKeyType.items()));
-    // Fluid Cells: Neutron Star Reservoir
+    public static final DeferredHolder<Item, AEBigIntegerCellItem> ITEM_CELL_SINGULARITY = ITEMS.register("white_dwarf_cell_singularity",
+            () -> new AEBigIntegerCellItem(new Item.Properties().stacksTo(1), 7.5D, AEKeyType.items(),TIER_INFINITY));    // Fluid Cells: Neutron Star Reservoir
     public static final DeferredHolder<Item, ModCellItem> FLUID_CELL_40M = ITEMS.register("neutron_star_reservoir_echo", () -> new ModCellItem(TIER_40M, 1024, AEKeyType.fluids()));
     public static final DeferredHolder<Item, ModCellItem> FLUID_CELL_100M = ITEMS.register("neutron_star_reservoir_beaco", () -> new ModCellItem(TIER_100M, 5 * 1024, AEKeyType.fluids()));
     public static final DeferredHolder<Item, ModCellItem> FLUID_CELL_250M = ITEMS.register("neutron_star_reservoir_nexus", () -> new ModCellItem(TIER_250M, 10 * 1024, AEKeyType.fluids()));
     public static final DeferredHolder<Item, ModCellItem> FLUID_CELL_750M = ITEMS.register("neutron_star_reservoir_core", () -> new ModCellItem(TIER_750M, 25 * 1024, AEKeyType.fluids()));
-    // --- Helper Methods ---
+    public static final DeferredHolder<Item, AEBigIntegerCellItem> FLUID_CELL_SINGULARITY = ITEMS.register("neutron_star_reservoir_singularity",
+            () -> new AEBigIntegerCellItem(new Item.Properties().stacksTo(1), 7.5D, AEKeyType.fluids(),TIER_INFINITY));     // --- Helper Methods ---
 
     // CORRIGIDO para retornar DeferredHolder<Item, Item>
     private static DeferredHolder<Item, Item> component(String idSuffix, int kibiBytes) {

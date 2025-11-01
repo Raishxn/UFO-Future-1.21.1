@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.text.DecimalFormat;
 
-@Mixin(value = CPUSelectionList.class, remap = false)
+@Mixin(value = CPUSelectionList.class,priority = 5000, remap = false)
 public class MixinCPUSelectionList {
     @Unique
     private static final DecimalFormat ufo$DF = new DecimalFormat("#.##");

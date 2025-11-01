@@ -5,6 +5,7 @@ import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.init.ModBlockEntities;
+import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModCreativeModeTabs;
 import com.raishxn.ufo.item.ModItems;
 import com.raishxn.ufo.item.UFORegistryHandler;
@@ -49,6 +50,7 @@ public class UfoMod {
         ModBlocks.register(modEventBus);
         ModDataComponents.register(modEventBus);
         ModBlockEntities.register(modEventBus);
+        ModCellItems.register(modEventBus); // <-- ADICIONE ESTA LINHA AQUI
         // Registra o arquivo de configuração do mod (para o custo de energia das células, etc.)
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
 
