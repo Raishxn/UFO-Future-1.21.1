@@ -1,6 +1,7 @@
 package com.raishxn.ufo.item.custom.cell;
 
 import appeng.api.config.FuzzyMode;
+import appeng.api.config.IncludeExclude;
 import appeng.api.ids.AEComponents;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.GenericStack;

@@ -1,5 +1,6 @@
 package com.raishxn.ufo;
 
+import appeng.api.storage.StorageCells;
 import com.mojang.logging.LogUtils;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.datagen.ModDataComponents;
@@ -9,6 +10,8 @@ import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModCreativeModeTabs;
 import com.raishxn.ufo.item.ModItems;
 import com.raishxn.ufo.item.UFORegistryHandler;
+import com.raishxn.ufo.item.custom.cell.AEBigIntegerCellHandler;
+import com.raishxn.ufo.item.custom.cell.IAEBigIntegerCell;
 import com.raishxn.ufo.network.ModPackets;
 import com.raishxn.ufo.network.packet.CycleModeKeyPacket;
 import com.raishxn.ufo.network.packet.CycleToolKeyPacket;
@@ -35,10 +38,6 @@ import org.slf4j.Logger;
 public class UfoMod {
     public static final String MOD_ID = "ufo";
     private static final Logger LOGGER = LogUtils.getLogger();
-
-    /**
-     * Método utilitário para criar um ResourceLocation com o ID do seu mod.
-     */
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
@@ -50,8 +49,7 @@ public class UfoMod {
         ModBlocks.register(modEventBus);
         ModDataComponents.register(modEventBus);
         ModBlockEntities.register(modEventBus);
-        ModCellItems.register(modEventBus); // <-- ADICIONE ESTA LINHA AQUI
-        // Registra o arquivo de configuração do mod (para o custo de energia das células, etc.)
+        ModCellItems.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
 
         // --- Listeners do Ciclo de Vida do Mod ---
@@ -67,17 +65,21 @@ public class UfoMod {
         ModPackets.register(event);
     }
 
+
+
+
+
     /**
      * Chamado após o registro de todos os itens. Ideal para interagir com outros mods.
      */
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            // Registra os handlers da Infinity Cell na API do Applied Energistics 2
             UFORegistryHandler.INSTANCE.onInit();
-            // Executa outras tarefas de inicialização comuns
             LazyInits.initCommon();
         });
     }
+
+
 
     /**
      * Chamado após todos os mods serem carregados. Ideal para tarefas que dependem de

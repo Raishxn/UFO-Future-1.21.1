@@ -22,19 +22,16 @@ public class ModBlockEntities {
             DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, UfoMod.MOD_ID);
 
     @SuppressWarnings("unchecked")
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CraftingBlockEntity>> MEGA_CRAFTING_UNITS_BE = // <<-- NOME ALTERADO PARA CLAREZA
-            BLOCK_ENTITIES.register("mega_crafting_units_be", () -> { // <<-- NOME ALTERADO PARA CLAREZA
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CraftingBlockEntity>> MEGA_CRAFTING_UNITS_BE =
+            BLOCK_ENTITIES.register("mega_crafting_units_be", () -> {
                 final AtomicReference<BlockEntityType<CraftingBlockEntity>> typeHolder = new AtomicReference<>();
 
-                // --- INÍCIO DA CORREÇÃO ---
-                // 1. Juntamos as duas listas de blocos (Storages e Co-Processors) em uma só.
+                // A correção já está aqui, unindo as duas listas de blocos
                 var validBlocks = Stream.concat(
                         ModBlocks.CRAFTING_STORAGE_BLOCKS.values().stream(),
                         ModBlocks.CO_PROCESSOR_BLOCKS.values().stream()
                 ).map(DeferredBlock::get).toArray(AEBaseEntityBlock[]::new);
-                // --- FIM DA CORREÇÃO ---
 
-                // Cria o BlockEntityType com a lista completa de blocos válidos
                 var type = BlockEntityType.Builder.of(
                         (pos, state) -> new CraftingBlockEntity(typeHolder.get(), pos, state),
                         validBlocks
@@ -42,7 +39,6 @@ public class ModBlockEntities {
 
                 typeHolder.set(type);
 
-                // Associa a BlockEntityType a cada um dos blocos
                 for (var block : validBlocks) {
                     block.setBlockEntity(CraftingBlockEntity.class, type, null, null);
                 }

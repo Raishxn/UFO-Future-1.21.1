@@ -81,18 +81,27 @@
   "item.ufo.storage_cell_side_750m": "750M Storage Component",
   "item.ufo.storage_cell_side_infinity": "Infinity Storage Component",
 
-  "item.ufo.white_dwarf_cell_echo": "White Dwarf Cell — Echo",
-  "item.ufo.white_dwarf_cell_beaco": "White Dwarf Cell — Beacon",
-  "item.ufo.white_dwarf_cell_nexus": "White Dwarf Cell — Nexus",
-  "item.ufo.white_dwarf_cell_core": "White Dwarf Cell — Core",
-  "item.ufo.white_dwarf_cell_singularity": "White Dwarf Cell — Singularity",
-
-  "item.ufo.neutron_star_reservoir_echo": "Neutron Star Reservoir — Echo",
-  "item.ufo.neutron_star_reservoir_beaco": "Neutron Star Reservoir — Beacon",
-  "item.ufo.neutron_star_reservoir_nexus": "Neutron Star Reservoir — Nexus",
-  "item.ufo.neutron_star_reservoir_core": "Neutron Star Reservoir — Core",
-  "item.ufo.neutron_star_reservoir_singularity": "Neutron Star Reservoir — Singularity",
-
   "item.ufo.bytes_used": "%s Bytes Used",
-  "item.ufo.types_used": "%s / %s Types"
+  "item.ufo.types_used": "%s / %s Types",
+
+  "item.ufo.white_dwarf_item_cell": "White Dwarf Cell",
+  "item.ufo.neutron_star_fluid_cell": "Neutron Star Reservoir",
+
+  "ufo.cell_tier.echo": "Echo",
+  "ufo.cell_tier.beacon": "Beacon",
+  "ufo.cell_tier.nexus": "Nexus",
+  "ufo.cell_tier.core": "Core",
+  "ufo.cell_tier.singularity": "Singularity",
+
+  "item.ufo.white_dwarf_cell_echo": "White Dwarf Cell - Echo",
+  "item.ufo.white_dwarf_cell_beaco": "White Dwarf Cell - Beacon",
+  "item.ufo.white_dwarf_cell_nexus": "White Dwarf Cell - Nexus",
+  "item.ufo.white_dwarf_cell_core": "White Dwarf Cell - Core",
+  "item.ufo.white_dwarf_cell_singularity": "White Dwarf Cell - Singularity",
+
+  "item.ufo.neutron_star_reservoir_echo": "Neutron Star Reservoir - Echo",
+  "item.ufo.neutron_star_reservoir_beaco": "Neutron Star Reservoir - Beacon",
+  "item.ufo.neutron_star_reservoir_nexus": "Neutron Star Reservoir - Nexus",
+  "item.ufo.neutron_star_reservoir_core": "Neutron Star Reservoir - Core",
+  "item.ufo.neutron_star_reservoir_singularity": "Neutron Star Reservoir - Singularity"
 }

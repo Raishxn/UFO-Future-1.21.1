@@ -10,7 +10,7 @@ public enum MegaCoProcessorTier implements ICraftingUnitType {
     COPROCESSOR_150M("150m", "150M", 150_000_000),
     COPROCESSOR_300M("300m", "300M", 300_000_000),
     COPROCESSOR_750M("750m", "750M", 750_000_000),
-    COPROCESSOR_2B("2b", "2B", Integer.MAX_VALUE);
+    COPROCESSOR_2B("2b", "2B", 2_000_000_000);
 
     private final String registryId;
     private final String displayName;
