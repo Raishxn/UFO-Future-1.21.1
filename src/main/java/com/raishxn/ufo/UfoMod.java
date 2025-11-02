@@ -1,8 +1,11 @@
 package com.raishxn.ufo;
 
-import appeng.api.storage.StorageCells;
+
 import com.mojang.logging.LogUtils;
 import com.raishxn.ufo.block.ModBlocks;
+import com.raishxn.ufo.block.MultiblockBlocks;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.init.ModBlockEntities;
@@ -10,25 +13,20 @@ import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModCreativeModeTabs;
 import com.raishxn.ufo.item.ModItems;
 import com.raishxn.ufo.item.UFORegistryHandler;
-import com.raishxn.ufo.item.custom.cell.AEBigIntegerCellHandler;
-import com.raishxn.ufo.item.custom.cell.IAEBigIntegerCell;
 import com.raishxn.ufo.network.ModPackets;
 import com.raishxn.ufo.network.packet.CycleModeKeyPacket;
 import com.raishxn.ufo.network.packet.CycleToolKeyPacket;
 import com.raishxn.ufo.util.LazyInits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -50,6 +48,9 @@ public class UfoMod {
         ModDataComponents.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModCellItems.register(modEventBus);
+        MultiblockBlocks.register(modEventBus);
+
+
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
 
         // --- Listeners do Ciclo de Vida do Mod ---

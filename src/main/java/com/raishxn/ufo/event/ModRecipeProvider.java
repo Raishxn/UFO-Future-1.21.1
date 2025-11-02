@@ -32,6 +32,7 @@ import gripe._90.megacells.definition.MEGAItems;
 // Imports do seu mod
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.ModBlocks;
+import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModItems;
 
 import java.util.concurrent.CompletableFuture;
@@ -205,6 +206,72 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(c.withConditions(new ModLoadedCondition("ae2")), UfoMod.id("infinity_sky_stone_cell"));
 
         // ========================================================================================
+        // --- RECEITAS DAS CÉLULAS DE ARMAZENAMENTO ---
+        // ========================================================================================
+
+        // --- Células de Item (White Dwarf) ---
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModCellItems.ITEM_CELL_40M.get())
+                .requires(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get())
+                .requires(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get())
+                .unlockedBy("has_item", has(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get()))
+                .save(c);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModCellItems.ITEM_CELL_100M.get())
+                .requires(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get())
+                .requires(ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
+                .unlockedBy("has_item", has(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get()))
+                .save(c);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModCellItems.ITEM_CELL_250M.get())
+                .requires(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get())
+                .requires(ModItems.TESSERACT_COMPONENT_MATRIX.get())
+                .unlockedBy("has_item", has(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get()))
+                .save(c);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModCellItems.ITEM_CELL_750M.get())
+                .requires(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get())
+                .requires(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get())
+                .unlockedBy("has_item", has(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get()))
+                .save(c);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModCellItems.ITEM_CELL_SINGULARITY.get())
+                .requires(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get())
+                .requires(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get())
+                .unlockedBy("has_item", has(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get()))
+                .save(c);
+
+        // --- Células de Fluido (Neutron Star) ---
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModCellItems.FLUID_CELL_40M.get())
+                .requires(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get())
+                .requires(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get())
+                .unlockedBy("has_item", has(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get()))
+                .save(c);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModCellItems.FLUID_CELL_100M.get())
+                .requires(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get())
+                .requires(ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
+                .unlockedBy("has_item", has(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get()))
+                .save(c);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModCellItems.FLUID_CELL_250M.get())
+                .requires(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get())
+                .requires(ModItems.TESSERACT_COMPONENT_MATRIX.get())
+                .unlockedBy("has_item", has(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get()))
+                .save(c);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModCellItems.FLUID_CELL_750M.get())
+                .requires(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get())
+                .requires(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get())
+                .unlockedBy("has_item", has(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get()))
+                .save(c);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModCellItems.FLUID_CELL_SINGULARITY.get())
+                .requires(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get())
+                .requires(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get())
+                .unlockedBy("has_item", has(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get()))
+                .save(c);
+
+        // ========================================================================================
         // --- CHAMADAS DE COMPATIBILIDADE ---
         // ========================================================================================
         if (GlodUtil.checkMod("megacells")) {
@@ -297,6 +364,40 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     private void extendedAERecipes(RecipeOutput c) {
+        // ========================================================================================
+        // --- RECEITAS DOS HOUSINGS (Compatibilidade com ExtendedAE) ---
+        // ========================================================================================
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get())
+                .pattern("ABA")
+                .pattern("B B")
+                .pattern("CCC")
+                .define('A', EAESingletons.ASSEMBLER_MATRIX_GLASS)
+                .define('B', EAESingletons.ENTRO_DUST)
+                .define('C', ModItems.WHITE_DWARF_FRAGMENT_INGOT.get())
+                .unlockedBy("has_item", has(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get()))
+                .save(c, UfoMod.id("white_dwarf_item_cell_housing_eae_compat"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get())
+                .pattern("ABA")
+                .pattern("B B")
+                .pattern("CCC")
+                .define('A', EAESingletons.ASSEMBLER_MATRIX_GLASS)
+                .define('B', EAESingletons.ENTRO_DUST)
+                .define('C', ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get())
+                .unlockedBy("has_item", has(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get()))
+                .save(c, UfoMod.id("neutron_fluid_cell_housing_eae_compat"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModCellItems.PULSAR_CELL_HOUSING.get())
+                .pattern("ABA")
+                .pattern("B B")
+                .pattern("CCC")
+                .define('A', EAESingletons.ASSEMBLER_MATRIX_GLASS)
+                .define('B', EAESingletons.ENTRO_DUST)
+                .define('C', ModItems.PULSAR_FRAGMENT_INGOT.get())
+                .unlockedBy("has_item", has(ModItems.PULSAR_FRAGMENT_INGOT.get()))
+                .save(c, UfoMod.id("pulsar_cell_housing_eae_compat"));
+
+
         CrystalAssemblerRecipeBuilder
                 .assemble(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get(), 4)
                 .input(AEItems.SINGULARITY, 4)

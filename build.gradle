@@ -91,6 +91,7 @@ dependencies {
     implementation "curse.maven:applied-energistics-2-223794:7027323"
     implementation "curse.maven:guideme-1173950:6812025"
     implementation "curse.maven:geckolib-388172:7023453"
+    implementation "curse.maven:ldlib-626676:6260254"
     compileOnly "curse.maven:mekanism-268560:7017663"
     implementation "curse.maven:glodium-957920:5821676"
     compileOnly "curse.maven:ex-pattern-provider-892005:7129221"

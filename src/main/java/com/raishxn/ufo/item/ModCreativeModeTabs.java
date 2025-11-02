@@ -113,6 +113,14 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.QUANTUM_LATTICE_FRAME.get());
                         output.accept(ModBlocks.NEUTRON_STAR_FRAGMENT_BLOCK.get());
                         output.accept(ModBlocks.PULSAR_FRAGMENT_BLOCK.get());
+
+                        output.accept(ModItems.ENTROPY_ASSEMBLER_CORE_CASING.get());
+                        output.accept(ModItems.ENTROPY_SINGULARITY_CASING.get());
+                        output.accept(ModItems.ENTROPY_CONTAINMENT_CHAMBER_COMPONENTS.get());
+                        output.accept(ModItems.ENTROPY_COOLANT_MATRIX_COMPONENTS.get());
+                        output.accept(ModItems.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
+                        output.accept(ModItems.ENTROPY_SINGULARITY_ARRAY_CONTROLLER.get());
+                        output.accept(ModItems.ENTROPY_CATALYST_BANK_COMPONENTS.get());
                         ModBlocks.CRAFTING_STORAGE_BLOCKS.values().forEach(block -> output.accept(block.get()));
                         ModBlocks.CO_PROCESSOR_BLOCKS.values().forEach(block -> output.accept(block.get()));
 

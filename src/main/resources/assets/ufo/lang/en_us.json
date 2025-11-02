@@ -69,6 +69,13 @@
   "block.ufo.white_dwarf_fragment_block": "White Dwarf Fragment Block",
   "block.ufo.neutron_star_fragment_block": "Neutron Star Fragment Block",
   "block.ufo.pulsar_fragment_block": "Pulsar Fragment Block",
+  "block.ufo.entropy_assembler_core_casing": "Entropy Assembler Core Casing",
+  "block.ufo.entropy_singularity_casing": "Entropy Singularity Casing",
+  "block.ufo.entropy_containment_chamber_components": "Entropy Containment Chamber Components",
+  "block.ufo.entropy_coolant_matrix_components": "Entropy Coolant Matrix Components",
+  "block.ufo.entropy_computer_condensation_matrix": "Entropy Computer Condensation Matrix",
+  "block.ufo.entropy_catalyst_bank_components": "Entropy Catalyst Bank Components",
+  "block.ufo.entropy_singularity_array_controller": "Entropy Singularity Array Controller",
 
 
   "item.ufo.white_dwarf_item_cell_housing": "White Dwarf Item Cell Housing",

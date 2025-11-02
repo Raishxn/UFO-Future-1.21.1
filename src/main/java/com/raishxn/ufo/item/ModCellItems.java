@@ -38,7 +38,7 @@ public final class ModCellItems {
     public static final StorageTier TIER_750M = new StorageTier(14, "750m", 750_000_000, 7.0D, CELL_COMPONENT_750M);
     public static final StorageTier TIER_INFINITY = new StorageTier(15, "infinity", Integer.MAX_VALUE, 7.5D, CELL_COMPONENT_INFINITY);
 
-    // --- CÓDIGO CORRIGIDO ---
+    
     // Item Cells: White Dwarf (Cores base cinza)
     public static final DeferredHolder<Item, ModCellItem> ITEM_CELL_40M = ITEMS.register("white_dwarf_cell_echo",
             () -> new AnimatedModCellItem(TIER_40M, 1024, AEKeyType.items(), "item.ufo.white_dwarf_item_cell", "ufo.cell_tier.echo", new ChatFormatting[]{ChatFormatting.WHITE, ChatFormatting.GRAY, ChatFormatting.DARK_GRAY}, ChatFormatting.RED, ChatFormatting.GOLD, ChatFormatting.RED));
@@ -62,7 +62,7 @@ public final class ModCellItems {
             () -> new AnimatedModCellItem(TIER_750M, 25 * 1024, AEKeyType.fluids(), "item.ufo.neutron_star_fluid_cell", "ufo.cell_tier.core", new ChatFormatting[]{ChatFormatting.WHITE, ChatFormatting.BLUE, ChatFormatting.DARK_BLUE, ChatFormatting.AQUA}, ChatFormatting.BLUE, ChatFormatting.DARK_PURPLE));
     public static final DeferredHolder<Item, AEBigIntegerCellItem> FLUID_CELL_SINGULARITY = ITEMS.register("neutron_star_reservoir_singularity",
             () -> new AnimatedAEBigIntegerCellItem(new Item.Properties().stacksTo(1), 7.5D, AEKeyType.fluids(), TIER_INFINITY, "item.ufo.neutron_star_fluid_cell", "ufo.cell_tier.singularity", new ChatFormatting[]{ChatFormatting.WHITE, ChatFormatting.BLUE, ChatFormatting.DARK_BLUE, ChatFormatting.AQUA}, ChatFormatting.GREEN, ChatFormatting.DARK_GREEN));
-    // --- FIM DA CORREÇÃO ---
+
 
     private static DeferredHolder<Item, Item> component(String idSuffix, int kibiBytes) {
         String id = "storage_cell_side_" + idSuffix;

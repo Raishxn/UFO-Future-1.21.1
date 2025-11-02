@@ -1,0 +1,9 @@
+{
+  "ldlib": {
+    "connection": "ufo:block/multiblock/entropy_computer_condensation_matrix_ctm"
+  },
+  "animation": {
+    "interpolate": true,
+    "frametime": 6
+  }
+}
