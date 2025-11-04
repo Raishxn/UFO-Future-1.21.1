@@ -21,7 +21,8 @@ public class ModDataComponents {
 
     // --- NOVOS COMPONENTES PARA AS CÉLULAS BIGINTEGER ---
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BigInteger>> CELL_BYTE_USAGE_BIG = register("cell_byte_usage_big", builder -> builder.persistent(BigIntegerCodec.INSTANCE).networkSynchronized(BigIntegerCodec.STREAM_CODEC));
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> CELL_TYPES_USAGE = register("cell_types_usage", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> CELL_TYPES_USAGE =
+            register("cell_types_usage", builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG));
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> CELL_STATE = register("cell_state", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
 
     // LINHA CORRIGIDA ABAIXO

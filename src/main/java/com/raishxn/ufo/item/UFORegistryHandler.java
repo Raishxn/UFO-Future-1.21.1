@@ -4,6 +4,7 @@ package com.raishxn.ufo.item;
 import appeng.api.client.StorageCellModels;
 import appeng.api.storage.StorageCells;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.item.custom.cell.AEBigIntegerCellHandler;
 import com.raishxn.ufo.item.custom.cell.InfinityCellInventory;
 
 public class UFORegistryHandler { // Não precisa mais herdar de RegistryHandler
@@ -17,6 +18,7 @@ public class UFORegistryHandler { // Não precisa mais herdar de RegistryHandler
 
     private void registerStorageHandler() {
         StorageCells.addCellHandler(InfinityCellInventory.HANDLER);
+        StorageCells.addCellHandler(AEBigIntegerCellHandler.INSTANCE);
         // Agora referenciamos os itens de ModItems
         StorageCellModels.registerModel(ModItems.INFINITY_WATER_CELL.get(), UfoMod.id("item/infinity_water_cell"));
         StorageCellModels.registerModel(ModItems.INFINITY_COBBLESTONE_CELL.get(), UfoMod.id("item/infinity_cobblestone_cell"));

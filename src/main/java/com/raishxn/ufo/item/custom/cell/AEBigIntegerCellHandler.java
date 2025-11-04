@@ -16,7 +16,6 @@ public class AEBigIntegerCellHandler implements ICellHandler
     @Override
     public boolean isCell(ItemStack itemStack)
     {
-        // 只允许堆叠为1的创建为元件，以防止极端情况下可能存在的刷物品bug
         return itemStack.getItem() instanceof IAEBigIntegerCell && itemStack.getCount() == 1;
     }
 

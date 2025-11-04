@@ -39,12 +39,12 @@ public interface IAEBigIntegerCell extends IUpgradeableItem {
         stack.set(ModDataComponents.CELL_BYTE_USAGE_BIG.get(), usedBytes);
     }
 
-    static int getUsedTypes(ItemStack stack) {
-        Integer v = stack.get(ModDataComponents.CELL_TYPES_USAGE.get());
-        return v == null ? 0 : v;
+    static long getUsedTypes(ItemStack stack) {
+        Long v = stack.get(ModDataComponents.CELL_TYPES_USAGE.get());
+        return v == null ? 0L : v;
     }
 
-    static void setUsedTypes(ItemStack stack, int usedTypes) {
+    static void setUsedTypes(ItemStack stack, long usedTypes) {
         stack.set(ModDataComponents.CELL_TYPES_USAGE.get(), usedTypes);
     }
 

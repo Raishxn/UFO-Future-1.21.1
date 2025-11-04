@@ -36,33 +36,13 @@ import java.util.List;
 public class AEBigIntegerCellInventory implements StorageCell
 {
 
-    /** 对应的 SavedData（用于 setDirty 通知存盘） */
     private final @NotNull AEBigIntegerCellData cellData;
-
-    /** 原始存储引用（AEKey -> amount(BigInteger)） */
     private final @NotNull Object2ObjectMap<AEKey, BigInteger> storage;
-
-    /** 对应的物品堆（用于更新客户端 NBT 用于 tooltip/states） */
     private final @NotNull ItemStack itemStack;
-
-    /** 元件类型（提供总字节/总类型/待机功耗等固定信息） */
     private final @NotNull IAEBigIntegerCell cellType;
-
-    /** AE容器的保存回调：用于统一的 persist 时机 */
     private final @Nullable ISaveProvider saveContainer;
-
-    // 运行时缓存 ----------------------------------------------------------------------
-
-    /** 当前“已用字节”（BigInteger），按 Σ桶内 ceil(Σamount/amountPerByte) 计算 */
     private BigInteger usedBytesCached;
-
-    /** 是否通知持久化 */
     private boolean isPersisted = false;
-
-    /**
-     * apb 桶累计：key=amountPerByte（>0），value=该桶内所有 Key 的数量总和（BigInteger）。
-     * 用于 O(1) 计算“额外再塞多少单位会增加几个字节”
-     */
     private final Long2ObjectOpenHashMap<BigInteger> bucketSums = new Long2ObjectOpenHashMap<>();
 
     public AEBigIntegerCellInventory(@NotNull AEBigIntegerCellData cellData,
@@ -77,8 +57,6 @@ public class AEBigIntegerCellInventory implements StorageCell
         this.saveContainer = saveProvider;
 
         this.bucketSums.defaultReturnValue(BigInteger.ZERO);
-
-        // 首次全量统计：填充 bucketSums、usedBytesCached
         for (Object2ObjectMap.Entry<AEKey, BigInteger> e : storage.object2ObjectEntrySet())
         {
             BigInteger v = nonNegative(e.getValue());
@@ -95,36 +73,24 @@ public class AEBigIntegerCellInventory implements StorageCell
             bytesForValues = bytesForValues.add(ceilDiv(sum, apb));
         }
         this.usedBytesCached = bytesForValues;
-
-        // 初始化后把统计状态写进ItemStack给客户端显示用
         updateItemTooltipState();
     }
-
-    // StorageCell 接口 ----------------------------------------------------------------
-
-    /** 获取状态灯 */
     @Override
     public CellState getStatus()
     {
         if (storage.isEmpty()) return CellState.EMPTY;
         else return CellState.NOT_EMPTY;
     }
-
-    /** 待机功耗 */
     @Override
     public double getIdleDrain()
     {
         return cellType.getIdleDrain();
     }
-
-    /** 允许被放入其他存储元件内 */
     @Override
     public boolean canFitInsideCell()
     {
         return true;
     }
-
-    /** 由驱动器等物品的统一监听，以减少频繁 tooltip 更新的额外开销 */
     @Override
     public void persist()
     {
@@ -133,14 +99,10 @@ public class AEBigIntegerCellInventory implements StorageCell
         updateItemTooltipState();
         isPersisted = true;
     }
-
-    /** 存入实现（BigInteger） */
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source)
     {
         if (amount <= 0) return 0;
-
-        // 分区/模糊/黑白名单 与 递归盘保护
         if (!matchesPartitionAndUpgrades(what)) return 0;
         if (!canNestStorageCells(what)) return 0;
 
@@ -149,27 +111,16 @@ public class AEBigIntegerCellInventory implements StorageCell
 
         if (mode == Actionable.MODULATE)
         {
-            // ---- 增量更新缓存：桶累计、已用字节 ----
             final BigInteger oldBucket = bucketSums.get(apb);
             final BigInteger newBucket = oldBucket.add(BigInteger.valueOf(amount));
-
-            // 值字节的增量 = ceil(new/apb) - ceil(old/apb)
             final BigInteger deltaValueBytes = ceilDiv(newBucket, apb).subtract(ceilDiv(oldBucket, apb));
-
-            // 应用“值字节”增量
             usedBytesCached = usedBytesCached.add(deltaValueBytes);
-
-            // 写回桶累计与具体 Key 的存量
             bucketSums.put(apb, newBucket);
             storage.put(what, current.add(BigInteger.valueOf(amount)));
-
-            // 客户端状态 + 标脏
             markChanged();
         }
         return amount;
     }
-
-    /** 取出实现（BigInteger） */
     @Override
     public long extract(AEKey what, long amount, Actionable mode, IActionSource source)
     {
@@ -188,8 +139,6 @@ public class AEBigIntegerCellInventory implements StorageCell
             final BigInteger oldBucket = bucketSums.get(apb);
             BigInteger newBucket = oldBucket.subtract(BigInteger.valueOf(taken));
             if (newBucket.signum() < 0) newBucket = BigInteger.ZERO;
-
-            // 值字节的增量 = ceil(new/apb) - ceil(old/apb)
             final BigInteger deltaValueBytes = ceilDiv(newBucket, apb).subtract(ceilDiv(oldBucket, apb));
             usedBytesCached = usedBytesCached.add(deltaValueBytes);
 
@@ -202,12 +151,8 @@ public class AEBigIntegerCellInventory implements StorageCell
             {
                 storage.remove(what);
             }
-
-            // 更新桶
             if (newBucket.signum() > 0) bucketSums.put(apb, newBucket);
             else bucketSums.remove(apb);
-
-            // 客户端状态 + 标脏
             markChanged();
         }
         return taken;
@@ -220,11 +165,7 @@ public class AEBigIntegerCellInventory implements StorageCell
         {
             BigInteger value = nonNegative(entry.getValue());
             if (value.signum() <= 0) continue;
-
-            // 该 key 在 out 中已存在的数量
             long existing = out.get(entry.getKey());
-
-            // 还能再加多少：避免 (Long.MAX_VALUE - existing) 的长整型上溢
             long headroom = (existing <= 0) ? Long.MAX_VALUE : (Long.MAX_VALUE - existing);
             if (headroom <= 0) continue;
 
@@ -241,10 +182,6 @@ public class AEBigIntegerCellInventory implements StorageCell
     {
         return this.itemStack.getHoverName();
     }
-
-    // 内部辅助工具 --------------------------------------------------------------------
-
-    /** 递归盘保护：若 what 是“另一个存储盘”且该盘声明不能嵌入，则拒收。 */
     private boolean canNestStorageCells(AEKey what)
     {
         if (what instanceof AEItemKey itemKey)
@@ -255,8 +192,6 @@ public class AEBigIntegerCellInventory implements StorageCell
         }
         return true;
     }
-
-    /** 分区/模糊/白黑名单匹配 */
     private boolean matchesPartitionAndUpgrades(AEKey what)
     {
         // 升级槽
@@ -274,7 +209,7 @@ public class AEBigIntegerCellInventory implements StorageCell
         }
         if (config == null || config.keySet().isEmpty())
         {
-            return true; // 未配置视为不过滤
+            return true;
         }
 
         IncludeExclude mode = hasInverter ? IncludeExclude.BLACKLIST : IncludeExclude.WHITELIST;
@@ -282,13 +217,8 @@ public class AEBigIntegerCellInventory implements StorageCell
 
         return hasInverter;
     }
-
-    /**
-     * 更新物品 NBT（字节/类型 & 状态 + 预览堆栈前五条）以供客户端后续使用，并立即 setDirty。
-     */
     private void markChanged()
     {
-        // 始终在此标脏，以防某些容器实现/ae潜在的不正确persist调用导致未保存
         cellData.setDirty();
 
         isPersisted = false;
@@ -297,8 +227,6 @@ public class AEBigIntegerCellInventory implements StorageCell
         else
             persist();
     }
-
-    /** 把“已用字节/类型 & 状态 + 预览堆栈前五条”写到物品 NBT（仅供客户端 tooltip 用） */
     private void updateItemTooltipState()
     {
         BigInteger used = usedBytesCached.signum() > 0 ? usedBytesCached : BigInteger.ZERO;
@@ -306,8 +234,6 @@ public class AEBigIntegerCellInventory implements StorageCell
         IAEBigIntegerCell.setUsedBytes(itemStack, used);
         IAEBigIntegerCell.setUsedTypes(itemStack, storage.size());
         IAEBigIntegerCell.setCellState(itemStack, getStatus());
-
-        // 取迭代到的前 5 个 kv，对应数量>0 的条目，构造成 GenericStack 列表
         List<GenericStack> show = new ArrayList<>(5);
         int count = 0;
         for (Object2ObjectMap.Entry<AEKey, BigInteger> e : storage.object2ObjectEntrySet())
@@ -319,10 +245,6 @@ public class AEBigIntegerCellInventory implements StorageCell
         }
         IAEBigIntegerCell.setTooltipShowStacks(itemStack, show);
     }
-
-    // 简单算数工具（BigInteger 版本） ---------------------------------------------------
-
-    /** BigInteger 向上整除：ceil(a / bLong) */
     private static BigInteger ceilDiv(BigInteger a, long bLong)
     {
         if (bLong <= 0) throw new IllegalArgumentException("div by non-positive");
@@ -330,16 +252,12 @@ public class AEBigIntegerCellInventory implements StorageCell
         BigInteger b = BigInteger.valueOf(bLong);
         return a.add(b.subtract(BigInteger.ONE)).divide(b);
     }
-
-    /** BigInteger 向上整除：ceil(a / bBI) */
     private static BigInteger ceilDiv(BigInteger a, BigInteger b)
     {
         if (b.signum() <= 0) throw new IllegalArgumentException("div by non-positive");
         if (a.signum() <= 0) return BigInteger.ZERO;
         return a.add(b.subtract(BigInteger.ONE)).divide(b);
     }
-
-    /** 将 BigInteger 钳到 long（下界 0，上界 Long.MAX_VALUE） */
     private static long clampToLong(BigInteger v)
     {
         if (v.signum() <= 0) return 0L;
@@ -347,21 +265,15 @@ public class AEBigIntegerCellInventory implements StorageCell
         long r = v.longValue();
         return (r < 0) ? Long.MAX_VALUE : r;
     }
-
-    /** 将 null 或 负数 归一为 ZERO */
     private static BigInteger nonNegative(BigInteger v)
     {
         if (v == null || v.signum() <= 0) return BigInteger.ZERO;
         return v;
     }
-
-    /** BigInteger 最小值 */
     private static BigInteger minBI(BigInteger a, BigInteger b)
     {
         return a.compareTo(b) <= 0 ? a : b;
     }
-
-    /** BigInteger 最大值 */
     @SuppressWarnings("unused")
     private static BigInteger maxBI(BigInteger a, BigInteger b)
     {
