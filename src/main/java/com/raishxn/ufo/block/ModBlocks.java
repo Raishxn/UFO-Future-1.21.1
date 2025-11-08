@@ -2,6 +2,7 @@ package com.raishxn.ufo.block;
 
 import appeng.block.crafting.CraftingUnitBlock;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.block.custom.DimensionalMatterAssemblerBlock;
 import com.raishxn.ufo.core.MegaCoProcessorTier;
 import com.raishxn.ufo.core.MegaCraftingStorageTier;
 import com.raishxn.ufo.item.ModItems;

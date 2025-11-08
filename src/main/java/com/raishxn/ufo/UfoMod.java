@@ -12,6 +12,7 @@ import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModCreativeModeTabs;
 import com.raishxn.ufo.item.ModItems;
 import com.raishxn.ufo.item.UFORegistryHandler;
+import com.raishxn.ufo.menu.DimensionalMatterAssemblerMenu;
 import com.raishxn.ufo.network.ModPackets;
 import com.raishxn.ufo.network.packet.CycleModeKeyPacket;
 import com.raishxn.ufo.network.packet.CycleToolKeyPacket;
@@ -50,7 +51,6 @@ public class UfoMod {
         MultiblockBlocks.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus); // ADICIONE
         ModBlockEntities.register(modEventBus);
-        ModMenuTypes.register(modEventBus);
         ModRecipes.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
