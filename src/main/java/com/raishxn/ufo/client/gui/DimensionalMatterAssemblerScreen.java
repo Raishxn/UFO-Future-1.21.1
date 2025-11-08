@@ -28,7 +28,11 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
     public DimensionalMatterAssemblerScreen(DimensionalMatterAssemblerMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = 176;
-        this.imageHeight = 166;
+        this.imageHeight = 183; // <--- CORREÇÃO: Altura real da sua textura (0 a 182 = 183 pixels)
+
+        // Ajuste opcional: o rótulo do inventário geralmente fica 94 pixels acima da base.
+        // Se sua GUI é mais alta, talvez precise recalcular isso.
+        // Tente manter assim por enquanto, ou ajuste se o texto "Inventory" ficar na posição errada.
         this.inventoryLabelY = this.imageHeight - 94;
         this.titleLabelX = 7;
         this.titleLabelY = 5;

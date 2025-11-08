@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "ufo:block/dma/dimensional_matter_assembler_front_off",
+    "side": "ufo:block/dma/dimensional_matter_assembler_side_off",
+    "top": "ufo:block/dma/dimensional_matter_assembler_top_off"
+  }
+}

@@ -12,6 +12,9 @@ import com.raishxn.ufo.event.ModTooltipEventHandler;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import com.raishxn.ufo.init.ModMenus;
+import com.raishxn.ufo.client.gui.DimensionalMatterAssemblerScreen;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -25,6 +28,7 @@ public class UfoModClient {
         eventBus.addListener(this::onClientSetup);
         NeoForge.EVENT_BUS.register(ModTooltipEventHandler.class);
         eventBus.addListener(this::onRegisterKeyMappings);
+        eventBus.addListener(this::registerScreens); // <--- Adicione esta linha
     }
 
     private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
@@ -32,6 +36,13 @@ public class UfoModClient {
         event.register(ModKeyBindings.CYCLE_TOOL_BACKWARD);
         event.register(ModKeyBindings.CYCLE_MODE);
     }
+
+
+    private void registerScreens(RegisterMenuScreensEvent event) {
+        // Certifique-se de que ModMenus.DMA_MENU corresponde ao nome exato no seu ModMenus.java
+        event.register(ModMenus.DMA_MENU.get(), DimensionalMatterAssemblerScreen::new);
+    }
+
 
     private void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {

@@ -113,6 +113,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.QUANTUM_LATTICE_FRAME.get());
                         output.accept(ModBlocks.NEUTRON_STAR_FRAGMENT_BLOCK.get());
                         output.accept(ModBlocks.PULSAR_FRAGMENT_BLOCK.get());
+                        output.accept(ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER.get());
 
                         output.accept(ModItems.ENTROPY_ASSEMBLER_CORE_CASING.get());
                         output.accept(ModItems.ENTROPY_SINGULARITY_CASING.get());

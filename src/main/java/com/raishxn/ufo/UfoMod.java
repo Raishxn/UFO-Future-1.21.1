@@ -4,9 +4,11 @@ package com.raishxn.ufo;
 import com.mojang.logging.LogUtils;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import com.raishxn.ufo.client.gui.DimensionalMatterAssemblerScreen;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.init.ModBlockEntities;
+import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.init.ModRecipes;
 import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModCreativeModeTabs;
@@ -28,6 +30,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import org.slf4j.Logger;
@@ -49,9 +52,8 @@ public class UfoMod {
         ModBlockEntities.register(modEventBus);
         ModCellItems.register(modEventBus);
         MultiblockBlocks.register(modEventBus);
-        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus); // ADICIONE
-        ModBlockEntities.register(modEventBus);
         ModRecipes.register(modEventBus);
+        ModMenus.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
 
@@ -59,7 +61,6 @@ public class UfoMod {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::loadComplete);
         modEventBus.addListener(this::registerPackets);
-
         // Registra os eventos do jogo (como input de teclas)
         NeoForge.EVENT_BUS.register(this);
     }

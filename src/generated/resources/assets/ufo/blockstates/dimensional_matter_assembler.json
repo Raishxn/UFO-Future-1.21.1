@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "active=false,facing=east": {
+      "model": "ufo:block/dimensional_matter_assembler_off",
+      "y": 90
+    },
+    "active=false,facing=north": {
+      "model": "ufo:block/dimensional_matter_assembler_off"
+    },
+    "active=false,facing=south": {
+      "model": "ufo:block/dimensional_matter_assembler_off",
+      "y": 180
+    },
+    "active=false,facing=west": {
+      "model": "ufo:block/dimensional_matter_assembler_off",
+      "y": 270
+    },
+    "active=true,facing=east": {
+      "model": "ufo:block/dimensional_matter_assembler_on",
+      "y": 90
+    },
+    "active=true,facing=north": {
+      "model": "ufo:block/dimensional_matter_assembler_on"
+    },
+    "active=true,facing=south": {
+      "model": "ufo:block/dimensional_matter_assembler_on",
+      "y": 180
+    },
+    "active=true,facing=west": {
+      "model": "ufo:block/dimensional_matter_assembler_on",
+      "y": 270
+    }
+  }
+}

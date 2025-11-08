@@ -23,11 +23,12 @@ public class DimensionalMatterAssemblerMenu extends AbstractContainerMenu {
     private final Level level;
     private final ContainerData data;
 
-    // Construtor do Cliente: ContainerData deve ter tamanho 12 agora!
+    // Construtor do Cliente
     public DimensionalMatterAssemblerMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
         this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(12));
     }
 
+    // Construtor Comum (Servidor e Cliente)
     public DimensionalMatterAssemblerMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
         super(ModMenus.DMA_MENU.get(), pContainerId);
         checkContainerSize(inv, 11);
@@ -41,8 +42,11 @@ public class DimensionalMatterAssemblerMenu extends AbstractContainerMenu {
         ItemStackHandler itemInputHandler = this.blockEntity.itemInputHandler;
         ItemStackHandler itemOutputHandler = this.blockEntity.itemOutputHandler;
 
-        int inputStartX = 43;
-        int inputStartY = 20;
+        // --- AJUSTE FINO DE POSIÇÃO DOS INPUTS ---
+        // X: 46 -> 45 (-1 pixel para esquerda)
+        // Y: 20 -> 22 (+2 pixels para baixo)
+        int inputStartX = 45;
+        int inputStartY = 22;
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
                 this.addSlot(new SlotItemHandler(itemInputHandler, col + row * 3,
@@ -61,7 +65,6 @@ public class DimensionalMatterAssemblerMenu extends AbstractContainerMenu {
     public int getEnergy() { return this.data.get(2); }
     public int getMaxEnergy() { return this.data.get(3); }
 
-    // === Novos Getters de Fluido para o Cliente ===
     public FluidStack getCoolantStack() { return getFluidStackInternal(4, 5); }
     public FluidStack getInputFluidStack() { return getFluidStackInternal(6, 7); }
     public FluidStack getOutputFluid1Stack() { return getFluidStackInternal(8, 9); }
@@ -107,16 +110,20 @@ public class DimensionalMatterAssemblerMenu extends AbstractContainerMenu {
     }
 
     private void addPlayerInventory(Inventory playerInventory) {
+        // --- AJUSTE VERTICAL DO INVENTÁRIO ---
+        // Y base alterado de 101 para 99 (-2 pixels para cima)
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 99 + i * 18));
             }
         }
     }
 
     private void addPlayerHotbar(Inventory playerInventory) {
+        // --- AJUSTE VERTICAL DA HOTBAR ---
+        // Y base alterado de 159 para 157 (-2 pixels para cima)
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
+            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 157));
         }
     }
 }

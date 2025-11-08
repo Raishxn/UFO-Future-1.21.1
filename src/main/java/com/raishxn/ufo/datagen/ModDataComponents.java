@@ -4,6 +4,7 @@ import appeng.api.stacks.GenericStack;
 import com.mojang.serialization.Codec;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.item.custom.cell.BigIntegerCodec;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs; // Importe este
@@ -13,6 +14,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.UnaryOperator;
 
 public class ModDataComponents {
@@ -58,7 +60,7 @@ public class ModDataComponents {
     private static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name, UnaryOperator<DataComponentType.Builder<T>> operator) {
         return DATA_COMPONENTS.register(name, () -> operator.apply(DataComponentType.builder()).build());
     }
-
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<UUID>> CELL_UUID = register("cell_uuid", builder -> builder.persistent(UUIDUtil.CODEC).networkSynchronized(UUIDUtil.STREAM_CODEC));
     public static void register(IEventBus eventBus) {
         DATA_COMPONENTS.register(eventBus);
     }

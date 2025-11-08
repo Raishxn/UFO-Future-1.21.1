@@ -4,6 +4,7 @@ import appeng.block.crafting.AbstractCraftingUnitBlock;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.MultiblockBlocks; // Importa a nova classe
+import com.raishxn.ufo.block.custom.DimensionalMatterAssemblerBlock;
 import com.raishxn.ufo.core.MegaCoProcessorTier;
 import com.raishxn.ufo.core.MegaCraftingStorageTier;
 import net.minecraft.core.Direction;
@@ -30,6 +31,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlockWithItem(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK);
         simpleBlockWithItem(ModBlocks.PULSAR_FRAGMENT_BLOCK);
         simpleBlockWithItem(ModBlocks.NEUTRON_STAR_FRAGMENT_BLOCK);
+        registerAssemblerBlock(ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER);
 
         // --- Registro dos Novos Blocos Multiblock ---
         // Blocos que são um cubo simples
@@ -164,5 +166,33 @@ public class ModBlockStateProvider extends BlockStateProvider {
         });
 
         simpleBlockItem(block.get(), inactiveModel.end());
+    }
+
+    private void registerAssemblerBlock(DeferredBlock<Block> block) {
+        String path = block.getId().getPath();
+
+        // Definição das texturas para o estado DESLIGADO (OFF)
+        ResourceLocation sideOff = modLoc("block/dma/" + path + "_side_off");
+        ResourceLocation frontOff = modLoc("block/dma/" + path + "_front_off");
+        ResourceLocation topOff = modLoc("block/dma/" + path + "_top_off");
+
+        // Definição das texturas para o estado LIGADO (ON/ACTIVE)
+        ResourceLocation sideOn = modLoc("block/dma/" + path + "_side");
+        ResourceLocation frontOn = modLoc("block/dma/" + path + "_front");
+        ResourceLocation topOn = modLoc("block/dma/" + path + "_top");
+
+        // Criação dos modelos usando o template 'orientable' (que suporta frente, lados e topo)
+        ModelFile modelOff = models().orientable(path + "_off", sideOff, frontOff, topOff);
+        ModelFile modelOn = models().orientable(path + "_on", sideOn, frontOn, topOn);
+
+        // Gera o BlockState.json:
+        // O método horizontalBlock cuida da rotação automaticamente.
+        // A função lambda (state -> ...) escolhe qual modelo usar baseada na propriedade ACTIVE.
+        horizontalBlock(block.get(), state ->
+                state.getValue(DimensionalMatterAssemblerBlock.ACTIVE) ? modelOn : modelOff
+        );
+
+        // Registra o item do bloco (usando o modelo desligado para o inventário)
+        simpleBlockItem(block.get(), modelOff);
     }
 }
