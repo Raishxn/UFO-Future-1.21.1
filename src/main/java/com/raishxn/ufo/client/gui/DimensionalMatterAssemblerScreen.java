@@ -5,7 +5,10 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.client.render.FluidTankRenderer;
 import com.raishxn.ufo.menu.DimensionalMatterAssemblerMenu;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -19,6 +22,9 @@ import java.util.List;
 public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<DimensionalMatterAssemblerMenu> {
     private static final ResourceLocation TEXTURE =
             ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "textures/gui/dimensional_matter_assembler.png");
+    // Textura para os botões laterais (abas)
+    private static final ResourceLocation CONFIG_TEXTURE =
+            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "textures/gui/dma_faceconfig_gui.png");
 
     private FluidTankRenderer coolantRenderer;
     private FluidTankRenderer inputFluidRenderer;
@@ -28,11 +34,7 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
     public DimensionalMatterAssemblerScreen(DimensionalMatterAssemblerMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = 176;
-        this.imageHeight = 183; // <--- CORREÇÃO: Altura real da sua textura (0 a 182 = 183 pixels)
-
-        // Ajuste opcional: o rótulo do inventário geralmente fica 94 pixels acima da base.
-        // Se sua GUI é mais alta, talvez precise recalcular isso.
-        // Tente manter assim por enquanto, ou ajuste se o texto "Inventory" ficar na posição errada.
+        this.imageHeight = 183;
         this.inventoryLabelY = this.imageHeight - 94;
         this.titleLabelX = 7;
         this.titleLabelY = 5;
@@ -45,6 +47,17 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         inputFluidRenderer = new FluidTankRenderer(16000, 15, 57);
         outputFluidRenderer1 = new FluidTankRenderer(16000, 18, 20);
         outputFluidRenderer2 = new FluidTankRenderer(16000, 18, 20);
+
+        // === Botão para abrir a Configuração de Faces ===
+        // Posicionado à esquerda da GUI principal (leftPos - 17)
+        this.addRenderableWidget(new SideTabButton(this.leftPos - 17, this.topPos + 5, 16, 19,
+                Component.literal("Side Config"),
+                b -> Minecraft.getInstance().setScreen(new DimensionalMatterAssemblerConfigScreen(this.menu.blockEntity, this)),
+                1, 1)); // Coordenadas U,V na textura dma_faceconfig_gui.png
+
+        // === Botão de Upgrades (Exemplo futuro) ===
+        // Posicionado à direita (leftPos + imageWidth)
+        // this.addRenderableWidget(new SideTabButton(this.leftPos + this.imageWidth, this.topPos + 5, 16, 19, ...));
     }
 
     @Override
@@ -55,42 +68,26 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        // 1. Fundo Principal
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
-        // 2. Renderiza os fluidos (atrás de elementos da GUI se houver transparência)
         coolantRenderer.render(guiGraphics, x + 4, y + 19, menu.getCoolantStack());
         inputFluidRenderer.render(guiGraphics, x + 23, y + 19, menu.getInputFluidStack());
         outputFluidRenderer1.render(guiGraphics, x + 114, y + 74, menu.getOutputFluid1Stack());
         outputFluidRenderer2.render(guiGraphics, x + 143, y + 74, menu.getOutputFluid2Stack());
 
-        // Opcional: Se seus tanques na textura principal forem transparentes,
-        // descomente a linha abaixo para desenhar o vidro por cima dos fluidos:
-        // guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
-
-        // 3. Barra de Energia (enche de baixo para cima)
         int energy = menu.getEnergy();
         int maxEnergy = menu.getMaxEnergy();
         int energyBarH = 17;
         int scaledEnergyHeight = (maxEnergy > 0 && energy > 0) ? (int)((long)energy * energyBarH / maxEnergy) : 0;
         if (scaledEnergyHeight > 0) {
-            guiGraphics.blit(TEXTURE,
-                    x + 152, y + 34 + (energyBarH - scaledEnergyHeight),
-                    176, 0 + (energyBarH - scaledEnergyHeight),
-                    5, scaledEnergyHeight);
+            guiGraphics.blit(TEXTURE, x + 152, y + 34 + (energyBarH - scaledEnergyHeight), 176, 0 + (energyBarH - scaledEnergyHeight), 5, scaledEnergyHeight);
         }
 
-        // 4. Barra de Progresso (enche da esquerda para a direita)
         int progress = menu.getProgressPercent();
-        int progressBarW = 20;
         int progressBarH = 11;
-        int scaledProgressWidth = (progress * progressBarW) / 100;
+        int scaledProgressWidth = (progress * 20) / 100;
         if (scaledProgressWidth > 0) {
-            // CORREÇÃO APLICADA AQUI: UV começa em 176, 19
-            guiGraphics.blit(TEXTURE,
-                    x + 102, y + 42,   // Posição na tela
-                    176, 19,           // Posição na textura (UV da barra cheia)
-                    scaledProgressWidth, progressBarH);
+            guiGraphics.blit(TEXTURE, x + 102, y + 42, 176, 19, scaledProgressWidth, progressBarH);
         }
     }
 
@@ -100,7 +97,6 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         renderTooltip(guiGraphics, mouseX, mouseY);
 
-        // Tooltips Manuais
         if (isHovering(152, 34, 5, 17, mouseX, mouseY)) {
             guiGraphics.renderTooltip(font, Component.literal(menu.getEnergy() + " / " + menu.getMaxEnergy() + " FE").withStyle(ChatFormatting.AQUA), mouseX, mouseY);
         }
@@ -123,5 +119,31 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
             tooltip.add(Component.literal(defaultName + " (Empty)").withStyle(ChatFormatting.GRAY));
         }
         guiGraphics.renderComponentTooltip(font, tooltip, mouseX, mouseY);
+    }
+
+    // === Classe interna para botões laterais (Abas) ===
+    private static class SideTabButton extends Button {
+        private final int textureU, textureV;
+
+        public SideTabButton(int x, int y, int width, int height, Component message, OnPress onPress, int u, int v) {
+            super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
+            this.textureU = u;
+            this.textureV = v;
+            this.setTooltip(Tooltip.create(message));
+        }
+
+        @Override
+        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, CONFIG_TEXTURE);
+            // Renderiza a parte da textura especificada
+            guiGraphics.blit(CONFIG_TEXTURE, getX(), getY(), textureU, textureV, width, height);
+
+            // Se estiver com o mouse por cima, pode desenhar um highlight opcional
+            if (isHovered) {
+                guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0x55FFFFFF);
+            }
+        }
     }
 }

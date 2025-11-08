@@ -5,6 +5,8 @@ import com.raishxn.ufo.item.custom.IHasCycleableModes;
 import com.raishxn.ufo.item.custom.IEnergyTool;
 import com.raishxn.ufo.network.packet.CycleModeKeyPacket;
 import com.raishxn.ufo.network.packet.CycleToolKeyPacket;
+import com.raishxn.ufo.network.packet.PacketChangeSideConfig;
+import com.raishxn.ufo.network.packet.PacketToggleAutoEject;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +25,17 @@ public class ModPackets {
                 ModPackets::handleCycleToolKey);
         registrar.playToServer(CycleModeKeyPacket.TYPE, CycleModeKeyPacket.STREAM_CODEC,
                 ModPackets::handleCycleModeKey);
+
+        registrar.playToServer(
+                PacketToggleAutoEject.TYPE,
+                PacketToggleAutoEject.STREAM_CODEC,
+                PacketToggleAutoEject::handle
+        );
+        registrar.playToServer(
+                PacketChangeSideConfig.TYPE,
+                PacketChangeSideConfig.STREAM_CODEC,
+                PacketChangeSideConfig::handle
+        );
     }
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {
