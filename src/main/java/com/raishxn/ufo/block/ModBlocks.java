@@ -12,6 +12,7 @@ import com.raishxn.ufo.item.custom.MegaCraftingStorageBlockItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -43,6 +44,13 @@ public class ModBlocks {
     public static final DeferredBlock<Block> NEUTRON_STAR_FRAGMENT_BLOCK = NeutronStarBlockWithAnimatedItem("neutron_star_fragment_block",
             () -> new Block(BlockBehaviour.Properties.of().strength(6.0f).requiresCorrectToolForDrops()));
 
+    public static final DeferredBlock<Block> DIMENSIONAL_MATTER_ASSEMBLER = registerBlockWithAnimatedItem("dimensional_matter_assembler",
+            () -> new DimensionalMatterAssemblerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERITE_BLOCK)
+                    .strength(50.0f, 1200.0f) // Propriedades do seu PDF
+                    .requiresCorrectToolForDrops()
+                    .lightLevel((state) -> state.getValue(DimensionalMatterAssemblerBlock.ACTIVE) ? 10 : 0) // Emite luz quando ativo
+            ));
+
     static {
         for (var tier : MegaCraftingStorageTier.values()) {
             registerMegaCraftingBlock(tier);
@@ -56,6 +64,8 @@ public class ModBlocks {
     /**
      * Registra um bloco e seu respectivo item de bloco com um nome animado.
      */
+
+
     private static <T extends Block> DeferredBlock<T> registerBlockWithAnimatedItem(String name, java.util.function.Supplier<T> blockSupplier) {
         // Registra o bloco em si
         DeferredBlock<T> block = BLOCKS.register(name, blockSupplier);
@@ -110,6 +120,7 @@ public class ModBlocks {
     private static <T extends Block> void registerBlockItem(String name, DeferredBlock<T> block, MegaCraftingStorageTier tier) {
         ModItems.ITEMS.register(name, () -> new MegaCraftingStorageBlockItem(block.get(), new Item.Properties(), tier));
     }
+
 
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);

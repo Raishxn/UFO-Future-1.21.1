@@ -37,7 +37,7 @@ public class InfinityCellInventory implements StorageCell {
 
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-        return what.equals(this.record) ? amount : 0;
+        return what.equals(this.record) ? 0 : amount;
     }
 
     @Override

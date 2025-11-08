@@ -96,6 +96,7 @@ dependencies {
     implementation "curse.maven:glodium-957920:5821676"
     compileOnly "curse.maven:ex-pattern-provider-892005:7129221"
     compileOnly "curse.maven:mega-cells-622112:6853076"
+    implementation "curse.maven:ae2addonlib-1366135:7135239"
 
     //local test
     localRuntime "curse.maven:mega-cells-622112:6853076"

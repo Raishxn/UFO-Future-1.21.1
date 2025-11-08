@@ -4,11 +4,10 @@ package com.raishxn.ufo;
 import com.mojang.logging.LogUtils;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.MultiblockBlocks;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.init.ModBlockEntities;
+import com.raishxn.ufo.init.ModRecipes;
 import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModCreativeModeTabs;
 import com.raishxn.ufo.item.ModItems;
@@ -49,7 +48,10 @@ public class UfoMod {
         ModBlockEntities.register(modEventBus);
         ModCellItems.register(modEventBus);
         MultiblockBlocks.register(modEventBus);
-
+        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus); // ADICIONE
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
+        ModRecipes.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
 

@@ -110,14 +110,10 @@ public class AEBigIntegerCellItem extends Item implements IAEBigIntegerCell, ICe
     }
 
     @Override
-    public StorageTier getTier() {
-        return null;
-    }
+    public StorageTier getTier() { return this.tier; }
 
     @Override
-    public AEKeyType getKeyType() {
-        return null;
-    }
+    public AEKeyType getKeyType() { return this.keyType; }
 
     @Override
     public IUpgradeInventory getUpgrades(ItemStack is)

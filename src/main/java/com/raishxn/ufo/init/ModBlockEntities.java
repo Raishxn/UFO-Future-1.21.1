@@ -45,6 +45,10 @@ public class ModBlockEntities {
 
                 return type;
             });
+    public static final Supplier<BlockEntityType<DimensionalMatterAssemblerBlockEntity>> DIMENSIONAL_MATTER_ASSEMBLER_BE =
+            BLOCK_ENTITIES.register("dimensional_matter_assembler_be", () ->
+                    BlockEntityType.Builder.of(DimensionalMatterAssemblerBlockEntity::new,
+                            ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER.get()).build(null));
 
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
