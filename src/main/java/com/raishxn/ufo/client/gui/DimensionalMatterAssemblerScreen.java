@@ -5,7 +5,6 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.client.gui.widget.DMAConfigWidget;
 import com.raishxn.ufo.client.render.FluidTankRenderer;
 import com.raishxn.ufo.menu.DimensionalMatterAssemblerMenu;
-import com.raishxn.ufo.util.ConfigType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -27,9 +26,8 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
     private FluidTankRenderer outputFluidRenderer1;
     private FluidTankRenderer outputFluidRenderer2;
 
-    // Campos para o Widget de Configuração
+    // O widget de configuração
     private DMAConfigWidget configWidget;
-    private ConfigType activeConfigType = ConfigType.ITEM; // Padrão: ITEM
 
     public DimensionalMatterAssemblerScreen(DimensionalMatterAssemblerMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -46,23 +44,14 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         this.leftPos = (this.width - this.imageWidth) / 2;
         this.topPos = (this.height - this.imageHeight) / 2;
 
-        coolantRenderer = new FluidTankRenderer(16000, 13, 57);
-        inputFluidRenderer = new FluidTankRenderer(16000, 15, 57);
-        outputFluidRenderer1 = new FluidTankRenderer(16000, 18, 20);
-        outputFluidRenderer2 = new FluidTankRenderer(16000, 18, 20);
+        // ATUALIZADO: Novas dimensões (largura, altura) corrigidas
+        coolantRenderer = new FluidTankRenderer(16000, 10, 52);
+        inputFluidRenderer = new FluidTankRenderer(16000, 10, 52);
+        outputFluidRenderer1 = new FluidTankRenderer(16000, 13, 15);
+        outputFluidRenderer2 = new FluidTankRenderer(16000, 12, 15);
 
-        // Inicializa e adiciona APENAS o widget de configuração
         this.configWidget = new DMAConfigWidget(this.leftPos - 22, this.topPos + 5, this.menu.blockEntity);
-        this.configWidget.setActiveType(this.activeConfigType);
         this.addRenderableWidget(this.configWidget);
-    }
-
-    // Método mantido caso precise alterar o tipo via código futuramente
-    private void updateActiveType(ConfigType type) {
-        this.activeConfigType = type;
-        if (this.configWidget != null) {
-            this.configWidget.setActiveType(type);
-        }
     }
 
     @Override
@@ -73,10 +62,14 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
-        coolantRenderer.render(guiGraphics, x + 4, y + 19, menu.getCoolantStack());
-        inputFluidRenderer.render(guiGraphics, x + 23, y + 19, menu.getInputFluidStack());
-        outputFluidRenderer1.render(guiGraphics, x + 114, y + 74, menu.getOutputFluid1Stack());
-        outputFluidRenderer2.render(guiGraphics, x + 143, y + 74, menu.getOutputFluid2Stack());
+
+        // Posições de início (X, Y) mantiveram-se as mesmas da sua última mensagem,
+        // mas garantindo que estão certas aqui:
+        coolantRenderer.render(guiGraphics, x + 7, y + 22, menu.getCoolantStack());
+        inputFluidRenderer.render(guiGraphics, x + 26, y + 22, menu.getInputFluidStack());
+        outputFluidRenderer1.render(guiGraphics, x + 117, y + 77, menu.getOutputFluid1Stack());
+        outputFluidRenderer2.render(guiGraphics, x + 146, y + 77, menu.getOutputFluid2Stack());
+
         int energy = menu.getEnergy();
         int maxEnergy = menu.getMaxEnergy();
         int energyBarH = 17;
@@ -84,6 +77,7 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         if (scaledEnergyHeight > 0) {
             guiGraphics.blit(TEXTURE, x + 152, y + 34 + (energyBarH - scaledEnergyHeight), 176, 0 + (energyBarH - scaledEnergyHeight), 5, scaledEnergyHeight);
         }
+
         int progress = menu.getProgressPercent();
         int progressBarH = 11;
         int scaledProgressWidth = (progress * 20) / 100;
@@ -97,16 +91,19 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         renderTooltip(guiGraphics, mouseX, mouseY);
+
         if (isHovering(152, 34, 5, 17, mouseX, mouseY)) {
             guiGraphics.renderTooltip(font, Component.literal(menu.getEnergy() + " / " + menu.getMaxEnergy() + " FE").withStyle(ChatFormatting.AQUA), mouseX, mouseY);
         }
         if (isHovering(102, 42, 20, 11, mouseX, mouseY)) {
             guiGraphics.renderTooltip(font, Component.literal(menu.getProgressPercent() + "%"), mouseX, mouseY);
         }
-        if (isHovering(4, 19, 13, 57, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getCoolantStack(), 16000, "Coolant");
-        if (isHovering(23, 19, 15, 57, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getInputFluidStack(), 16000, "Input Fluid");
-        if (isHovering(114, 74, 18, 20, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getOutputFluid1Stack(), 16000, "Output Fluid 1");
-        if (isHovering(143, 74, 18, 20, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getOutputFluid2Stack(), 16000, "Output Fluid 2");
+
+        // ATUALIZADO: Tooltips com as novas dimensões corrigidas
+        if (isHovering(7, 22, 10, 52, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getCoolantStack(), 16000, "Coolant");
+        if (isHovering(26, 22, 10, 52, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getInputFluidStack(), 16000, "Input Fluid");
+        if (isHovering(117, 77, 13, 15, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getOutputFluid1Stack(), 16000, "Output Fluid 1");
+        if (isHovering(146, 77, 12, 15, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getOutputFluid2Stack(), 16000, "Output Fluid 2");
     }
 
     private void renderFluidTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY, FluidStack fluid, int capacity, String defaultName) {

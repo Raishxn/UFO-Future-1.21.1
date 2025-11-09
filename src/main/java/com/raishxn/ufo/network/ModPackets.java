@@ -3,10 +3,7 @@ package com.raishxn.ufo.network;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.item.custom.IHasCycleableModes;
 import com.raishxn.ufo.item.custom.IEnergyTool;
-import com.raishxn.ufo.network.packet.CycleModeKeyPacket;
-import com.raishxn.ufo.network.packet.CycleToolKeyPacket;
-import com.raishxn.ufo.network.packet.PacketChangeSideConfig;
-import com.raishxn.ufo.network.packet.PacketToggleAutoEject;
+import com.raishxn.ufo.network.packet.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +27,11 @@ public class ModPackets {
                 PacketToggleAutoEject.TYPE,
                 PacketToggleAutoEject.STREAM_CODEC,
                 PacketToggleAutoEject::handle
+        );
+        registrar.playToServer(
+                PacketToggleAutoInput.TYPE,
+                PacketToggleAutoInput.STREAM_CODEC,
+                PacketToggleAutoInput::handle
         );
         registrar.playToServer(
                 PacketChangeSideConfig.TYPE,
