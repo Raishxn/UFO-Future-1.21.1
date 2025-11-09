@@ -54,12 +54,9 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
     public final FluidTank fluidOutputTank2 = new FluidTank(16000) { @Override protected void onContentsChanged() { setChanged(); } };
     public final EnergyStorage energyStorage = new EnergyStorage(1000000, 50000, 0) { @Override public int receiveEnergy(int maxReceive, boolean simulate) { setChanged(); return super.receiveEnergy(maxReceive, simulate); } };
 
-    // === Configuração Avançada ===
-    // [Tipo de Config][Direção]
     private final IOMode[][] sideConfigs = new IOMode[ConfigType.values().length][6];
-    // [Tipo de Config]
     private final boolean[] autoEject = new boolean[ConfigType.values().length];
-
+    private final boolean[] autoInput = new boolean[ConfigType.values().length];
     protected final ContainerData data = new ContainerData() {
         @Override
         public int get(int pIndex) {
@@ -76,7 +73,6 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
                 case 9 -> fluidOutputTank1.getFluidAmount();
                 case 10 -> BuiltInRegistries.FLUID.getId(fluidOutputTank2.getFluid().getFluid());
                 case 11 -> fluidOutputTank2.getFluidAmount();
-                // Empacota os 4 booleanos em um inteiro para sincronizar (Bitmask)
                 case 12 -> (autoEject[0] ? 1 : 0) | (autoEject[1] ? 2 : 0) | (autoEject[2] ? 4 : 0) | (autoEject[3] ? 8 : 0);
                 default -> 0;
             };
@@ -96,18 +92,14 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         }
         @Override public int getCount() { return 13; }
     };
-
     private int progress = 0;
     private int maxProgress = 0;
-
     public DimensionalMatterAssemblerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.DMA_BE.get(), pos, state);
-        // Inicializa configurações padrão
         for (ConfigType type : ConfigType.values()) {
             Arrays.fill(sideConfigs[type.ordinal()], IOMode.NONE);
             autoEject[type.ordinal()] = false;
         }
-        // Padrões iniciais (retrocompatibilidade)
         sideConfigs[ConfigType.ITEM.ordinal()][Direction.DOWN.ordinal()] = IOMode.ITEM_OUT;
         sideConfigs[ConfigType.FLUID.ordinal()][Direction.UP.ordinal()] = IOMode.FLUID_IN;
         sideConfigs[ConfigType.COOLANT.ordinal()][Direction.NORTH.ordinal()] = IOMode.COOLANT_IN;
@@ -115,22 +107,15 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         sideConfigs[ConfigType.ENERGY.ordinal()][Direction.EAST.ordinal()] = IOMode.ENERGY;
         sideConfigs[ConfigType.ENERGY.ordinal()][Direction.WEST.ordinal()] = IOMode.ENERGY;
     }
-
     @Override public @NotNull Component getDisplayName() { return Component.translatable("block.ufo.dimensional_matter_assembler"); }
 
     @Nullable @Override public AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
         return new DimensionalMatterAssemblerMenu(pContainerId, pPlayerInventory, this, this.data);
     }
-
     public static void tick(Level level, BlockPos pos, BlockState state, DimensionalMatterAssemblerBlockEntity be) {
         if (level.isClientSide) return;
-
-        // Tenta auto-ejetar para todos os tipos que estiverem ativos
         if (be.autoEject[ConfigType.ITEM.ordinal()]) be.tryEjectItems(level, pos);
         if (be.autoEject[ConfigType.FLUID.ordinal()]) be.tryEjectFluids(level, pos, ConfigType.FLUID);
-        // Coolant geralmente não tem output, mas se tiver no futuro, adicione aqui.
-
-        // ... (Lógica de craft permanece a mesma) ...
         boolean isActive = false;
         Optional<DimensionalMatterAssemblerRecipe> recipeOptional = be.getRecipe();
         if (recipeOptional.isPresent()) {
@@ -160,8 +145,6 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         }
         be.setChanged();
     }
-
-    // === Métodos Auxiliares de Ejeção ===
     private void tryEjectItems(Level level, BlockPos pos) {
         for (Direction dir : Direction.values()) {
             if (getSideConfig(ConfigType.ITEM, dir) == IOMode.ITEM_OUT) {
@@ -178,7 +161,6 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
             }
         }
     }
-
     private void tryEjectFluids(Level level, BlockPos pos, ConfigType type) {
         for (Direction dir : Direction.values()) {
             IOMode mode = getSideConfig(type, dir);
@@ -197,8 +179,6 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
             }
         }
     }
-
-    // ... (Métodos getRecipe, matchesRecipe, canProcess, craft permanecem IGUAIS) ...
     private Optional<DimensionalMatterAssemblerRecipe> getRecipe() {
         if (level == null) return Optional.empty();
         return level.getRecipeManager().getAllRecipesFor(ModRecipes.DMA_TYPE.get()).stream()
@@ -206,7 +186,6 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
                 .filter(this::matchesRecipe)
                 .findFirst();
     }
-
     private boolean matchesRecipe(DimensionalMatterAssemblerRecipe recipe) {
         if (!recipe.getFluidInput().isEmpty()) {
             if (!recipe.getFluidInput().getIngredient().test(fluidInputTank.getFluid()) ||
@@ -229,7 +208,6 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         }
         return true;
     }
-
     private boolean canProcess(DimensionalMatterAssemblerRecipe recipe) {
         List<ItemStack> itemOutputs = recipe.getItemOutputs();
         for (int i = 0; i < itemOutputs.size(); i++) {
@@ -244,7 +222,6 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         }
         return true;
     }
-
     private void craft(DimensionalMatterAssemblerRecipe recipe) {
         if (!recipe.getFluidInput().isEmpty()) {
             fluidInputTank.drain((int)recipe.getFluidInput().getAmount(), IFluidHandler.FluidAction.EXECUTE);
@@ -272,29 +249,39 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         if (fluidOutputs.size() > 0) fluidOutputTank1.fill(fluidOutputs.get(0).copy(), IFluidHandler.FluidAction.EXECUTE);
         if (fluidOutputs.size() > 1) fluidOutputTank2.fill(fluidOutputs.get(1).copy(), IFluidHandler.FluidAction.EXECUTE);
     }
-
-
-    // === Getters/Setters Configuráveis ===
     public IOMode getSideConfig(ConfigType type, Direction side) {
         return sideConfigs[type.ordinal()][side.ordinal()];
     }
-
     public void setSideConfig(ConfigType type, Direction side, IOMode mode) {
         sideConfigs[type.ordinal()][side.ordinal()] = mode;
         setChanged();
         if (level != null && !level.isClientSide) level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
     }
-
     public boolean isAutoEject(ConfigType type) {
         return autoEject[type.ordinal()];
     }
-
     public void setAutoEject(ConfigType type, boolean active) {
         autoEject[type.ordinal()] = active;
         setChanged();
         if (level != null && !level.isClientSide) level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
     }
-
+    public boolean isAutoInput(ConfigType type) {
+        int idx = type.ordinal();
+        if (idx >= 0 && idx < autoInput.length) {
+            return this.autoInput[idx];
+        }
+        return false;
+    }
+    public void setAutoInput(ConfigType type, boolean enabled) {
+        int idx = type.ordinal();
+        if (idx >= 0 && idx < autoInput.length) {
+            this.autoInput[idx] = enabled;
+            setChanged();
+            if (level != null && !level.isClientSide) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            }
+        }
+    }
     public void resetAllSideConfigs() {
         for(int i = 0; i < sideConfigs.length; i++) {
             Arrays.fill(sideConfigs[i], IOMode.NONE);
@@ -302,12 +289,10 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         setChanged();
         if (level != null && !level.isClientSide) level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
     }
-
-    // === NBT ===
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        // ... (seus saves de inventário existentes) ...
+        // Seus salvamentos padrões
         tag.put("input_items", itemInputHandler.serializeNBT(registries));
         tag.put("output_items", itemOutputHandler.serializeNBT(registries));
         tag.put("input_fluid", fluidInputTank.writeToNBT(registries, new CompoundTag()));
@@ -317,12 +302,16 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         tag.putInt("energy", energyStorage.getEnergyStored());
         tag.putInt("progress", progress);
 
-        // Salva as 4 configurações
+        // Salvamento das configurações laterais, auto-eject e auto-input num único loop
         for (ConfigType type : ConfigType.values()) {
             int idx = type.ordinal();
             tag.putBoolean("auto_eject_" + idx, autoEject[idx]);
+            tag.putBoolean("auto_input_" + idx, autoInput[idx]); // Adicionado aqui
+
             int[] sideOrdinals = new int[6];
-            for (int i = 0; i < 6; i++) sideOrdinals[i] = sideConfigs[idx][i].ordinal();
+            for (int i = 0; i < 6; i++) {
+                sideOrdinals[i] = sideConfigs[idx][i].ordinal();
+            }
             tag.putIntArray("side_config_" + idx, sideOrdinals);
         }
     }
@@ -330,42 +319,53 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        // ... (seus loads de inventário existentes) ...
+        // Seus carregamentos padrões
         itemInputHandler.deserializeNBT(registries, tag.getCompound("input_items"));
         itemOutputHandler.deserializeNBT(registries, tag.getCompound("output_items"));
         fluidInputTank.readFromNBT(registries, tag.getCompound("input_fluid"));
         coolantInputTank.readFromNBT(registries, tag.getCompound("input_coolant"));
         fluidOutputTank1.readFromNBT(registries, tag.getCompound("output_fluid1"));
         fluidOutputTank2.readFromNBT(registries, tag.getCompound("output_fluid2"));
-        if (tag.contains("energy")) energyStorage.receiveEnergy(tag.getInt("energy") - energyStorage.getEnergyStored(), false);
+        if (tag.contains("energy")) {
+            energyStorage.receiveEnergy(tag.getInt("energy") - energyStorage.getEnergyStored(), false);
+        }
         progress = tag.getInt("progress");
 
-        // Carrega as 4 configurações
+        // Carregamento das configurações
         for (ConfigType type : ConfigType.values()) {
             int idx = type.ordinal();
             autoEject[idx] = tag.getBoolean("auto_eject_" + idx);
+            autoInput[idx] = tag.getBoolean("auto_input_" + idx); // Adicionado aqui
+
             if (tag.contains("side_config_" + idx)) {
                 int[] sideOrdinals = tag.getIntArray("side_config_" + idx);
                 for (int i = 0; i < 6; i++) {
                     if (i < sideConfigs[idx].length) {
-                        sideConfigs[idx][i] = IOMode.values()[Math.min(sideOrdinals[i], IOMode.values().length - 1)];
+                        // Garante que não crasha se o ordinal salvo for inválido (ex: após atualizar o mod)
+                        int safeOrdinal = Math.min(Math.max(sideOrdinals[i], 0), IOMode.values().length - 1);
+                        sideConfigs[idx][i] = IOMode.values()[safeOrdinal];
                     }
                 }
             }
         }
     }
-
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries) { return saveWithoutMetadata(registries); }
     @Nullable @Override public Packet<ClientGamePacketListener> getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
     @Override public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         super.onDataPacket(net, pkt, lookupProvider);
         if (level != null && level.isClientSide) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
     }
-
-    // Getters padrão
     public IEnergyStorage getEnergyStorage() { return energyStorage; }
-    public FluidTank getFluidInputTank() { return fluidInputTank; }
-    public FluidTank getCoolantInputTank() { return coolantInputTank; }
-    public FluidTank getFluidOutputTank1() { return fluidOutputTank1; }
-    public FluidTank getFluidOutputTank2() { return fluidOutputTank2; }
+    public FluidTank getFluidInputTank() {
+        return this.fluidInputTank;
+    }
+    public FluidTank getCoolantInputTank() {
+        return this.coolantInputTank;
+    }
+    public FluidTank getFluidOutputTank1() {
+        return this.fluidOutputTank1;
+    }
+    public FluidTank getFluidOutputTank2() {
+        return this.fluidOutputTank2;
+    }
 }

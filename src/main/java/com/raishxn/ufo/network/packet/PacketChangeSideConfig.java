@@ -15,13 +15,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record PacketChangeSideConfig(BlockPos pos, Direction side, int typeOrdinal) implements CustomPacketPayload {
+// Adicionado 'nextModeOrdinal' ao record
+public record PacketChangeSideConfig(BlockPos pos, Direction side, int typeOrdinal, int nextModeOrdinal) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<PacketChangeSideConfig> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "change_side_config"));
 
     public static final StreamCodec<ByteBuf, PacketChangeSideConfig> STREAM_CODEC = StreamCodec.composite(
             BlockPos.STREAM_CODEC, PacketChangeSideConfig::pos,
             Direction.STREAM_CODEC, PacketChangeSideConfig::side,
             ByteBufCodecs.INT, PacketChangeSideConfig::typeOrdinal,
+            ByteBufCodecs.INT, PacketChangeSideConfig::nextModeOrdinal, // Novo campo
             PacketChangeSideConfig::new
     );
 
@@ -31,20 +33,21 @@ public record PacketChangeSideConfig(BlockPos pos, Direction side, int typeOrdin
     public static void handle(PacketChangeSideConfig payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer player) {
-                BlockEntity be = player.level().getBlockEntity(payload.pos());
-                if (be instanceof DimensionalMatterAssemblerBlockEntity dma) {
-                    if (payload.typeOrdinal >= 0 && payload.typeOrdinal < ConfigType.values().length) {
-                        ConfigType type = ConfigType.values()[payload.typeOrdinal];
-                        IOMode current = dma.getSideConfig(type, payload.side());
+                // Verifica se o chunk está carregado
+                if (player.level().isLoaded(payload.pos)) {
+                    BlockEntity be = player.level().getBlockEntity(payload.pos());
+                    if (be instanceof DimensionalMatterAssemblerBlockEntity dma) {
+                        if (payload.typeOrdinal >= 0 && payload.typeOrdinal < ConfigType.values().length) {
+                            ConfigType type = ConfigType.values()[payload.typeOrdinal];
 
-                        // Lógica de ciclo: Energia só tem NONE ou ENERGY. Outros ciclam tudo.
-                        IOMode next = current.next();
-                        if (type == ConfigType.ENERGY) {
-                            next = (current == IOMode.NONE) ? IOMode.ENERGY : IOMode.NONE;
+                            // Valida o modo recebido para evitar crashes com ordinais inválidos
+                            int modeOrd = payload.nextModeOrdinal();
+                            if (modeOrd >= 0 && modeOrd < IOMode.values().length) {
+                                IOMode nextMode = IOMode.values()[modeOrd];
+                                // Aplica diretamente o modo que o cliente calculou
+                                dma.setSideConfig(type, payload.side(), nextMode);
+                            }
                         }
-                        // Adicione mais filtros aqui se Coolant só puder ser Input, etc.
-
-                        dma.setSideConfig(type, payload.side(), next);
                     }
                 }
             }

@@ -9,6 +9,7 @@ public enum IOMode implements StringRepresentable {
     NONE("none", Component.literal("None").withStyle(ChatFormatting.GRAY)),
     ITEM_IN("item_in", Component.literal("Item Input").withStyle(ChatFormatting.BLUE)),
     ITEM_OUT("item_out", Component.literal("Item Output").withStyle(ChatFormatting.GOLD)),
+    ITEM_OUT2("item_out", Component.literal("Item Output").withStyle(ChatFormatting.GOLD)),
     FLUID_IN("fluid_in", Component.literal("Fluid Input").withStyle(ChatFormatting.AQUA)),
     FLUID_OUT_1("fluid_out_1", Component.literal("Fluid Output 1").withStyle(ChatFormatting.DARK_AQUA)),
     FLUID_OUT_2("fluid_out_2", Component.literal("Fluid Output 2").withStyle(ChatFormatting.DARK_BLUE)),
