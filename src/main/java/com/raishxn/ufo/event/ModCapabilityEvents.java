@@ -5,6 +5,8 @@ import com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.item.ModItems;
+import com.raishxn.ufo.util.ConfigType;
+import com.raishxn.ufo.util.IOMode;
 import com.raishxn.ufo.util.UfoPersistentEnergyStorage;
 import net.minecraft.core.Direction;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -72,45 +74,46 @@ public class ModCapabilityEvents {
     }
 
     private static void registerBlockCapabilities(RegisterCapabilitiesEvent event) {
-        // === Dimensional Matter Assembler (DMA) ===
+        // --- Dimensional Matter Assembler ---
 
-        // 1. Itens (Automação com funis/tubos)
+        // 1. Itens (Usa SidedItemHandler para respeitar a configuração lateral e retorna null se NONE)
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 ModBlockEntities.DMA_BE.get(),
                 (be, side) -> {
-                    // Se o acesso vier de BAIXO (Direction.DOWN), expõe a SAÍDA.
-                    // Qualquer outro lado (Cima, Norte, Sul, etc.) expõe a ENTRADA.
-                    if (side == Direction.DOWN) {
-                        return be.itemOutputHandler;
+                    if (side == null) return be.itemInputHandler; // Acesso interno
+
+                    // Se o modo for NONE, retorna null para o cabo desconectar
+                    if (be.getSideConfig(ConfigType.ITEM, side) == IOMode.NONE) {
+                        return null;
                     }
-                    return be.itemInputHandler;
+                    return be.new SidedItemHandler(side);
                 }
         );
 
-        // 2. Energia (Cabos de energia)
+        // 2. Energia (Universal - Conecta em todos os lados, sem filtro)
         event.registerBlockEntity(
                 Capabilities.EnergyStorage.BLOCK,
                 ModBlockEntities.DMA_BE.get(),
-                (be, side) -> be.energyStorage // Permite conexão de energia por qualquer lado
+                (be, side) -> be.energyStorage
         );
 
-        // 3. Fluidos (Tubos de fluidos)
+        // 3. Fluidos (Usa SidedFluidHandler e retorna null se NONE)
         event.registerBlockEntity(
                 Capabilities.FluidHandler.BLOCK,
                 ModBlockEntities.DMA_BE.get(),
                 (be, side) -> {
-                    // Acesso interno (sem lado específico) retorna o tanque principal por padrão
                     if (side == null) return be.fluidInputTank;
 
-                    if (side == Direction.DOWN) {
-                        return be.fluidOutputTank1; // Saída por BAIXO (apenas tanque 1 por enquanto)
-                    } else if (side == Direction.UP) {
-                        return be.fluidInputTank;   // Entrada principal por CIMA
-                    } else {
-                        return be.coolantInputTank; // Lados horizontais (N/S/L/O) para Coolant (água, etc.)
+                    IOMode fluidMode = be.getSideConfig(ConfigType.FLUID, side);
+                    IOMode coolantMode = be.getSideConfig(ConfigType.COOLANT, side);
+
+                    // Se nem Fluido nem Coolant estão ativos neste lado, retorna null para desconectar
+                    if (fluidMode == IOMode.NONE && coolantMode == IOMode.NONE) {
+                        return null;
                     }
+                    return be.new SidedFluidHandler(side);
                 }
         );
     }
-}
+    }

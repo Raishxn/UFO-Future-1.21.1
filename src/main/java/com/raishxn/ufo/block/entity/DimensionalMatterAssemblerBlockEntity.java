@@ -22,7 +22,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -82,7 +81,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
             switch (pIndex) {
                 case 0 -> progress = pValue;
                 case 1 -> maxProgress = pValue;
-                case 12 -> { // Desempacota os bits no cliente
+                case 12 -> {
                     autoEject[0] = (pValue & 1) != 0;
                     autoEject[1] = (pValue & 2) != 0;
                     autoEject[2] = (pValue & 4) != 0;
@@ -94,6 +93,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
     };
     private int progress = 0;
     private int maxProgress = 0;
+
     public DimensionalMatterAssemblerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.DMA_BE.get(), pos, state);
         for (ConfigType type : ConfigType.values()) {
@@ -107,15 +107,18 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         sideConfigs[ConfigType.ENERGY.ordinal()][Direction.EAST.ordinal()] = IOMode.ENERGY;
         sideConfigs[ConfigType.ENERGY.ordinal()][Direction.WEST.ordinal()] = IOMode.ENERGY;
     }
+
     @Override public @NotNull Component getDisplayName() { return Component.translatable("block.ufo.dimensional_matter_assembler"); }
 
     @Nullable @Override public AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
         return new DimensionalMatterAssemblerMenu(pContainerId, pPlayerInventory, this, this.data);
     }
+
     public static void tick(Level level, BlockPos pos, BlockState state, DimensionalMatterAssemblerBlockEntity be) {
         if (level.isClientSide) return;
         if (be.autoEject[ConfigType.ITEM.ordinal()]) be.tryEjectItems(level, pos);
         if (be.autoEject[ConfigType.FLUID.ordinal()]) be.tryEjectFluids(level, pos, ConfigType.FLUID);
+
         boolean isActive = false;
         Optional<DimensionalMatterAssemblerRecipe> recipeOptional = be.getRecipe();
         if (recipeOptional.isPresent()) {
@@ -145,6 +148,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         }
         be.setChanged();
     }
+
     private void tryEjectItems(Level level, BlockPos pos) {
         for (Direction dir : Direction.values()) {
             if (getSideConfig(ConfigType.ITEM, dir) == IOMode.ITEM_OUT) {
@@ -161,6 +165,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
             }
         }
     }
+
     private void tryEjectFluids(Level level, BlockPos pos, ConfigType type) {
         for (Direction dir : Direction.values()) {
             IOMode mode = getSideConfig(type, dir);
@@ -179,6 +184,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
             }
         }
     }
+
     private Optional<DimensionalMatterAssemblerRecipe> getRecipe() {
         if (level == null) return Optional.empty();
         return level.getRecipeManager().getAllRecipesFor(ModRecipes.DMA_TYPE.get()).stream()
@@ -186,6 +192,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
                 .filter(this::matchesRecipe)
                 .findFirst();
     }
+
     private boolean matchesRecipe(DimensionalMatterAssemblerRecipe recipe) {
         if (!recipe.getFluidInput().isEmpty()) {
             if (!recipe.getFluidInput().getIngredient().test(fluidInputTank.getFluid()) ||
@@ -208,6 +215,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         }
         return true;
     }
+
     private boolean canProcess(DimensionalMatterAssemblerRecipe recipe) {
         List<ItemStack> itemOutputs = recipe.getItemOutputs();
         for (int i = 0; i < itemOutputs.size(); i++) {
@@ -222,6 +230,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         }
         return true;
     }
+
     private void craft(DimensionalMatterAssemblerRecipe recipe) {
         if (!recipe.getFluidInput().isEmpty()) {
             fluidInputTank.drain((int)recipe.getFluidInput().getAmount(), IFluidHandler.FluidAction.EXECUTE);
@@ -249,50 +258,66 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         if (fluidOutputs.size() > 0) fluidOutputTank1.fill(fluidOutputs.get(0).copy(), IFluidHandler.FluidAction.EXECUTE);
         if (fluidOutputs.size() > 1) fluidOutputTank2.fill(fluidOutputs.get(1).copy(), IFluidHandler.FluidAction.EXECUTE);
     }
+
     public IOMode getSideConfig(ConfigType type, Direction side) {
         return sideConfigs[type.ordinal()][side.ordinal()];
     }
+
+    // --- MÉTODOS DE CONFIGURAÇÃO COM ATUALIZAÇÃO DE VIZINHOS ---
     public void setSideConfig(ConfigType type, Direction side, IOMode mode) {
         sideConfigs[type.ordinal()][side.ordinal()] = mode;
         setChanged();
-        if (level != null && !level.isClientSide) level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        if (level != null && !level.isClientSide) {
+            BlockState state = getBlockState();
+            level.sendBlockUpdated(worldPosition, state, state, 3);
+            level.updateNeighborsAt(worldPosition, state.getBlock()); // Importante para cabos!
+        }
     }
+
     public boolean isAutoEject(ConfigType type) {
         return autoEject[type.ordinal()];
     }
+
     public void setAutoEject(ConfigType type, boolean active) {
         autoEject[type.ordinal()] = active;
         setChanged();
-        if (level != null && !level.isClientSide) level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        if (level != null && !level.isClientSide) {
+            BlockState state = getBlockState();
+            level.sendBlockUpdated(worldPosition, state, state, 3);
+            level.updateNeighborsAt(worldPosition, state.getBlock());
+        }
     }
+
     public boolean isAutoInput(ConfigType type) {
-        int idx = type.ordinal();
-        if (idx >= 0 && idx < autoInput.length) {
-            return this.autoInput[idx];
-        }
-        return false;
+        return autoInput[type.ordinal()];
     }
+
     public void setAutoInput(ConfigType type, boolean enabled) {
-        int idx = type.ordinal();
-        if (idx >= 0 && idx < autoInput.length) {
-            this.autoInput[idx] = enabled;
-            setChanged();
-            if (level != null && !level.isClientSide) {
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
-            }
+        autoInput[type.ordinal()] = enabled;
+        setChanged();
+        if (level != null && !level.isClientSide) {
+            BlockState state = getBlockState();
+            level.sendBlockUpdated(worldPosition, state, state, 3);
+            level.updateNeighborsAt(worldPosition, state.getBlock());
         }
     }
+
     public void resetAllSideConfigs() {
         for(int i = 0; i < sideConfigs.length; i++) {
             Arrays.fill(sideConfigs[i], IOMode.NONE);
         }
         setChanged();
-        if (level != null && !level.isClientSide) level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        if (level != null && !level.isClientSide) {
+            BlockState state = getBlockState();
+            level.sendBlockUpdated(worldPosition, state, state, 3);
+            level.updateNeighborsAt(worldPosition, state.getBlock());
+        }
     }
+    // -----------------------------------------------------------
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        // Seus salvamentos padrões
         tag.put("input_items", itemInputHandler.serializeNBT(registries));
         tag.put("output_items", itemOutputHandler.serializeNBT(registries));
         tag.put("input_fluid", fluidInputTank.writeToNBT(registries, new CompoundTag()));
@@ -302,11 +327,10 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         tag.putInt("energy", energyStorage.getEnergyStored());
         tag.putInt("progress", progress);
 
-        // Salvamento das configurações laterais, auto-eject e auto-input num único loop
         for (ConfigType type : ConfigType.values()) {
             int idx = type.ordinal();
             tag.putBoolean("auto_eject_" + idx, autoEject[idx]);
-            tag.putBoolean("auto_input_" + idx, autoInput[idx]); // Adicionado aqui
+            tag.putBoolean("auto_input_" + idx, autoInput[idx]);
 
             int[] sideOrdinals = new int[6];
             for (int i = 0; i < 6; i++) {
@@ -319,7 +343,6 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        // Seus carregamentos padrões
         itemInputHandler.deserializeNBT(registries, tag.getCompound("input_items"));
         itemOutputHandler.deserializeNBT(registries, tag.getCompound("output_items"));
         fluidInputTank.readFromNBT(registries, tag.getCompound("input_fluid"));
@@ -331,17 +354,15 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         }
         progress = tag.getInt("progress");
 
-        // Carregamento das configurações
         for (ConfigType type : ConfigType.values()) {
             int idx = type.ordinal();
             autoEject[idx] = tag.getBoolean("auto_eject_" + idx);
-            autoInput[idx] = tag.getBoolean("auto_input_" + idx); // Adicionado aqui
+            autoInput[idx] = tag.getBoolean("auto_input_" + idx);
 
             if (tag.contains("side_config_" + idx)) {
                 int[] sideOrdinals = tag.getIntArray("side_config_" + idx);
                 for (int i = 0; i < 6; i++) {
                     if (i < sideConfigs[idx].length) {
-                        // Garante que não crasha se o ordinal salvo for inválido (ex: após atualizar o mod)
                         int safeOrdinal = Math.min(Math.max(sideOrdinals[i], 0), IOMode.values().length - 1);
                         sideConfigs[idx][i] = IOMode.values()[safeOrdinal];
                     }
@@ -353,19 +374,152 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
     @Nullable @Override public Packet<ClientGamePacketListener> getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
     @Override public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
         super.onDataPacket(net, pkt, lookupProvider);
-        if (level != null && level.isClientSide) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        if (level != null && level.isClientSide) {
+            // Atualiza visualmente para o cliente
+            BlockState state = getBlockState();
+            level.sendBlockUpdated(worldPosition, state, state, 3);
+        }
     }
     public IEnergyStorage getEnergyStorage() { return energyStorage; }
-    public FluidTank getFluidInputTank() {
-        return this.fluidInputTank;
+    public FluidTank getFluidInputTank() { return this.fluidInputTank; }
+    public FluidTank getCoolantInputTank() { return this.coolantInputTank; }
+    public FluidTank getFluidOutputTank1() { return this.fluidOutputTank1; }
+    public FluidTank getFluidOutputTank2() { return this.fluidOutputTank2; }
+
+    // =========================================================
+    // Classes Internas para Controle de Acesso por Lado (Wrappers)
+    // =========================================================
+
+    public class SidedItemHandler implements IItemHandler {
+        private final Direction side;
+
+        public SidedItemHandler(Direction side) {
+            this.side = side;
+        }
+
+        @Override
+        public int getSlots() {
+            return itemInputHandler.getSlots() + itemOutputHandler.getSlots();
+        }
+
+        @Override
+        public @NotNull ItemStack getStackInSlot(int slot) {
+            if (slot < itemInputHandler.getSlots()) {
+                return itemInputHandler.getStackInSlot(slot);
+            }
+            return itemOutputHandler.getStackInSlot(slot - itemInputHandler.getSlots());
+        }
+
+        @Override
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+            IOMode mode = getSideConfig(ConfigType.ITEM, side);
+            // Se não for modo de entrada, rejeita
+            if (mode != IOMode.ITEM_IN && mode != IOMode.ITEM_IO && mode != IOMode.ITEM_IO2) {
+                return stack;
+            }
+            // Só permite inserir nos slots de entrada
+            if (slot < itemInputHandler.getSlots()) {
+                return itemInputHandler.insertItem(slot, stack, simulate);
+            }
+            return stack;
+        }
+
+        @Override
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+            IOMode mode = getSideConfig(ConfigType.ITEM, side);
+            // Se não for modo de saída, rejeita
+            if (mode != IOMode.ITEM_OUT && mode != IOMode.ITEM_OUT2 && mode != IOMode.ITEM_IO && mode != IOMode.ITEM_IO2) {
+                return ItemStack.EMPTY;
+            }
+            // Só permite extrair dos slots de saída
+            if (slot >= itemInputHandler.getSlots()) {
+                return itemOutputHandler.extractItem(slot - itemInputHandler.getSlots(), amount, simulate);
+            }
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) { return 64; }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            if (slot < itemInputHandler.getSlots()) return itemInputHandler.isItemValid(slot, stack);
+            return itemOutputHandler.isItemValid(slot - itemInputHandler.getSlots(), stack);
+        }
     }
-    public FluidTank getCoolantInputTank() {
-        return this.coolantInputTank;
-    }
-    public FluidTank getFluidOutputTank1() {
-        return this.fluidOutputTank1;
-    }
-    public FluidTank getFluidOutputTank2() {
-        return this.fluidOutputTank2;
+
+    public class SidedFluidHandler implements IFluidHandler {
+        private final Direction side;
+
+        public SidedFluidHandler(Direction side) {
+            this.side = side;
+        }
+
+        @Override public int getTanks() { return 4; }
+
+        @Override
+        public @NotNull FluidStack getFluidInTank(int tank) {
+            return switch (tank) {
+                case 0 -> fluidInputTank.getFluid();
+                case 1 -> coolantInputTank.getFluid();
+                case 2 -> fluidOutputTank1.getFluid();
+                case 3 -> fluidOutputTank2.getFluid();
+                default -> FluidStack.EMPTY;
+            };
+        }
+
+        @Override
+        public int getTankCapacity(int tank) {
+            return switch (tank) {
+                case 0 -> fluidInputTank.getCapacity();
+                case 1 -> coolantInputTank.getCapacity();
+                case 2 -> fluidOutputTank1.getCapacity();
+                case 3 -> fluidOutputTank2.getCapacity();
+                default -> 0;
+            };
+        }
+
+        @Override public boolean isFluidValid(int tank, @NotNull FluidStack stack) { return true; }
+
+        @Override
+        public int fill(FluidStack resource, FluidAction action) {
+            int filled = 0;
+            // Tenta Coolant se o modo permitir
+            if (getSideConfig(ConfigType.COOLANT, side) == IOMode.COOLANT_IN) {
+                filled = coolantInputTank.fill(resource, action);
+            }
+            // Se não encheu (ou se quiser permitir ambos), tenta Input se o modo permitir
+            if (filled == 0) {
+                IOMode fluidMode = getSideConfig(ConfigType.FLUID, side);
+                if (fluidMode == IOMode.FLUID_IN || fluidMode == IOMode.FLUID_IO_1 || fluidMode == IOMode.FLUID_IO_2) {
+                    filled = fluidInputTank.fill(resource, action);
+                }
+            }
+            return filled;
+        }
+
+        @Override
+        public FluidStack drain(FluidStack resource, FluidAction action) {
+            IOMode fluidMode = getSideConfig(ConfigType.FLUID, side);
+            if ((fluidMode == IOMode.FLUID_OUT_1 || fluidMode == IOMode.FLUID_IO_1) && !fluidOutputTank1.isEmpty()) {
+                return fluidOutputTank1.drain(resource, action);
+            }
+            if ((fluidMode == IOMode.FLUID_OUT_2 || fluidMode == IOMode.FLUID_IO_2) && !fluidOutputTank2.isEmpty()) {
+                return fluidOutputTank2.drain(resource, action);
+            }
+            return FluidStack.EMPTY;
+        }
+
+        @Override
+        public FluidStack drain(int maxDrain, FluidAction action) {
+            IOMode fluidMode = getSideConfig(ConfigType.FLUID, side);
+            if (fluidMode == IOMode.FLUID_OUT_1 || fluidMode == IOMode.FLUID_IO_1) {
+                return fluidOutputTank1.drain(maxDrain, action);
+            }
+            if (fluidMode == IOMode.FLUID_OUT_2 || fluidMode == IOMode.FLUID_IO_2) {
+                return fluidOutputTank2.drain(maxDrain, action);
+            }
+            return FluidStack.EMPTY;
+        }
     }
 }
