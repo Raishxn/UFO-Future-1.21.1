@@ -1,0 +1,5 @@
+{
+  "parent": "neoforge:item/bucket",
+  "fluid": "ufo:source_raw_star_matter_plasma_fluid",
+  "loader": "neoforge:fluid_container"
+}

@@ -7,6 +7,8 @@ import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.client.gui.DimensionalMatterAssemblerScreen;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.event.ModKeyBindings;
+import com.raishxn.ufo.fluid.ModFluidTypes;
+import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.init.ModRecipes;
@@ -45,16 +47,25 @@ public class UfoMod {
 
     public UfoMod(IEventBus modEventBus, ModContainer modContainer) {
         // --- Registros do Mod (usando DeferredRegister) ---
-        ModCreativeModeTabs.register(modEventBus);
-        ModItems.register(modEventBus);
-        ModBlocks.register(modEventBus);
         ModDataComponents.register(modEventBus);
-        ModBlockEntities.register(modEventBus);
-        ModCellItems.register(modEventBus);
+        ModCreativeModeTabs.register(modEventBus);
+
+        // --- 2. Fluidos (tem que vir antes de blocos e itens) ---
+        com.raishxn.ufo.fluid.ModFluidTypes.register(modEventBus);
+        com.raishxn.ufo.fluid.ModFluids.register(modEventBus);
+
+        // --- 3. Blocos (tem que vir antes de itens) ---
+        ModBlocks.register(modEventBus);
         MultiblockBlocks.register(modEventBus);
+
+        // --- 4. Itens (dependem de blocos e fluidos) ---
+        ModItems.register(modEventBus);
+        ModCellItems.register(modEventBus);
+
+        // --- 5. O Resto (dependem do que já foi registrado acima) ---
+        ModBlockEntities.register(modEventBus);
         ModRecipes.register(modEventBus);
         ModMenus.register(modEventBus);
-
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
 
         // --- Listeners do Ciclo de Vida do Mod ---

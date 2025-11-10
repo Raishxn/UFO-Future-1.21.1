@@ -2,36 +2,28 @@ package com.raishxn.ufo.item;
 
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
-import appeng.core.definitions.AEBlocks;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.datagen.ModDataComponents;
+import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.item.custom.*;
 import com.raishxn.ufo.item.custom.InfinityCell;
-import com.raishxn.ufo.util.ColorHelper;
 import mekanism.common.registries.MekanismItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import appeng.api.ids.AEBlockIds;
-import appeng.api.stacks.AEFluidKey;
-import appeng.api.stacks.AEItemKey;
-import com.raishxn.ufo.item.custom.InfinityCell;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.minecraft.world.item.Items;
-import net.minecraft.core.registries.BuiltInRegistries; // <-- IMPORT CHAVE E CORRETO
 
- public class ModItems {
+public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(UfoMod.MOD_ID);
 
     public static final DeferredItem<Item> BISMUTH = ITEMS.register("bismuth",
@@ -97,13 +89,59 @@ import net.minecraft.core.registries.BuiltInRegistries; // <-- IMPORT CHAVE E CO
                     ChatFormatting.GRAY,
                     ChatFormatting.DARK_GRAY,
                     ChatFormatting.GRAY));
+     public static final DeferredItem<Item> WHITE_DWARF_FRAGMENT_ROD = ITEMS.register("white_dwarf_fragment_rod",
+             () -> new AnimatedNameItem(new Item.Properties(),
+                     ChatFormatting.WHITE,
+                     ChatFormatting.GRAY,
+                     ChatFormatting.DARK_GRAY,
+                     ChatFormatting.GRAY));
+     public static final DeferredItem<Item> WHITE_DWARF_FRAGMENT_NUGGET = ITEMS.register("white_dwarf_fragment_nugget",
+             () -> new AnimatedNameItem(new Item.Properties(),
+                     ChatFormatting.WHITE,
+                     ChatFormatting.GRAY,
+                     ChatFormatting.DARK_GRAY,
+                     ChatFormatting.GRAY));
+     public static final DeferredItem<Item> WHITE_DWARF_FRAGMENT_DUST = ITEMS.register("white_dwarf_fragment_dust",
+             () -> new AnimatedNameItem(new Item.Properties(),
+                     ChatFormatting.WHITE,
+                     ChatFormatting.GRAY,
+                     ChatFormatting.DARK_GRAY,
+                     ChatFormatting.GRAY));
      public static final DeferredItem<Item> NEUTRON_STAR_FRAGMENT_INGOT = ITEMS.register("neutron_star_fragment_ingot",
              () -> new AnimatedNameItem(new Item.Properties(),
                      ChatFormatting.WHITE,
                      ChatFormatting.BLUE,
                      ChatFormatting.DARK_BLUE,
                      ChatFormatting.AQUA));
+     public static final DeferredItem<Item> NEUTRON_STAR_FRAGMENT_ROD = ITEMS.register("neutron_star_fragment_rod",
+             () -> new AnimatedNameItem(new Item.Properties(),
+                     ChatFormatting.WHITE,
+                     ChatFormatting.BLUE,
+                     ChatFormatting.DARK_BLUE,
+                     ChatFormatting.AQUA));
+     public static final DeferredItem<Item> NEUTRON_STAR_FRAGMENT_NUGGET = ITEMS.register("neutron_star_fragment_nugget",
+             () -> new AnimatedNameItem(new Item.Properties(),
+                     ChatFormatting.WHITE,
+                     ChatFormatting.BLUE,
+                     ChatFormatting.DARK_BLUE,
+                     ChatFormatting.AQUA));
+     public static final DeferredItem<Item> NEUTRON_STAR_FRAGMENT_DUST = ITEMS.register("neutron_star_fragment_dust",
+             () -> new AnimatedNameItem(new Item.Properties(),
+                     ChatFormatting.WHITE,
+                     ChatFormatting.BLUE,
+                     ChatFormatting.DARK_BLUE,
+                     ChatFormatting.AQUA));
      public static final DeferredItem<Item> PULSAR_FRAGMENT_INGOT = ITEMS.register("pulsar_fragment_ingot",
+             () -> new AnimatedNameItem(new Item.Properties(),
+                     ChatFormatting.WHITE,
+                     ChatFormatting.GREEN,
+                     ChatFormatting.DARK_GREEN));
+     public static final DeferredItem<Item> PULSAR_FRAGMENT_NUGGET = ITEMS.register("pulsar_fragment_nugget",
+             () -> new AnimatedNameItem(new Item.Properties(),
+                     ChatFormatting.WHITE,
+                     ChatFormatting.GREEN,
+                     ChatFormatting.DARK_GREEN));
+     public static final DeferredItem<Item> PULSAR_FRAGMENT_DUST = ITEMS.register("pulsar_fragment_dust",
              () -> new AnimatedNameItem(new Item.Properties(),
                      ChatFormatting.WHITE,
                      ChatFormatting.GREEN,
@@ -304,6 +342,33 @@ import net.minecraft.core.registries.BuiltInRegistries; // <-- IMPORT CHAVE E CO
      public static final DeferredItem<Item> ENTROPY_SINGULARITY_ARRAY_CONTROLLER = ITEMS.register("entropy_singularity_array_controller",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_SINGULARITY_ARRAY_CONTROLLER.get(), new Item.Properties(),
                      ChatFormatting.BLUE, ChatFormatting.DARK_BLUE, ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED));
+
+    public static final DeferredItem<Item> NEUTRON_STAR_FRAGMENT_BUCKET = ITEMS.register("neutron_star_fragment_bucket",
+            () -> new BucketItem(ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+     public static final DeferredItem<Item> PULSAR_FRAGMENT_BUCKET = ITEMS.register("pulsar_fragment_bucket",
+             () -> new BucketItem(ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+     public static final DeferredItem<Item> WHITE_DWARF_FRAGMENT_BUCKET = ITEMS.register("white_dwarf_fragment_bucket",
+             () -> new BucketItem(ModFluids.SOURCE_WHITE_DWARF_FRAGMENT_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+     public static final DeferredItem<Item> LIQUID_STARLIGHT_BUCKET = ITEMS.register("liquid_starlight_bucket",
+             () -> new BucketItem(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+     public static final DeferredItem<Item> PRIMORDIAL_MATTER_BUCKET = ITEMS.register("primordial_matter_bucket",
+             () -> new BucketItem(ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+     public static final DeferredItem<Item> RAW_STAR_MATTER_PLASMA_BUCKET = ITEMS.register("raw_star_matter_plasma_bucket",
+             () -> new BucketItem(ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+     public static final DeferredItem<Item> TRANSCENDING_MATTER_BUCKET = ITEMS.register("transcending_matter_bucket",
+             () -> new BucketItem(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+     public static final DeferredItem<Item> UU_MATTER_BUCKET = ITEMS.register("uu_matter_bucket",
+             () -> new BucketItem(ModFluids.SOURCE_UU_MATTER_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+     public static final DeferredItem<Item> UU_AMPLIFIER_BUCKET = ITEMS.register("uu_amplifier_bucket",
+             () -> new BucketItem(ModFluids.SOURCE_UU_AMPLIFIER_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 
     public static void register(IEventBus eventBus) {

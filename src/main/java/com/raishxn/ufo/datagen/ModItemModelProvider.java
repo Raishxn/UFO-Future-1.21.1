@@ -1,21 +1,21 @@
 package com.raishxn.ufo.datagen;
 
 import com.raishxn.ufo.UfoMod;
-import com.raishxn.ufo.block.ModBlocks;
+import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModItems;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.models.BlockModelGenerators;
-import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
+import net.minecraft.world.level.material.Fluid;
+import java.util.function.Supplier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
+import net.minecraft.world.item.BucketItem;
 
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
@@ -23,8 +23,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     }
 
     private static final ResourceLocation UFO_LED_TEXTURE = ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/storage_cell_led");
-    private static final ResourceLocation GENERATED_PARENT = ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID,"item/generated");
-
+    private static final ResourceLocation GENERATED_PARENT = ResourceLocation.withDefaultNamespace("item/generated");
     @Override
         protected void registerModels() {
         basicItem(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
@@ -36,8 +35,24 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.DIMENSIONAL_PROCESSOR.get());
         basicItem(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get());
         basicItem(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get());
-        basicItem(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get());
+        basicItem(ModItems.WHITE_DWARF_FRAGMENT_ROD.get());
+        basicItem(ModItems.WHITE_DWARF_FRAGMENT_DUST.get());
+        basicItem(ModItems.WHITE_DWARF_FRAGMENT_NUGGET.get());
+        withExistingParent(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.getId().getPath(), GENERATED_PARENT)
+                .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_ingot"))
+                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_ingot_overlay"));
+        withExistingParent(ModItems.NEUTRON_STAR_FRAGMENT_NUGGET.getId().getPath(), GENERATED_PARENT)
+                .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_nugget"))
+                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_nugget_overlay"));
+        withExistingParent(ModItems.NEUTRON_STAR_FRAGMENT_ROD.getId().getPath(), GENERATED_PARENT)
+                .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_rod"))
+                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_rod_overlay"));
+        withExistingParent(ModItems.NEUTRON_STAR_FRAGMENT_DUST.getId().getPath(), GENERATED_PARENT)
+                .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_dust"))
+                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_dust_overlay"));
         basicItem(ModItems.PULSAR_FRAGMENT_INGOT.get());
+        basicItem(ModItems.PULSAR_FRAGMENT_DUST.get());
+        basicItem(ModItems.PULSAR_FRAGMENT_NUGGET.get());
 
         // --- Infinity Cells ---
         basicItem(ModItems.INFINITY_WATER_CELL.get());
@@ -120,6 +135,18 @@ public class ModItemModelProvider extends ItemModelProvider {
             cellModel(ModCellItems.FLUID_CELL_250M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, ModCellItems.CELL_COMPONENT_250M);
             cellModel(ModCellItems.FLUID_CELL_750M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, ModCellItems.CELL_COMPONENT_750M);
             cellModel(ModCellItems.FLUID_CELL_SINGULARITY, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, ModCellItems.CELL_COMPONENT_INFINITY);
+
+
+        dynamicBucketItem(ModItems.NEUTRON_STAR_FRAGMENT_BUCKET, ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID);
+        dynamicBucketItem(ModItems.PULSAR_FRAGMENT_BUCKET, ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID);
+        dynamicBucketItem(ModItems.WHITE_DWARF_FRAGMENT_BUCKET, ModFluids.SOURCE_WHITE_DWARF_FRAGMENT_FLUID);
+        dynamicBucketItem(ModItems.LIQUID_STARLIGHT_BUCKET, ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID);
+        dynamicBucketItem(ModItems.PRIMORDIAL_MATTER_BUCKET, ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID);
+        dynamicBucketItem(ModItems.RAW_STAR_MATTER_PLASMA_BUCKET, ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID);
+        dynamicBucketItem(ModItems.TRANSCENDING_MATTER_BUCKET, ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID);
+        dynamicBucketItem(ModItems.UU_MATTER_BUCKET, ModFluids.SOURCE_UU_MATTER_FLUID);
+        dynamicBucketItem(ModItems.UU_AMPLIFIER_BUCKET, ModFluids.SOURCE_UU_AMPLIFIER_FLUID);
+
     }
 
     private ItemModelBuilder handheldItem(DeferredItem<?> item) {
@@ -133,9 +160,11 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/" + item.getId().getPath()));
     }
 
-    /**
-     * Gera um modelo de célula com múltiplas camadas (housing, side, led).
-     */
+    private void dynamicBucketItem(DeferredItem<Item> bucket, Supplier<? extends Fluid> fluid) {
+        withExistingParent(bucket.getId().getPath(), ResourceLocation.fromNamespaceAndPath("neoforge", "item/bucket"))
+                .customLoader(DynamicFluidContainerModelBuilder::begin)
+                .fluid(fluid.get());
+    }
     private void cellModel(DeferredHolder<Item, ? extends Item> cell, DeferredHolder<Item, ? extends Item> housing, DeferredHolder<Item, ? extends Item> component) {
         withExistingParent(cell.getId().getPath(), ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"))
                 .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/" + housing.getId().getPath())) // Camada base: o housing

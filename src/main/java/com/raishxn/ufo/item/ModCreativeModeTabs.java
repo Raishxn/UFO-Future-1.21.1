@@ -34,9 +34,24 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR_PRESS.get());
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR.get());
                         output.accept(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get());
+
                         output.accept(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get());
+                        output.accept(ModItems.WHITE_DWARF_FRAGMENT_DUST.get());
+                        output.accept(ModItems.WHITE_DWARF_FRAGMENT_NUGGET.get());
+                        output.accept(ModItems.WHITE_DWARF_FRAGMENT_ROD.get());
+                        output.accept(ModItems.WHITE_DWARF_FRAGMENT_BUCKET.get());
+
                         output.accept(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get());
+                        output.accept(ModItems.NEUTRON_STAR_FRAGMENT_DUST.get());
+                        output.accept(ModItems.NEUTRON_STAR_FRAGMENT_NUGGET.get());
+                        output.accept(ModItems.NEUTRON_STAR_FRAGMENT_ROD.get());
+                        output.accept(ModItems.NEUTRON_STAR_FRAGMENT_BUCKET.get());
+
                         output.accept(ModItems.PULSAR_FRAGMENT_INGOT.get());
+                        output.accept(ModItems.PULSAR_FRAGMENT_DUST.get());
+                        output.accept(ModItems.PULSAR_FRAGMENT_NUGGET.get());
+                        output.accept(ModItems.PULSAR_FRAGMENT_BUCKET.get());
+
                         output.accept(ModItems.INFINITY_COBBLED_DEEPSLATE_CELL.get());
                         output.accept(ModItems.INFINITY_END_STONE_CELL.get());
                         output.accept(ModItems.INFINITY_NETHERRACK_CELL.get());
@@ -101,6 +116,8 @@ public class ModCreativeModeTabs {
                         output.accept(ModCellItems.FLUID_CELL_250M.get());
                         output.accept(ModCellItems.FLUID_CELL_750M.get());
                         output.accept(ModCellItems.FLUID_CELL_SINGULARITY.get());
+
+
 
                     }).build());
 

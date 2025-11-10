@@ -5,6 +5,7 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.custom.DimensionalMatterAssemblerBlock;
 import com.raishxn.ufo.core.MegaCoProcessorTier;
 import com.raishxn.ufo.core.MegaCraftingStorageTier;
+import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.item.ModItems;
 // --- IMPORTS ADICIONADOS ---
 import com.raishxn.ufo.item.custom.AnimatedNameBlockItem;
@@ -14,7 +15,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -51,6 +54,32 @@ public class ModBlocks {
                     .requiresCorrectToolForDrops()
                     .lightLevel((state) -> state.getValue(DimensionalMatterAssemblerBlock.ACTIVE) ? 10 : 0) // Emite luz quando ativo
             ));
+    public static final DeferredBlock<LiquidBlock> NEUTRON_STAR_FRAGMENT_FLUID_BLOCK = BLOCKS.register("neutron_star_fragment_fluid_block",
+            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> PULSAR_FRAGMENT_FLUID_BLOCK = BLOCKS.register("pulsar_fragment_fluid_block",
+            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> WHITE_DWARF_FRAGMENT_FLUID_BLOCK = BLOCKS.register("white_dwarf_fragment_fluid_block",
+            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_WHITE_DWARF_FRAGMENT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> LIQUID_STARLIGHT_FLUID_BLOCK = BLOCKS.register("liquid_starlight_fluid_block",
+            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> PRIMORDIAL_MATTER_FLUID_BLOCK = BLOCKS.register("primordial_matter_fluid_block",
+            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> RAW_STAR_MATTER_PLASMA_FLUID_BLOCK = BLOCKS.register("raw_star_matter_plasma_fluid_block",
+            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> TRANSCENDING_MATTER_FLUID_BLOCK = BLOCKS.register("transcending_matter_fluid_block",
+            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> UU_MATTER_FLUID_BLOCK = BLOCKS.register("uu_matter_fluid_block",
+            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_UU_MATTER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> UU_AMPLIFIER_FLUID_BLOCK = BLOCKS.register("uu_amplifier_fluid_block",
+            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_UU_AMPLIFIER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     static {
         for (var tier : MegaCraftingStorageTier.values()) {
