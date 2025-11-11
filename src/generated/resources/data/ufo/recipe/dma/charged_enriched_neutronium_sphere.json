@@ -1,0 +1,39 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 4000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 10000000,
+  "fluid_input": {
+    "amount": 4000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:enriched_neutronium_sphere"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:nuclear_star"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:charged_enriched_neutronium_sphere"
+    }
+  ],
+  "process_time": 4000
+}

@@ -81,6 +81,15 @@ public class ModBlocks {
     public static final DeferredBlock<LiquidBlock> UU_AMPLIFIER_FLUID_BLOCK = BLOCKS.register("uu_amplifier_fluid_block",
             () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_UU_AMPLIFIER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
+    public static final DeferredBlock<LiquidBlock> GELID_CRYOTHEUM_BLOCK = BLOCKS.register("gelid_cryotheum_block",
+            () -> new LiquidBlock(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> TEMPORAL_FLUID_BLOCK = BLOCKS.register("temporal_fluid_block",
+            () -> new LiquidBlock((FlowingFluid)ModFluids.SOURCE_TEMPORAL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+
+    public static final DeferredBlock<LiquidBlock> SPATIAL_FLUID_BLOCK = BLOCKS.register("spatial_fluid_block",
+            () -> new LiquidBlock((FlowingFluid)ModFluids.SOURCE_SPATIAL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+
     static {
         for (var tier : MegaCraftingStorageTier.values()) {
             registerMegaCraftingBlock(tier);
@@ -89,17 +98,8 @@ public class ModBlocks {
             registerMegaCoProcessorBlock(tier);
         }
     }
-
-    // --- MÉTODO HELPER ADICIONADO AQUI ---
-    /**
-     * Registra um bloco e seu respectivo item de bloco com um nome animado.
-     */
-
-
     private static <T extends Block> DeferredBlock<T> registerBlockWithAnimatedItem(String name, java.util.function.Supplier<T> blockSupplier) {
-        // Registra o bloco em si
         DeferredBlock<T> block = BLOCKS.register(name, blockSupplier);
-        // Registra o item do bloco usando a classe AnimatedNameBlockItem
         ModItems.ITEMS.register(name, () -> new AnimatedNameBlockItem(block.get(), new Item.Properties(),
                 ChatFormatting.WHITE,
                 ChatFormatting.GRAY,
@@ -109,22 +109,16 @@ public class ModBlocks {
                 ChatFormatting.GRAY));
         return block;
     }
-
     private static <T extends Block> DeferredBlock<T> PulsarBlockWithAnimatedItem(String name, java.util.function.Supplier<T> blockSupplier) {
-        // Registra o bloco em si
         DeferredBlock<T> block = BLOCKS.register(name, blockSupplier);
-        // Registra o item do bloco usando a classe AnimatedNameBlockItem
         ModItems.ITEMS.register(name, () -> new AnimatedNameBlockItem(block.get(), new Item.Properties(),
                 ChatFormatting.WHITE,
                 ChatFormatting.GREEN,
                 ChatFormatting.DARK_GREEN));
         return block;
     }
-
     private static <T extends Block> DeferredBlock<T> NeutronStarBlockWithAnimatedItem(String name, java.util.function.Supplier<T> blockSupplier) {
-        // Registra o bloco em si
         DeferredBlock<T> block = BLOCKS.register(name, blockSupplier);
-        // Registra o item do bloco usando a classe AnimatedNameBlockItem
         ModItems.ITEMS.register(name, () -> new AnimatedNameBlockItem(block.get(), new Item.Properties(),
                 ChatFormatting.WHITE,
                 ChatFormatting.BLUE,
@@ -132,26 +126,21 @@ public class ModBlocks {
                 ChatFormatting.AQUA));
         return block;
     }
-
     private static void registerMegaCoProcessorBlock(MegaCoProcessorTier tier) {
         String registryName = tier.getRegistryId() + "_mega_co_processor";
         var registeredBlock = BLOCKS.register(registryName, () -> new CraftingUnitBlock(tier));
         ModItems.ITEMS.register(registryName, () -> new MegaCoProcessorBlockItem(registeredBlock.get(), new Item.Properties(), tier));
         CO_PROCESSOR_BLOCKS.put(tier, registeredBlock);
     }
-
     private static void registerMegaCraftingBlock(MegaCraftingStorageTier tier) {
         String registryName = tier.getRegistryId() + "_mega_crafting_storage";
         var registeredBlock = BLOCKS.register(registryName, () -> new CraftingUnitBlock(tier));
         registerBlockItem(registryName, registeredBlock, tier);
         CRAFTING_STORAGE_BLOCKS.put(tier, registeredBlock);
     }
-
     private static <T extends Block> void registerBlockItem(String name, DeferredBlock<T> block, MegaCraftingStorageTier tier) {
         ModItems.ITEMS.register(name, () -> new MegaCraftingStorageBlockItem(block.get(), new Item.Properties(), tier));
     }
-
-
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
     }

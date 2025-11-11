@@ -1,0 +1,41 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0,
+    0.03
+  ],
+  "coolant_input": {
+    "amount": 100,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 10000000,
+  "fluid_input": {
+    "amount": 100,
+    "ingredient": {
+      "fluid": "ufo:source_uu_amplifier_fluid"
+    }
+  },
+  "item_inputs": [
+    {
+      "amount": 9,
+      "ingredient": {
+        "item": "ufo:scrap"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:scrap_box"
+    },
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:scar"
+    }
+  ],
+  "process_time": 2000
+}

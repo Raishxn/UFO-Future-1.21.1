@@ -1,0 +1,50 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0,
+    0.1
+  ],
+  "coolant_input": {
+    "amount": 1500,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 12000000,
+  "fluid_input": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "ufo:source_pulsar_fragment_fluid"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:corporeal_matter"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:uu_matter_crystal"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:pulsar_fragment_block"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:pulsar_matter"
+    },
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:scar"
+    }
+  ],
+  "process_time": 2200
+}

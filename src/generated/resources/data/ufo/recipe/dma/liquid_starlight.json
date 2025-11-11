@@ -1,0 +1,41 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 4000000,
+  "fluid_input": {
+    "amount": 100,
+    "ingredient": {
+      "fluid": "ufo:source_uu_amplifier_fluid"
+    }
+  },
+  "item_inputs": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "item": "ufo:pulsar_fragment_dust"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 10000,
+      "#t": "ae2:f",
+      "id": "ufo:source_liquid_starlight_fluid"
+    }
+  ],
+  "process_time": 1000
+}

@@ -52,6 +52,28 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.PULSAR_FRAGMENT_NUGGET.get());
                         output.accept(ModItems.PULSAR_FRAGMENT_BUCKET.get());
 
+                        output.accept(ModItems.AETHER_CONTAINMENT_CAPSULE.get());
+                        output.accept(ModItems.SAFE_CONTAINMENT_MATTER.get());
+                        output.accept(ModItems.PROTO_MATTER.get());
+                        output.accept(ModItems.CORPOREAL_MATTER.get());
+                        output.accept(ModItems.WHITE_DWARF_MATTER.get());
+                        output.accept(ModItems.NEUTRON_STAR_MATTER.get());
+                        output.accept(ModItems.PULSAR_MATTER.get());
+                        output.accept(ModItems.UU_MATTER_CRYSTAL.get());
+                        output.accept(ModItems.DARK_MATTER.get());
+                        output.accept(ModItems.UNSTABLE_WHITE_HOLE_MATTER.get());
+                        output.accept(ModItems.QUANTUM_ANOMALY.get());
+                        output.accept(ModItems.NUCLEAR_STAR.get());
+                        output.accept(ModItems.NEUTRONIUM_SPHERE.get());
+                        output.accept(ModItems.ENRICHED_NEUTRONIUM_SPHERE.get());
+                        output.accept(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get());
+                        output.accept(ModItems.SCAR.get());
+                        output.accept(ModItems.SCRAP.get());
+                        output.accept(ModItems.SCRAP_BOX.get());
+                        output.accept(ModItems.DUST_CRYOTHEUM.get());
+                        output.accept(ModItems.DUST_BLIZZ.get());
+                        output.accept(ModItems.OBSIDIAN_MATRIX.get());
+
                         output.accept(ModItems.INFINITY_COBBLED_DEEPSLATE_CELL.get());
                         output.accept(ModItems.INFINITY_END_STONE_CELL.get());
                         output.accept(ModItems.INFINITY_NETHERRACK_CELL.get());

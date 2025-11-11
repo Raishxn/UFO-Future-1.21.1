@@ -1,0 +1,40 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 8000000,
+  "fluid_input": {
+    "amount": 12000,
+    "ingredient": {
+      "fluid": "ufo:source_primordial_matter_fluid"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:neutronium_sphere"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:enriched_neutronium_sphere"
+    }
+  ],
+  "process_time": 3000
+}

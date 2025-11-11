@@ -1,5 +1,5 @@
 {
   "parent": "neoforge:item/bucket",
-  "fluid": "ufo:source_transcending_matter_fluid",
+  "fluid": "ufo:transcending_matter",
   "loader": "neoforge:fluid_container"
 }

@@ -109,6 +109,34 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.UFO_CHESTPLATE.get());
         basicItem(ModItems.UFO_LEGGINGS.get());
         basicItem(ModItems.UFO_BOOTS.get());
+        basicItem(ModItems.QUANTUM_ANOMALY);
+        basicItem(ModItems.NUCLEAR_STAR);
+        basicItem(ModItems.SCAR);
+        basicItem(ModItems.SCRAP);
+        basicItem(ModItems.SCRAP_BOX);
+
+        // --- Esferas / Componentes Avançados ---
+        basicItem(ModItems.NEUTRONIUM_SPHERE);
+        basicItem(ModItems.ENRICHED_NEUTRONIUM_SPHERE);
+        basicItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE);
+
+        // --- Stages de Matter ---
+        basicItem(ModItems.PROTO_MATTER);
+        basicItem(ModItems.CORPOREAL_MATTER);
+        basicItem(ModItems.WHITE_DWARF_MATTER);
+        basicItem(ModItems.NEUTRON_STAR_MATTER);
+        basicItem(ModItems.PULSAR_MATTER);
+        basicItem(ModItems.DARK_MATTER);
+        basicItem(ModItems.UU_MATTER_CRYSTAL);
+
+
+        // --- Estrutural / Utilitário ---
+        basicItem(ModItems.OBSIDIAN_MATRIX);
+        basicItem(ModItems.DUST_CRYOTHEUM);
+        basicItem(ModItems.DUST_BLIZZ);
+        basicItem(ModItems.UNSTABLE_WHITE_HOLE_MATTER);
+        basicItem(ModItems.AETHER_CONTAINMENT_CAPSULE);
+        basicItem(ModItems.SAFE_CONTAINMENT_MATTER);
 
             // Housings
             basicItem(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.getId());
@@ -146,6 +174,9 @@ public class ModItemModelProvider extends ItemModelProvider {
         dynamicBucketItem(ModItems.TRANSCENDING_MATTER_BUCKET, ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID);
         dynamicBucketItem(ModItems.UU_MATTER_BUCKET, ModFluids.SOURCE_UU_MATTER_FLUID);
         dynamicBucketItem(ModItems.UU_AMPLIFIER_BUCKET, ModFluids.SOURCE_UU_AMPLIFIER_FLUID);
+        dynamicBucketItem(ModItems.GELID_CRYOTHEUM_BUCKET, ModFluids.SOURCE_GELID_CRYOTHEUM);
+        dynamicBucketItem(ModItems.TEMPORAL_FLUID_BUCKET, ModFluids.SOURCE_TEMPORAL_FLUID);
+        dynamicBucketItem(ModItems.SPATIAL_FLUID_BUCKET, ModFluids.SOURCE_SPATIAL_FLUID);
 
     }
 

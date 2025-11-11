@@ -1,0 +1,35 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 500,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 1000000,
+  "fluid_input": {
+    "amount": 500,
+    "ingredient": {
+      "fluid": "ufo:source_uu_amplifier_fluid"
+    }
+  },
+  "item_inputs": [
+    {
+      "amount": 9,
+      "ingredient": {
+        "item": "ufo:neutron_star_fragment_ingot"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:neutronium_sphere"
+    }
+  ],
+  "process_time": 600
+}

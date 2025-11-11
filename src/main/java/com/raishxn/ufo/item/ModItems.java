@@ -369,7 +369,130 @@ public class ModItems {
 
      public static final DeferredItem<Item> UU_AMPLIFIER_BUCKET = ITEMS.register("uu_amplifier_bucket",
              () -> new BucketItem(ModFluids.SOURCE_UU_AMPLIFIER_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredItem<Item> GELID_CRYOTHEUM_BUCKET = ITEMS.register("gelid_cryotheum_bucket",
+            () -> new BucketItem(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
+    public static final DeferredItem<Item> TEMPORAL_FLUID_BUCKET = ITEMS.register("temporal_fluid_bucket",
+            () -> new BucketItem(ModFluids.SOURCE_TEMPORAL_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    public static final DeferredItem<Item> SPATIAL_FLUID_BUCKET = ITEMS.register("spatial_fluid_bucket",
+            () -> new BucketItem(ModFluids.SOURCE_SPATIAL_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+
+    public static final DeferredItem<Item> QUANTUM_ANOMALY = ITEMS.register("quantum_anomaly",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.RARE)
+                    .fireResistant()));
+
+    public static final DeferredItem<Item> NUCLEAR_STAR = ITEMS.register("nuclear_star",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    public static final DeferredItem<Item> SCAR = ITEMS.register("scar",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(64)
+                    .rarity(Rarity.COMMON)));
+
+    public static final DeferredItem<Item> SCRAP = ITEMS.register("scrap",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(64)
+                    .rarity(Rarity.COMMON)));
+
+    public static final DeferredItem<Item> SCRAP_BOX = ITEMS.register("scrap_box",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(16)
+                    .rarity(Rarity.UNCOMMON)));
+
+    // ---------- Esferas / componentes avançados ----------
+    public static final DeferredItem<Item> NEUTRONIUM_SPHERE = ITEMS.register("neutronium_sphere",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(16)
+                    .rarity(Rarity.RARE)));
+
+    public static final DeferredItem<Item> ENRICHED_NEUTRONIUM_SPHERE = ITEMS.register("enriched_neutronium_sphere",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(8)
+                    .rarity(Rarity.RARE)));
+
+    public static final DeferredItem<Item> CHARGED_ENRICHED_NEUTRONIUM_SPHERE = ITEMS.register("charged_enriched_neutronium_sphere",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    // ---------- Stages de matter ----------
+    public static final DeferredItem<Item> PROTO_MATTER = ITEMS.register("proto_matter",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(16)
+                    .rarity(Rarity.UNCOMMON)));
+
+    public static final DeferredItem<Item> CORPOREAL_MATTER = ITEMS.register("corporeal_matter",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(4)
+                    .rarity(Rarity.RARE)));
+
+    public static final DeferredItem<Item> WHITE_DWARF_MATTER = ITEMS.register("white_dwarf_matter",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    public static final DeferredItem<Item> NEUTRON_STAR_MATTER = ITEMS.register("neutron_star_matter",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    public static final DeferredItem<Item> PULSAR_MATTER = ITEMS.register("pulsar_matter",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    public static final DeferredItem<Item> DARK_MATTER = ITEMS.register("dark_matter",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    // ---------- Estrutural / utilitário ----------
+    public static final DeferredItem<Item> OBSIDIAN_MATRIX = ITEMS.register("obsidian_matrix",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(16)
+                    .rarity(Rarity.UNCOMMON)));
+
+    public static final DeferredItem<Item> UU_MATTER_CRYSTAL = ITEMS.register("uu_matter_crystal",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(16)
+                    .rarity(Rarity.RARE)));
+
+    public static final DeferredItem<Item> DUST_CRYOTHEUM = ITEMS.register("dust_cryotheum",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(64)
+                    .rarity(Rarity.UNCOMMON)));
+
+    public static final DeferredItem<Item> DUST_BLIZZ = ITEMS.register("dust_blizz",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(64)
+                    .rarity(Rarity.UNCOMMON)));
+
+    public static final DeferredItem<Item> UNSTABLE_WHITE_HOLE_MATTER = ITEMS.register("unstable_white_hole_matter",
+            () -> new Item(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+    public static final DeferredItem<Item> AETHER_CONTAINMENT_CAPSULE = ITEMS.register("aether_containment_capsule",
+            () -> new AetherContainmentCapsuleItem(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.UNCOMMON)));
+
+    public static final DeferredItem<Item> SAFE_CONTAINMENT_MATTER = ITEMS.register("safe_containment_matter",
+            () -> new SafeContainmentMatterItem(new Item.Properties()
+                    .stacksTo(1)
+                    .rarity(Rarity.UNCOMMON)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

@@ -1,0 +1,34 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 5000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 12000000,
+  "fluid_input": {
+    "amount": 10000,
+    "ingredient": {
+      "fluid": "ufo:raw_star_matter_plasma"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:unstable_white_hole_matter"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 10000,
+      "#t": "ae2:f",
+      "id": "ufo:transcending_matter"
+    }
+  ],
+  "process_time": 3000
+}

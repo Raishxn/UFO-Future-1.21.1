@@ -1,0 +1,58 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 2000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 12000000,
+  "fluid_input": {
+    "amount": 2000,
+    "ingredient": {
+      "fluid": "ufo:source_liquid_starlight_fluid"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:charged_enriched_neutronium_sphere"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:proto_matter"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "mekanism:alloy_atomic"
+      }
+    },
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "ae2:matter_ball"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:ufo_staff"
+    }
+  ],
+  "process_time": 2400
+}

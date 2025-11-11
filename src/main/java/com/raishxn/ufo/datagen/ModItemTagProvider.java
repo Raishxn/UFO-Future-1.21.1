@@ -56,5 +56,55 @@ public class ModItemTagProvider extends ItemTagsProvider {
         tag(ItemTags.FOOT_ARMOR)
                 .add(ModItems.UFO_BOOTS.get());
 
+
+        tag(ModTags.Items.HAZARDOUS).add(
+                ModItems.QUANTUM_ANOMALY.get(),
+                ModItems.NUCLEAR_STAR.get(),
+                ModItems.UNSTABLE_WHITE_HOLE_MATTER.get(),
+                ModItems.RAW_STAR_MATTER_PLASMA_BUCKET.get(),
+                ModItems.UU_MATTER_BUCKET.get(),
+                ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get()
+        );
+        tag(ModTags.Items.COOLANTS).add(
+                ModItems.GELID_CRYOTHEUM_BUCKET.get(),
+                ModItems.TEMPORAL_FLUID_BUCKET.get(),
+                ModItems.SPATIAL_FLUID_BUCKET.get()
+        );
+        tag(ModTags.Items.CONTAINMENT_DEVICE).add(
+                ModItems.AETHER_CONTAINMENT_CAPSULE.get(),
+                ModItems.SAFE_CONTAINMENT_MATTER.get()
+        );
+        tag(ModTags.Items.COOLANT_MATERIAL).add(
+                ModItems.DUST_BLIZZ.get(),
+                ModItems.DUST_CRYOTHEUM.get()
+        );
+        tag(ModTags.Items.COMPONENT).add(
+                ModItems.OBSIDIAN_MATRIX.get()
+        );
+        tag(ModTags.Items.MATTER_STAGE_1).add(
+                ModItems.PROTO_MATTER.get()
+        );
+        tag(ModTags.Items.MATTER_STAGE_2).add(
+                ModItems.CORPOREAL_MATTER.get()
+        );
+        tag(ModTags.Items.MATTER_STAGE_FINAL).add(
+                ModItems.DARK_MATTER.get(),
+                ModItems.PULSAR_MATTER.get(),
+                ModItems.WHITE_DWARF_MATTER.get(),
+                ModItems.NEUTRON_STAR_MATTER.get()
+        );
+        tag(ModTags.Items.ADVANCED_COMPONENT).add(
+                ModItems.ENRICHED_NEUTRONIUM_SPHERE.get(),
+                ModItems.NEUTRONIUM_SPHERE.get()
+        );
+        tag(ModTags.Items.COMPRESSED).add(
+                ModItems.SCRAP_BOX.get()
+        );
+        tag(ModTags.Items.RECYCLABLE).add(
+                ModItems.SCRAP.get()
+        );
+        tag(ModTags.Items.DIM_RESIDUE).add(
+                ModItems.SCAR.get()
+        );
     }
 }

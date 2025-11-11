@@ -44,21 +44,24 @@ public class ModFluids {
             PrimordialMatterFluid.Flowing::new);
 
     // --- RAW STAR MATTER PLASMA ---
-    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_RAW_STAR_MATTER_PLASMA_FLUID = FLUIDS.register("source_raw_star_matter_plasma_fluid",
+    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_RAW_STAR_MATTER_PLASMA_FLUID = FLUIDS.register("raw_star_matter_plasma",
             RawStarMatterPlasmaFluid.Source::new);
-    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_RAW_STAR_MATTER_PLASMA_FLUID = FLUIDS.register("flowing_raw_star_matter_plasma_fluid",
+    // Antes: "flowing_raw_star_matter_plasma_fluid"
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_RAW_STAR_MATTER_PLASMA_FLUID = FLUIDS.register("flowing_raw_star_matter_plasma",
             RawStarMatterPlasmaFluid.Flowing::new);
 
     // --- TRANSCENDING MATTER ---
-    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_TRANSCENDING_MATTER_FLUID = FLUIDS.register("source_transcending_matter_fluid",
+    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_TRANSCENDING_MATTER_FLUID = FLUIDS.register("transcending_matter",
             TranscendingMatterFluid.Source::new);
-    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_TRANSCENDING_MATTER_FLUID = FLUIDS.register("flowing_transcending_matter_fluid",
+    // Antes: "flowing_transcending_matter_fluid"
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_TRANSCENDING_MATTER_FLUID = FLUIDS.register("flowing_transcending_matter",
             TranscendingMatterFluid.Flowing::new);
 
     // --- UU MATTER ---
-    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_UU_MATTER_FLUID = FLUIDS.register("source_uu_matter_fluid",
+    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_UU_MATTER_FLUID = FLUIDS.register("uu_matter",
             UuMatterFluid.Source::new);
-    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_UU_MATTER_FLUID = FLUIDS.register("flowing_uu_matter_fluid",
+    // Antes: "flowing_uu_matter_fluid"
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_UU_MATTER_FLUID = FLUIDS.register("flowing_uu_matter",
             UuMatterFluid.Flowing::new);
 
     // --- UU AMPLIFIER ---
@@ -66,6 +69,23 @@ public class ModFluids {
             UuAmplifierFluid.Source::new);
     public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_UU_AMPLIFIER_FLUID = FLUIDS.register("flowing_uu_amplifier_fluid",
             UuAmplifierFluid.Flowing::new);
+
+    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_GELID_CRYOTHEUM = FLUIDS.register("source_gelid_cryotheum",
+            GelidCryotheumFluid.Source::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_GELID_CRYOTHEUM = FLUIDS.register("flowing_gelid_cryotheum",
+            GelidCryotheumFluid.Flowing::new);
+
+    // --- TEMPORAL FLUID ---
+    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_TEMPORAL_FLUID = FLUIDS.register("source_temporal_fluid",
+            TemporalFluid.Source::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_TEMPORAL_FLUID = FLUIDS.register("flowing_temporal_fluid",
+            TemporalFluid.Flowing::new);
+
+    // --- SPATIAL FLUID ---
+    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_SPATIAL_FLUID = FLUIDS.register("source_spatial_fluid",
+            SpatialFluid.Source::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_SPATIAL_FLUID = FLUIDS.register("flowing_spatial_fluid",
+            SpatialFluid.Flowing::new);
 
 
     public static void register(IEventBus eventBus) {

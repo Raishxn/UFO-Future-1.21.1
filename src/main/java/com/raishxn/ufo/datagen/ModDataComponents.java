@@ -3,12 +3,16 @@ package com.raishxn.ufo.datagen;
 import appeng.api.stacks.GenericStack;
 import com.mojang.serialization.Codec;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.item.ModItems;
 import com.raishxn.ufo.item.custom.cell.BigIntegerCodec;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs; // Importe este
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -55,6 +59,13 @@ public class ModDataComponents {
             DATA_COMPONENTS.register("bow_fast_mode", () -> DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)
                     .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>> FLUID_CONTENT = register("fluid_content",
+            builder -> builder.persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC));
+
+    // Correção para SAVED_INVENTORY (caso tenhas adicionado o do CCM anteriormente com o nome errado)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemContainerContents>> SAVED_INVENTORY = register("saved_inventory",
+            builder -> builder.persistent(ItemContainerContents.CODEC).networkSynchronized(ItemContainerContents.STREAM_CODEC));
 
     // --- Novo método helper para simplificar o registro ---
     private static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name, UnaryOperator<DataComponentType.Builder<T>> operator) {

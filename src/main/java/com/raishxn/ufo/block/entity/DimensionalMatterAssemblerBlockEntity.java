@@ -51,7 +51,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
     public final FluidTank coolantInputTank = new FluidTank(16000) { @Override protected void onContentsChanged() { setChanged(); } };
     public final FluidTank fluidOutputTank1 = new FluidTank(16000) { @Override protected void onContentsChanged() { setChanged(); } };
     public final FluidTank fluidOutputTank2 = new FluidTank(16000) { @Override protected void onContentsChanged() { setChanged(); } };
-    public final EnergyStorage energyStorage = new EnergyStorage(1000000, 50000, 0) { @Override public int receiveEnergy(int maxReceive, boolean simulate) { setChanged(); return super.receiveEnergy(maxReceive, simulate); } };
+    public final EnergyStorage energyStorage = new EnergyStorage(1000000000, 50000000, 0) { @Override public int receiveEnergy(int maxReceive, boolean simulate) { setChanged(); return super.receiveEnergy(maxReceive, simulate); } };
 
     private final IOMode[][] sideConfigs = new IOMode[ConfigType.values().length][6];
     private final boolean[] autoEject = new boolean[ConfigType.values().length];

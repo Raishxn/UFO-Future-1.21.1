@@ -5,6 +5,7 @@ import com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.item.ModItems;
+import com.raishxn.ufo.item.custom.AetherContainmentCapsuleItem;
 import com.raishxn.ufo.util.ConfigType;
 import com.raishxn.ufo.util.IOMode;
 import com.raishxn.ufo.util.UfoPersistentEnergyStorage;
@@ -27,6 +28,12 @@ public class ModCapabilityEvents {
     }
 
     private static void registerItemCapabilities(RegisterCapabilitiesEvent event) {
+
+        event.registerItem(
+                Capabilities.FluidHandler.ITEM,
+                (stack, context) -> new AetherContainmentCapsuleItem.HazardousFluidHandler(stack, AetherContainmentCapsuleItem.CAPACITY),
+                ModItems.AETHER_CONTAINMENT_CAPSULE.get()
+        );
         // --- Ferramentas e Armas ---
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),

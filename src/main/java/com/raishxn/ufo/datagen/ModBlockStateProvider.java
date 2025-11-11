@@ -28,9 +28,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         // --- Blocos Simples Originais ---
         simpleBlockWithItem(ModBlocks.QUANTUM_LATTICE_FRAME);
         simpleBlockWithItem(ModBlocks.GRAVITON_PLATED_CASING);
-        simpleBlockWithItem(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK);
-        simpleBlockWithItem(ModBlocks.PULSAR_FRAGMENT_BLOCK);
-        simpleBlockWithItem(ModBlocks.NEUTRON_STAR_FRAGMENT_BLOCK);
+        blockWithFluidTexture(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK, "white_dwarf_fragment");
+        blockWithFluidTexture(ModBlocks.PULSAR_FRAGMENT_BLOCK, "pulsar_fragment");
+        blockWithFluidTexture(ModBlocks.NEUTRON_STAR_FRAGMENT_BLOCK, "neutron_star_fragment");
         registerAssemblerBlock(ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER);
 
         // --- Registro dos Novos Blocos Multiblock ---
@@ -100,9 +100,13 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(block.get(), models().getExistingFile(modLoc("block/" + name)));
     }
 
-    /**
-     * Registra um bloco de componente direcional com uma textura base e um overlay frontal.
-     */
+    private void blockWithFluidTexture(DeferredBlock<Block> block, String fluidTextureName) {
+        String name = block.getId().getPath();
+        ResourceLocation texture = modLoc("block/fluid/" + fluidTextureName);
+        ModelFile model = models().cubeAll(name, texture);
+        simpleBlock(block.get(), model);
+        simpleBlockItem(block.get(), model);
+    }
     private void multiblockComponentBlock(DeferredBlock<Block> block) {
         String name = block.getId().getPath();
         ResourceLocation baseTexture = modLoc("block/multiblock/entropy_assembler_core_casing_base");

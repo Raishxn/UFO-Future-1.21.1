@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "ufo:block/pulsar_fragment_block"
+    "all": "ufo:block/fluid/pulsar_fragment"
   }
 }

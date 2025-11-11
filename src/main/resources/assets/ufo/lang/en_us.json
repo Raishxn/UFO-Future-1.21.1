@@ -57,9 +57,6 @@
   "item.ufo.dimensional_processor_press": "Dimensional Processor Press",
   "item.ufo.printed_dimensional_processor": "Printed Dimensional Processor",
   "item.ufo.dimensional_processor": "Dimensional Processor",
-  "item.ufo.white_dwarf_fragment_ingot": "White Dwarf Fragment Ingot",
-  "item.ufo.neutron_star_fragment_ingot": "Neutron Star Fragment Ingot",
-  "item.ufo.pulsar_fragment_ingot": "Pulsar Fragment Ingot",
   "item.ufo.infinity_cell_name": "Infinity %s Cell",
   "item.ufo.infinity_cell_name_invalid": "Invalid Infinity Cell",
 
@@ -110,5 +107,48 @@
   "item.ufo.neutron_star_reservoir_beaco": "Neutron Star Reservoir - Beacon",
   "item.ufo.neutron_star_reservoir_nexus": "Neutron Star Reservoir - Nexus",
   "item.ufo.neutron_star_reservoir_core": "Neutron Star Reservoir - Core",
-  "item.ufo.neutron_star_reservoir_singularity": "Neutron Star Reservoir - Singularity"
+  "item.ufo.neutron_star_reservoir_singularity": "Neutron Star Reservoir - Singularity",
+
+  "tooltip.ufo.acc": "Shift-Right Click to empty into another tank.",
+  "tooltip.ufo.scm": "Right Click with a hazardous item in offhand to contain it.",
+
+  "tooltip.ufo.hazard_warning": "§cWARNING: Dimensional Containment Failed!",
+
+  "item.ufo.white_dwarf_fragment_ingot": "White Dwarf Fragment Ingot",
+  "item.ufo.white_dwarf_fragment_dust": "White Dwarf Fragment Dust",
+  "item.ufo.white_dwarf_fragment_nugget": "White Dwarf Fragment Nugget",
+  "item.ufo.white_dwarf_fragment_rod": "White Dwarf Fragment Rod",
+  "item.ufo.white_dwarf_fragment_bucket": "White Dwarf Fragment Bucket",
+
+  "item.ufo.neutron_star_fragment_ingot": "Neutron Star Fragment Ingot",
+  "item.ufo.neutron_star_fragment_dust": "Neutron Star Fragment Dust",
+  "item.ufo.neutron_star_fragment_nugget": "Neutron Star Fragment Nugget",
+  "item.ufo.neutron_star_fragment_rod": "Neutron Star Fragment Rod",
+  "item.ufo.neutron_star_fragment_bucket": "Neutron Star Fragment Bucket",
+
+  "item.ufo.pulsar_fragment_ingot": "Pulsar Fragment Ingot",
+  "item.ufo.pulsar_fragment_dust": "Pulsar Fragment Dust",
+  "item.ufo.pulsar_fragment_nugget": "Pulsar Fragment Nugget",
+  "item.ufo.pulsar_fragment_bucket": "Pulsar Fragment Bucket",
+
+  "item.ufo.aether_containment_capsule": "Aether Containment Capsule (ACC)",
+  "item.ufo.safe_containment_matter": "Safe Containment Matter (SCM)",
+  "item.ufo.proto_matter": "Proto Matter",
+  "item.ufo.corporeal_matter": "Corporeal Matter",
+  "item.ufo.white_dwarf_matter": "White Dwarf Matter",
+  "item.ufo.neutron_star_matter": "Neutron Star Matter",
+  "item.ufo.pulsar_matter": "Pulsar Matter",
+  "item.ufo.dark_matter": "Dark Matter",
+  "item.ufo.unstable_white_hole_matter": "Unstable White Hole Matter",
+  "item.ufo.quantum_anomaly": "Quantum Anomaly",
+  "item.ufo.nuclear_star": "Nuclear Star",
+  "item.ufo.neutronium_sphere": "Neutronium Sphere",
+  "item.ufo.enriched_neutronium_sphere": "Enriched Neutronium Sphere",
+  "item.ufo.charged_enriched_neutronium_sphere": "Charged Enriched Neutronium Sphere",
+  "item.ufo.scar": "Scar",
+  "item.ufo.scrap": "Scrap",
+  "item.ufo.scrap_box": "Scrap Box",
+  "item.ufo.dust_cryotheum": "Cryotheum Dust",
+  "item.ufo.dust_blizz": "Blizz Dust",
+  "item.ufo.obsidian_matrix": "Obsidian Matrix"
 }
