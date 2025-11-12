@@ -31,9 +31,12 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
 
     public DimensionalMatterAssemblerScreen(DimensionalMatterAssemblerMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.imageWidth = 176;
+        // ATUALIZADO: Novas dimensões da UI (0,0 até 193,182)
+        this.imageWidth = 194;
         this.imageHeight = 183;
-        this.inventoryLabelY = this.imageHeight - 94;
+
+        this.inventoryLabelY = Integer.MAX_VALUE;
+
         this.titleLabelX = 7;
         this.titleLabelY = 5;
     }
@@ -44,12 +47,17 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         this.leftPos = (this.width - this.imageWidth) / 2;
         this.topPos = (this.height - this.imageHeight) / 2;
 
-        // ATUALIZADO: Novas dimensões (largura, altura) corrigidas
-        coolantRenderer = new FluidTankRenderer(16000, 10, 52);
-        inputFluidRenderer = new FluidTankRenderer(16000, 10, 52);
-        outputFluidRenderer1 = new FluidTankRenderer(16000, 13, 15);
-        outputFluidRenderer2 = new FluidTankRenderer(16000, 12, 15);
+        // ATUALIZADO: Novas dimensões dos tanques
+        // Coolant: 9,21 a 19,73 -> (11 largura, 53 altura)
+        coolantRenderer = new FluidTankRenderer(16000, 11, 53);
+        // Fluid Input: 28,21 a 38,73 -> (11 largura, 53 altura)
+        inputFluidRenderer = new FluidTankRenderer(16000, 11, 53);
+        // Fluid Output 1: 119,76 a 132,91 -> (14 largura, 16 altura)
+        outputFluidRenderer1 = new FluidTankRenderer(16000, 14, 16);
+        // Fluid Output 2: 148,76 a 161,91 -> (14 largura, 16 altura)
+        outputFluidRenderer2 = new FluidTankRenderer(16000, 14, 16);
 
+        // O widget de config permanece o mesmo, `leftPos` será atualizado
         this.configWidget = new DMAConfigWidget(this.leftPos - 22, this.topPos + 5, this.menu.blockEntity);
         this.addRenderableWidget(this.configWidget);
     }
@@ -63,26 +71,48 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         int y = (height - imageHeight) / 2;
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
-        // Posições de início (X, Y) mantiveram-se as mesmas da sua última mensagem,
-        // mas garantindo que estão certas aqui:
-        coolantRenderer.render(guiGraphics, x + 7, y + 22, menu.getCoolantStack());
-        inputFluidRenderer.render(guiGraphics, x + 26, y + 22, menu.getInputFluidStack());
-        outputFluidRenderer1.render(guiGraphics, x + 117, y + 77, menu.getOutputFluid1Stack());
-        outputFluidRenderer2.render(guiGraphics, x + 146, y + 77, menu.getOutputFluid2Stack());
+        // ATUALIZADO: Novas posições de renderização dos tanques
+        // Coolant: 9,21
+        coolantRenderer.render(guiGraphics, x + 9, y + 21, menu.getCoolantStack());
+        // Fluid Input: 28,21
+        inputFluidRenderer.render(guiGraphics, x + 28, y + 21, menu.getInputFluidStack());
+        // Fluid Output 1: 119,76
+        outputFluidRenderer1.render(guiGraphics, x + 119, y + 76, menu.getOutputFluid1Stack());
+        // Fluid Output 2: 148,76
+        outputFluidRenderer2.render(guiGraphics, x + 148, y + 76, menu.getOutputFluid2Stack());
 
+        // ATUALIZADO: Barra de Energia
+        // Posição: 155,34 (Largura 6, Altura 18)
+        // UV: 225,0 (Largura 6, Altura 18)
         int energy = menu.getEnergy();
         int maxEnergy = menu.getMaxEnergy();
-        int energyBarH = 17;
+        int energyBarH = 18; // Nova altura
         int scaledEnergyHeight = (maxEnergy > 0 && energy > 0) ? (int)((long)energy * energyBarH / maxEnergy) : 0;
         if (scaledEnergyHeight > 0) {
-            guiGraphics.blit(TEXTURE, x + 152, y + 34 + (energyBarH - scaledEnergyHeight), 176, 0 + (energyBarH - scaledEnergyHeight), 5, scaledEnergyHeight);
+            guiGraphics.blit(TEXTURE,
+                    x + 155, // Nova Posição X
+                    y + 34 + (energyBarH - scaledEnergyHeight), // Nova Posição Y (render de baixo p/ cima)
+                    225, // Nova UV X
+                    0 + (energyBarH - scaledEnergyHeight), // Nova UV Y (render de baixo p/ cima)
+                    6, // Nova Largura
+                    scaledEnergyHeight);
         }
 
+        // ATUALIZADO: Barra de Progresso
+        // Posição: 105,42 (Largura 21, Altura 12)
+        // UV: 234,0 (Largura 21, Altura 12)
         int progress = menu.getProgressPercent();
-        int progressBarH = 11;
-        int scaledProgressWidth = (progress * 20) / 100;
+        int progressBarW = 21; // Nova largura
+        int progressBarH = 12; // Nova altura
+        int scaledProgressWidth = (progress * progressBarW) / 100; // Usa a nova largura
         if (scaledProgressWidth > 0) {
-            guiGraphics.blit(TEXTURE, x + 102, y + 42, 176, 19, scaledProgressWidth, progressBarH);
+            guiGraphics.blit(TEXTURE,
+                    x + 105, // Nova Posição X
+                    y + 42, // Nova Posição Y
+                    234, // Nova UV X
+                    0, // Nova UV Y
+                    scaledProgressWidth,
+                    progressBarH); // Nova Altura
         }
     }
 
@@ -90,20 +120,46 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        // <-- INÍCIO: RENDERIZAÇÃO DO TEXTO DA TEMPERATURA
+        int temp = menu.getTemperature();
+        String tempText = temp + " K"; // "K" de Kelvin, ou "°C" etc.
+
+        // Coordenadas da "tela": 9,84 (largura 31, altura 9)
+        int textX = this.leftPos + 9 + (31 / 2); // Centraliza (9 + 15 = 24)
+        int textY = this.topPos + 85;             // Posição Y (84 + 1 pixel padding)
+        int color = 0xFFFFFF; // Cor branca
+
+        // Desenha o texto centralizado
+        guiGraphics.drawCenteredString(font, tempText, textX, textY, color);
+        // <-- FIM: RENDERIZAÇÃO DO TEXTO DA TEMPERATURA
+
         renderTooltip(guiGraphics, mouseX, mouseY);
 
-        if (isHovering(152, 34, 5, 17, mouseX, mouseY)) {
+        // ATUALIZADO: Tooltips (áreas de hover)
+        // Energia: 155,34 (Largura 6, Altura 18)
+        if (isHovering(155, 34, 6, 18, mouseX, mouseY)) {
             guiGraphics.renderTooltip(font, Component.literal(menu.getEnergy() + " / " + menu.getMaxEnergy() + " FE").withStyle(ChatFormatting.AQUA), mouseX, mouseY);
         }
-        if (isHovering(102, 42, 20, 11, mouseX, mouseY)) {
+        // Progresso: 105,42 (Largura 21, Altura 12)
+        if (isHovering(105, 42, 21, 12, mouseX, mouseY)) {
             guiGraphics.renderTooltip(font, Component.literal(menu.getProgressPercent() + "%"), mouseX, mouseY);
         }
 
-        // ATUALIZADO: Tooltips com as novas dimensões corrigidas
-        if (isHovering(7, 22, 10, 52, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getCoolantStack(), 16000, "Coolant");
-        if (isHovering(26, 22, 10, 52, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getInputFluidStack(), 16000, "Input Fluid");
-        if (isHovering(117, 77, 13, 15, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getOutputFluid1Stack(), 16000, "Output Fluid 1");
-        if (isHovering(146, 77, 12, 15, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getOutputFluid2Stack(), 16000, "Output Fluid 2");
+        // ATUALIZADO: Tooltips dos tanques (áreas de hover)
+        // Coolant: 9,21 (Largura 11, Altura 53)
+        if (isHovering(9, 21, 11, 53, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getCoolantStack(), 16000, "Coolant");
+        // Input Fluid: 28,21 (Largura 11, Altura 53)
+        if (isHovering(28, 21, 11, 53, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getInputFluidStack(), 16000, "Input Fluid");
+        // Output Fluid 1: 119,76 (Largura 14, Altura 16)
+        if (isHovering(119, 76, 14, 16, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getOutputFluid1Stack(), 16000, "Output Fluid 1");
+        // Output Fluid 2: 148,76 (Largura 14, Altura 16)
+        if (isHovering(148, 76, 14, 16, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getOutputFluid2Stack(), 16000, "Output Fluid 2");
+
+        // <-- ADICIONADO: Tooltip para a 'tela de temperatura' (9, 84, 31, 9)
+        if (isHovering(9, 84, 31, 9, mouseX, mouseY)) {
+            guiGraphics.renderTooltip(font, Component.literal("Temperatura: " + menu.getTemperature() + " K").withStyle(ChatFormatting.RED), mouseX, mouseY);
+        }
     }
 
     private void renderFluidTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY, FluidStack fluid, int capacity, String defaultName) {

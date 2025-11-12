@@ -27,6 +27,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.BlockCapability; // <-- IMPORT ADICIONADO
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -45,54 +46,66 @@ import java.util.Optional;
 
 public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implements MenuProvider {
 
+    private final Object[] itemHandlers = new Object[6];
+    private final Object[] fluidHandlers = new Object[6];
+    private final Object[] energyHandlers = new Object[6];
     public final ItemStackHandler itemInputHandler = new ItemStackHandler(9) { @Override protected void onContentsChanged(int slot) { setChanged(); } };
     public final ItemStackHandler itemOutputHandler = new ItemStackHandler(2) { @Override protected void onContentsChanged(int slot) { setChanged(); } @Override public boolean isItemValid(int slot, @NotNull ItemStack stack) { return false; } };
+    public final ItemStackHandler upgradeHandler = new ItemStackHandler(4) { @Override protected void onContentsChanged(int slot) { setChanged(); } };
     public final FluidTank fluidInputTank = new FluidTank(16000) { @Override protected void onContentsChanged() { setChanged(); } };
     public final FluidTank coolantInputTank = new FluidTank(16000) { @Override protected void onContentsChanged() { setChanged(); } };
     public final FluidTank fluidOutputTank1 = new FluidTank(16000) { @Override protected void onContentsChanged() { setChanged(); } };
     public final FluidTank fluidOutputTank2 = new FluidTank(16000) { @Override protected void onContentsChanged() { setChanged(); } };
     public final EnergyStorage energyStorage = new EnergyStorage(1000000000, 50000000, 0) { @Override public int receiveEnergy(int maxReceive, boolean simulate) { setChanged(); return super.receiveEnergy(maxReceive, simulate); } };
-
     private final IOMode[][] sideConfigs = new IOMode[ConfigType.values().length][6];
     private final boolean[] autoEject = new boolean[ConfigType.values().length];
     private final boolean[] autoInput = new boolean[ConfigType.values().length];
-    protected final ContainerData data = new ContainerData() {
-        @Override
-        public int get(int pIndex) {
-            return switch (pIndex) {
-                case 0 -> progress;
-                case 1 -> maxProgress;
-                case 2 -> energyStorage.getEnergyStored();
-                case 3 -> energyStorage.getMaxEnergyStored();
-                case 4 -> BuiltInRegistries.FLUID.getId(coolantInputTank.getFluid().getFluid());
-                case 5 -> coolantInputTank.getFluidAmount();
-                case 6 -> BuiltInRegistries.FLUID.getId(fluidInputTank.getFluid().getFluid());
-                case 7 -> fluidInputTank.getFluidAmount();
-                case 8 -> BuiltInRegistries.FLUID.getId(fluidOutputTank1.getFluid().getFluid());
-                case 9 -> fluidOutputTank1.getFluidAmount();
-                case 10 -> BuiltInRegistries.FLUID.getId(fluidOutputTank2.getFluid().getFluid());
-                case 11 -> fluidOutputTank2.getFluidAmount();
-                case 12 -> (autoEject[0] ? 1 : 0) | (autoEject[1] ? 2 : 0) | (autoEject[2] ? 4 : 0) | (autoEject[3] ? 8 : 0);
-                default -> 0;
-            };
-        }
-        @Override
-        public void set(int pIndex, int pValue) {
-            switch (pIndex) {
-                case 0 -> progress = pValue;
-                case 1 -> maxProgress = pValue;
-                case 12 -> {
-                    autoEject[0] = (pValue & 1) != 0;
-                    autoEject[1] = (pValue & 2) != 0;
-                    autoEject[2] = (pValue & 4) != 0;
-                    autoEject[3] = (pValue & 8) != 0;
-                }
-            }
-        }
-        @Override public int getCount() { return 13; }
-    };
+    private int temperature = 20;
+    protected final ContainerData data; // ... (seu código de data) ...
     private int progress = 0;
     private int maxProgress = 0;
+
+    // ... (Declaração do seu ContainerData 'data' aqui) ...
+    {
+        data = new ContainerData() {
+            @Override
+            public int get(int pIndex) {
+                return switch (pIndex) {
+                    case 0 -> progress;
+                    case 1 -> maxProgress;
+                    case 2 -> energyStorage.getEnergyStored();
+                    case 3 -> energyStorage.getMaxEnergyStored();
+                    case 4 -> BuiltInRegistries.FLUID.getId(coolantInputTank.getFluid().getFluid());
+                    case 5 -> coolantInputTank.getFluidAmount();
+                    case 6 -> BuiltInRegistries.FLUID.getId(fluidInputTank.getFluid().getFluid());
+                    case 7 -> fluidInputTank.getFluidAmount();
+                    case 8 -> BuiltInRegistries.FLUID.getId(fluidOutputTank1.getFluid().getFluid());
+                    case 9 -> fluidOutputTank1.getFluidAmount();
+                    case 10 -> BuiltInRegistries.FLUID.getId(fluidOutputTank2.getFluid().getFluid());
+                    case 11 -> fluidOutputTank2.getFluidAmount();
+                    case 12 -> (autoEject[0] ? 1 : 0) | (autoEject[1] ? 2 : 0) | (autoEject[2] ? 4 : 0) | (autoEject[3] ? 8 : 0);
+                    case 13 -> temperature;
+                    default -> 0;
+                };
+            }
+            @Override
+            public void set(int pIndex, int pValue) {
+                switch (pIndex) {
+                    case 0 -> progress = pValue;
+                    case 1 -> maxProgress = pValue;
+                    case 12 -> {
+                        autoEject[0] = (pValue & 1) != 0;
+                        autoEject[1] = (pValue & 2) != 0;
+                        autoEject[2] = (pValue & 4) != 0;
+                        autoEject[3] = (pValue & 8) != 0;
+                    }
+                    case 13 -> temperature = pValue;
+                }
+            }
+            @Override public int getCount() { return 14; }
+        };
+    }
+
 
     public DimensionalMatterAssemblerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.DMA_BE.get(), pos, state);
@@ -106,7 +119,63 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         sideConfigs[ConfigType.COOLANT.ordinal()][Direction.SOUTH.ordinal()] = IOMode.COOLANT_IN;
         sideConfigs[ConfigType.ENERGY.ordinal()][Direction.EAST.ordinal()] = IOMode.ENERGY;
         sideConfigs[ConfigType.ENERGY.ordinal()][Direction.WEST.ordinal()] = IOMode.ENERGY;
+
+        // --- AS LINHAS 'registerCapability' FORAM REMOVIDAS DAQUI ---
     }
+
+    // =================================================================================
+    // --- ADICIONADO: MÉTODO CORRETO DE REGISTRO DE CAPACIDADE ---
+    //
+    // Este método é chamado pelo NeoForge sempre que algo (um cano, um balde)
+    // tenta interagir com este bloco, pedindo uma "capacidade".
+    // =================================================================================
+    @SuppressWarnings("unchecked")
+    public <T> @Nullable T getCapability(BlockCapability<T, Direction> capability, @Nullable Direction side) {
+
+        // Se o lado for nulo, não fornecemos nada.
+        // Interações de automação quase sempre têm um 'side'.
+        if (side == null) {
+            return null;
+        }
+
+        int sideIndex = side.ordinal();
+
+        // --- Se o jogo está pedindo a capability de ITEM ---
+        if (capability == Capabilities.ItemHandler.BLOCK) {
+            if (itemHandlers[sideIndex] == null) {
+                // Inicialização preguiçosa (Lazy init): Cria o handler SÓ UMA VEZ.
+                itemHandlers[sideIndex] = new SidedItemHandler(side);
+            }
+            return (T) itemHandlers[sideIndex];
+        }
+
+        // --- Se o jogo está pedindo a capability de FLUIDO ---
+        if (capability == Capabilities.FluidHandler.BLOCK) {
+            if (fluidHandlers[sideIndex] == null) {
+                // Inicialização preguiçosa (Lazy init): Cria o handler SÓ UMA VEZ.
+                fluidHandlers[sideIndex] = new SidedFluidHandler(side);
+            }
+            return (T) fluidHandlers[sideIndex];
+        }
+
+        // --- Se o jogo está pedindo a capability de ENERGIA ---
+        if (capability == Capabilities.EnergyStorage.BLOCK) {
+            if (energyHandlers[sideIndex] == null) {
+                // Inicialização preguiçosa (Lazy init): Cria o handler SÓ UMA VEZ.
+
+                // CORRIGIDO: Usando sua classe interna 'SidedEnergyStorage'
+                // que respeita o IOMode, e não a classe genérica.
+                energyHandlers[sideIndex] = new SidedEnergyStorage(side);
+            }
+            return (T) energyHandlers[sideIndex];
+        }
+
+        // Não é uma capability que fornecemos, passa para o super
+        // (Embora neste caso, retornar null é o correto)
+        return null;
+    }
+    // =================================================================================
+
 
     @Override public @NotNull Component getDisplayName() { return Component.translatable("block.ufo.dimensional_matter_assembler"); }
 
@@ -115,6 +184,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, DimensionalMatterAssemblerBlockEntity be) {
+        // ... (Seu código de tick) ...
         if (level.isClientSide) return;
         if (be.autoEject[ConfigType.ITEM.ordinal()]) be.tryEjectItems(level, pos);
         if (be.autoEject[ConfigType.FLUID.ordinal()]) be.tryEjectFluids(level, pos, ConfigType.FLUID);
@@ -143,11 +213,24 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         } else {
             be.progress = 0;
         }
+
+        if(isActive) {
+            if(be.temperature < 1500) {
+                be.temperature++;
+            }
+        } else {
+            if(be.temperature > 20) {
+                be.temperature--;
+            }
+        }
+
         if (state.getValue(DimensionalMatterAssemblerBlock.ACTIVE) != isActive) {
             level.setBlock(pos, state.setValue(DimensionalMatterAssemblerBlock.ACTIVE, isActive), 3);
         }
         be.setChanged();
     }
+
+    // ... (Seu código: tryEjectItems, tryEjectFluids, getRecipe, matchesRecipe, canProcess, craft, get/set configs, save/load NBT, etc.) ...
 
     private void tryEjectItems(Level level, BlockPos pos) {
         for (Direction dir : Direction.values()) {
@@ -263,7 +346,6 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         return sideConfigs[type.ordinal()][side.ordinal()];
     }
 
-    // --- MÉTODOS DE CONFIGURAÇÃO COM ATUALIZAÇÃO DE VIZINHOS ---
     public void setSideConfig(ConfigType type, Direction side, IOMode mode) {
         sideConfigs[type.ordinal()][side.ordinal()] = mode;
         setChanged();
@@ -313,19 +395,20 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
             level.updateNeighborsAt(worldPosition, state.getBlock());
         }
     }
-    // -----------------------------------------------------------
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("input_items", itemInputHandler.serializeNBT(registries));
         tag.put("output_items", itemOutputHandler.serializeNBT(registries));
+        tag.put("upgrades", upgradeHandler.serializeNBT(registries)); // <-- ADICIONADO
         tag.put("input_fluid", fluidInputTank.writeToNBT(registries, new CompoundTag()));
         tag.put("input_coolant", coolantInputTank.writeToNBT(registries, new CompoundTag()));
         tag.put("output_fluid1", fluidOutputTank1.writeToNBT(registries, new CompoundTag()));
         tag.put("output_fluid2", fluidOutputTank2.writeToNBT(registries, new CompoundTag()));
         tag.putInt("energy", energyStorage.getEnergyStored());
         tag.putInt("progress", progress);
+        tag.putInt("temperature", temperature);
 
         for (ConfigType type : ConfigType.values()) {
             int idx = type.ordinal();
@@ -345,6 +428,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         super.loadAdditional(tag, registries);
         itemInputHandler.deserializeNBT(registries, tag.getCompound("input_items"));
         itemOutputHandler.deserializeNBT(registries, tag.getCompound("output_items"));
+        upgradeHandler.deserializeNBT(registries, tag.getCompound("upgrades")); // <-- ADICIONADO
         fluidInputTank.readFromNBT(registries, tag.getCompound("input_fluid"));
         coolantInputTank.readFromNBT(registries, tag.getCompound("input_coolant"));
         fluidOutputTank1.readFromNBT(registries, tag.getCompound("output_fluid1"));
@@ -353,6 +437,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
             energyStorage.receiveEnergy(tag.getInt("energy") - energyStorage.getEnergyStored(), false);
         }
         progress = tag.getInt("progress");
+        temperature = tag.getInt("temperature");
 
         for (ConfigType type : ConfigType.values()) {
             int idx = type.ordinal();
@@ -386,11 +471,13 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
     public FluidTank getFluidOutputTank1() { return this.fluidOutputTank1; }
     public FluidTank getFluidOutputTank2() { return this.fluidOutputTank2; }
 
+
     // =========================================================
     // Classes Internas para Controle de Acesso por Lado (Wrappers)
     // =========================================================
 
     public class SidedItemHandler implements IItemHandler {
+        // ... (Seu código SidedItemHandler) ...
         private final Direction side;
 
         public SidedItemHandler(Direction side) {
@@ -399,7 +486,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
 
         @Override
         public int getSlots() {
-            return itemInputHandler.getSlots() + itemOutputHandler.getSlots();
+            return itemInputHandler.getSlots() + itemOutputHandler.getSlots() + upgradeHandler.getSlots();
         }
 
         @Override
@@ -407,17 +494,20 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
             if (slot < itemInputHandler.getSlots()) {
                 return itemInputHandler.getStackInSlot(slot);
             }
-            return itemOutputHandler.getStackInSlot(slot - itemInputHandler.getSlots());
+            int offsetSlot = slot - itemInputHandler.getSlots();
+            if (offsetSlot < itemOutputHandler.getSlots()) {
+                return itemOutputHandler.getStackInSlot(offsetSlot);
+            }
+            offsetSlot -= itemOutputHandler.getSlots();
+            return upgradeHandler.getStackInSlot(offsetSlot);
         }
 
         @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             IOMode mode = getSideConfig(ConfigType.ITEM, side);
-            // Se não for modo de entrada, rejeita
             if (mode != IOMode.ITEM_IN && mode != IOMode.ITEM_IO && mode != IOMode.ITEM_IO2) {
                 return stack;
             }
-            // Só permite inserir nos slots de entrada
             if (slot < itemInputHandler.getSlots()) {
                 return itemInputHandler.insertItem(slot, stack, simulate);
             }
@@ -427,12 +517,10 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
             IOMode mode = getSideConfig(ConfigType.ITEM, side);
-            // Se não for modo de saída, rejeita
             if (mode != IOMode.ITEM_OUT && mode != IOMode.ITEM_OUT2 && mode != IOMode.ITEM_IO && mode != IOMode.ITEM_IO2) {
                 return ItemStack.EMPTY;
             }
-            // Só permite extrair dos slots de saída
-            if (slot >= itemInputHandler.getSlots()) {
+            if (slot >= itemInputHandler.getSlots() && slot < (itemInputHandler.getSlots() + itemOutputHandler.getSlots())) {
                 return itemOutputHandler.extractItem(slot - itemInputHandler.getSlots(), amount, simulate);
             }
             return ItemStack.EMPTY;
@@ -444,11 +532,15 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             if (slot < itemInputHandler.getSlots()) return itemInputHandler.isItemValid(slot, stack);
-            return itemOutputHandler.isItemValid(slot - itemInputHandler.getSlots(), stack);
+            int offsetSlot = slot - itemInputHandler.getSlots();
+            if (offsetSlot < itemOutputHandler.getSlots()) return itemOutputHandler.isItemValid(offsetSlot, stack);
+            offsetSlot -= itemOutputHandler.getSlots();
+            return upgradeHandler.isItemValid(offsetSlot, stack);
         }
     }
 
     public class SidedFluidHandler implements IFluidHandler {
+        // ... (Seu código SidedFluidHandler) ...
         private final Direction side;
 
         public SidedFluidHandler(Direction side) {
@@ -484,11 +576,9 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
         @Override
         public int fill(FluidStack resource, FluidAction action) {
             int filled = 0;
-            // Tenta Coolant se o modo permitir
             if (getSideConfig(ConfigType.COOLANT, side) == IOMode.COOLANT_IN) {
                 filled = coolantInputTank.fill(resource, action);
             }
-            // Se não encheu (ou se quiser permitir ambos), tenta Input se o modo permitir
             if (filled == 0) {
                 IOMode fluidMode = getSideConfig(ConfigType.FLUID, side);
                 if (fluidMode == IOMode.FLUID_IN || fluidMode == IOMode.FLUID_IO_1 || fluidMode == IOMode.FLUID_IO_2) {
@@ -521,5 +611,37 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
             }
             return FluidStack.EMPTY;
         }
+    }
+
+    // =================================================================================
+    // --- ADICIONADO: CLASSE INTERNA PARA ENERGIA ---
+    //
+    // Adicionada para consistência e para respeitar a configuração IOMode.ENERGY
+    // =================================================================================
+    public class SidedEnergyStorage implements IEnergyStorage {
+        private final Direction side;
+
+        public SidedEnergyStorage(Direction side) {
+            this.side = side;
+        }
+
+        @Override
+        public int receiveEnergy(int maxReceive, boolean simulate) {
+            // Apenas permite receber energia se o lado estiver configurado para ENERGY
+            if (getSideConfig(ConfigType.ENERGY, this.side) == IOMode.ENERGY) {
+                return energyStorage.receiveEnergy(maxReceive, simulate);
+            }
+            return 0;
+        }
+        @Override
+        public int extractEnergy(int maxExtract, boolean simulate) {
+
+            return 0;
+        }
+
+        @Override public int getEnergyStored() { return energyStorage.getEnergyStored(); }
+        @Override public int getMaxEnergyStored() { return energyStorage.getMaxEnergyStored(); }
+        @Override public boolean canExtract() { return false; }
+        @Override public boolean canReceive() { return true; }
     }
 }

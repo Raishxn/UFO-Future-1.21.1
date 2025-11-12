@@ -96,6 +96,8 @@ dependencies {
     implementation "curse.maven:glodium-957920:5821676"
     compileOnly "curse.maven:ex-pattern-provider-892005:7129221"
     compileOnly "curse.maven:mega-cells-622112:6853076"
+    compileOnly "curse.maven:jei-238222:7129287"
+
     implementation "curse.maven:ae2addonlib-1366135:7135239"
 
     //local test
@@ -103,6 +105,7 @@ dependencies {
     localRuntime "curse.maven:mekanism-268560:7017663"
     localRuntime "curse.maven:ex-pattern-provider-892005:7129221"
     localRuntime "curse.maven:jei-238222:7129287"
+    localRuntime "curse.maven:ae2-jei-integration-1074338:5748513"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar

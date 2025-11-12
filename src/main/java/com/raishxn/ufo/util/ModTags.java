@@ -33,6 +33,7 @@ public class ModTags {
         public static final TagKey<Item> RECYCLABLE = createTag("recyclable");
         public static final TagKey<Item> DIM_RESIDUE = createTag("dim_residue");
         public static final TagKey<Item> COOLANT_MATERIAL = createTag("coolant_material");
+        public static final TagKey<Item> CATALYST = createTag("catalyst");
 
         public static final TagKey<Item> ADVANCED_COMPONENT = createTag("advanced_component");
         public static final TagKey<Item> MATTER_STAGE_1 = createTag("matter_stage_1");
