@@ -1,4 +1,4 @@
-// 1.21.1	2025-11-10T15:25:11.3973717	Tags for minecraft:item mod id ufo
+// 1.21.1	2025-11-12T10:56:39.3998456	Tags for minecraft:item mod id ufo
 cd1839d8449292f44c642dfdc879ce6688b062e3 data/minecraft/tags/item/axes.json
 ca820b7ef979b3f4b977fabd7cd9e82cc2987fc1 data/minecraft/tags/item/chest_armor.json
 a53ed7eeab4d0bf465c7b4006f710181b0b341d0 data/minecraft/tags/item/enchantable/bow.json
@@ -11,6 +11,7 @@ df0a029e7a4974d3fe956ac86ce34b007dce0f1c data/minecraft/tags/item/head_armor.jso
 3f2875d31f614485ecc707dd0488677005e67a20 data/minecraft/tags/item/shovels.json
 b7b7c42892ad293dc95c65ca1149ee455ee91769 data/minecraft/tags/item/swords.json
 740366a16b3866262dc8f8d95dc1549cbe90319d data/ufo/tags/item/advanced_component.json
+e591547ed523b999ec567f31aa35fce1ee32c3c4 data/ufo/tags/item/catalyst.json
 cd011ed20add4ed25e89805ad259370451004e82 data/ufo/tags/item/component.json
 01dcf0eb27178879a693cb4d8f3f2c57eef0698b data/ufo/tags/item/compressed.json
 ac4b7abc42160485e5cc34e39894b85387445719 data/ufo/tags/item/containment_device.json

@@ -106,5 +106,20 @@ public class ModItemTagProvider extends ItemTagsProvider {
         tag(ModTags.Items.DIM_RESIDUE).add(
                 ModItems.SCAR.get()
         );
+        tag(ModTags.Items.CATALYST).add(
+        ModItems.CHRONO_CATALYST_T1.get(),
+        ModItems.CHRONO_CATALYST_T2.get(),
+        ModItems.CHRONO_CATALYST_T3.get(),
+        ModItems.MATTERFLOW_CATALYST_T1.get(),
+        ModItems.MATTERFLOW_CATALYST_T2.get(),
+        ModItems.MATTERFLOW_CATALYST_T3.get(),
+        ModItems.OVERFLUX_CATALYST_T1.get(),
+        ModItems.OVERFLUX_CATALYST_T2.get(),
+        ModItems.OVERFLUX_CATALYST_T3.get(),
+        ModItems.QUANTUM_CATALYST_T1.get(),
+        ModItems.QUANTUM_CATALYST_T2.get(),
+        ModItems.QUANTUM_CATALYST_T3.get(),
+        ModItems.DIMENSIONAL_CATALYST.get()
+        );
     }
 }

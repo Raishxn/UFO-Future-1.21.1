@@ -124,4 +124,5 @@ public class DimensionalMatterAssemblerBlock extends BaseEntityBlock {
         // (Assumindo que seu registro se chama DMA_BE como no import)
         return createTickerHelper(blockEntityType, ModBlockEntities.DMA_BE.get(), DimensionalMatterAssemblerBlockEntity::tick);
     }
+
 }

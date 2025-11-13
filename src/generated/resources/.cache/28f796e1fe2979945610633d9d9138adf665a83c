@@ -1,9 +1,13 @@
-// 1.21.1	2025-11-11T07:53:57.255403	Item Models: ufo
+// 1.21.1	2025-11-13T15:30:39.8169613	Item Models: ufo
 65bffe38993ea67d3302816b93f2d718431de59b assets/ufo/models/item/aether_containment_capsule.json
 c41f2c84703caa2f3a67fc73bfdb9ac21eea6eec assets/ufo/models/item/charged_enriched_neutronium_sphere.json
+86d9de77936ae4a0cbcaec6708dc4b7a7192352d assets/ufo/models/item/chrono_catalyst_t1.json
+a58b7eb61d1ee2da3b6cddfba8b58e278bc4d1de assets/ufo/models/item/chrono_catalyst_t2.json
+f9080076d5f00e3f3c8571284c6f41cb7063f4b4 assets/ufo/models/item/chrono_catalyst_t3.json
 d0f63d57b1fd9fe95eb48a3e245b70c29a1b4bc5 assets/ufo/models/item/corporeal_matter.json
 ee11d9a1459d2233b209a533cfb7cdff0b567879 assets/ufo/models/item/cosmic_string_component_matrix.json
 d65be26e59e6011762423528ecedabbc32a1ae61 assets/ufo/models/item/dark_matter.json
+d1f5197276e1eef176e65380400034560c88b375 assets/ufo/models/item/dimensional_catalyst.json
 1fe6a098a6a5d83cf8be9495d3a600bf83c11455 assets/ufo/models/item/dimensional_processor.json
 1c799ae32066af1ab5dec32f5b595ac90f18ab4c assets/ufo/models/item/dimensional_processor_press.json
 13443882852153fd22942af8898693766c45b5f4 assets/ufo/models/item/dust_blizz.json
@@ -46,6 +50,9 @@ f036495a7f5263bce8b5ef02e301c2b936904ffa assets/ufo/models/item/infinity_water_c
 3fcb9667894eaf3f29d2542d44a2cb5aca9e2e50 assets/ufo/models/item/infinity_white_dye_cell.json
 7084a9fd0e335994e42b1eebb17a6d695860a33e assets/ufo/models/item/infinity_yellow_dye_cell.json
 1b253bff00102fb0938dffd53b6edcf3b260d12d assets/ufo/models/item/liquid_starlight_bucket.json
+30d301869d993eae726b73602b97040f38971e26 assets/ufo/models/item/matterflow_catalyst_t1.json
+70d35da6d0096cfbe6bfd8deff955c7c48432a01 assets/ufo/models/item/matterflow_catalyst_t2.json
+5e570a403a9c85476f688a4bc63bf7afed0c2c9c assets/ufo/models/item/matterflow_catalyst_t3.json
 de3d4bc5646f02fca3e4d320ebca6acbf3166a03 assets/ufo/models/item/neutronium_sphere.json
 b17f6d9797d31d38617409394711e054d4ec4949 assets/ufo/models/item/neutron_fluid_cell_housing.json
 c5cc48f94dd3fb449cd709959ac598fe2f5bf42b assets/ufo/models/item/neutron_star_fragment_bucket.json
@@ -61,6 +68,9 @@ ad9fbbf64622accf1ffef0529ea3744107e35c3e assets/ufo/models/item/neutron_star_res
 561e470c30617a387cae03196d7e077823fb6566 assets/ufo/models/item/neutron_star_reservoir_singularity.json
 4ec2a1e78fc47c1afa5eb7d315703fa3e3550798 assets/ufo/models/item/nuclear_star.json
 493222f6d19bd550ad58d1a6956450bc7c006ef1 assets/ufo/models/item/obsidian_matrix.json
+f7f20338a997986d4b5a15158852dd299321d53e assets/ufo/models/item/overflux_catalyst_t1.json
+5f1664e265addae0f6782b3ce1e49a41375937b6 assets/ufo/models/item/overflux_catalyst_t2.json
+2c37f5880481cb79cdd7b1c8d88e687b61bec227 assets/ufo/models/item/overflux_catalyst_t3.json
 9ffab18b083b0edd00dc4c3bc3dd6ff2e0a5f981 assets/ufo/models/item/phase_shift_component_matrix.json
 37bd5d2e60079fe6abe39887e97628c09b2a2ac0 assets/ufo/models/item/primordial_matter_bucket.json
 75fb43d829328d7e5fd5f71d87bc5914ea867f79 assets/ufo/models/item/printed_dimensional_processor.json
@@ -72,6 +82,9 @@ d8e44038e5cdfd780216f5aa557f09d84d506d07 assets/ufo/models/item/pulsar_fragment_
 dd85e4dfd657f064d9324a40091ed98cd3113ef7 assets/ufo/models/item/pulsar_fragment_nugget.json
 7db7a4e84ff3c65c2b39565e778f3c69d4738363 assets/ufo/models/item/pulsar_matter.json
 72e0e3a00a7dec96a5389d6ea3774215ee902e6c assets/ufo/models/item/quantum_anomaly.json
+5ff6becaa8e29724c88e4683fa0155f6244e8a84 assets/ufo/models/item/quantum_catalyst_t1.json
+dba14307d19e562e3f37d90ff1b3ca52866c21d2 assets/ufo/models/item/quantum_catalyst_t2.json
+a04ec98c7640ff92017e341d20abd379a01bdcaf assets/ufo/models/item/quantum_catalyst_t3.json
 150ac69519a0f5247d85750878fb283b8d35b527 assets/ufo/models/item/raw_star_matter_plasma_bucket.json
 73918dc1a6b4fd073b8fd0dbcc82bccd53469df2 assets/ufo/models/item/safe_containment_matter.json
 ac93959686ae188c75875bce71dd9d15f1b37c9a assets/ufo/models/item/scar.json
@@ -85,6 +98,10 @@ c0e172f4ac0f3c8d47abeaa49634e3cebbd99995 assets/ufo/models/item/storage_cell_sid
 1348e777db1df08ad3665ce11d7bbc0d0f21b4e4 assets/ufo/models/item/storage_cell_side_infinity.json
 8d0ee24376d9b792e6d38329a55967801ae17ed6 assets/ufo/models/item/temporal_fluid_bucket.json
 55d445877e012b422ceaa15e84dcc5a41bc07782 assets/ufo/models/item/tesseract_component_matrix.json
+04764ba1ceccf3bc286672f217c5d6436a11c924 assets/ufo/models/item/thermal_resistor_boots.json
+608b94f4dd9217c6740acd97a39fdcd3b82c6a60 assets/ufo/models/item/thermal_resistor_chest.json
+3a624a73213088c68ae73d544026364eaf3d8990 assets/ufo/models/item/thermal_resistor_mask.json
+5559f6843b53edaff7b0efff13f4cd8da80ed8e5 assets/ufo/models/item/thermal_resistor_pants.json
 f78bada06e511643006f4834cff38cf35f58dfc7 assets/ufo/models/item/transcending_matter_bucket.json
 059b061461bb2f2e35b1e59a956829b9f58a040c assets/ufo/models/item/ufo_axe.json
 55ba6b14f4484470e976d9a5dc7c79cad484994f assets/ufo/models/item/ufo_boots.json

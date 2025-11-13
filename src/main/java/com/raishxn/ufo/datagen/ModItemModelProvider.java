@@ -109,6 +109,10 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.UFO_CHESTPLATE.get());
         basicItem(ModItems.UFO_LEGGINGS.get());
         basicItem(ModItems.UFO_BOOTS.get());
+        basicItem(ModItems.THERMAL_RESISTOR_BOOTS.get());
+        basicItem(ModItems.THERMAL_RESISTOR_CHEST.get());
+        basicItem(ModItems.THERMAL_RESISTOR_MASK.get());
+        basicItem(ModItems.THERMAL_RESISTOR_PANTS.get());
         basicItem(ModItems.QUANTUM_ANOMALY);
         basicItem(ModItems.NUCLEAR_STAR);
         basicItem(ModItems.SCAR);
@@ -129,6 +133,20 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.DARK_MATTER);
         basicItem(ModItems.UU_MATTER_CRYSTAL);
 
+        // --- Catalyst ---
+        basicItem(ModItems.CHRONO_CATALYST_T1);
+        basicItem(ModItems.CHRONO_CATALYST_T2);
+        basicItem(ModItems.CHRONO_CATALYST_T3);
+        basicItem(ModItems.MATTERFLOW_CATALYST_T1);
+        basicItem(ModItems.MATTERFLOW_CATALYST_T2);
+        basicItem(ModItems.MATTERFLOW_CATALYST_T3);
+        basicItem(ModItems.OVERFLUX_CATALYST_T1);
+        basicItem(ModItems.OVERFLUX_CATALYST_T2);
+        basicItem(ModItems.OVERFLUX_CATALYST_T3);
+        basicItem(ModItems.QUANTUM_CATALYST_T1);
+        basicItem(ModItems.QUANTUM_CATALYST_T2);
+        basicItem(ModItems.QUANTUM_CATALYST_T3);
+        basicItem(ModItems.DIMENSIONAL_CATALYST);
 
         // --- Estrutural / Utilitário ---
         basicItem(ModItems.OBSIDIAN_MATRIX);

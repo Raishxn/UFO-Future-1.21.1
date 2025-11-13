@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+import java.text.DecimalFormat; // <-- IMPORTAÇÃO ADICIONADA
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,13 +74,13 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
 
         // ATUALIZADO: Novas posições de renderização dos tanques
         // Coolant: 9,21
-        coolantRenderer.render(guiGraphics, x + 9, y + 21, menu.getCoolantStack());
+        coolantRenderer.render(guiGraphics, x + 10, y + 22, menu.getCoolantStack());
         // Fluid Input: 28,21
-        inputFluidRenderer.render(guiGraphics, x + 28, y + 21, menu.getInputFluidStack());
+        inputFluidRenderer.render(guiGraphics, x + 29, y + 22, menu.getInputFluidStack());
         // Fluid Output 1: 119,76
-        outputFluidRenderer1.render(guiGraphics, x + 119, y + 76, menu.getOutputFluid1Stack());
+        outputFluidRenderer1.render(guiGraphics, x + 120, y + 77, menu.getOutputFluid1Stack());
         // Fluid Output 2: 148,76
-        outputFluidRenderer2.render(guiGraphics, x + 148, y + 76, menu.getOutputFluid2Stack());
+        outputFluidRenderer2.render(guiGraphics, x + 149, y + 77, menu.getOutputFluid2Stack());
 
         // ATUALIZADO: Barra de Energia
         // Posição: 155,34 (Largura 6, Altura 18)
@@ -121,9 +122,14 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        // <-- INÍCIO: RENDERIZAÇÃO DO TEXTO DA TEMPERATURA
-        int temp = menu.getTemperature();
-        String tempText = temp + " K"; // "K" de Kelvin, ou "°C" etc.
+        // <-- INÍCIO: RENDERIZAÇÃO DO TEXTO DA TEMPERATURA (MODIFICADO)
+        int tempKelvin = menu.getTemperature();
+
+        // 1. Converte de Kelvin para Celsius (K - 273.15)
+        double tempCelsius = tempKelvin - 273.15;
+
+        // 2. Formata o valor de Celsius (ex: "1.2 k°C" ou "-253 °C")
+        String tempText = formatTemperature(tempCelsius);
 
         // Coordenadas da "tela": 9,84 (largura 31, altura 9)
         int textX = this.leftPos + 9 + (31 / 2); // Centraliza (9 + 15 = 24)
@@ -156,9 +162,15 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
         // Output Fluid 2: 148,76 (Largura 14, Altura 16)
         if (isHovering(148, 76, 14, 16, mouseX, mouseY)) renderFluidTooltip(guiGraphics, mouseX, mouseY, menu.getOutputFluid2Stack(), 16000, "Output Fluid 2");
 
-        // <-- ADICIONADO: Tooltip para a 'tela de temperatura' (9, 84, 31, 9)
+        // <-- MODIFICADO: Tooltip para a 'tela de temperatura' (9, 84, 31, 9)
         if (isHovering(9, 84, 31, 9, mouseX, mouseY)) {
-            guiGraphics.renderTooltip(font, Component.literal("Temperatura: " + menu.getTemperature() + " K").withStyle(ChatFormatting.RED), mouseX, mouseY);
+            // Mostra o valor preciso em Celsius e o valor original em Kelvin
+            String celsiusStr = String.format("%.2f °C", tempCelsius);
+            String kelvinStr = tempKelvin + " K";
+
+            guiGraphics.renderTooltip(font,
+                    Component.literal("Temperatura: " + celsiusStr + " (" + kelvinStr + ")").withStyle(ChatFormatting.RED),
+                    mouseX, mouseY);
         }
     }
 
@@ -171,5 +183,42 @@ public class DimensionalMatterAssemblerScreen extends AbstractContainerScreen<Di
             tooltip.add(Component.literal(defaultName + " (Empty)").withStyle(ChatFormatting.GRAY));
         }
         guiGraphics.renderComponentTooltip(font, tooltip, mouseX, mouseY);
+    }
+
+    // =================================================================================
+    // --- ADICIONADO: MÉTODO PARA FORMATAR TEMPERATURA ---
+    // =================================================================================
+    /**
+     * Formata um valor double em uma string compacta com sufixos (k, M, G, T)
+     * e adiciona "°C" no final.
+     * Ex: 1227 -> "1.2 k°C"
+     * Ex: -253 -> "-253 °C"
+     */
+    private String formatTemperature(double value) {
+        // Se o valor for "pequeno" (entre -1000 e 1000), mostre o número inteiro.
+        if (value < 1000 && value > -1000) {
+            // Arredonda para o inteiro mais próximo
+            return Math.round(value) + " °C";
+        }
+
+        // Define os sufixos (k = Kilo/mil, M = Mega/milhão, G = Giga/bilhão, T = Tera/trilhão)
+        String[] suffixes = {"", "k", "M", "G", "T"};
+        int index = 0;
+        double absValue = Math.abs(value);
+
+        // Divide por 1000 até estar abaixo de 1000 ou esgotar os sufixos
+        while (absValue >= 1000 && index < suffixes.length - 1) {
+            absValue /= 1000.0;
+            index++;
+        }
+
+        // Restaura o sinal original (negativo ou positivo)
+        double formattedValue = (value < 0) ? -absValue : absValue;
+
+        // Formata para ter uma casa decimal (ex: "1.2")
+        DecimalFormat df = new DecimalFormat("0.0");
+
+        // Retorna a string final, ex: "-2.5 k°C" ou "1.2 M°C"
+        return df.format(formattedValue) + " " + suffixes[index] + "°C";
     }
 }

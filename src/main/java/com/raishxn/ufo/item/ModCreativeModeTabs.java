@@ -52,6 +52,26 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.PULSAR_FRAGMENT_NUGGET.get());
                         output.accept(ModItems.PULSAR_FRAGMENT_BUCKET.get());
 
+
+                        output.accept(ModItems.CHRONO_CATALYST_T1.get());
+                        output.accept(ModItems.CHRONO_CATALYST_T2.get());
+                        output.accept(ModItems.CHRONO_CATALYST_T3.get());
+                        output.accept(ModItems.MATTERFLOW_CATALYST_T1.get());
+                        output.accept(ModItems.MATTERFLOW_CATALYST_T2.get());
+                        output.accept(ModItems.MATTERFLOW_CATALYST_T3.get());
+                        output.accept(ModItems.OVERFLUX_CATALYST_T1.get());
+                        output.accept(ModItems.OVERFLUX_CATALYST_T2.get());
+                        output.accept(ModItems.OVERFLUX_CATALYST_T3.get());
+                        output.accept(ModItems.QUANTUM_CATALYST_T1.get());
+                        output.accept(ModItems.QUANTUM_CATALYST_T2.get());
+                        output.accept(ModItems.QUANTUM_CATALYST_T3.get());
+                        output.accept(ModItems.DIMENSIONAL_CATALYST.get());
+
+                        output.accept(ModItems.THERMAL_RESISTOR_BOOTS.get());
+                        output.accept(ModItems.THERMAL_RESISTOR_CHEST.get());
+                        output.accept(ModItems.THERMAL_RESISTOR_MASK.get());
+                        output.accept(ModItems.THERMAL_RESISTOR_PANTS.get());
+
                         output.accept(ModItems.AETHER_CONTAINMENT_CAPSULE.get());
                         output.accept(ModItems.SAFE_CONTAINMENT_MATTER.get());
                         output.accept(ModItems.PROTO_MATTER.get());

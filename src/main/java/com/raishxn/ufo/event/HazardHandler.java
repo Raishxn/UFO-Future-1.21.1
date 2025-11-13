@@ -62,9 +62,14 @@ public class HazardHandler {
     private static void applyHazardEffects(Player player) {
         LOGGER.info("Aplicando efeitos de hazard em {}", player.getName().getString());
         player.hurt(player.damageSources().magic(), 2.0f);
-        player.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 0, false, false));
-        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 0, false, false));
-        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 0, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 5, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 5, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 5, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 5, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 100, 5, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 100, 5, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.INFESTED, 100, 5, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 100, 5, false, false));
 
         if (player instanceof ServerPlayer && player.tickCount % 100 == 0) {
             player.displayClientMessage(Component.literal("WARNING: Dimensional Containment Failed!").withStyle(ChatFormatting.RED), true);

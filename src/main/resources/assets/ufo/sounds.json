@@ -1,0 +1,14 @@
+{
+  "block.dma.work": {
+    "subtitle": "subtitles.ufo.block.dma.work",
+    "sounds": [
+      "ufo:block/dma/dma_work"
+    ]
+  },
+  "block.dma.alarm": {
+    "subtitle": "subtitles.ufo.block.dma.alarm",
+    "sounds": [
+      "ufo:block/dma/dma_alarm"
+    ]
+  }
+}

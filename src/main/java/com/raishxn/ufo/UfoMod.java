@@ -12,6 +12,7 @@ import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.init.ModRecipes;
+import com.raishxn.ufo.init.ModSounds;
 import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModCreativeModeTabs;
 import com.raishxn.ufo.item.ModItems;
@@ -66,6 +67,7 @@ public class UfoMod {
         ModBlockEntities.register(modEventBus);
         ModRecipes.register(modEventBus);
         ModMenus.register(modEventBus);
+        ModSounds.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
 
         // --- Listeners do Ciclo de Vida do Mod ---

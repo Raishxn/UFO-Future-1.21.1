@@ -8,6 +8,7 @@ import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.item.custom.*;
 import com.raishxn.ufo.item.custom.InfinityCell;
+import com.raishxn.ufo.item.custom.ThermalArmorItem;
 import mekanism.common.registries.MekanismItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -22,6 +23,8 @@ import net.minecraft.world.item.component.CustomData;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(UfoMod.MOD_ID);
@@ -294,19 +297,19 @@ public class ModItems {
                     .component(ModDataComponents.BOW_FAST_MODE.get(), false).stacksTo(1) // Valor padrão: false
             ));
      public static final DeferredItem<Item> UFO_HELMET = ITEMS.register("ufo_helmet",
-             () -> new UfoArmorItem(ModArmorMaterials.UFO, ArmorItem.Type.HELMET, new Item.Properties()
+             () -> new ThermalArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.HELMET, new Item.Properties()
                      .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1))); // Adicione .stacksTo(1)
 
      public static final DeferredItem<Item> UFO_CHESTPLATE = ITEMS.register("ufo_chestplate",
-             () -> new UfoArmorItem(ModArmorMaterials.UFO, ArmorItem.Type.CHESTPLATE, new Item.Properties()
+             () -> new ThermalArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Properties()
                      .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1))); // Adicione .stacksTo(1)
 
      public static final DeferredItem<Item> UFO_LEGGINGS = ITEMS.register("ufo_leggings",
-             () -> new UfoArmorItem(ModArmorMaterials.UFO, ArmorItem.Type.LEGGINGS, new Item.Properties()
+             () -> new ThermalArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Properties()
                      .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1))); // Adicione .stacksTo(1)
 
      public static final DeferredItem<Item> UFO_BOOTS = ITEMS.register("ufo_boots",
-             () -> new UfoArmorItem(ModArmorMaterials.UFO, ArmorItem.Type.BOOTS, new Item.Properties()
+             () -> new ThermalArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.BOOTS, new Item.Properties()
                      .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1)));
 
 
@@ -493,6 +496,64 @@ public class ModItems {
             () -> new SafeContainmentMatterItem(new Item.Properties()
                     .stacksTo(1)
                     .rarity(Rarity.UNCOMMON)));
+
+    private static Item.Properties catalystProps(Rarity rarity) {
+        return new Item.Properties().stacksTo(1).rarity(rarity);
+    }
+
+    // --- 3) MATTERFLOW CATALYST (Eficiência Energética) [cite: 67] ---
+
+    public static final DeferredItem<Item> MATTERFLOW_CATALYST_T1 = ITEMS.register("matterflow_catalyst_t1",
+            () -> new BaseCatalystItem(new Item.Properties(), "matterflow", 1));
+    public static final DeferredItem<Item> MATTERFLOW_CATALYST_T2 = ITEMS.register("matterflow_catalyst_t2",
+            () -> new BaseCatalystItem(new Item.Properties(), "matterflow", 2));
+    public static final DeferredItem<Item> MATTERFLOW_CATALYST_T3 = ITEMS.register("matterflow_catalyst_t3",
+            () -> new BaseCatalystItem(new Item.Properties(), "matterflow", 3));
+
+    public static final DeferredItem<Item> CHRONO_CATALYST_T1 = ITEMS.register("chrono_catalyst_t1",
+            () -> new BaseCatalystItem(new Item.Properties(), "chrono", 1));
+    public static final DeferredItem<Item> CHRONO_CATALYST_T2 = ITEMS.register("chrono_catalyst_t2",
+            () -> new BaseCatalystItem(new Item.Properties(), "chrono", 2));
+    public static final DeferredItem<Item> CHRONO_CATALYST_T3 = ITEMS.register("chrono_catalyst_t3",
+            () -> new BaseCatalystItem(new Item.Properties(), "chrono", 3));
+
+    public static final DeferredItem<Item> OVERFLUX_CATALYST_T1 = ITEMS.register("overflux_catalyst_t1",
+            () -> new BaseCatalystItem(new Item.Properties(), "overflux", 1));
+    public static final DeferredItem<Item> OVERFLUX_CATALYST_T2 = ITEMS.register("overflux_catalyst_t2",
+            () -> new BaseCatalystItem(new Item.Properties(), "overflux", 2));
+    public static final DeferredItem<Item> OVERFLUX_CATALYST_T3 = ITEMS.register("overflux_catalyst_t3",
+            () -> new BaseCatalystItem(new Item.Properties(), "overflux", 3));
+
+    public static final DeferredItem<Item> QUANTUM_CATALYST_T1 = ITEMS.register("quantum_catalyst_t1",
+            () -> new BaseCatalystItem(new Item.Properties(), "quantum", 1));
+    public static final DeferredItem<Item> QUANTUM_CATALYST_T2 = ITEMS.register("quantum_catalyst_t2",
+            () -> new BaseCatalystItem(new Item.Properties(), "quantum", 2));
+    public static final DeferredItem<Item> QUANTUM_CATALYST_T3 = ITEMS.register("quantum_catalyst_t3",
+            () -> new BaseCatalystItem(new Item.Properties(), "quantum", 3));
+
+    // E o criativo:
+    public static final DeferredItem<Item> DIMENSIONAL_CATALYST = ITEMS.register("dimensional_catalyst",
+            () -> new DimensionalCatalystItem(new Item.Properties()));
+
+    public static final Supplier<Item> THERMAL_RESISTOR_PLATING = ITEMS.register(
+            "thermal_resistor_plating",
+            () -> new Item(new Item.Properties().fireResistant())
+    );
+    public static final Supplier<Item> THERMAL_RESISTOR_MASK = ITEMS.register("thermal_resistor_mask",
+            () -> new ThermalArmorItem(ModArmorMaterials.THERMAL_EXOSUIT, ArmorItem.Type.HELMET, new Item.Properties())); // <-- CORRIGIDO
+
+    public static final Supplier<Item> THERMAL_RESISTOR_CHEST = ITEMS.register("thermal_resistor_chest",
+            () -> new ThermalArmorItem(ModArmorMaterials.THERMAL_EXOSUIT, ArmorItem.Type.CHESTPLATE, new Item.Properties())); // <-- CORRIGIDO
+
+    public static final Supplier<Item> THERMAL_RESISTOR_PANTS = ITEMS.register("thermal_resistor_pants",
+            () -> new ThermalArmorItem(ModArmorMaterials.THERMAL_EXOSUIT, ArmorItem.Type.LEGGINGS, new Item.Properties())); // <-- CORRIGIDO
+
+    // O 'G' em 'Gfinal' foi removido
+    public static final Supplier<Item> THERMAL_RESISTOR_BOOTS = ITEMS.register("thermal_resistor_boots",
+            () -> new ThermalArmorItem(ModArmorMaterials.THERMAL_EXOSUIT, ArmorItem.Type.BOOTS, new Item.Properties())); // <-- CORRIGIDO
+
+    // --- NOVA ARMADURA ---
+
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

@@ -25,6 +25,9 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList; // <-- IMPORT ADICIONADO
+import java.util.List; // <-- IMPORT ADICIONADO
+
 public class DMACategory implements IRecipeCategory<DimensionalMatterAssemblerRecipe> {
 
     public static final RecipeType<DimensionalMatterAssemblerRecipe> RECIPE_TYPE =
@@ -200,4 +203,50 @@ public class DMACategory implements IRecipeCategory<DimensionalMatterAssemblerRe
         // --- FIM DA CORREÇÃO ---
         // =================================================================================
     }
+
+    // =================================================================================
+    // --- INÍCIO DO NOVO MÉTODO DE TOOLTIP ---
+    // =================================================================================
+
+    @Override
+    public @NotNull List<Component> getTooltipStrings(@NotNull DimensionalMatterAssemblerRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+
+        // 1. Defina a área de hover da barra de progresso
+        // (Deve ser EXATAMENTE a mesma Posição e Tamanho usados no 'draw' e no construtor)
+
+        final int barX = 105;      // Posição X da barra
+        final int barY = 42;       // Posição Y da barra
+        final int barWidth = 21;   // Largura da barra (do construtor)
+        final int barHeight = 12;  // Altura da barra (do construtor)
+
+        // 2. Checa se o mouse (mouseX, mouseY) está sobre a barra
+        if (mouseX >= barX && mouseX < (barX + barWidth) &&
+                mouseY >= barY && mouseY < (barY + barHeight)) {
+
+            // 3. Se estiver, crie e retorne o tooltip
+
+            // Pega o tempo da receita (em ticks)
+            int processTimeTicks = recipe.getProcessTime();
+
+            // Converte ticks para segundos (20 ticks = 1 segundo)
+            float processTimeSeconds = processTimeTicks / 20.0f;
+
+            List<Component> tooltip = new ArrayList<>();
+
+            // Adiciona a linha "Processing Time" (traduzida pelo JEI)
+            tooltip.add(Component.translatable("gui.jei.category.processingTime"));
+
+            // Adiciona o valor formatado (ex: "200.0 s (4000 t)")
+            tooltip.add(Component.literal(String.format("%.1f s (%d t)", processTimeSeconds, processTimeTicks))
+                    .withStyle(ChatFormatting.GRAY));
+
+            return tooltip;
+        }
+
+        // 4. Se não estiver, retorne uma lista vazia
+        return IRecipeCategory.super.getTooltipStrings(recipe, recipeSlotsView, mouseX, mouseY);
+    }
+    // =================================================================================
+    // --- FIM DO NOVO MÉTODO DE TOOLTIP ---
+    // =================================================================================
 }
