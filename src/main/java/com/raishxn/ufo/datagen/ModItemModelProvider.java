@@ -220,4 +220,10 @@ public class ModItemModelProvider extends ItemModelProvider {
                 .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/" + component.getId().getPath())) // Camada do meio: o "side"
                 .texture("layer2", UFO_LED_TEXTURE);// Camada de cima: o LED do AE2
     }
+    private void infinityResourceCellModel(DeferredHolder<Item, ? extends Item> cell) {
+        withExistingParent(cell.getId().getPath(), ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"))
+                .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/" + cell.getId().getPath())) // Camada base: A textura da própria célula
+                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/" + ModCellItems.CELL_COMPONENT_INFINITY.getId().getPath())) // Camada do meio: O componente infinity
+                .texture("layer2", UFO_LED_TEXTURE); // Camada de cima: O LED
+    }
 }
