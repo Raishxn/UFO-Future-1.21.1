@@ -8,15 +8,21 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageTypes; // Correct Import
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -24,32 +30,78 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
+import java.util.List;
+import java.util.Optional;
+
 @EventBusSubscriber(modid = UfoMod.MOD_ID)
 public class ModEvents {
 
-    // --- PICKAXE AND AXE LOGIC (Block Break) ---
+    // --- PICKAXE AND HAMMER LOGIC (Block Break & Auto-Smelt) ---
     @SubscribeEvent
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
-        if (player == null) return;
+        if (player == null || player.level().isClientSide) return;
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getItem() instanceof UfoEnergyPickaxeItem) {
-            int currentFortune = stack.getOrDefault(ModDataComponents.PROGRESSIVE_FORTUNE.get(), 0);
-            if (currentFortune < 100) {
-                stack.set(ModDataComponents.PROGRESSIVE_FORTUNE.get(), currentFortune + 1);
+        // Aplica tanto para Pickaxe quanto para Hammer
+        if (stack.getItem() instanceof UfoEnergyPickaxeItem || stack.getItem() instanceof HammerItem) {
+
+            // Lógica de Fortuna Progressiva (Apenas Pickaxe, opcional para Hammer)
+            if (stack.getItem() instanceof UfoEnergyPickaxeItem) {
+                int currentFortune = stack.getOrDefault(ModDataComponents.PROGRESSIVE_FORTUNE.get(), 0);
+                if (currentFortune < 100) {
+                    stack.set(ModDataComponents.PROGRESSIVE_FORTUNE.get(), currentFortune + 1);
+                }
             }
 
+            // --- AUTO SMELT LOGIC ---
             if (stack.getOrDefault(ModDataComponents.AUTO_SMELT.get(), false)) {
-                Level level = player.level();
-                if (!level.isClientSide) {
+                ServerLevel level = (ServerLevel) player.level();
+                BlockPos pos = event.getPos();
+                BlockState state = event.getState();
+
+                // Simula os drops que aconteceriam
+                List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), player, stack);
+                boolean smelledAny = false;
+
+                // Tenta smeltar os drops
+                for (ItemStack drop : drops) {
+                    Optional<net.minecraft.world.item.crafting.RecipeHolder<SmeltingRecipe>> recipe = level.getRecipeManager()
+                            .getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(drop), level);
+
+                    if (recipe.isPresent()) {
+                        ItemStack result = recipe.get().value().getResultItem(level.registryAccess()).copy();
+                        result.setCount(drop.getCount()); // Mantém a quantidade (ex: 2 areias -> 2 vidros)
+
+                        spawnItem(level, pos, result);
+                        smelledAny = true;
+                    } else {
+                        spawnItem(level, pos, drop); // Drop normal se não tiver receita
+                    }
+                }
+
+                if (smelledAny) {
+                    // Consome energia extra pelo processo
                     consumeEnergyDirect(stack, 50);
+
+                    // Impede o drop vanilla (já dropamos manualmente)
+                    event.setCanceled(true);
+
+                    // Destrói o bloco manualmente (sem drops e sem som/particulas duplicados se possível)
+                    level.setBlock(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
                 }
             }
         }
     }
 
+    private static void spawnItem(Level level, BlockPos pos, ItemStack stack) {
+        ItemEntity entity = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
+        level.addFreshEntity(entity);
+    }
+
     // --- COMBAT LOGIC (Sword and Axe) ---
+    // (Mantenha o resto do seu código de combate e armadura exatamente como estava abaixo...)
+
     @SubscribeEvent
     public static void onPlayerAttack(LivingIncomingDamageEvent event) {
         if (event.getSource().getEntity() instanceof Player player) {
@@ -110,7 +162,7 @@ public class ModEvents {
         if (event.getEntity() instanceof ServerPlayer player) {
             if (!isFullUfoArmor(player)) return;
 
-            // 1. Anti-Void (Corrected Variable: FELL_OUT_OF_WORLD)
+            // 1. Anti-Void
             if (event.getSource().is(DamageTypes.FELL_OUT_OF_WORLD) && event.getAmount() < Float.MAX_VALUE) {
                 if (consumeArmorEnergyDirect(player, 50000)) {
                     event.setCanceled(true);
@@ -119,7 +171,7 @@ public class ModEvents {
                 }
             }
 
-            // 2. Anti-Kill Command / Absolute Damage / Infinite Void
+            // 2. Anti-Kill Command / Absolute Damage
             if (event.getSource().is(DamageTypes.GENERIC_KILL) ||
                     event.getAmount() >= Float.MAX_VALUE ||
                     (event.getSource().is(DamageTypes.FELL_OUT_OF_WORLD) && event.getAmount() > 10000f)) {
@@ -144,10 +196,9 @@ public class ModEvents {
         }
     }
 
-    // --- LAST RESORT: PREVENT DEATH (Guaranteed Anti-/kill) ---
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingDeath(LivingDeathEvent event) {
-        // Sword Logic (Kill Counter)
+        // Sword Logic
         if (event.getSource().getEntity() instanceof Player attacker) {
             ItemStack stack = attacker.getMainHandItem();
             if (stack.getItem() instanceof UfoEnergySwordItem) {
@@ -161,7 +212,7 @@ public class ModEvents {
             }
         }
 
-        // Armor Logic (Final Anti-Death)
+        // Armor Logic
         if (event.getEntity() instanceof ServerPlayer player) {
             if (isFullUfoArmor(player)) {
                 if (consumeArmorEnergyDirect(player, 200000)) {
@@ -187,7 +238,6 @@ public class ModEvents {
         int amountLeft = amountNeeded;
         int totalAvailable = 0;
 
-        // 1. Check total energy
         for (ItemStack stack : player.getInventory().armor) {
             if (stack.getItem() instanceof UfoArmorItem) {
                 totalAvailable += stack.getOrDefault(ModDataComponents.ENERGY.get(), 0);
@@ -196,7 +246,6 @@ public class ModEvents {
 
         if (totalAvailable < amountNeeded) return false;
 
-        // 2. Consume energy
         for (ItemStack stack : player.getInventory().armor) {
             if (amountLeft <= 0) break;
             if (stack.getItem() instanceof UfoArmorItem) {
@@ -225,7 +274,6 @@ public class ModEvents {
             player.teleportTo(respawnLevel, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
         } else {
             BlockPos worldSpawn = player.level().getSharedSpawnPos();
-            // Teleport high up in the world spawn
             player.teleportTo(worldSpawn.getX(), 300, worldSpawn.getZ());
             player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 1200));
         }

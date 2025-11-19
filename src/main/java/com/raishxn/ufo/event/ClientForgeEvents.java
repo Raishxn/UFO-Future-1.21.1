@@ -40,11 +40,16 @@ public class ClientForgeEvents {
         if (heldStack.getItem() instanceof HammerItem) {
             range = HammerItem.getRange(heldStack);
             if (range > 0) {
-                positions = HammerItem.getPositions(event.getTarget().getBlockPos(), player.getDirection(), range);
+                // CORREÇÃO AQUI:
+                // Substituído 'getPositions' por 'getBlocksToBeDestroyed'
+                // Isso usa o RayTrace para desenhar a linha na área exata que será quebrada
+                positions = HammerItem.getBlocksToBeDestroyed(range, event.getTarget().getBlockPos(), player);
             }
         } else if (heldStack.getItem() instanceof UfoEnergyHoeItem) {
             range = UfoEnergyHoeItem.getRange(heldStack);
             if (range > 0) {
+                // Assume-se que a Enxada (Hoe) ainda usa a lógica antiga.
+                // Se tiver erro aqui também, precisaremos atualizar a Enxada.
                 positions = UfoEnergyHoeItem.getPositions(event.getTarget().getBlockPos(), range);
             }
         }
@@ -69,7 +74,6 @@ public class ClientForgeEvents {
         }
     }
 
-    // --- CÓDIGO CORRIGIDO/ADICIONADO PARA O HUD ---
     @SubscribeEvent
     public static void onRenderGui(RenderGuiEvent.Post event) {
         Player player = Minecraft.getInstance().player;
@@ -80,14 +84,13 @@ public class ClientForgeEvents {
         if (heldStack.getItem() instanceof IHasModeHUD hudItem) {
             Component hudText = hudItem.getModeHudComponent(heldStack);
             GuiGraphics guiGraphics = event.getGuiGraphics();
-            int screenWidth = event.getGuiGraphics().guiWidth();
             int screenHeight = event.getGuiGraphics().guiHeight();
 
             // Posição do texto (canto inferior esquerdo)
             int x = 10;
             int y = screenHeight - 20;
 
-            // Desenha o texto com uma sombra para melhor visibilidade
+            // Desenha o texto com sombra
             guiGraphics.drawString(Minecraft.getInstance().font, hudText, x, y, 0xFFFFFF, true);
         }
     }
