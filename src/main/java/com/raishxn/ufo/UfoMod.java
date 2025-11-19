@@ -21,6 +21,7 @@ import com.raishxn.ufo.menu.DimensionalMatterAssemblerMenu;
 import com.raishxn.ufo.network.ModPackets;
 import com.raishxn.ufo.network.packet.CycleModeKeyPacket;
 import com.raishxn.ufo.network.packet.CycleToolKeyPacket;
+import com.raishxn.ufo.network.packet.ToggleAutoSmeltPacket;
 import com.raishxn.ufo.util.LazyInits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -126,6 +127,9 @@ public class UfoMod {
             ModPackets.sendToServer(new CycleModeKeyPacket());
             LOGGER.info("[UFO Mod] Cycle Mode key pressed!");
         }
+        if (ModKeyBindings.TOGGLE_AUTO_SMELT.consumeClick()) {
+            ModPackets.sendToServer(new ToggleAutoSmeltPacket());
+        }
     }
     private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(ModKeyBindings.CYCLE_TOOL_FORWARD);
@@ -139,6 +143,7 @@ public class UfoMod {
             event.register(ModKeyBindings.CYCLE_TOOL_FORWARD);
             event.register(ModKeyBindings.CYCLE_TOOL_BACKWARD);
             event.register(ModKeyBindings.CYCLE_MODE);
+            event.register(ModKeyBindings.TOGGLE_AUTO_SMELT);
         }
     }
 }

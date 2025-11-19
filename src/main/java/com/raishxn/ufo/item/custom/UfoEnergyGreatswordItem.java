@@ -14,7 +14,8 @@ import java.util.List;
 public class UfoEnergyGreatswordItem extends SwordItem implements IEnergyTool {
 
     public UfoEnergyGreatswordItem(Tier pTier, Properties pProperties) {
-        super(pTier, pProperties.stacksTo(1));
+        // Dano base alto (10), Velocidade muito baixa (-3.5F, quase 1.5s cooldown)
+        super(pTier, pProperties.attributes(SwordItem.createAttributes(pTier, 10, -3.5F)).stacksTo(1));
     }
 
     // --- CORREÇÃO ADICIONADA AQUI ---

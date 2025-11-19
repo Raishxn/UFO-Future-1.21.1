@@ -35,6 +35,7 @@ public class UfoModClient {
         event.register(ModKeyBindings.CYCLE_TOOL_FORWARD);
         event.register(ModKeyBindings.CYCLE_TOOL_BACKWARD);
         event.register(ModKeyBindings.CYCLE_MODE);
+        event.register(ModKeyBindings.TOGGLE_AUTO_SMELT);
     }
 
 

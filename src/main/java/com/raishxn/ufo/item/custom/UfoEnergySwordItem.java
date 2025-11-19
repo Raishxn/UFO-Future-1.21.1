@@ -1,6 +1,8 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.util.EnergyToolHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -18,7 +20,7 @@ import java.util.List;
 public class UfoEnergySwordItem extends SwordItem implements IEnergyTool {
 
     public UfoEnergySwordItem(Tier pTier, Properties pProperties) {
-        super(pTier, pProperties.stacksTo(1));
+        super(pTier, pProperties.attributes(SwordItem.createAttributes(pTier, 3, -2.0F)).stacksTo(1)); // -2.0F é mais rápido que o padrão -2.4F
     }
 
     // --- CORREÇÃO ADICIONADA AQUI ---
@@ -57,7 +59,10 @@ public class UfoEnergySwordItem extends SwordItem implements IEnergyTool {
 
     @Override
     public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
-        IEnergyTool.super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
+        int kills = pStack.getOrDefault(ModDataComponents.KILL_COUNT.get(), 0);
+        int bonusDmg = kills * 2;
+        pTooltipComponents.add(Component.literal("Soul Harvest: " + kills + " Kills").withStyle(ChatFormatting.DARK_RED));
+        pTooltipComponents.add(Component.literal("Bonus Dmg: +" + bonusDmg).withStyle(ChatFormatting.RED));
         super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
     }
 }

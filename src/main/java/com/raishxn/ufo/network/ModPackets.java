@@ -38,6 +38,11 @@ public class ModPackets {
                 PacketChangeSideConfig.STREAM_CODEC,
                 PacketChangeSideConfig::handle
         );
+        registrar.playToServer(
+                ToggleAutoSmeltPacket.TYPE,
+                ToggleAutoSmeltPacket.STREAM_CODEC,
+                ToggleAutoSmeltPacket::handle
+        );
     }
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {
