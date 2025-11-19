@@ -11,7 +11,7 @@
   },
   "energy": 250000000,
   "fluid_input": {
-    "amount": 2000,
+    "amount": 2500,
     "ingredient": {
       "fluid": "ufo:transcending_matter"
     }

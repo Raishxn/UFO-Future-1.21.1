@@ -1,4 +1,4 @@
-// 1.21.1	2025-11-13T22:25:17.0768704	Item Models: ufo
+// 1.21.1	2025-11-19T15:24:16.172598	Item Models: ufo
 65bffe38993ea67d3302816b93f2d718431de59b assets/ufo/models/item/aether_containment_capsule.json
 c41f2c84703caa2f3a67fc73bfdb9ac21eea6eec assets/ufo/models/item/charged_enriched_neutronium_sphere.json
 86d9de77936ae4a0cbcaec6708dc4b7a7192352d assets/ufo/models/item/chrono_catalyst_t1.json
@@ -102,6 +102,7 @@ c0e172f4ac0f3c8d47abeaa49634e3cebbd99995 assets/ufo/models/item/storage_cell_sid
 608b94f4dd9217c6740acd97a39fdcd3b82c6a60 assets/ufo/models/item/thermal_resistor_chest.json
 3a624a73213088c68ae73d544026364eaf3d8990 assets/ufo/models/item/thermal_resistor_mask.json
 5559f6843b53edaff7b0efff13f4cd8da80ed8e5 assets/ufo/models/item/thermal_resistor_pants.json
+6e8ae9be7632fe9d776ee9d6169616950b0c8ff0 assets/ufo/models/item/thermal_resistor_plating.json
 f78bada06e511643006f4834cff38cf35f58dfc7 assets/ufo/models/item/transcending_matter_bucket.json
 059b061461bb2f2e35b1e59a956829b9f58a040c assets/ufo/models/item/ufo_axe.json
 55ba6b14f4484470e976d9a5dc7c79cad484994f assets/ufo/models/item/ufo_boots.json

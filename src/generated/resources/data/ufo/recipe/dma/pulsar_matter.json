@@ -5,7 +5,7 @@
     0.1
   ],
   "coolant_input": {
-    "amount": 1500,
+    "amount": 1000,
     "ingredient": {
       "fluid": "ufo:source_gelid_cryotheum"
     }

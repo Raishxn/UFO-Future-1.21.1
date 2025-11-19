@@ -18,19 +18,19 @@
   },
   "item_inputs": [
     {
-      "amount": 64,
+      "amount": 16,
       "ingredient": {
         "item": "ufo:white_dwarf_matter"
       }
     },
     {
-      "amount": 64,
+      "amount": 16,
       "ingredient": {
         "item": "ufo:neutron_star_matter"
       }
     },
     {
-      "amount": 64,
+      "amount": 16,
       "ingredient": {
         "item": "ufo:pulsar_matter"
       }

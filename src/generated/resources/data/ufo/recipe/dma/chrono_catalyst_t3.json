@@ -4,14 +4,14 @@
     1.0
   ],
   "coolant_input": {
-    "amount": 500,
+    "amount": 2000,
     "ingredient": {
       "fluid": "ufo:source_gelid_cryotheum"
     }
   },
-  "energy": 2500000,
+  "energy": 3000000,
   "fluid_input": {
-    "amount": 1000,
+    "amount": 4000,
     "ingredient": {
       "fluid": "ufo:transcending_matter"
     }
@@ -19,13 +19,19 @@
   "item_inputs": [
     {
       "ingredient": {
+        "item": "ufo:chrono_catalyst_t2"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
         "item": "ufo:pulsar_matter"
       }
     },
     {
-      "amount": 4,
+      "amount": 2,
       "ingredient": {
-        "item": "ufo:bismuth"
+        "item": "ae2:quartz_vibrant_glass"
       }
     }
   ],
@@ -36,5 +42,5 @@
       "id": "ufo:chrono_catalyst_t3"
     }
   ],
-  "process_time": 300
+  "process_time": 1000
 }

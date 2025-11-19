@@ -19,13 +19,19 @@
   "item_inputs": [
     {
       "ingredient": {
+        "item": "ufo:obsidian_matrix"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
         "item": "ufo:proto_matter"
       }
     },
     {
-      "amount": 4,
+      "amount": 2,
       "ingredient": {
-        "item": "ufo:bismuth"
+        "item": "ae2:quartz_vibrant_glass"
       }
     }
   ],
@@ -36,5 +42,5 @@
       "id": "ufo:quantum_catalyst_t1"
     }
   ],
-  "process_time": 300
+  "process_time": 200
 }
