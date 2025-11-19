@@ -1,0 +1,44 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 5000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 25000000,
+  "fluid_input": {
+    "amount": 5000,
+    "ingredient": {
+      "fluid": "ufo:raw_star_matter_plasma"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:white_dwarf_fragment_block"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:neutron_star_fragment_block"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:pulsar_fragment_block"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:nuclear_star"
+    }
+  ],
+  "process_time": 3000
+}

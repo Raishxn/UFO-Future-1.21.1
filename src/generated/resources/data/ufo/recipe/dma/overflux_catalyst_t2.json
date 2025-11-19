@@ -1,0 +1,40 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 500,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 600000,
+  "fluid_input": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "ufo:raw_star_matter_plasma"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:corporeal_matter"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:bismuth"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:overflux_catalyst_t2"
+    }
+  ],
+  "process_time": 300
+}

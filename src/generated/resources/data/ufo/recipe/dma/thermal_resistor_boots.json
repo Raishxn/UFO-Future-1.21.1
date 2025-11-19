@@ -1,0 +1,35 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 800000,
+  "fluid_input": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "item_inputs": [
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:thermal_resistor_plating"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:thermal_resistor_boots"
+    }
+  ],
+  "process_time": 500
+}

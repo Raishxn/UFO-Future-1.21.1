@@ -1,0 +1,44 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 10000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 100000000,
+  "fluid_input": {
+    "amount": 5000,
+    "ingredient": {
+      "fluid": "ufo:transcending_matter"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:event_horizon_component_matrix"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:nuclear_star"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:unstable_white_hole_matter"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:cosmic_string_component_matrix"
+    }
+  ],
+  "process_time": 6000
+}

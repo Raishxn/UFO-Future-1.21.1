@@ -1,0 +1,46 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 2000000,
+  "fluid_input": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "ufo:source_primordial_matter_fluid"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:phase_shift_component_matrix"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "item": "ae2:ender_dust"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:hyper_dense_component_matrix"
+    }
+  ],
+  "process_time": 800
+}

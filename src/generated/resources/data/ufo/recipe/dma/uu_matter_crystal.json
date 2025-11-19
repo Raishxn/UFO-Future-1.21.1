@@ -16,7 +16,13 @@
       "fluid": "ufo:uu_matter"
     }
   },
-  "item_inputs": [],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "minecraft:amethyst_shard"
+      }
+    }
+  ],
   "outputs": [
     {
       "#": 1,

@@ -1,0 +1,46 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 50,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 40000,
+  "fluid_input": {
+    "amount": 100,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "item_inputs": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:dust_blizz"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "minecraft:redstone"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:snowball"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 2,
+      "#t": "ae2:i",
+      "id": "ufo:dust_cryotheum"
+    }
+  ],
+  "process_time": 100
+}
