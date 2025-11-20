@@ -1,5 +1,12 @@
-<!-- File: tools.md -->
+---
+navigation:
+  parent: ufo_intro/index.md
+  title: UFO Tools
+  position: 60
+---
+
 # UFO Future Tools — Player Guide
+...
 
 UFO Future introduces a set of advanced tools with progression, passive effects, and unique mechanics.  
 This guide explains how each tool behaves and how players can use or upgrade them efficiently.

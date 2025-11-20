@@ -89,7 +89,9 @@ dependencies {
     // We add the full version to localRuntime, not runtimeOnly, so that we do not publish a dependency on it
     // localRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
     implementation "curse.maven:applied-energistics-2-223794:7027323"
+    compileOnly "curse.maven:applied-energistics-2-223794:7027323"
     implementation "curse.maven:guideme-1173950:6812025"
+    compileOnly "curse.maven:guideme-1173950:6812025"
     implementation "curse.maven:geckolib-388172:7023453"
     implementation "curse.maven:ldlib-626676:6260254"
     compileOnly "curse.maven:mekanism-268560:7017663"

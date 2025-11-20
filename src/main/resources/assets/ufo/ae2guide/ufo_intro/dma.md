@@ -1,6 +1,12 @@
-<!-- File: dma.md -->
-# Dimensional Matter Assembler (DMA) — Player Guide
+---
+navigation:
+  parent: ufo_intro/index.md
+  title: Dimensional Matter Assembler
+  position: 30
+---
 
+# Dimensional Matter Assembler (DMA) — Player Guide
+...
 **Overview**
 The Dimensional Matter Assembler (DMA) is the primary advanced crafting machine in UFO Future. It processes item and fluid inputs, uses catalysts to modify outcomes, and relies on a coolant/thermal system. This guide explains catalysts, the DMA thermal model (thermo), and practical usage.
 
@@ -113,12 +119,6 @@ The DMA uses a temperature model with zones. Keep the temperature under control�
 3. Coolant: Spatial Fluid (fill at least a few buckets).
 4. Catalysts: Matterflow T2 + Overflux T1 (reduces energy and stabilizes).
 5. Start the process and monitor temperature and coolant consumption.
-
-**Example: Stellar Alloy (advanced)**
-- Inputs: star ingots + Transcending Matter Fluid.
-- Catalysts: Quantum T3 for extra byproduct chance + Overflux T3 to stabilize.
-- Coolant: Transcending Matter Fluid.
-- Expect high heat — ensure coolant reserve and consider running with an Overflux priority.
 
 ---
 

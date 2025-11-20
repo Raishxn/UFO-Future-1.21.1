@@ -1,7 +1,9 @@
 ---
 navigation:
-  title: UFO Introduction
-  position: 10
+  title: UFO FUTURE Introduction
+  position: 30
+categories:
+  - ufo_intro
 ---
 
 # Welcome to UFO Future!
@@ -15,7 +17,7 @@ navigation:
 <CategoryIndex category="ufo_intro"></CategoryIndex>
 
 ### What you will find here:
-* **[Stellar Fragments](fragments.md)**: Advanced materials synthesized in the DMA.
+* **[White Dwarf Fragment Ingot](fragments.md)**: Advanced materials synthesized in the DMA.
 * **Quantum Processing**: New machines to manipulate the fabric of reality.
 * **Infinite Storage**: Solutions to store all your items forever.
 

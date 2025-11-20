@@ -1,4 +1,9 @@
-<!-- File: ufo_armor.md -->
+---
+navigation:
+  parent: ufo_intro/index.md
+  title: UFO Armor
+  position: 70
+---
 # UFO Armor — Player Guide
 
 The UFO Armor Set is an advanced high-tier armor providing unique survival mechanics, thermal protection, and powerful passive effects.

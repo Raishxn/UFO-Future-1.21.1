@@ -1,52 +1,60 @@
-<!-- File: mega_storage.md -->
-# Mega Storage & Crafting Processors — Player Guide
+---
+navigation:
+  parent: ufo_intro/index.md
+  title: Infinity Cells — Reference & DMA Fabrication
+  position: 40
+---
 
-**Overview**
-Mega Storage modules and Crafting Processors implement extremely high-capacity storage and parallelized crafting capabilities. They integrate well with the DMA for fabricating the components required at late-game scale.
+# Infinity Cells — Reference & DMA Fabrication
+
+**Purpose**
+Infinity Cells are endgame storage/production artifacts that provide effectively infinite access to a single resource when placed into a compatible storage network (e.g., ME/AE2 style systems). They are expensive and typically crafted only in the DMA.
 
 ---
 
-## Mega Storage Tiers
-- **High-capacity tiers** (examples): 1M, 256M, 1B, 1T, 1QD.
-- Higher tiers require more energy and more complex components (crafted in DMA).
+## Common Types
+- **Fluid Infinity Cells** — e.g., Water, Lava, Liquid Starlight.
+- **Item Infinity Cells** — base blocks like Cobblestone, Sand, Obsidian, Glass.
+- **Advanced Infinity Cells** — antimatter pellets, star-matter, etc. (very high cost).
 
 ---
 
-## Crafting Processor vs Mega Co-Processor
-- **Crafting Processor**: a modular component that speeds up and parallelizes crafting tasks in storage networks.
-- **Mega Co-Processor**: an advanced companion to Crafting Processors that enables multi-threaded or batched recipe execution for extremely complex recipes (often required for mass-producing late-game items).
+## How to use
+1. Insert the cell into a compatible storage network slot or pedestal that recognizes Infinity Cells.
+2. Configure access/permissions to prevent accidental extraction or duplication exploits.
+3. Remember: Infinity Cells are powerful—consider server policies or gating.
 
 ---
 
-## DMA role in Mega Storage
-- DMA crafts **processors**, **co-processors**, and **high-density storage matrices** that form the backbone of Mega Storage.
-- DMA recipes for processors typically require:
-    - star-matter ingots / UU-Matter / Transcending Matter Fluids
-    - catalysts (often Matterflow + Overflux for efficiency and stability)
-    - high-tier coolant and large energy budgets
+## Fabrication (DMA-specific)
+Infinity Cells are **crafted only in the DMA**. Typical recipe pattern:
+- Item inputs (1–4) + fluid inputs (0–4) — obey DMA validation rules (many advanced DMA recipes enforce `ItemInputs + FluidInputs <= 4`).
+- Catalysts: recipes generally require at least one catalyst. Common setups:
+    - **Efficiency builds**: Matterflow T2/T3 to lower energy cost.
+    - **Stability builds**: Overflux T2/T3 for safer runs (recommended for advanced Infinity Cells).
+    - **Speed builds**: Chrono T2/T3 to speed up processing (ensure coolant reserve).
+    - **Yield builds**: Quantum catalysts for chance at extra byproducts (rarely used for basic Infinity Cells).
+- Coolant: Spatial Fluid for mid-tier, Transcending Matter Fluid for advanced Infinity Cells.
+
+**Example (simplified)**:
+- Inputs: 8×Glass (or recipe-specific inputs)
+- Fluid: none or small special fluid
+- Catalysts: Matterflow T2 + Overflux T1
+- Coolant: Spatial Fluid
+- Result: Infinity Glass Cell (example)
 
 ---
 
-## Best practices for large-scale production
-- **Parallelize**: use multiple DMAs for simultaneous fabrication of processor components.
-- **Use Matterflow** T2/T3 to reduce the energy overhead for continuous production.
-- **Monitor coolant** and keep coolant buffers for each DMA in case Chrono catalysts increase heat generation.
-- Use **Overflux** to reduce failure rates on complex recipes which would otherwise be lost.
+## Balancing & Server recommendations
+- Infinity Cells often remove the need to farm certain resources—consider making advanced cells require multi-stage crafting or quest unlocks.
+- You may wish to limit which Infinity Cells are craftable by default on multiplayer servers.
 
 ---
 
-## Example: Building a Mega Crafting Node
-1. Build the storage network and allocate slots for Crafting Processors and Mega Co-Processors.
-2. Fabricate processors with DMA using Matterflow and Overflux to stabilize and save energy.
-3. Install processors into the network and configure parallel crafting threads.
-4. Use a pool of DMAs as a "fabrication farm" for producing additional processors and co-processors as demand increases.
+## Troubleshooting
+- Recipe fails validation: check I+F rule (Item count + Fluid count).
+- DMA fails or burns outputs: add Overflux, stronger coolant, or reduce Chrono.
 
 ---
 
-## Admin notes
-- Production of high-end processors can quickly destabilize server performance if unregulated. Introduce gating: research, quests, or multi-step crafting (e.g., require several separate DMA passes).
-- Consider limiting Transcending Matter Fluid or T3 catalysts behind progression systems.
-
----
-
-*End of Mega Storage & Crafting Processor guide.*
+*End of Infinity Cells reference.*
