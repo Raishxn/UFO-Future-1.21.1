@@ -5,10 +5,11 @@ import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.item.custom.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents; // Novo Import
+import net.minecraft.core.registries.Registries; // Novo Import
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -20,6 +21,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.enchantment.Enchantments; // Novo Import
+import net.minecraft.world.item.enchantment.ItemEnchantments; // Novo Import
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,11 +49,27 @@ public class ModEvents {
         // Aplica tanto para Pickaxe quanto para Hammer
         if (stack.getItem() instanceof UfoEnergyPickaxeItem || stack.getItem() instanceof HammerItem) {
 
-            // Lógica de Fortuna Progressiva (Apenas Pickaxe, opcional para Hammer)
+            // Lógica de Fortuna Progressiva (Apenas Pickaxe)
             if (stack.getItem() instanceof UfoEnergyPickaxeItem) {
                 int currentFortune = stack.getOrDefault(ModDataComponents.PROGRESSIVE_FORTUNE.get(), 0);
+
+                // Limite de nível 100 (ou ajuste conforme necessário)
                 if (currentFortune < 100) {
-                    stack.set(ModDataComponents.PROGRESSIVE_FORTUNE.get(), currentFortune + 1);
+                    int newFortune = currentFortune + 1;
+
+                    // 1. Atualiza o componente customizado (para o seu controle interno e HUD)
+                    stack.set(ModDataComponents.PROGRESSIVE_FORTUNE.get(), newFortune);
+
+                    // 2. [CORREÇÃO] Aplica o Encantamento Vanilla REAL no item
+                    // Isso faz o jogo entender que o item tem Fortuna X para o cálculo de drops
+                    var registry = player.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+                    var fortuneEnchant = registry.getOrThrow(Enchantments.FORTUNE);
+
+                    // Pega os encantamentos atuais, cria uma versão mutável, atualiza a Fortuna e salva de volta
+                    ItemEnchantments.Mutable enchantmentsMap = new ItemEnchantments.Mutable(stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY));
+                    enchantmentsMap.set(fortuneEnchant, newFortune);
+
+                    stack.set(DataComponents.ENCHANTMENTS, enchantmentsMap.toImmutable());
                 }
             }
 
@@ -60,7 +79,7 @@ public class ModEvents {
                 BlockPos pos = event.getPos();
                 BlockState state = event.getState();
 
-                // Simula os drops que aconteceriam
+                // Simula os drops que aconteceriam (agora considerando a Fortuna aplicada acima)
                 List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), player, stack);
                 boolean smelledAny = false;
 
@@ -71,7 +90,7 @@ public class ModEvents {
 
                     if (recipe.isPresent()) {
                         ItemStack result = recipe.get().value().getResultItem(level.registryAccess()).copy();
-                        result.setCount(drop.getCount()); // Mantém a quantidade (ex: 2 areias -> 2 vidros)
+                        result.setCount(drop.getCount()); // Mantém a quantidade multiplicada pela fortuna
 
                         spawnItem(level, pos, result);
                         smelledAny = true;
@@ -87,7 +106,7 @@ public class ModEvents {
                     // Impede o drop vanilla (já dropamos manualmente)
                     event.setCanceled(true);
 
-                    // Destrói o bloco manualmente (sem drops e sem som/particulas duplicados se possível)
+                    // Destrói o bloco manualmente (sem drops vanilla e evitando sons duplicados se possível)
                     level.setBlock(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
                 }
             }
@@ -100,7 +119,6 @@ public class ModEvents {
     }
 
     // --- COMBAT LOGIC (Sword and Axe) ---
-    // (Mantenha o resto do seu código de combate e armadura exatamente como estava abaixo...)
 
     @SubscribeEvent
     public static void onPlayerAttack(LivingIncomingDamageEvent event) {
