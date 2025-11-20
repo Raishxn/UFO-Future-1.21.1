@@ -1,6 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
 import com.raishxn.ufo.datagen.ModDataComponents;
+import com.raishxn.ufo.util.EnergyToolHelper; // Importante: Importar o Helper
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,18 +39,71 @@ public class HammerItem extends DiggerItem implements IEnergyTool, IHasModeHUD, 
         super(pTier, BlockTags.MINEABLE_WITH_PICKAXE, pProperties);
     }
 
+    // --- PADRONIZAÇÃO COM IEnergyTool E EnergyToolHelper ---
+
+    @Override
+    public Component getName(ItemStack stack) {
+        // Padrão RGB do IEnergyTool
+        return IEnergyTool.super.getName(stack);
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack pStack) {
+        // Delega para o Helper (Padrão)
+        return EnergyToolHelper.isBarVisible(pStack);
+    }
+
+    @Override
+    public int getBarWidth(ItemStack pStack) {
+        // Delega para o Helper (Padrão)
+        return EnergyToolHelper.getBarWidth(pStack);
+    }
+
+    @Override
+    public int getBarColor(ItemStack pStack) {
+        // Delega para o Helper (Padrão)
+        return EnergyToolHelper.getBarColor(pStack);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
+        // Adiciona informações específicas do Martelo (Modo de Área)
+        pTooltipComponents.add(getModeHudComponent(pStack));
+
+        // Chama o tooltip padrão de energia (Padrão)
+        IEnergyTool.super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
+        super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
+    }
+
+    @Override
+    public int getEnergyPerUse() {
+        return 50; // Custo por bloco
+    }
+
+    // --- LÓGICA DE MINERAÇÃO (MANTIDA) ---
+
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (!pLevel.isClientSide && pEntityLiving instanceof ServerPlayer player) {
             int range = getRange(pStack);
 
+            // Se for modo 1x1, apenas consome energia do bloco central (se for quebrável)
             if (range == 0) {
+                // Nota: A lógica de consumir energia do bloco central geralmente fica no evento ou aqui se chamarmos super
+                // Mas para seguir o padrão do UfoEnergyAxeItem, podemos verificar aqui:
+                if (pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
+                    consumeEnergy(pStack);
+                }
                 return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
             }
 
-            // Chama o método estático que calcula a área
             List<BlockPos> blocksToBreak = getBlocksToBeDestroyed(range, pPos, player);
             boolean autoSmelt = pStack.getOrDefault(ModDataComponents.AUTO_SMELT.get(), false);
+
+            // Consome energia para o bloco central também
+            if (pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
+                consumeEnergy(pStack);
+            }
 
             for (BlockPos targetPos : blocksToBreak) {
                 if (targetPos.equals(pPos)) continue;
@@ -57,6 +111,7 @@ public class HammerItem extends DiggerItem implements IEnergyTool, IHasModeHUD, 
                 BlockState targetState = pLevel.getBlockState(targetPos);
 
                 if (!targetState.isAir() && pStack.isCorrectToolForDrops(targetState)) {
+                    // Tenta consumir energia para o bloco extra
                     if (consumeEnergy(pStack)) {
                         if (autoSmelt) {
                             smeltAndSpawn(pLevel, targetPos, targetState, pStack);
@@ -65,6 +120,7 @@ public class HammerItem extends DiggerItem implements IEnergyTool, IHasModeHUD, 
                             pLevel.destroyBlock(targetPos, true, player);
                         }
                     } else {
+                        // Se faltar energia, para de quebrar a área, mas o bloco central já foi processado
                         break;
                     }
                 }
@@ -73,11 +129,10 @@ public class HammerItem extends DiggerItem implements IEnergyTool, IHasModeHUD, 
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
     }
 
-    // --- LÓGICA DE ÁREA (PÚBLICA E ESTÁTICA PARA O CLIENT EVENTS USAR) ---
-    // Alterado de ServerPlayer para Player para funcionar no Client também
+    // --- MÉTODOS AUXILIARES (ÁREA, AUTO-SMELT, MODOS) ---
+
     public static List<BlockPos> getBlocksToBeDestroyed(int range, BlockPos initalBlockPos, Player player) {
         List<BlockPos> positions = new ArrayList<>();
-
         BlockHitResult traceResult = player.level().clip(new ClipContext(player.getEyePosition(1f),
                 (player.getEyePosition(1f).add(player.getViewVector(1f).scale(6f))),
                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
@@ -86,34 +141,17 @@ public class HammerItem extends DiggerItem implements IEnergyTool, IHasModeHUD, 
             return positions;
         }
 
-        if(traceResult.getDirection() == Direction.DOWN || traceResult.getDirection() == Direction.UP) {
-            for(int x = -range; x <= range; x++) {
-                for(int y = -range; y <= range; y++) {
-                    positions.add(new BlockPos(initalBlockPos.getX() + x, initalBlockPos.getY(), initalBlockPos.getZ() + y));
-                }
-            }
+        Direction face = traceResult.getDirection();
+        if(face == Direction.DOWN || face == Direction.UP) {
+            for(int x = -range; x <= range; x++) for(int y = -range; y <= range; y++) positions.add(new BlockPos(initalBlockPos.getX() + x, initalBlockPos.getY(), initalBlockPos.getZ() + y));
+        } else if(face == Direction.NORTH || face == Direction.SOUTH) {
+            for(int x = -range; x <= range; x++) for(int y = -range; y <= range; y++) positions.add(new BlockPos(initalBlockPos.getX() + x, initalBlockPos.getY() + y, initalBlockPos.getZ()));
+        } else if(face == Direction.EAST || face == Direction.WEST) {
+            for(int x = -range; x <= range; x++) for(int y = -range; y <= range; y++) positions.add(new BlockPos(initalBlockPos.getX(), initalBlockPos.getY() + y, initalBlockPos.getZ() + x));
         }
-
-        if(traceResult.getDirection() == Direction.NORTH || traceResult.getDirection() == Direction.SOUTH) {
-            for(int x = -range; x <= range; x++) {
-                for(int y = -range; y <= range; y++) {
-                    positions.add(new BlockPos(initalBlockPos.getX() + x, initalBlockPos.getY() + y, initalBlockPos.getZ()));
-                }
-            }
-        }
-
-        if(traceResult.getDirection() == Direction.EAST || traceResult.getDirection() == Direction.WEST) {
-            for(int x = -range; x <= range; x++) {
-                for(int y = -range; y <= range; y++) {
-                    positions.add(new BlockPos(initalBlockPos.getX(), initalBlockPos.getY() + y, initalBlockPos.getZ() + x));
-                }
-            }
-        }
-
         return positions;
     }
 
-    // --- AUTO-SMELT HELPER ---
     private void smeltAndSpawn(Level level, BlockPos pos, BlockState state, ItemStack tool) {
         if (level.isClientSide) return;
         List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level, pos, level.getBlockEntity(pos), null, tool);
@@ -137,7 +175,6 @@ public class HammerItem extends DiggerItem implements IEnergyTool, IHasModeHUD, 
         level.addFreshEntity(entity);
     }
 
-    // --- MÉTODOS DE UTILIDADE ---
     @Override
     public void cycleMode(ItemStack stack, Player player) {
         int currentRange = getRange(stack);
@@ -175,10 +212,5 @@ public class HammerItem extends DiggerItem implements IEnergyTool, IHasModeHUD, 
         }
         Component coloredArea = Component.literal(areaText).withStyle(color);
         return Component.translatable("tooltip.ufo.area_mode", coloredArea);
-    }
-
-    @Override
-    public int getEnergyPerUse() {
-        return 50;
     }
 }
