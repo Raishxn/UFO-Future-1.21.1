@@ -1,0 +1,40 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 500,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 500000,
+  "fluid_input": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "ufo:source_spatial_fluid"
+    }
+  },
+  "item_inputs": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:safe_containment_matter"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:phase_shift_component_matrix"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:aether_containment_capsule"
+    }
+  ],
+  "process_time": 400
+}

@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class ModKeyBindings {
     public static final String KEY_CATEGORY_UFO = "key.category.ufo";
-
+    public static final String KEY_TOGGLE_AUTO_SMELT = "key.ufo.toggle_auto_smelt";
     public static final KeyMapping CYCLE_TOOL_FORWARD = new KeyMapping(
             "key.ufo.cycle_tool_forward",
             KeyConflictContext.IN_GAME,
@@ -31,4 +31,6 @@ public class ModKeyBindings {
             GLFW.GLFW_KEY_C,
             KEY_CATEGORY_UFO
     );
+    public static final KeyMapping TOGGLE_AUTO_SMELT = new KeyMapping(KEY_TOGGLE_AUTO_SMELT, KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, KEY_CATEGORY_UFO);
 }

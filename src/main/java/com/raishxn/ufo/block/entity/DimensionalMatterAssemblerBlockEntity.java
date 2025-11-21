@@ -347,7 +347,7 @@ public class DimensionalMatterAssemblerBlockEntity extends BlockEntity implement
                     player.sendSystemMessage(chatMsg.copy().append(posMsg));
                 }
                 if (currentZone == DMAThermalHandler.TemperatureZone.MELTDOWN) {
-                    Component title = Component.literal("⚠️ MELTDOWN ⚠️").withStyle(ChatFormatting.DARK_RED);
+                    Component title = Component.literal("⚠ MELTDOWN ⚠").withStyle(ChatFormatting.DARK_RED);
                     Component subtitle = Component.literal("Evacuate Immediately! (10s)").withStyle(ChatFormatting.RED); // Avisa do tempo
                     player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 70, 20));
                     player.connection.send(new ClientboundSetSubtitleTextPacket(subtitle));

@@ -1,0 +1,46 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 500,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 150000,
+  "fluid_input": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "ufo:source_temporal_fluid"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:obsidian_matrix"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:proto_matter"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ae2:quartz_vibrant_glass"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:chrono_catalyst_t1"
+    }
+  ],
+  "process_time": 200
+}

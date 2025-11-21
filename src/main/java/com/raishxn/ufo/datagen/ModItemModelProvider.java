@@ -53,6 +53,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.PULSAR_FRAGMENT_INGOT.get());
         basicItem(ModItems.PULSAR_FRAGMENT_DUST.get());
         basicItem(ModItems.PULSAR_FRAGMENT_NUGGET.get());
+        basicItem(ModItems.THERMAL_RESISTOR_PLATING.get());
 
         // --- Infinity Cells ---
         basicItem(ModItems.INFINITY_WATER_CELL.get());

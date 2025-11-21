@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "ufo:dimensional_processor"
+    },
+    "G": {
+      "item": "ae2:quartz_vibrant_glass"
+    },
+    "Q": {
+      "item": "ae2:quartz_fiber"
+    }
+  },
+  "pattern": [
+    "GDG",
+    "DQD",
+    "GDG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:quantum_lattice_frame"
+  }
+}

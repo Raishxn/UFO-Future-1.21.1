@@ -1,0 +1,45 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 5000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 250000000,
+  "fluid_input": {
+    "amount": 2500,
+    "ingredient": {
+      "fluid": "ufo:transcending_matter"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:cosmic_string_component_matrix"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    },
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "minecraft:cobbled_deepslate"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:infinity_cobbled_deepslate_cell"
+    }
+  ],
+  "process_time": 10000
+}

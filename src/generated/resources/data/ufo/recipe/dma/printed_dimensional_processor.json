@@ -1,0 +1,39 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 50,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 50000,
+  "fluid_input": {
+    "amount": 100,
+    "ingredient": {
+      "fluid": "ufo:source_liquid_starlight_fluid"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:white_dwarf_fragment_ingot"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:dimensional_processor_press"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:printed_dimensional_processor"
+    }
+  ],
+  "process_time": 100
+}

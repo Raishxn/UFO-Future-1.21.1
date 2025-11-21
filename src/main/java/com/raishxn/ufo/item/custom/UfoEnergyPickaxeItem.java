@@ -5,7 +5,11 @@ import com.raishxn.ufo.util.EnergyToolHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -43,6 +47,8 @@ public class UfoEnergyPickaxeItem extends PickaxeItem implements IEnergyTool, IH
 
     }
 
+
+
     @Override
     public Component getModeHudComponent(ItemStack stack) {
         boolean isFast = stack.getOrDefault(ModDataComponents.FAST_MODE.get(), false);
@@ -69,10 +75,27 @@ public class UfoEnergyPickaxeItem extends PickaxeItem implements IEnergyTool, IH
     }
 
     @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        ItemStack stack = player.getItemInHand(usedHand);
+        if (!level.isClientSide && player.isShiftKeyDown()) {
+            boolean currentSmelt = stack.getOrDefault(ModDataComponents.AUTO_SMELT.get(), false);
+            stack.set(ModDataComponents.AUTO_SMELT.get(), !currentSmelt);
+            player.sendSystemMessage(Component.literal("Auto-Smelt: " + (!currentSmelt ? "ON" : "OFF"))
+                    .withStyle(!currentSmelt ? ChatFormatting.GREEN : ChatFormatting.RED));
+            return InteractionResultHolder.success(stack);
+        }
+        return super.use(level, player, usedHand);
+    }
+
+    @Override
     public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
-        pTooltipComponents.add(getModeHudComponent(pStack));
-        IEnergyTool.super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
         super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
+
+        boolean smite = pStack.getOrDefault(ModDataComponents.AUTO_SMELT.get(), false);
+        int fortune = pStack.getOrDefault(ModDataComponents.PROGRESSIVE_FORTUNE.get(), 0);
+
+        pTooltipComponents.add(Component.literal("Auto-Smelt: " + (smite ? "ON" : "OFF")).withStyle(smite ? ChatFormatting.GOLD : ChatFormatting.GRAY));
+        pTooltipComponents.add(Component.literal("Prog. Fortune: " + fortune + "/100").withStyle(ChatFormatting.AQUA));
     }
 
     @Override

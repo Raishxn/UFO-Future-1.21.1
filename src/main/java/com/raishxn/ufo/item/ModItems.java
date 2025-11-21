@@ -296,21 +296,21 @@ public class ModItems {
                     .component(ModDataComponents.TOOL_MODE_INDEX.get(), 0)
                     .component(ModDataComponents.BOW_FAST_MODE.get(), false).stacksTo(1) // Valor padrão: false
             ));
-     public static final DeferredItem<Item> UFO_HELMET = ITEMS.register("ufo_helmet",
-             () -> new ThermalArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.HELMET, new Item.Properties()
-                     .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1))); // Adicione .stacksTo(1)
+    public static final DeferredItem<Item> UFO_HELMET = ITEMS.register("ufo_helmet",
+            () -> new UfoArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.HELMET, new Item.Properties()
+                    .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1)));
 
-     public static final DeferredItem<Item> UFO_CHESTPLATE = ITEMS.register("ufo_chestplate",
-             () -> new ThermalArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Properties()
-                     .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1))); // Adicione .stacksTo(1)
+    public static final DeferredItem<Item> UFO_CHESTPLATE = ITEMS.register("ufo_chestplate",
+            () -> new UfoArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.CHESTPLATE, new Item.Properties()
+                    .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1)));
 
-     public static final DeferredItem<Item> UFO_LEGGINGS = ITEMS.register("ufo_leggings",
-             () -> new ThermalArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Properties()
-                     .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1))); // Adicione .stacksTo(1)
+    public static final DeferredItem<Item> UFO_LEGGINGS = ITEMS.register("ufo_leggings",
+            () -> new UfoArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.LEGGINGS, new Item.Properties()
+                    .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1)));
 
-     public static final DeferredItem<Item> UFO_BOOTS = ITEMS.register("ufo_boots",
-             () -> new ThermalArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.BOOTS, new Item.Properties()
-                     .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1)));
+    public static final DeferredItem<Item> UFO_BOOTS = ITEMS.register("ufo_boots",
+            () -> new UfoArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.BOOTS, new Item.Properties()
+                    .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1)));
 
 
      public static final DeferredItem<Item> ENTROPY_ASSEMBLER_CORE_CASING = ITEMS.register("entropy_assembler_core_casing",

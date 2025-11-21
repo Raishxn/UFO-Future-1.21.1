@@ -34,6 +34,21 @@ public class ModDataComponents {
     // LINHA CORRIGIDA ABAIXO
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<GenericStack>>> CELL_SHOW_TOOLTIP_STACKS = register("cell_show_tooltip_stacks", builder -> builder.persistent(GenericStack.CODEC.listOf()).networkSynchronized(GenericStack.STREAM_CODEC.apply(ByteBufCodecs.list())));
 
+
+    // Para a Picareta
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> AUTO_SMELT =
+            register("auto_smelt", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> PROGRESSIVE_FORTUNE =
+            register("progressive_fortune", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
+    // Para a Espada
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> KILL_COUNT =
+            register("kill_count", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> COMBO_COUNT =
+            register("combo_count", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> LAST_HIT_TIME =
+            register("last_hit_time", builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG));
+
     // --- Seus Componentes Existentes (sem alterações) ---
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ENERGY =
             DATA_COMPONENTS.register("energy", () -> DataComponentType.<Integer>builder()

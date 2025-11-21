@@ -34,7 +34,7 @@ public class ModCapabilityEvents {
                 (stack, context) -> new AetherContainmentCapsuleItem.HazardousFluidHandler(stack, AetherContainmentCapsuleItem.CAPACITY),
                 ModItems.AETHER_CONTAINMENT_CAPSULE.get()
         );
-        // --- Ferramentas e Armas ---
+        // --- Ferramentas e Armas Já Existentes ---
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
                 ModItems.UFO_SWORD.get()
@@ -58,6 +58,32 @@ public class ModCapabilityEvents {
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
                 ModItems.UFO_STAFF.get()
+        );
+
+        // --- ADICIONE ESTES BLOCOS ABAIXO ---
+
+        // Hammer
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
+                        new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
+                ModItems.UFO_HAMMER.get()
+        );
+
+        // Greatsword
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
+                        new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
+                ModItems.UFO_GREATSWORD.get()
+        );
+
+        // Fishing Rod
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
+                        new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
+                ModItems.UFO_FISHING_ROD.get()
+        );
+
+        // Bow
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
+                        new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
+                ModItems.UFO_BOW.get()
         );
 
         // --- Armaduras ---

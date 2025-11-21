@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "ufo:dimensional_processor"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "M": {
+      "item": "ufo:obsidian_matrix"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "pattern": [
+    "IDI",
+    "OMO",
+    "IDI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:graviton_plated_casing"
+  }
+}

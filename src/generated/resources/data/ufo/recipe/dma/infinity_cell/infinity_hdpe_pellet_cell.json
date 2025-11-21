@@ -1,0 +1,51 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "ufo:dimensional_assembly",
+  "chances": [
+    1.0
+  ],
+  "coolant_input": {
+    "amount": 5000,
+    "ingredient": {
+      "fluid": "ufo:source_gelid_cryotheum"
+    }
+  },
+  "energy": 250000000,
+  "fluid_input": {
+    "amount": 2500,
+    "ingredient": {
+      "fluid": "ufo:transcending_matter"
+    }
+  },
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:cosmic_string_component_matrix"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    },
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "mekanism:hdpe_pellet"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:infinity_hdpe_pellet_cell"
+    }
+  ],
+  "process_time": 10000
+}

@@ -87,19 +87,26 @@ public class DimensionalMatterAssemblerMenu extends AbstractContainerMenu {
                 return stack.is(CATALYST_TAG);
             }
         });
-        this.addSlot(new SlotItemHandler(upgradeHandler, 1, 174, 40) {
+        this.addSlot(new SlotItemHandler(upgradeHandler, 0, 175, 23) {
+            @Override
+            public boolean mayPlace(@NotNull ItemStack stack) {
+                // Checa se o item tem a tag "ufo:catalyst"
+                return stack.is(CATALYST_TAG);
+            }
+        });
+        this.addSlot(new SlotItemHandler(upgradeHandler, 1, 175, 41) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
                 return stack.is(CATALYST_TAG);
             }
         });
-        this.addSlot(new SlotItemHandler(upgradeHandler, 2, 174, 57) {
+        this.addSlot(new SlotItemHandler(upgradeHandler, 2, 175, 59) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
                 return stack.is(CATALYST_TAG);
             }
         });
-        this.addSlot(new SlotItemHandler(upgradeHandler, 3, 174, 74) {
+        this.addSlot(new SlotItemHandler(upgradeHandler, 3, 175, 77) {
             @Override
             public boolean mayPlace(@NotNull ItemStack stack) {
                 return stack.is(CATALYST_TAG);

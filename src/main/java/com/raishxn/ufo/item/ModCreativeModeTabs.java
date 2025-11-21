@@ -67,6 +67,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.QUANTUM_CATALYST_T3.get());
                         output.accept(ModItems.DIMENSIONAL_CATALYST.get());
 
+                        output.accept(ModItems.THERMAL_RESISTOR_PLATING.get());
                         output.accept(ModItems.THERMAL_RESISTOR_BOOTS.get());
                         output.accept(ModItems.THERMAL_RESISTOR_CHEST.get());
                         output.accept(ModItems.THERMAL_RESISTOR_MASK.get());
@@ -174,13 +175,13 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.PULSAR_FRAGMENT_BLOCK.get());
                         output.accept(ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER.get());
 
-                        output.accept(ModItems.ENTROPY_ASSEMBLER_CORE_CASING.get());
-                        output.accept(ModItems.ENTROPY_SINGULARITY_CASING.get());
-                        output.accept(ModItems.ENTROPY_CONTAINMENT_CHAMBER_COMPONENTS.get());
-                        output.accept(ModItems.ENTROPY_COOLANT_MATRIX_COMPONENTS.get());
-                        output.accept(ModItems.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
-                        output.accept(ModItems.ENTROPY_SINGULARITY_ARRAY_CONTROLLER.get());
-                        output.accept(ModItems.ENTROPY_CATALYST_BANK_COMPONENTS.get());
+                        //output.accept(ModItems.ENTROPY_ASSEMBLER_CORE_CASING.get());
+                        //output.accept(ModItems.ENTROPY_SINGULARITY_CASING.get());
+                        //output.accept(ModItems.ENTROPY_CONTAINMENT_CHAMBER_COMPONENTS.get());
+                        //output.accept(ModItems.ENTROPY_COOLANT_MATRIX_COMPONENTS.get());
+                        //output.accept(ModItems.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
+                        //output.accept(ModItems.ENTROPY_SINGULARITY_ARRAY_CONTROLLER.get());
+                        //output.accept(ModItems.ENTROPY_CATALYST_BANK_COMPONENTS.get());
                         ModBlocks.CRAFTING_STORAGE_BLOCKS.values().forEach(block -> output.accept(block.get()));
                         ModBlocks.CO_PROCESSOR_BLOCKS.values().forEach(block -> output.accept(block.get()));
 
