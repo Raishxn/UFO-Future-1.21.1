@@ -1,11 +1,11 @@
-// 1.21.1	2025-11-19T15:29:43.5113763	Recipes
+// 1.21.1	2025-12-02T00:25:51.0672469	Recipes
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
 eb7866de442289af9a906bdbf371421bb9e18e5a data/ufo/advancement/recipes/misc/coprocessor_2b.json
 2da6c174cfadc6187c64a460466526bf7370f743 data/ufo/advancement/recipes/misc/coprocessor_300m.json
 c329c52c1cf665d32d0c4676c21a72563f6b324f data/ufo/advancement/recipes/misc/coprocessor_50m.json
 be3ad26fbd1e6a1fcf540a0efc63acf3c693e948 data/ufo/advancement/recipes/misc/coprocessor_750m.json
 ad8781cb7009056952f51b77421b471bdf8d2c1f data/ufo/advancement/recipes/misc/dimensional_matter_assembler.json
-ddb8a6692221ae645ea36883720780b1696b3607 data/ufo/advancement/recipes/misc/graviton_plated_casing.json
+9df0ce0cbe99c632061c52600b5abe54dfe8beae data/ufo/advancement/recipes/misc/graviton_plated_casing.json
 6a96dbec30235a12a1f15514260fa9fdcb651334 data/ufo/advancement/recipes/misc/neutron_fluid_cell_housing.json
 e8b1a2437c8069066b1b529df7312d10823e3aa6 data/ufo/advancement/recipes/misc/neutron_star_fragment_block.json
 c3732218061c66a7a94588de8302d4c2486b5d96 data/ufo/advancement/recipes/misc/neutron_star_fragment_ingot_from_block.json
@@ -42,7 +42,7 @@ b4bd040634f116c021189da2329bac369192ae35 data/ufo/recipe/coprocessor_150m.json
 8aae4d8dca74b893907dcf0545d594e4ce12f592 data/ufo/recipe/coprocessor_300m.json
 89a83ca56f828fc97cb81ee20ba439afde9cfbeb data/ufo/recipe/coprocessor_50m.json
 c54aca9b1dbd456b6ed9832e9f9545989483cf85 data/ufo/recipe/coprocessor_750m.json
-0b22e5bdacae029605f28cdbd2c85b87c13f00a1 data/ufo/recipe/dimensional_matter_assembler.json
+6c7cf93d61001d1a9f4f6f3281244727eb012751 data/ufo/recipe/dimensional_matter_assembler.json
 d8b5fa606beb100bc1af3d7b7b9bba7e4e639f4a data/ufo/recipe/dma/aether_containment_capsule.json
 ba8a8f42fdca2d7a2438dc3d884ec905b48b07e9 data/ufo/recipe/dma/charged_enriched_neutronium_sphere.json
 73f388d0aad2d351d47e4845b319974840bf5996 data/ufo/recipe/dma/chrono_catalyst_t1.json
@@ -61,7 +61,7 @@ d73f3ce74063232fcd4b0b228294633121a33a5b data/ufo/recipe/dma/dimensional_process
 59b7754cae68cea11a10a270450ec641dfa4087d data/ufo/recipe/dma/dust_blizz.json
 fe6a54e107620ae70d259523755eb21c5526c363 data/ufo/recipe/dma/dust_cryotheum.json
 d303f480ac2476d869dfc865956fb100ae2e4fa5 data/ufo/recipe/dma/enriched_neutronium_sphere.json
-02dcc3ef103f4f3c266bf6e1fb15667380671f38 data/ufo/recipe/dma/gelid_cryotheum.json
+4a56e7c69f18d05e2a28b08b014fbff5c92bc8f4 data/ufo/recipe/dma/gelid_cryotheum.json
 671b6f6a4d4c86de08b855aa6c57bc6d99b6f29d data/ufo/recipe/dma/infinity_cell/infinity_amethyst_shard_cell.json
 853ce175e98e55e9b50129bcd57e682a4c63bc4c data/ufo/recipe/dma/infinity_cell/infinity_antimatter_pellet_cell.json
 05034e71e184f15c84395ce397e327217fe04975 data/ufo/recipe/dma/infinity_cell/infinity_black_dye_cell.json
@@ -137,13 +137,13 @@ a806f147e64830fab47cd02b44b739851699da44 data/ufo/recipe/dma/ufo_chestplate.json
 3c4fc9db1b05742958bee1ab93606d4a42676cb6 data/ufo/recipe/dma/ufo_leggings.json
 499e3dd83dc35da73c3cfa51277152d8451aebde data/ufo/recipe/dma/ufo_staff.json
 f2982c3ed9e9fa7d99ff76bfdb9b9dc130474595 data/ufo/recipe/dma/unstable_white_hole_matter.json
-804b5fd5db74d8b76e491800d82420a31d4d51c5 data/ufo/recipe/dma/uu_amplifier.json
+7627187fe80c375c6d6b3151e87d5337f82cc1b6 data/ufo/recipe/dma/uu_amplifier.json
 c01a5234492f742186f28dd7508e41dd5dee7135 data/ufo/recipe/dma/uu_matter.json
 40dc2c7a1e89189feac8a16c4a9d44aba269c254 data/ufo/recipe/dma/uu_matter_crystal.json
 09d0670f0c8ec04374ce1ee172933d81437f2ee9 data/ufo/recipe/dma/white_dwarf_dust.json
 1f95588e9dacd579c7c7797915c3c7834882b252 data/ufo/recipe/dma/white_dwarf_fragment_rod.json
 c77e855673e31503b4f00d80e24e522c109498a9 data/ufo/recipe/dma/white_dwarf_matter.json
-9a70f78f23c9fa032ff5df79962742ee227f8ca0 data/ufo/recipe/graviton_plated_casing.json
+39eb5ce5a7462e4d7a5dea58f6335f368326cd63 data/ufo/recipe/graviton_plated_casing.json
 0b001fce60c2e1feb0302f9553020edb67571d1e data/ufo/recipe/neutron_fluid_cell_housing.json
 71f886a4b9dcef5429e40c319e3916a5153b2318 data/ufo/recipe/neutron_star_fragment_block.json
 3d39a7881a35ca1352ceab7b78317af0fa306a86 data/ufo/recipe/neutron_star_fragment_ingot_from_block.json

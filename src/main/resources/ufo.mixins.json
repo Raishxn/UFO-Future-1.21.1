@@ -2,6 +2,7 @@
   "required": true,
   "package": "com.raishxn.ufo.mixin",
   "compatibilityLevel": "JAVA_21",
+  "priority": 3000,
   "mixins": [
     "AccessorBuiltInModelHooks",
     "MixinCPUSelectionList",

@@ -5,6 +5,7 @@ import com.raishxn.ufo.core.MegaCoProcessorTier;
 import com.raishxn.ufo.core.MegaCraftingStorageTier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.level.material.Fluids; // Necessário para usar Fluids.WATER
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -274,8 +275,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .energy(10_000_000).time(2000).save(c);
 
         // Fluid Recipes (UU, Temporal, etc.)
-        buildFluidRecipes(c);
 
+        buildFluidRecipes(c);
         // Matters e Esferas (Progresso Principal)
         buildMatterProgression(c);
 
@@ -297,6 +298,7 @@ public class ModRecipeProvider extends RecipeProvider {
         buildStaffAndAnomaly(c);
     }
 
+
     // --- Helpers para buildMaterialsAndFluidsDMA ---
     private void buildRodRecipe(RecipeOutput c, Supplier<net.minecraft.world.item.Item> rod, Supplier<net.minecraft.world.item.Item> ingot, int energy, int time) {
         DMARecipeBuilder.create("dma/" + BuiltInRegistries.ITEM.getKey(rod.get()).getPath())
@@ -312,7 +314,9 @@ public class ModRecipeProvider extends RecipeProvider {
         DMARecipeBuilder.create("dma/uu_amplifier")
                 .outputFluid(ModFluids.SOURCE_UU_AMPLIFIER_FLUID.get(), 9, 1.0f)
                 .inputItem(ModItems.SCRAP_BOX.get())
-                .inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 10).inputCoolant(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 100)
+                // CORREÇÃO: Usa Água (1000mB) em vez de Starlight para quebrar o loop com Liquid Starlight
+                .inputFluid(Fluids.WATER, 1000)
+                .inputCoolant(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 100)
                 .energy(200_000).time(600).save(c);
 
         DMARecipeBuilder.create("dma/uu_matter")
@@ -329,7 +333,9 @@ public class ModRecipeProvider extends RecipeProvider {
         DMARecipeBuilder.create("dma/gelid_cryotheum")
                 .outputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 10000, 1.0f)
                 .inputItem(ModItems.DUST_CRYOTHEUM.get(), 4)
-                .inputFluid(MekanismFluids.HYDROGEN.get(), 2000).inputCoolant(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 100)
+                .inputFluid(MekanismFluids.HYDROGEN.get(), 2000)
+                // CORREÇÃO: Usa Água como refrigerante inicial para permitir a primeira produção
+                .inputCoolant(Fluids.WATER, 1000)
                 .energy(500_000).time(200).save(c);
 
         DMARecipeBuilder.create("dma/primordial_matter_liquid")
@@ -692,21 +698,29 @@ public class ModRecipeProvider extends RecipeProvider {
     // --- 9. MÁQUINAS E ESTRUTURAS (CRAFTING TABLE) ---
     // ========================================================================================
     private void buildMachineAndStorageRecipes(RecipeOutput c) {
+        // Graviton Plated Casing - Base da estrutura
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.GRAVITON_PLATED_CASING.get())
                 .pattern("IDI").pattern("OMO").pattern("IDI")
-                .define('I', Items.IRON_BLOCK).define('D', ModItems.DIMENSIONAL_PROCESSOR.get())
+                .define('I', Items.IRON_BLOCK)
+                // CORREÇÃO: Usa Engineering Processor (AE2) em vez de Dimensional Processor
+                .define('D', AEItems.ENGINEERING_PROCESSOR)
                 .define('M', ModItems.OBSIDIAN_MATRIX.get()).define('O', Items.OBSIDIAN)
-                .unlockedBy("has_processor", has(ModItems.DIMENSIONAL_PROCESSOR.get())).save(c);
+                .unlockedBy("has_processor", has(AEItems.ENGINEERING_PROCESSOR)).save(c);
 
+        // Frame pode manter o Dimensional Processor se for usado apenas para Upgrades (Co-Processors)
+        // Se for necessário para a máquina básica, muda para Engineering Processor também.
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_LATTICE_FRAME.get())
                 .pattern("GDG").pattern("DQD").pattern("GDG")
                 .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS).define('D', ModItems.DIMENSIONAL_PROCESSOR.get())
                 .define('Q', AEParts.QUARTZ_FIBER)
                 .unlockedBy("has_processor", has(ModItems.DIMENSIONAL_PROCESSOR.get())).save(c);
 
+        // Dimensional Matter Assembler - A Máquina Principal
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER.get())
                 .pattern("OPO").pattern("CMC").pattern("OEO")
-                .define('O', ModItems.OBSIDIAN_MATRIX.get()).define('P', ModItems.DIMENSIONAL_PROCESSOR.get())
+                .define('O', ModItems.OBSIDIAN_MATRIX.get())
+                // CORREÇÃO: Usa Engineering Processor (AE2) para permitir crafting inicial
+                .define('P', AEItems.ENGINEERING_PROCESSOR)
                 .define('C', ModBlocks.GRAVITON_PLATED_CASING.get()).define('M', AEBlocks.CONTROLLER)
                 .define('E', Items.ENDER_EYE)
                 .unlockedBy("has_controller", has(AEBlocks.CONTROLLER)).save(c);

@@ -11,9 +11,9 @@
   },
   "energy": 200000,
   "fluid_input": {
-    "amount": 10,
+    "amount": 1000,
     "ingredient": {
-      "fluid": "ufo:source_liquid_starlight_fluid"
+      "fluid": "minecraft:water"
     }
   },
   "item_inputs": [

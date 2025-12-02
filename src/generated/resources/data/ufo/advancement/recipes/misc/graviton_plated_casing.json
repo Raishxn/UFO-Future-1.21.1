@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "ufo:dimensional_processor"
+            "items": "ae2:engineering_processor"
           }
         ]
       },
