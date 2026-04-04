@@ -23,6 +23,6 @@ jobs:
         with:
           python-version: '3.x'
       - name: Install dependencies
-        run: pip install mkdocs mkdocs-material
+        run: pip install mkdocs mkdocs-material mkdocs-static-i18n
       - name: Deploy Wiki
         run: mkdocs gh-deploy --force
