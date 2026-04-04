@@ -1,0 +1,35 @@
+{
+  "type": "ufo:stellar_simulation",
+  "item_inputs": [
+    {
+      "amount": 8,
+      "ingredient": {
+        "item": "ufo:charged_enriched_neutronium_sphere"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    }
+  ],
+  "fluid_inputs": [
+    {
+      "amount": 100000,
+      "ingredient": {
+        "fluid": "ufo:raw_star_matter_plasma"
+      }
+    }
+  ],
+  "item_outputs": [
+    { "#": 3000000, "#t": "ae2:i", "id": "minecraft:netherite_scrap" },
+    { "#": 2000000, "#t": "ae2:i", "id": "minecraft:quartz" },
+    { "#": 2000000, "#t": "ae2:i", "id": "minecraft:ender_pearl" }
+  ],
+  "fluid_outputs": [],
+  "energy": 5000000,
+  "time": 30000,
+  "cooling_level": 2,
+  "field_tier": 2
+}

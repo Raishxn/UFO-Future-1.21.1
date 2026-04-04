@@ -1,0 +1,49 @@
+{
+  "type": "ufo:stellar_simulation",
+  "item_inputs": [
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "ufo:charged_enriched_neutronium_sphere"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "item": "ufo:aether_containment_capsule"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:dark_matter"
+      }
+    }
+  ],
+  "fluid_inputs": [
+    {
+      "amount": 200000,
+      "ingredient": {
+        "fluid": "ufo:raw_star_matter_plasma"
+      }
+    },
+    {
+      "amount": 100000,
+      "ingredient": {
+        "fluid": "ufo:transcending_matter"
+      }
+    }
+  ],
+  "item_outputs": [
+    { "#": 2000000, "#t": "ae2:i", "id": "ufo:pulsar_dust" },
+    { "#": 1000000, "#t": "ae2:i", "id": "ufo:white_dwarf_matter" },
+    { "#": 500000, "#t": "ae2:i", "id": "ufo:neutron_star_matter" }
+  ],
+  "fluid_outputs": [
+    { "#": 50000, "#t": "ae2:f", "id": "ufo:liquid_starlight" }
+  ],
+  "energy": 15000000,
+  "time": 48000,
+  "cooling_level": 3,
+  "field_tier": 3
+}

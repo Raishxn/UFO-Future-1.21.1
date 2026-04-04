@@ -46,6 +46,14 @@ public class ModBlockStateProvider extends BlockStateProvider {
         // Bloco controlador com estados
         controllerBlock(MultiblockBlocks.ENTROPY_SINGULARITY_ARRAY_CONTROLLER);
 
+        // ═══════════════════ STELLAR NEXUS ═══════════════════
+        stellarNexusControllerBlock(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER);
+        directionalMultiblockCube(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH);
+        directionalMultiblockCube(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH);
+        multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1);
+        multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2);
+        multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3);
+
 
         // --- Blocos com Variantes (Crafting Units) ---
         for (var tier : MegaCraftingStorageTier.values()) {
@@ -91,11 +99,31 @@ public class ModBlockStateProvider extends BlockStateProvider {
     /**
      * Registra um bloco de multiblock que é um cubo simples.
      */
-    private void multiblockCube(DeferredBlock<Block> block) {
+    private void multiblockCube(DeferredBlock<? extends Block> block) {
         String name = block.getId().getPath();
         ResourceLocation texture = modLoc("block/multiblock/" + name);
         simpleBlock(block.get(), models().cubeAll(name, texture));
         simpleBlockItem(block.get(), models().getExistingFile(modLoc("block/" + name)));
+    }
+
+    /**
+     * Directional multiblock cube — same texture on all faces, rotated by FACING.
+     */
+    private void directionalMultiblockCube(DeferredBlock<? extends Block> block) {
+        String name = block.getId().getPath();
+        ResourceLocation texture = modLoc("block/multiblock/" + name);
+        ModelFile model = models().cubeAll(name, texture);
+
+        getVariantBuilder(block.get()).forAllStates(state -> {
+            Direction dir = state.getValue(DirectionalBlock.FACING);
+            return ConfiguredModel.builder()
+                    .modelFile(model)
+                    .rotationX(dir == Direction.DOWN ? 90 : dir == Direction.UP ? -90 : 0)
+                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + 180) % 360)
+                    .build();
+        });
+
+        simpleBlockItem(block.get(), model);
     }
 
     private void blockWithFluidTexture(DeferredBlock<Block> block, String fluidTextureName) {
@@ -168,5 +196,26 @@ public class ModBlockStateProvider extends BlockStateProvider {
         });
 
         simpleBlockItem(block.get(), inactiveModel.end());
+    }
+
+    private void stellarNexusControllerBlock(DeferredBlock<? extends Block> block) {
+        String name = block.getId().getPath();
+        ResourceLocation texture = modLoc("block/multiblock/" + name);
+        ResourceLocation textureAssembled = modLoc("block/multiblock/" + name + "_assembled");
+
+        ModelFile normalModel = models().cubeAll(name, texture);
+        ModelFile assembledModel = models().cubeAll(name + "_assembled", textureAssembled);
+
+        getVariantBuilder(block.get()).forAllStates(state -> {
+            Direction dir = state.getValue(DirectionalBlock.FACING);
+            boolean assembled = state.getValue(com.raishxn.ufo.block.StellarNexusControllerBlock.ASSEMBLED);
+            return ConfiguredModel.builder()
+                    .modelFile(assembled ? assembledModel : normalModel)
+                    .rotationX(dir == Direction.DOWN ? 90 : dir == Direction.UP ? -90 : 0)
+                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + 180) % 360)
+                    .build();
+        });
+
+        simpleBlockItem(block.get(), normalModel);
     }
 }

@@ -18,7 +18,9 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import appeng.init.client.InitScreens;
 import com.raishxn.ufo.client.gui.DimensionalMatterAssemblerScreen;
+import com.raishxn.ufo.screen.StellarNexusControllerScreen;
 import com.raishxn.ufo.menu.UFOMenus;
+import com.raishxn.ufo.init.ModMenus;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
@@ -43,6 +45,7 @@ public class UfoModClient {
 
     private void registerScreens(RegisterMenuScreensEvent event) {
         InitScreens.register(event, UFOMenus.DIMENSIONAL_MATTER_ASSEMBLER.get(), DimensionalMatterAssemblerScreen::new, "/screens/dimensional_matter_assembler.json");
+        event.register(ModMenus.STELLAR_NEXUS_CONTROLLER_MENU.get(), StellarNexusControllerScreen::new);
     }
 
 

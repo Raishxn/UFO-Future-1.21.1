@@ -56,6 +56,44 @@ public class MultiblockBlocks {
     public static final DeferredBlock<Block> ENTROPY_SINGULARITY_ARRAY_CONTROLLER = registerBlock("entropy_singularity_array_controller",
             () -> new ControllerBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
 
+    // ═══════════════════════════════════════════════════════════
+    //  STELLAR NEXUS — Multiblock Components
+    // ═══════════════════════════════════════════════════════════
+
+    public static final DeferredBlock<StellarNexusControllerBlock> STELLAR_NEXUS_CONTROLLER = BLOCKS.register("stellar_nexus_controller",
+            () -> new StellarNexusControllerBlock(BlockBehaviour.Properties.of()
+                    .strength(50.0f, 1200.0f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> state.getValue(StellarNexusControllerBlock.ASSEMBLED) ? 12 : 0)));
+
+    public static final DeferredBlock<MassiveOutputHatchBlock> ME_MASSIVE_OUTPUT_HATCH = BLOCKS.register("me_massive_output_hatch",
+            () -> new MassiveOutputHatchBlock(BlockBehaviour.Properties.of()
+                    .strength(25.0f, 600.0f)
+                    .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<MassiveOutputHatchBlock> ME_MASSIVE_FLUID_HATCH = BLOCKS.register("me_massive_fluid_hatch",
+            () -> new MassiveOutputHatchBlock(BlockBehaviour.Properties.of()
+                    .strength(25.0f, 600.0f)
+                    .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<StellarNexusPartBlock> STELLAR_FIELD_GENERATOR_T1 = BLOCKS.register("stellar_field_generator_t1",
+            () -> new StellarNexusPartBlock(BlockBehaviour.Properties.of()
+                    .strength(25.0f, 600.0f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> 4)));
+
+    public static final DeferredBlock<StellarNexusPartBlock> STELLAR_FIELD_GENERATOR_T2 = BLOCKS.register("stellar_field_generator_t2",
+            () -> new StellarNexusPartBlock(BlockBehaviour.Properties.of()
+                    .strength(35.0f, 800.0f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> 7)));
+
+    public static final DeferredBlock<StellarNexusPartBlock> STELLAR_FIELD_GENERATOR_T3 = BLOCKS.register("stellar_field_generator_t3",
+            () -> new StellarNexusPartBlock(BlockBehaviour.Properties.of()
+                    .strength(50.0f, 1200.0f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> 10)));
+
 
     // --- Métodos de Registro ---
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {

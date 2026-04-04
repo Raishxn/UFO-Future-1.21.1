@@ -3,6 +3,8 @@ package com.raishxn.ufo.init;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipeSerializer;
+import com.raishxn.ufo.recipe.StellarSimulationRecipe;
+import com.raishxn.ufo.recipe.StellarSimulationRecipeSerializer;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -19,6 +21,7 @@ public class ModRecipes {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES =
             DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, UfoMod.MOD_ID);
 
+    // ═══════════════════ DMA ═══════════════════
     public static final String DMA_ID = "dimensional_assembly";
     
     public static final Supplier<RecipeType<DimensionalMatterAssemblerRecipe>> DMA_RECIPE_TYPE = RECIPE_TYPES.register(DMA_ID, () -> new RecipeType<DimensionalMatterAssemblerRecipe>() {
@@ -30,6 +33,19 @@ public class ModRecipes {
 
     public static final Supplier<RecipeSerializer<DimensionalMatterAssemblerRecipe>> DMA_RECIPE_SERIALIZER =
             SERIALIZERS.register(DMA_ID, () -> DimensionalMatterAssemblerRecipeSerializer.INSTANCE);
+
+    // ═══════════════════ STELLAR NEXUS ═══════════════════
+    public static final String STELLAR_SIMULATION_ID = "stellar_simulation";
+
+    public static final Supplier<RecipeType<StellarSimulationRecipe>> STELLAR_SIMULATION_TYPE = RECIPE_TYPES.register(STELLAR_SIMULATION_ID, () -> new RecipeType<StellarSimulationRecipe>() {
+        @Override
+        public String toString() {
+            return STELLAR_SIMULATION_ID;
+        }
+    });
+
+    public static final Supplier<RecipeSerializer<StellarSimulationRecipe>> STELLAR_SIMULATION_SERIALIZER =
+            SERIALIZERS.register(STELLAR_SIMULATION_ID, () -> StellarSimulationRecipeSerializer.INSTANCE);
 
     public static void register(IEventBus eventBus) {
         SERIALIZERS.register(eventBus);

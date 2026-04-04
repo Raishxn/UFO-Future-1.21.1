@@ -194,5 +194,25 @@
   "tooltip.ufo.chrono_catalyst": "Condenses seconds into milliseconds, on the verge of chronodimensional collapse.",
   "tooltip.ufo.overflux_catalyst": "Absolute balance between energy and molecular structure.",
   "tooltip.ufo.quantum_catalyst": "The laws of probability bend to your will.",
-  "tooltip.ufo.dimensional_catalyst": "Total control over energy, time, and matter. The DMA recognizes you as its creator."
+  "tooltip.ufo.dimensional_catalyst": "Total control over energy, time, and matter. The DMA recognizes you as its creator.",
+
+  "block.ufo.stellar_nexus_controller": "Stellar Nexus Controller",
+  "block.ufo.me_massive_output_hatch": "ME Massive Output Hatch",
+  "block.ufo.me_massive_fluid_hatch": "ME Massive Fluid Hatch",
+  "block.ufo.stellar_field_generator_t1": "Stellar Field Generator Mk.I",
+  "block.ufo.stellar_field_generator_t2": "Stellar Field Generator Mk.II",
+  "block.ufo.stellar_field_generator_t3": "Stellar Field Generator Mk.III",
+  "message.ufo.stellar_nexus.status": "Stellar Nexus: %s",
+
+  "jei.ufo.stellar_simulation": "Stellar Simulation",
+  "jei.ufo.stellar_simulation.energy": "Energy: %s AE/t",
+  "jei.ufo.stellar_simulation.time": "Time: %s",
+  "jei.ufo.stellar_simulation.cooling": "Cooling Level: %d",
+  "jei.ufo.stellar_simulation.field": "Field Generator: Mk.%s",
+  "recipe.ufo.stellar_simulation.red_giant_collapse": "Red Giant Collapse",
+  "recipe.ufo.stellar_simulation.iron_core_fusion": "Iron Core Fusion",
+  "recipe.ufo.stellar_simulation.diamond_pressure": "Diamond Pressure",
+  "recipe.ufo.stellar_simulation.neutron_bombardment": "Neutron Bombardment",
+  "recipe.ufo.stellar_simulation.supernova_harvest": "Supernova Harvest",
+  "recipe.ufo.stellar_simulation.stellar_synthesis": "Stellar Synthesis"
 }

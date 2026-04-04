@@ -32,6 +32,11 @@ public class ModPackets {
                 PacketChangeSideConfig.STREAM_CODEC,
                 PacketChangeSideConfig::handle
         );
+        registrar.playToServer(
+                PacketChangeStellarRecipe.TYPE,
+                PacketChangeStellarRecipe.STREAM_CODEC,
+                PacketChangeStellarRecipe::handle
+        );
     }
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {

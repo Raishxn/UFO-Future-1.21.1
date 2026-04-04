@@ -11,7 +11,6 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
 import java.util.stream.Stream; // <<-- IMPORT ADICIONADO
 
 public class ModBlockEntities {
@@ -56,6 +55,48 @@ public class ModBlockEntities {
                         null, 
                         (level, pos, state, be) -> be.serverTick()
                 );
+                return type;
+            });
+
+    // ═══════════════════════════════════════════════════════════
+    //  STELLAR NEXUS — Block Entities
+    // ═══════════════════════════════════════════════════════════
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.StellarNexusControllerBE>> STELLAR_NEXUS_CONTROLLER_BE =
+            BLOCK_ENTITIES.register("stellar_nexus_controller", () -> {
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.StellarNexusControllerBE(
+                                ModBlockEntities.STELLAR_NEXUS_CONTROLLER_BE.get(), pos, state),
+                        com.raishxn.ufo.block.MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get()
+                ).build(null);
+                return type;
+            });
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.StellarNexusPartBE>> STELLAR_NEXUS_PART_BE =
+            BLOCK_ENTITIES.register("stellar_nexus_part", () -> {
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.StellarNexusPartBE(
+                                ModBlockEntities.STELLAR_NEXUS_PART_BE.get(), pos, state),
+                        // Only field generators and non-AE2 structural blocks
+                        com.raishxn.ufo.block.MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get(),
+                        com.raishxn.ufo.block.MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get(),
+                        com.raishxn.ufo.block.MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get()
+                ).build(null);
+                return type;
+            });
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.MassiveOutputHatchBE>> ME_MASSIVE_OUTPUT_HATCH_BE =
+            BLOCK_ENTITIES.register("me_massive_output_hatch", () -> {
+                final java.util.concurrent.atomic.AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.MassiveOutputHatchBE>> typeHolder = new java.util.concurrent.atomic.AtomicReference<>();
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.MassiveOutputHatchBE(typeHolder.get(), pos, state),
+                        com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get(),
+                        com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()
+                ).build(null);
+                typeHolder.set(type);
+                // Register item mapping for AE2 wrench/network tool compatibility
+                appeng.blockentity.AEBaseBlockEntity.registerBlockEntityItem(type,
+                        com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get().asItem());
                 return type;
             });
 

@@ -190,6 +190,34 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_SINGULARITY_ARRAY_CONTROLLER.get(), new Item.Properties(),
                      ChatFormatting.BLUE, ChatFormatting.DARK_BLUE, ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED));
 
+     // ═══════════════════════════════════════════════════════════
+     //  STELLAR NEXUS — Block Items
+     // ═══════════════════════════════════════════════════════════
+
+     public static final DeferredItem<Item> STELLAR_NEXUS_CONTROLLER = ITEMS.register("stellar_nexus_controller",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get(), new Item.Properties(),
+                     ChatFormatting.GOLD, ChatFormatting.YELLOW, ChatFormatting.WHITE, ChatFormatting.AQUA, ChatFormatting.BLUE, ChatFormatting.LIGHT_PURPLE));
+
+     public static final DeferredItem<Item> ME_MASSIVE_OUTPUT_HATCH = ITEMS.register("me_massive_output_hatch",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.WHITE));
+
+     public static final DeferredItem<Item> ME_MASSIVE_FLUID_HATCH = ITEMS.register("me_massive_fluid_hatch",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.BLUE));
+
+     public static final DeferredItem<Item> STELLAR_FIELD_GENERATOR_T1 = ITEMS.register("stellar_field_generator_t1",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get(), new Item.Properties(),
+                     ChatFormatting.WHITE, ChatFormatting.GRAY, ChatFormatting.YELLOW));
+
+     public static final DeferredItem<Item> STELLAR_FIELD_GENERATOR_T2 = ITEMS.register("stellar_field_generator_t2",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get(), new Item.Properties(),
+                     ChatFormatting.GOLD, ChatFormatting.YELLOW, ChatFormatting.WHITE));
+
+     public static final DeferredItem<Item> STELLAR_FIELD_GENERATOR_T3 = ITEMS.register("stellar_field_generator_t3",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get(), new Item.Properties(),
+                     ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE, ChatFormatting.GOLD, ChatFormatting.YELLOW));
+
     public static final DeferredItem<Item> NEUTRON_STAR_FRAGMENT_BUCKET = ITEMS.register("neutron_star_fragment_bucket",
             () -> new BucketItem(ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 

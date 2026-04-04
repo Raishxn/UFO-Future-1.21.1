@@ -2,6 +2,7 @@ package com.raishxn.ufo.item;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.ModBlocks;
+import com.raishxn.ufo.block.MultiblockBlocks;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -176,6 +177,23 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER_BLOCK.get());
                         ModBlocks.CRAFTING_STORAGE_BLOCKS.values().forEach(block -> output.accept(block.get()));
                         ModBlocks.CO_PROCESSOR_BLOCKS.values().forEach(block -> output.accept(block.get()));
+
+                        // --- STELLAR NEXUS ---
+                        output.accept(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get());
+                        output.accept(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get());
+                        output.accept(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get());
+                        output.accept(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get());
+                        output.accept(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get());
+                        output.accept(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get());
+
+                        // --- ENTROPY MULTIBLOCK ---
+                        output.accept(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get());
+                        output.accept(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get());
+                        output.accept(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
+                        output.accept(MultiblockBlocks.ENTROPY_CONTAINMENT_CHAMBER_COMPONENTS.get());
+                        output.accept(MultiblockBlocks.ENTROPY_COOLANT_MATRIX_COMPONENTS.get());
+                        output.accept(MultiblockBlocks.ENTROPY_CATALYST_BANK_COMPONENTS.get());
+                        output.accept(MultiblockBlocks.ENTROPY_SINGULARITY_ARRAY_CONTROLLER.get());
 
                     }).build());
 

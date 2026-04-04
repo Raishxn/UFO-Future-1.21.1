@@ -13,6 +13,9 @@ public class ModMenus {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(BuiltInRegistries.MENU, UfoMod.MOD_ID);
 
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.StellarNexusControllerMenu>> STELLAR_NEXUS_CONTROLLER_MENU =
+            MENUS.register("stellar_nexus_controller_menu",
+                    () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.StellarNexusControllerMenu::new));
 
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);

@@ -40,6 +40,7 @@ public class UfoJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registry) {
         var jeiHelpers = registry.getJeiHelpers();
         registry.addRecipeCategories(new DimensionalMatterAssemblerRecipeCategory(jeiHelpers));
+        registry.addRecipeCategories(new StellarSimulationRecipeCategory(jeiHelpers));
     }
 
     @Override
@@ -50,12 +51,20 @@ public class UfoJeiPlugin implements IModPlugin {
                 List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.DMA_RECIPE_TYPE.get()).stream()
                         .map(RecipeHolder::value)
                         .toList()));
+        registration.addRecipes(
+                StellarSimulationRecipeCategory.RECIPE_TYPE,
+                List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.STELLAR_SIMULATION_TYPE.get()).stream()
+                        .map(RecipeHolder::value)
+                        .toList()));
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         var dmaBlock = ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER_BLOCK.get().asItem().getDefaultInstance();
         registration.addRecipeCatalyst(dmaBlock, DimensionalMatterAssemblerRecipeCategory.RECIPE_TYPE);
+
+        var nexusController = MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get().asItem().getDefaultInstance();
+        registration.addRecipeCatalyst(nexusController, StellarSimulationRecipeCategory.RECIPE_TYPE);
     }
 
     public static Ingredient stackOf(IngredientStack.Item stack) {

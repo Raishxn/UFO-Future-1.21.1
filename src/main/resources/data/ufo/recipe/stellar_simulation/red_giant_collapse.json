@@ -1,0 +1,29 @@
+{
+  "type": "ufo:stellar_simulation",
+  "item_inputs": [
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:enriched_neutronium_sphere"
+      }
+    }
+  ],
+  "fluid_inputs": [
+    {
+      "amount": 50000,
+      "ingredient": {
+        "fluid": "ufo:raw_star_matter_plasma"
+      }
+    }
+  ],
+  "item_outputs": [
+    { "#": 5000000, "#t": "ae2:i", "id": "minecraft:redstone" },
+    { "#": 3000000, "#t": "ae2:i", "id": "minecraft:lapis_lazuli" },
+    { "#": 2000000, "#t": "ae2:i", "id": "minecraft:glowstone_dust" }
+  ],
+  "fluid_outputs": [],
+  "energy": 2500000,
+  "time": 24000,
+  "cooling_level": 1,
+  "field_tier": 1
+}
