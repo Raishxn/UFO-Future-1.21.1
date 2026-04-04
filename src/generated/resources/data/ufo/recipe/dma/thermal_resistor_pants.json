@@ -5,16 +5,27 @@
     {
       "amount": 1000,
       "ingredient": {
-        "fluid": "ufo:source_gelid_cryotheum"
+        "fluid": "minecraft:water"
       }
     }
   ],
   "fluid_outputs": [],
   "item_inputs": [
     {
+      "ingredient": {
+        "item": "minecraft:netherite_leggings"
+      }
+    },
+    {
       "amount": 7,
       "ingredient": {
         "item": "ufo:thermal_resistor_plating"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "minecraft:blue_ice"
       }
     }
   ],

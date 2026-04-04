@@ -3,8 +3,21 @@ navigation:
   parent: ufo_intro/index.md
   title: Mega Processors & Storage
   position: 50
+item_ids:
+  - ufo:1b_mega_crafting_storage
+  - ufo:50b_mega_crafting_storage
+  - ufo:1t_mega_crafting_storage
+  - ufo:250t_mega_crafting_storage
+  - ufo:1qd_mega_crafting_storage
+  - ufo:50m_mega_co_processor
+  - ufo:150m_mega_co_processor
+  - ufo:300m_mega_co_processor
+  - ufo:750m_mega_co_processor
+  - ufo:2b_mega_co_processor
 ---
 # Mega Storage & Crafting Processors — Player Guide
+
+<BlockImage id="ufo:1b_mega_crafting_storage" scale="3"></BlockImage>
 
 **Overview**
 Mega Storage modules and Crafting Processors implement extremely high-capacity storage and parallelized crafting capabilities. They integrate well with the DMA for fabricating the components required at late-game scale.

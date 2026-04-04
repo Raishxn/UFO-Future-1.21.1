@@ -3,10 +3,17 @@ navigation:
   parent: ufo_intro/index.md
   title: UFO Tools
   position: 60
+item_ids:
+  - ufo:ufo_pickaxe
+  - ufo:ufo_sword
+  - ufo:ufo_hammer
+  - ufo:ufo_staff
+  - ufo:quantum_anomaly
+  - ufo:scar
+  - ufo:scrap_box
 ---
 
 # UFO Future Tools — Player Guide
-...
 
 UFO Future introduces a set of advanced tools with progression, passive effects, and unique mechanics.  
 This guide explains how each tool behaves and how players can use or upgrade them efficiently.
@@ -14,6 +21,8 @@ This guide explains how each tool behaves and how players can use or upgrade the
 ---
 
 # 🔨 Pickaxes — Fortune Progression + Auto-Smelt
+
+<ItemImage id="ufo:ufo_pickaxe" scale="2" />
 
 ## Fortune Leveling System
 UFO Future pickaxes feature a **progressive Fortune system**:
@@ -46,6 +55,8 @@ All UFO Future **pickaxes** include **Auto-Smelt**:
 
 # 🔨 Hammer — Area Mining + Auto-Smelt
 
+<ItemImage id="ufo:ufo_hammer" scale="2" />
+
 The **Hammer** is a large-area mining tool.
 
 ## Area of Effect
@@ -63,6 +74,8 @@ The **Hammer** is a large-area mining tool.
 ---
 
 # 🗡️ Swords — Damage & Looting Progression
+
+<ItemImage id="ufo:ufo_sword" scale="2" />
 
 UFO Future swords scale automatically as players fight.
 

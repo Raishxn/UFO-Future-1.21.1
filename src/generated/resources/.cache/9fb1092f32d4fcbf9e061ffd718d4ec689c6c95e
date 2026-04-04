@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-03T20:14:26.0227092	Recipes
+// 1.21.1	2026-04-04T15:43:17.511938	Recipes
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
 eb7866de442289af9a906bdbf371421bb9e18e5a data/ufo/advancement/recipes/misc/coprocessor_2b.json
 2da6c174cfadc6187c64a460466526bf7370f743 data/ufo/advancement/recipes/misc/coprocessor_300m.json
@@ -44,15 +44,15 @@ b4bd040634f116c021189da2329bac369192ae35 data/ufo/recipe/coprocessor_150m.json
 c54aca9b1dbd456b6ed9832e9f9545989483cf85 data/ufo/recipe/coprocessor_750m.json
 6c7cf93d61001d1a9f4f6f3281244727eb012751 data/ufo/recipe/dimensional_matter_assembler.json
 403daa2866938e3a17bb571d8b31c4e4921b6074 data/ufo/recipe/dma/aether_containment_capsule.json
-658ea5d93a02e34dd26fed246141b16a7118998d data/ufo/recipe/dma/charged_enriched_neutronium_sphere.json
-6caf785d03e7387f725d3b338750f5e8524e2d13 data/ufo/recipe/dma/chrono_catalyst_t1.json
-82f8516972d8e7189fd19ae87c4143b1990adc0f data/ufo/recipe/dma/chrono_catalyst_t2.json
+8b99886066d34e394630843bf48f43a3886169e2 data/ufo/recipe/dma/charged_enriched_neutronium_sphere.json
+63c3f88da425358f1bd9961c8fd9a80baefd3ddb data/ufo/recipe/dma/chrono_catalyst_t1.json
+9e143a3afd0ff8c437387b3bcaaeede3b488cc7c data/ufo/recipe/dma/chrono_catalyst_t2.json
 11f33f7aea99c03995fd511e4ab455833f0c509a data/ufo/recipe/dma/chrono_catalyst_t3.json
 1ec6c3745c895ce2004dda64fd766505040bbe9a data/ufo/recipe/dma/component/cosmic_string_component_matrix.json
 e9d3dba61e97e09cbe4c909c496922c3734558dc data/ufo/recipe/dma/component/event_horizon_component_matrix.json
 ac1562197ae317cac7afc610aa3972713d696c76 data/ufo/recipe/dma/component/hyper_dense_component_matrix.json
 320abeb719b87e465c53322a9942b8485760f42e data/ufo/recipe/dma/component/phase_shift.json
-367114809296bbffb35ed64511f64c8b4d118c3a data/ufo/recipe/dma/component/tesseract_component_matrix.json
+f1c6790416568fefafda722bb69ec86048954d9e data/ufo/recipe/dma/component/tesseract_component_matrix.json
 40e5441f7fc6abe8a7d4ead6a5ecd5e65e0dcebd data/ufo/recipe/dma/corporeal_matter.json
 5297e03130211f38b0a936787548d36a266f9e1c data/ufo/recipe/dma/cryotheum_dust_bootstrap.json
 94890e99de14b8aede1c217b09ce8f65c24f155c data/ufo/recipe/dma/dark_matter.json
@@ -94,9 +94,9 @@ c32558a915f17d6634f6ebce44033e148ad64e32 data/ufo/recipe/dma/infinity_cell/infin
 9d485cf12d7d0a9fe507e72181dbe8e403dbbbff data/ufo/recipe/dma/infinity_cell/infinity_water_cell.json
 f40187dee2dbd91e67a7782591ab2f139f251ce1 data/ufo/recipe/dma/infinity_cell/infinity_white_dye_cell.json
 e5203aaeb5cf66b8e1c2ae1406f500cba146954a data/ufo/recipe/dma/infinity_cell/infinity_yellow_dye_cell.json
-b652e25f8c84f223dad6e07a15795c0e911d8463 data/ufo/recipe/dma/ingot/neutron_star_fragment.json
-86cc25a960a2cfaeb6da5c8cf94e105a88d737f5 data/ufo/recipe/dma/ingot/pulsar_fragment.json
-64f77e1eebbb26f354f4b56d1e81393c73a72c6f data/ufo/recipe/dma/ingot/white_dwarf_fragment.json
+5bef0c71d93bd377f0e447132ced27168e85c231 data/ufo/recipe/dma/ingot/neutron_star_fragment.json
+cd34e58baefc4a4a5875a4e82f01e642e0bd0d1a data/ufo/recipe/dma/ingot/pulsar_fragment.json
+1321cb8ea1b022867ba4f5a08ea9d4d2d0c7ccf2 data/ufo/recipe/dma/ingot/white_dwarf_fragment.json
 675118ce9bb1d61cdcedfb6111b78af8665aab11 data/ufo/recipe/dma/liquid_starlight.json
 f3f84667f1b49ad3cb7fa086b6bb460fb8e405eb data/ufo/recipe/dma/matterflow_catalyst_t1.json
 9d50b5b04af795b0df79fd04032c69d0d3cfe5c9 data/ufo/recipe/dma/matterflow_catalyst_t2.json
@@ -126,11 +126,11 @@ d25d59f91b5438aaccbfb7a86febede3d4ba240f data/ufo/recipe/dma/safe_containment_ma
 ed557fb32bab55ad0a75344ea6e0814e77b0cd63 data/ufo/recipe/dma/scrap_from_matrix.json
 e308c679c2fac082693bd47553ffc29922f39adf data/ufo/recipe/dma/source_spatial_fluid.json
 6580481095aeaa645a31965bde21fc854955ebe0 data/ufo/recipe/dma/source_temporal_fluid.json
-d84b24d65daa3fbe998d2187dfc17f1a204773b2 data/ufo/recipe/dma/thermal_resistor_boots.json
-6b4c5a39fde3f46204c76f39406d44566bf84013 data/ufo/recipe/dma/thermal_resistor_chest.json
-32918b15f6d9ac4e70457eb6150e49530836d634 data/ufo/recipe/dma/thermal_resistor_mask.json
-dbd41a60ce552436f7a3f907c54d68d503dbc8d9 data/ufo/recipe/dma/thermal_resistor_pants.json
-db930d7b224e0ff45ab7e4e4aca71dda859c7335 data/ufo/recipe/dma/thermal_resistor_plating.json
+8e1d7fe82e0cf19a08701a87198e31087ddeee7c data/ufo/recipe/dma/thermal_resistor_boots.json
+272e4308adadecf69267bc864e3a6b0835b92257 data/ufo/recipe/dma/thermal_resistor_chest.json
+f147091b2bea939500e770f852ad458cc85811d1 data/ufo/recipe/dma/thermal_resistor_mask.json
+9d00234955cefdcbb30b69b33e98a613bdfffc4c data/ufo/recipe/dma/thermal_resistor_pants.json
+35e4f5eb2473e5affa6be25814a95c39e0e59a3f data/ufo/recipe/dma/thermal_resistor_plating.json
 1eac326126107f8ef5646c8e27bc70a712348f31 data/ufo/recipe/dma/transcending_matter_fluid.json
 e2201a5dfe578230c3cd01e1d270bfc6a6d3d5bc data/ufo/recipe/dma/ufo_boots.json
 58e4616d7a0d8f89fba439cd1baf3ea64e06518d data/ufo/recipe/dma/ufo_chestplate.json

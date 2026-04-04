@@ -5,7 +5,7 @@
     {
       "amount": 250,
       "ingredient": {
-        "fluid": "ufo:source_gelid_cryotheum"
+        "fluid": "ufo:source_liquid_starlight_fluid"
       }
     }
   ],

@@ -3,10 +3,26 @@ navigation:
   parent: ufo_intro/index.md
   title: UFO Armor
   position: 70
+item_ids:
+  - ufo:ufo_helmet
+  - ufo:ufo_chestplate
+  - ufo:ufo_leggings
+  - ufo:ufo_boots
+  - ufo:thermal_resistor_mask
+  - ufo:thermal_resistor_chest
+  - ufo:thermal_resistor_pants
+  - ufo:thermal_resistor_boots
 ---
 # UFO Armor — Player Guide
 
 The UFO Armor Set is an advanced high-tier armor providing unique survival mechanics, thermal protection, and powerful passive effects.
+
+<div style="display: flex; gap: 10px; margin-bottom: 20px;">
+  <ItemImage id="ufo:ufo_helmet" scale="2" />
+  <ItemImage id="ufo:ufo_chestplate" scale="2" />
+  <ItemImage id="ufo:ufo_leggings" scale="2" />
+  <ItemImage id="ufo:ufo_boots" scale="2" />
+</div>
 
 ---
 

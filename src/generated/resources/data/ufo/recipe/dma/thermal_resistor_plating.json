@@ -5,7 +5,7 @@
     {
       "amount": 500,
       "ingredient": {
-        "fluid": "ufo:source_gelid_cryotheum"
+        "fluid": "minecraft:water"
       }
     }
   ],
@@ -19,6 +19,12 @@
     {
       "ingredient": {
         "item": "ufo:obsidian_matrix"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "minecraft:blue_ice"
       }
     }
   ],

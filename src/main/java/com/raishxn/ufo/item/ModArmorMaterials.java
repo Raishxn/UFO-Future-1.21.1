@@ -23,17 +23,17 @@ public class ModArmorMaterials {
     public static final Holder<ArmorMaterial> THERMAL_EXOSUIT = register(
             "thermal_exosuit", // Nome do material
             new EnumMap<>(ArmorItem.Type.class) {{ // Proteção por peça
-                put(ArmorItem.Type.BOOTS, 3);
-                put(ArmorItem.Type.LEGGINGS, 6);
-                put(ArmorItem.Type.CHESTPLATE, 8);
-                put(ArmorItem.Type.HELMET, 3);
+                put(ArmorItem.Type.BOOTS, 4);
+                put(ArmorItem.Type.LEGGINGS, 7);
+                put(ArmorItem.Type.CHESTPLATE, 9);
+                put(ArmorItem.Type.HELMET, 4);
             }},
-            37, // Multiplicador de Durabilidade (ex: 37, como Netherite)
+            38, // Multiplicador de Durabilidade (ex: 37 Netherite)
             SoundEvents.ARMOR_EQUIP_IRON, // Som ao equipar
-            Ingredient.of(Tags.Items.INGOTS_IRON), // Ingrediente de reparo (Ex: barra de ferro)
-            0.0f, // Resistência a Knockback
-            0.0f  // Tenacidade (Toughness)
-    ); // <-- Encantabilidade (15) foi REMOVIDA daqui
+            Ingredient.of(net.minecraft.world.item.Items.NETHERITE_INGOT), // Ingrediente de reparo
+            0.15f, // Resistência a Knockback
+            3.2f  // Tenacidade (Toughness)
+    ); 
 
     // 2. MATERIAL PARA A UFO ARMOR
     public static final Holder<ArmorMaterial> UFO_ARMOR = register(

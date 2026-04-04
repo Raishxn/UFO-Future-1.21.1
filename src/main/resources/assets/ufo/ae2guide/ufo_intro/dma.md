@@ -3,10 +3,14 @@ navigation:
   parent: ufo_intro/index.md
   title: Dimensional Matter Assembler
   position: 30
+item_ids:
+  - ufo:dimensional_matter_assembler
 ---
 
 # Dimensional Matter Assembler (DMA) — Player Guide
-...
+
+<BlockImage id="ufo:dimensional_matter_assembler" scale="4"></BlockImage>
+
 **Overview**
 The Dimensional Matter Assembler (DMA) is the primary advanced crafting machine in UFO Future. It processes item and fluid inputs, uses catalysts to modify outcomes, and relies on a coolant/thermal system. 
 
@@ -45,10 +49,12 @@ Generate heat == Need Coolants!
 - **MELTDOWN**: **100% Heat** — Triggers an alarm and 5-second countdown. If it reaches 0, the machine **explodes**, destroying blocks around it!
 
 ### Coolants Effectiveness
-Different fluids provide different cooling efficiency.
-- **Temporal Fluid** — Very high efficiency. 1mB cools up to 100°C!
-- **Gelid Cryotheum** — Low mass efficiency. Requires 200mB to cool just 1°C. Good for early burst cooling if you have infinite pumps.
-- *(Note: Spatial Fluid was removed from the coolants list!)*
+O DMA necessita de fluidos para refrigerar e cada um possui um fator de resfriamento (Heat Units) diferente:
+
+- **Temporal Fluid** — Super eficiente. **1 mB** resfria **100 HU**. (Endgame)
+- **Liquid Starlight** — Ótimo custo benefício. **1 mB** resfria **30 HU**. (Midgame)
+- **Fluidos Genéricos** *(ex: Água/Lava)* — **1 mB** resfria **15 HU**. (Early game)
+- **Gelid Cryotheum** — Muito fraco, depende de volume intenso. Requer pesados **200 mB** para resfriar apenas **1 HU**.
 
 ---
 

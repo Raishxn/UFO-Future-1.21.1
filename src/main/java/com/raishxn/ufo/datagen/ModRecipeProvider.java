@@ -159,7 +159,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(c);
 
         this.createTieredComponent(c, ModItems.HYPER_DENSE_COMPONENT_MATRIX.get(), ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get(), 2, ModItems.WHITE_DWARF_MATTER.get(), 4, ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID, 1000, 2000000, 800);
-        this.createTieredComponent(c, ModItems.TESSERACT_COMPONENT_MATRIX.get(), ModItems.HYPER_DENSE_COMPONENT_MATRIX.get(), 2, ModItems.NEUTRON_STAR_MATTER.get(), 4, ModFluids.SOURCE_TEMPORAL_FLUID, 2000, 8000000, 1600);
+        this.createTieredComponent(c, ModItems.TESSERACT_COMPONENT_MATRIX.get(), ModItems.HYPER_DENSE_COMPONENT_MATRIX.get(), 2, ModItems.NEUTRON_STAR_MATTER.get(), 4, ModFluids.SOURCE_SPATIAL_FLUID, 2000, 8000000, 1600);
         this.createTieredComponent(c, ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get(), ModItems.TESSERACT_COMPONENT_MATRIX.get(), 2, ModItems.PULSAR_MATTER.get(), 4, ModFluids.SOURCE_SPATIAL_FLUID, 4000, 32000000, 3200);
         this.createTieredComponent(c, ModItems.COSMIC_STRING_COMPONENT_MATRIX.get(), ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get(), 2, ModItems.DARK_MATTER.get(), 2, ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID, 8000, 100000000, 6000);
     }
@@ -236,7 +236,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     private void buildStaffAndAnomaly(RecipeOutput c) {
         DMARecipeBuilder.create("dma/ufo_staff").output(ModItems.UFO_STAFF.get()).inputItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get()).inputItem(ModItems.QUANTUM_ANOMALY.get(), 2).inputItem(ModItems.PROTO_MATTER.get(), 2).inputItem(Items.NETHERITE_INGOT, 4).inputItem(AEItems.MATTER_BALL.get(), 16).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 2000).energy(12000000).time(2400).save(c);
-        DMARecipeBuilder.create("dma/charged_enriched_neutronium_sphere").output(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get()).inputItem(ModItems.ENRICHED_NEUTRONIUM_SPHERE.get()).inputItem(ModItems.NUCLEAR_STAR.get()).inputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 4000).energy(10000000).time(4000).save(c);
+        DMARecipeBuilder.create("dma/charged_enriched_neutronium_sphere").output(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get()).inputItem(ModItems.ENRICHED_NEUTRONIUM_SPHERE.get()).inputItem(ModItems.NUCLEAR_STAR.get()).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 4000).energy(10000000).time(4000).save(c);
         DMARecipeBuilder.create("dma/quantum_anomaly").output(ModItems.QUANTUM_ANOMALY.get()).inputItem(ModItems.PULSAR_FRAGMENT_DUST.get(), 12).inputItem(ModItems.OBSIDIAN_MATRIX.get()).inputFluid(ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID.get(), 8000).energy(6000000).time(1200).save(c);
     }
 
@@ -244,8 +244,8 @@ public class ModRecipeProvider extends RecipeProvider {
         this.createProgressiveCatalyst(c, ModItems.MATTERFLOW_CATALYST_T1.get(), ModItems.OBSIDIAN_MATRIX.get(), ModItems.PROTO_MATTER.get(), ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID, 1000, 100000, 200);
         this.createProgressiveCatalyst(c, ModItems.MATTERFLOW_CATALYST_T2.get(), ModItems.MATTERFLOW_CATALYST_T1.get(), ModItems.CORPOREAL_MATTER.get(), ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID, 2000, 500000, 400);
         this.createProgressiveCatalyst(c, ModItems.MATTERFLOW_CATALYST_T3.get(), ModItems.MATTERFLOW_CATALYST_T2.get(), ModItems.NEUTRON_STAR_MATTER.get(), ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID, 4000, 2500000, 800);
-        this.createProgressiveCatalyst(c, ModItems.CHRONO_CATALYST_T1.get(), ModItems.OBSIDIAN_MATRIX.get(), ModItems.PROTO_MATTER.get(), ModFluids.SOURCE_TEMPORAL_FLUID, 1000, 150000, 200);
-        this.createProgressiveCatalyst(c, ModItems.CHRONO_CATALYST_T2.get(), ModItems.CHRONO_CATALYST_T1.get(), ModItems.CORPOREAL_MATTER.get(), ModFluids.SOURCE_TEMPORAL_FLUID, 2000, 600000, 500);
+        this.createProgressiveCatalyst(c, ModItems.CHRONO_CATALYST_T1.get(), ModItems.OBSIDIAN_MATRIX.get(), ModItems.PROTO_MATTER.get(), ModFluids.SOURCE_SPATIAL_FLUID, 1000, 150000, 200);
+        this.createProgressiveCatalyst(c, ModItems.CHRONO_CATALYST_T2.get(), ModItems.CHRONO_CATALYST_T1.get(), ModItems.CORPOREAL_MATTER.get(), ModFluids.SOURCE_SPATIAL_FLUID, 2000, 600000, 500);
         this.createProgressiveCatalyst(c, ModItems.CHRONO_CATALYST_T3.get(), ModItems.CHRONO_CATALYST_T2.get(), ModItems.PULSAR_MATTER.get(), ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID, 4000, 3000000, 1000);
         this.createProgressiveCatalyst(c, ModItems.OVERFLUX_CATALYST_T1.get(), ModItems.OBSIDIAN_MATRIX.get(), ModItems.PROTO_MATTER.get(), ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID, 1000, 150000, 200);
         this.createProgressiveCatalyst(c, ModItems.OVERFLUX_CATALYST_T2.get(), ModItems.OVERFLUX_CATALYST_T1.get(), ModItems.CORPOREAL_MATTER.get(), ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID, 2000, 600000, 400);
@@ -261,20 +261,28 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     private void buildArmorsDMA(RecipeOutput c) {
-        DMARecipeBuilder.create("dma/thermal_resistor_plating").output(ModItems.THERMAL_RESISTOR_PLATING.get()).inputItem(Items.NETHERITE_INGOT).inputItem(ModItems.OBSIDIAN_MATRIX.get()).inputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 500).energy(50000).time(100).save(c);
-        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_MASK, ModItems.THERMAL_RESISTOR_PLATING, 5, 1000000);
-        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_CHEST, ModItems.THERMAL_RESISTOR_PLATING, 8, 1500000);
-        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_PANTS, ModItems.THERMAL_RESISTOR_PLATING, 7, 1200000);
-        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_BOOTS, ModItems.THERMAL_RESISTOR_PLATING, 4, 800000);
+        DMARecipeBuilder.create("dma/thermal_resistor_plating").output(ModItems.THERMAL_RESISTOR_PLATING.get()).inputItem(Items.NETHERITE_INGOT).inputItem(ModItems.OBSIDIAN_MATRIX.get()).inputItem(Items.BLUE_ICE, 2).inputFluid(Fluids.WATER, 500).energy(50000).time(100).save(c);
+        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_MASK, Items.NETHERITE_HELMET, ModItems.THERMAL_RESISTOR_PLATING, 5, 1000000);
+        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_CHEST, Items.NETHERITE_CHESTPLATE, ModItems.THERMAL_RESISTOR_PLATING, 8, 1500000);
+        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_PANTS, Items.NETHERITE_LEGGINGS, ModItems.THERMAL_RESISTOR_PLATING, 7, 1200000);
+        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_BOOTS, Items.NETHERITE_BOOTS, ModItems.THERMAL_RESISTOR_PLATING, 4, 800000);
         this.createUfoArmorDMA(c, ModItems.UFO_HELMET, ModItems.THERMAL_RESISTOR_MASK, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
         this.createUfoArmorDMA(c, ModItems.UFO_CHESTPLATE, ModItems.THERMAL_RESISTOR_CHEST, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
         this.createUfoArmorDMA(c, ModItems.UFO_LEGGINGS, ModItems.THERMAL_RESISTOR_PANTS, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
         this.createUfoArmorDMA(c, ModItems.UFO_BOOTS, ModItems.THERMAL_RESISTOR_BOOTS, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
     }
 
-    private void createArmorDMA(RecipeOutput c, Supplier<Item> output, Supplier<Item> material, int amount, int energy) {
+    private void createArmorDMA(RecipeOutput c, Supplier<Item> output, Item baseArmor, Supplier<Item> material, int amount, int energy) {
         String name = BuiltInRegistries.ITEM.getKey(output.get()).getPath();
-        DMARecipeBuilder.create("dma/" + name).output(output.get()).inputItem(material.get(), amount).inputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 1000).energy(energy).time(500).save(c);
+        DMARecipeBuilder.create("dma/" + name)
+                .output(output.get())
+                .inputItem(baseArmor)
+                .inputItem(material.get(), amount)
+                .inputItem(Items.BLUE_ICE, 4)
+                .inputFluid(Fluids.WATER, 1000)
+                .energy(energy)
+                .time(500)
+                .save(c);
     }
 
     private void createUfoArmorDMA(RecipeOutput c, Supplier<Item> output, Supplier<Item> baseArmor, Supplier<Item> rareItem) {
@@ -446,9 +454,9 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     private void buildIngotGenerators(RecipeOutput c) {
-        DMARecipeBuilder.create("dma/ingot/white_dwarf_fragment").output(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get()).inputItem(Items.NETHERITE_INGOT, 2).inputItem(Items.BLUE_ICE, 4).inputItem(AEBlocks.SKY_STONE_BLOCK, 4).inputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 250).energy(100000).time(200).save(c);
-        DMARecipeBuilder.create("dma/ingot/neutron_star_fragment").output(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get()).inputItem(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get(), 4).inputItem(Items.NETHER_STAR).inputItem(ModItems.OBSIDIAN_MATRIX.get()).inputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 500).energy(500000).time(400).save(c);
-        DMARecipeBuilder.create("dma/ingot/pulsar_fragment").output(ModItems.PULSAR_FRAGMENT_INGOT.get()).inputItem(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get(), 2).inputItem(Items.LODESTONE, 2).inputItem(Items.LIGHTNING_ROD, 4).inputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 1000).energy(1000000).time(600).save(c);
+        DMARecipeBuilder.create("dma/ingot/white_dwarf_fragment").output(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get()).inputItem(Items.NETHERITE_INGOT, 2).inputItem(Items.BLUE_ICE, 4).inputItem(AEBlocks.SKY_STONE_BLOCK, 4).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 250).energy(100000).time(200).save(c);
+        DMARecipeBuilder.create("dma/ingot/neutron_star_fragment").output(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get()).inputItem(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get(), 4).inputItem(Items.NETHER_STAR).inputItem(ModItems.OBSIDIAN_MATRIX.get()).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 500).energy(500000).time(400).save(c);
+        DMARecipeBuilder.create("dma/ingot/pulsar_fragment").output(ModItems.PULSAR_FRAGMENT_INGOT.get()).inputItem(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get(), 2).inputItem(Items.LODESTONE, 2).inputItem(Items.LIGHTNING_ROD, 4).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 1000).energy(1000000).time(600).save(c);
     }
 
     private void createTieredComponent(RecipeOutput c, ItemLike output, ItemLike prevTier, int prevCount, ItemLike rareItem, int rareCount, Supplier<? extends Fluid> fluid, int fluidAmount, int energy, int time) {
