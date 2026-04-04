@@ -108,7 +108,7 @@ Todas as receitas do DMA usam o tipo `ufo:dimensional_assembly`. O formato JSON 
   ],
   "fluid_inputs": [
     {
-      "ingredient": { "fluid": "ufo:source_gelid_cryotheum" },
+      "ingredient": { "fluid": "ufo:source_liquid_starlight_fluid" },
       "amount": 250
     }
   ],
