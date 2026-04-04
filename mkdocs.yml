@@ -8,6 +8,59 @@ theme:
   features:
     - navigation.tabs
     - content.code.copy
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: folder
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: pt
+          name: Português
+          build: true
+          nav_translations:
+            Home: Início
+            Wiki: Wiki
+            Dimensional Matter Assembler: Montador de Matéria Dimensional
+            Catalysts: Catalisadores
+            KubeJS Recipes: Receitas KubeJS
+            Tools & Weapons: Ferramentas & Armas
+            Armor Sets: Conjuntos de Armadura
+            Storage Cells: Células de Armazenamento
+            Materials & Fluids: Materiais & Fluidos
+            Crafting Progression: Progressão de Crafting
+        - locale: es
+          name: Español
+          build: true
+          nav_translations:
+            Home: Inicio
+            Wiki: Wiki
+            Dimensional Matter Assembler: Ensamblador de Materia Dimensional
+            Catalysts: Catalizadores
+            KubeJS Recipes: Recetas KubeJS
+            Tools & Weapons: Herramientas y Armas
+            Armor Sets: Conjuntos de Armadura
+            Storage Cells: Celdas de Almacenamiento
+            Materials & Fluids: Materiales y Fluidos
+            Crafting Progression: Progresión de Fabricación
+        - locale: zh
+          name: 中文
+          build: true
+          nav_translations:
+            Home: 首页
+            Wiki: 维基
+            Dimensional Matter Assembler: 维度物质装配器
+            Catalysts: 催化剂
+            KubeJS Recipes: KubeJS 配方
+            Tools & Weapons: 工具与武器
+            Armor Sets: 装甲套装
+            Storage Cells: 存储单元
+            Materials & Fluids: 材料与流体
+            Crafting Progression: 合成进阶
+
 nav:
   - Home: index.md
   - Wiki:
