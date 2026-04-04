@@ -1,0 +1,40 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 600000,
+  "fluid_inputs": [
+    {
+      "amount": 2000,
+      "ingredient": {
+        "fluid": "ufo:source_temporal_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:chrono_catalyst_t1"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:corporeal_matter"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ae2:quartz_vibrant_glass"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:chrono_catalyst_t2"
+    }
+  ],
+  "time": 500
+}

@@ -1,0 +1,33 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 50000,
+  "fluid_inputs": [
+    {
+      "amount": 100,
+      "ingredient": {
+        "fluid": "ufo:source_liquid_starlight_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:white_dwarf_fragment_ingot"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:dimensional_processor_press"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:printed_dimensional_processor"
+    }
+  ],
+  "time": 100
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ufo:graviton_plated_casing"
+    },
+    {
+      "item": "ufo:cosmic_string_component_matrix"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:1qd_mega_crafting_storage"
+  }
+}

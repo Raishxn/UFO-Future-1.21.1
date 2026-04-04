@@ -1,0 +1,43 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 7000000,
+  "fluid_inputs": [
+    {
+      "amount": 1000,
+      "ingredient": {
+        "fluid": "ufo:source_white_dwarf_fragment_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:corporeal_matter"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:uu_matter_crystal"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:white_dwarf_fragment_block"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:white_dwarf_matter"
+    },
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:scar"
+    }
+  ],
+  "time": 1500
+}

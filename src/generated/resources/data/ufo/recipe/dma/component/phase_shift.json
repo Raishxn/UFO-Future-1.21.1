@@ -1,0 +1,45 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 500000,
+  "fluid_inputs": [
+    {
+      "amount": 1000,
+      "ingredient": {
+        "fluid": "ufo:source_liquid_starlight_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:cell_component_256k"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ae2:quartz_vibrant_glass"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:nether_star"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:phase_shift_component_matrix"
+    }
+  ],
+  "time": 400
+}

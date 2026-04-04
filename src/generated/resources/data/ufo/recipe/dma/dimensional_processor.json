@@ -1,0 +1,38 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 80000,
+  "fluid_inputs": [
+    {
+      "amount": 200,
+      "ingredient": {
+        "fluid": "ufo:source_liquid_starlight_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:printed_dimensional_processor"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:printed_silicon"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:fluix_dust"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:dimensional_processor"
+    }
+  ],
+  "time": 150
+}

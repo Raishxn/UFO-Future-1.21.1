@@ -1,0 +1,5 @@
+{
+  "parent": "neoforge:item/bucket",
+  "fluid": "ufo:source_temporal_fluid",
+  "loader": "neoforge:fluid_container"
+}

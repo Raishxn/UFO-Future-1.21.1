@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "ufo:block/entropy_catalyst_bank_components",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "ufo:block/entropy_catalyst_bank_components",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "ufo:block/entropy_catalyst_bank_components"
+    },
+    "facing=south": {
+      "model": "ufo:block/entropy_catalyst_bank_components",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "ufo:block/entropy_catalyst_bank_components",
+      "x": -90
+    },
+    "facing=west": {
+      "model": "ufo:block/entropy_catalyst_bank_components",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 500000,
+  "fluid_inputs": [
+    {
+      "amount": 500,
+      "ingredient": {
+        "fluid": "ufo:source_gelid_cryotheum"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:white_dwarf_fragment_ingot"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:nether_star"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:obsidian_matrix"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:neutron_star_fragment_ingot"
+    }
+  ],
+  "time": 400
+}

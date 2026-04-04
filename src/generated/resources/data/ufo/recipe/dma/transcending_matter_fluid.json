@@ -1,0 +1,28 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 12000000,
+  "fluid_inputs": [
+    {
+      "amount": 10000,
+      "ingredient": {
+        "fluid": "ufo:raw_star_matter_plasma"
+      }
+    }
+  ],
+  "fluid_outputs": [
+    {
+      "#": 10000,
+      "#t": "ae2:f",
+      "id": "ufo:transcending_matter"
+    }
+  ],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:unstable_white_hole_matter"
+      }
+    }
+  ],
+  "item_outputs": [],
+  "time": 3000
+}

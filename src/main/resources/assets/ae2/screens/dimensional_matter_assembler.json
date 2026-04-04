@@ -1,0 +1,55 @@
+{
+  "$schema": "schema.json",
+  "includes": [
+    "common/common.json",
+    "common/player_inventory.json",
+    "common/toolbox.json"
+  ],
+  "text": {
+    "dialog_title": {
+      "position": {
+        "left": 8,
+        "top": 5
+      }
+    }
+  },
+  "background": {
+    "texture": "guis/dimensional_matter_assembler.png",
+    "srcRect": [0, 0, 176, 182]
+  },
+  "images": {
+    "progressBar": {
+      "texture": "guis/dimensional_matter_assembler.png",
+      "srcRect": [234, 0, 20, 11]
+    },
+    "powerAlert": {
+      "texture": "guis/dimensional_matter_assembler.png",
+      "srcRect": [225, 18, 18, 18]
+    }
+  },
+  "widgets": {
+    "progressBar": {
+      "left": 105,
+      "top": 42
+    },
+    "powerAlert": {
+      "left": 155,
+      "top": 16
+    }
+  },
+  "slots": {
+    "MACHINE_INPUT": {
+      "left": 47,
+      "top": 21,
+      "grid": "BREAK_AFTER_3COLS"
+    },
+    "MACHINE_OUTPUT": {
+      "left": 132,
+      "top": 21
+    },
+    "UFO_MACHINE_OUTPUT_2": {
+      "left": 132,
+      "top": 49
+    }
+  }
+}

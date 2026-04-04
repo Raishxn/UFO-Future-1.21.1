@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ufo:neutron_fluid_cell_housing"
+    },
+    {
+      "item": "ufo:cosmic_string_component_matrix"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:neutron_star_reservoir_singularity"
+  }
+}

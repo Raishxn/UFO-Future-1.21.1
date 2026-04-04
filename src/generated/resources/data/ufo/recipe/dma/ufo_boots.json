@@ -1,0 +1,39 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 50000000,
+  "fluid_inputs": [
+    {
+      "amount": 2000,
+      "ingredient": {
+        "fluid": "ufo:transcending_matter"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:thermal_resistor_boots"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:enriched_neutronium_sphere"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:ufo_boots"
+    }
+  ],
+  "time": 2000
+}

@@ -1,0 +1,28 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 20000000,
+  "fluid_inputs": [
+    {
+      "amount": 10000,
+      "ingredient": {
+        "fluid": "ufo:uu_matter"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "minecraft:amethyst_shard"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:uu_matter_crystal"
+    }
+  ],
+  "time": 4000
+}

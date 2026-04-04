@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ufo:white_dwarf_item_cell_housing"
+    },
+    {
+      "item": "ufo:phase_shift_component_matrix"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:white_dwarf_cell_echo"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 8000000,
+  "fluid_inputs": [
+    {
+      "amount": 2000,
+      "ingredient": {
+        "fluid": "ufo:source_temporal_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:hyper_dense_component_matrix"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:neutron_star_matter"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:tesseract_component_matrix"
+    }
+  ],
+  "time": 1600
+}

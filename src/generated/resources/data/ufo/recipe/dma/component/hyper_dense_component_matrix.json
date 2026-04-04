@@ -1,0 +1,40 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 2000000,
+  "fluid_inputs": [
+    {
+      "amount": 1000,
+      "ingredient": {
+        "fluid": "ufo:source_primordial_matter_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:phase_shift_component_matrix"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:white_dwarf_matter"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:hyper_dense_component_matrix"
+    }
+  ],
+  "time": 800
+}

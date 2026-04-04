@@ -1,0 +1,28 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 2000000,
+  "fluid_inputs": [
+    {
+      "amount": 1000,
+      "ingredient": {
+        "fluid": "ufo:uu_matter"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:enriched_neutronium_sphere"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:proto_matter"
+    }
+  ],
+  "time": 800
+}

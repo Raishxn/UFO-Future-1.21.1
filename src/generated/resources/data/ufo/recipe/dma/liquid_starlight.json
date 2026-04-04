@@ -1,0 +1,35 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 4000000,
+  "fluid_inputs": [
+    {
+      "amount": 100,
+      "ingredient": {
+        "fluid": "ufo:source_uu_amplifier_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [
+    {
+      "#": 10000,
+      "#t": "ae2:f",
+      "id": "ufo:source_liquid_starlight_fluid"
+    }
+  ],
+  "item_inputs": [
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:obsidian_matrix"
+      }
+    },
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "minecraft:nether_star"
+      }
+    }
+  ],
+  "item_outputs": [],
+  "time": 1000
+}

@@ -1,0 +1,6 @@
+site_name: UFO Future Documentation
+theme: readthedocs
+nav:
+  - Home: index.md
+  - Machines:
+    - Dimensional Matter Assembler: dma.md

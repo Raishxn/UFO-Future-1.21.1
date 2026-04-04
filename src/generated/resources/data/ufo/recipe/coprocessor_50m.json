@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "item": "ae2:engineering_processor"
+    },
+    "F": {
+      "item": "ufo:quantum_lattice_frame"
+    },
+    "P": {
+      "item": "ufo:dimensional_processor"
+    }
+  },
+  "pattern": [
+    "PEP",
+    "EFE",
+    "PEP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:50m_mega_co_processor"
+  }
+}

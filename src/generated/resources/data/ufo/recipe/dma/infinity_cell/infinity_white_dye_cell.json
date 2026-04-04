@@ -1,0 +1,39 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 250000000,
+  "fluid_inputs": [
+    {
+      "amount": 2500,
+      "ingredient": {
+        "fluid": "ufo:transcending_matter"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:cosmic_string_component_matrix"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    },
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "minecraft:white_dye"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:infinity_white_dye_cell"
+    }
+  ],
+  "time": 10000
+}

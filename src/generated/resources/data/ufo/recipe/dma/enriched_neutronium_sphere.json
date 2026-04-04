@@ -1,0 +1,34 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 8000000,
+  "fluid_inputs": [
+    {
+      "amount": 12000,
+      "ingredient": {
+        "fluid": "ufo:source_primordial_matter_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ufo:neutronium_sphere"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:enriched_neutronium_sphere"
+    }
+  ],
+  "time": 3000
+}

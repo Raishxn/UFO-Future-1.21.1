@@ -1,0 +1,40 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 32000000,
+  "fluid_inputs": [
+    {
+      "amount": 4000,
+      "ingredient": {
+        "fluid": "ufo:source_spatial_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:tesseract_component_matrix"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:pulsar_matter"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:event_horizon_component_matrix"
+    }
+  ],
+  "time": 3200
+}
