@@ -26,11 +26,11 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.TESSERACT_COMPONENT_MATRIX.get());
                         output.accept(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
 
-                        output.accept(ModItems.UFO_HELMET.get());
-                        output.accept(ModItems.UFO_CHESTPLATE.get());
-                        output.accept(ModItems.UFO_LEGGINGS.get());
-                        output.accept(ModItems.UFO_BOOTS.get());
-                        output.accept(ModItems.UFO_STAFF);
+                        output.accept(ModArmor.UFO_HELMET.get());
+                        output.accept(ModArmor.UFO_CHESTPLATE.get());
+                        output.accept(ModArmor.UFO_LEGGINGS.get());
+                        output.accept(ModArmor.UFO_BOOTS.get());
+                        output.accept(ModTools.UFO_STAFF);
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR_PRESS.get());
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR.get());
                         output.accept(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get());
@@ -67,11 +67,11 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.QUANTUM_CATALYST_T3.get());
                         output.accept(ModItems.DIMENSIONAL_CATALYST.get());
 
-                        output.accept(ModItems.THERMAL_RESISTOR_PLATING.get());
-                        output.accept(ModItems.THERMAL_RESISTOR_BOOTS.get());
-                        output.accept(ModItems.THERMAL_RESISTOR_CHEST.get());
-                        output.accept(ModItems.THERMAL_RESISTOR_MASK.get());
-                        output.accept(ModItems.THERMAL_RESISTOR_PANTS.get());
+                        output.accept(ModArmor.THERMAL_RESISTOR_PLATING.get());
+                        output.accept(ModArmor.THERMAL_RESISTOR_BOOTS.get());
+                        output.accept(ModArmor.THERMAL_RESISTOR_CHEST.get());
+                        output.accept(ModArmor.THERMAL_RESISTOR_MASK.get());
+                        output.accept(ModArmor.THERMAL_RESISTOR_PANTS.get());
 
                         output.accept(ModItems.AETHER_CONTAINMENT_CAPSULE.get());
                         output.accept(ModItems.SAFE_CONTAINMENT_MATTER.get());
@@ -95,50 +95,50 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.DUST_BLIZZ.get());
                         output.accept(ModItems.OBSIDIAN_MATRIX.get());
 
-                        output.accept(ModItems.INFINITY_COBBLED_DEEPSLATE_CELL.get());
-                        output.accept(ModItems.INFINITY_END_STONE_CELL.get());
-                        output.accept(ModItems.INFINITY_NETHERRACK_CELL.get());
-                        output.accept(ModItems.INFINITY_SAND_CELL.get());
-                        output.accept(ModItems.INFINITY_LAVA_CELL.get());
-                        output.accept(ModItems.INFINITY_SKY_STONE_CELL.get());
-                        output.accept(ModItems.INFINITY_ANTIMATTER_PELLET_CELL.get());
+                        output.accept(ModCells.INFINITY_COBBLED_DEEPSLATE_CELL.get());
+                        output.accept(ModCells.INFINITY_END_STONE_CELL.get());
+                        output.accept(ModCells.INFINITY_NETHERRACK_CELL.get());
+                        output.accept(ModCells.INFINITY_SAND_CELL.get());
+                        output.accept(ModCells.INFINITY_LAVA_CELL.get());
+                        output.accept(ModCells.INFINITY_SKY_STONE_CELL.get());
+                        output.accept(ModCells.INFINITY_ANTIMATTER_PELLET_CELL.get());
 
-                        output.accept(ModItems.INFINITY_COBBLED_DEEPSLATE_CELL.get());
-                        output.accept(ModItems.INFINITY_END_STONE_CELL.get());
-                        output.accept(ModItems.INFINITY_NETHERRACK_CELL.get());
-                        output.accept(ModItems.INFINITY_SAND_CELL.get());
-                        output.accept(ModItems.INFINITY_LAVA_CELL.get());
-                        output.accept(ModItems.INFINITY_SKY_STONE_CELL.get());
-                        output.accept(ModItems.INFINITY_ANTIMATTER_PELLET_CELL.get());
+                        output.accept(ModCells.INFINITY_COBBLED_DEEPSLATE_CELL.get());
+                        output.accept(ModCells.INFINITY_END_STONE_CELL.get());
+                        output.accept(ModCells.INFINITY_NETHERRACK_CELL.get());
+                        output.accept(ModCells.INFINITY_SAND_CELL.get());
+                        output.accept(ModCells.INFINITY_LAVA_CELL.get());
+                        output.accept(ModCells.INFINITY_SKY_STONE_CELL.get());
+                        output.accept(ModCells.INFINITY_ANTIMATTER_PELLET_CELL.get());
 
                         // --- NOVAS CÉLULAS INFINITAS (adicionais que você criou) ---
-                        output.accept(ModItems.INFINITY_WATER_CELL.get());
-                        output.accept(ModItems.INFINITY_COBBLESTONE_CELL.get());
-                        output.accept(ModItems.INFINITY_PLUTONIUM_PELLET_CELL.get());
-                        output.accept(ModItems.INFINITY_POLONIUM_PELLET_CELL.get());
-                        output.accept(ModItems.INFINITY_HDPE_PELLET_CELL.get());
-                        output.accept(ModItems.INFINITY_OBSIDIAN_CELL.get());
-                        output.accept(ModItems.INFINITY_GRAVEL_CELL.get());
-                        output.accept(ModItems.INFINITY_OAK_LOG_CELL.get());
-                        output.accept(ModItems.INFINITY_GLASS_CELL.get());
-                        output.accept(ModItems.INFINITY_AMETHYST_SHARD_CELL.get());
+                        output.accept(ModCells.INFINITY_WATER_CELL.get());
+                        output.accept(ModCells.INFINITY_COBBLESTONE_CELL.get());
+                        output.accept(ModCells.INFINITY_PLUTONIUM_PELLET_CELL.get());
+                        output.accept(ModCells.INFINITY_POLONIUM_PELLET_CELL.get());
+                        output.accept(ModCells.INFINITY_HDPE_PELLET_CELL.get());
+                        output.accept(ModCells.INFINITY_OBSIDIAN_CELL.get());
+                        output.accept(ModCells.INFINITY_GRAVEL_CELL.get());
+                        output.accept(ModCells.INFINITY_OAK_LOG_CELL.get());
+                        output.accept(ModCells.INFINITY_GLASS_CELL.get());
+                        output.accept(ModCells.INFINITY_AMETHYST_SHARD_CELL.get());
                         // Cells de corante
-                        output.accept(ModItems.INFINITY_WHITE_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_ORANGE_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_MAGENTA_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_LIGHT_BLUE_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_YELLOW_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_LIME_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_PINK_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_GRAY_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_LIGHT_GRAY_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_CYAN_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_PURPLE_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_BLUE_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_BROWN_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_GREEN_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_RED_DYE_CELL.get());
-                        output.accept(ModItems.INFINITY_BLACK_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_WHITE_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_ORANGE_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_MAGENTA_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_LIGHT_BLUE_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_YELLOW_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_LIME_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_PINK_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_GRAY_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_LIGHT_GRAY_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_CYAN_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_PURPLE_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_BLUE_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_BROWN_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_GREEN_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_RED_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_BLACK_DYE_CELL.get());
 
 
                         // --- HOUSINGS DE CÉLULAS (de ModCellItems) ---

@@ -28,10 +28,10 @@ public class HazardHandler {
         boolean hasHelm = false, hasChest = false, hasLegs = false, hasBoots = false;
         for (ItemStack stack : player.getArmorSlots()) {
             Item item = stack.getItem();
-            if (item == com.raishxn.ufo.item.ModItems.THERMAL_RESISTOR_MASK.get() || item == com.raishxn.ufo.item.ModItems.UFO_HELMET.get()) hasHelm = true;
-            if (item == com.raishxn.ufo.item.ModItems.THERMAL_RESISTOR_CHEST.get() || item == com.raishxn.ufo.item.ModItems.UFO_CHESTPLATE.get()) hasChest = true;
-            if (item == com.raishxn.ufo.item.ModItems.THERMAL_RESISTOR_PANTS.get() || item == com.raishxn.ufo.item.ModItems.UFO_LEGGINGS.get()) hasLegs = true;
-            if (item == com.raishxn.ufo.item.ModItems.THERMAL_RESISTOR_BOOTS.get() || item == com.raishxn.ufo.item.ModItems.UFO_BOOTS.get()) hasBoots = true;
+            if (item == com.raishxn.ufo.item.ModArmor.THERMAL_RESISTOR_MASK.get() || item == com.raishxn.ufo.item.ModArmor.UFO_HELMET.get()) hasHelm = true;
+            if (item == com.raishxn.ufo.item.ModArmor.THERMAL_RESISTOR_CHEST.get() || item == com.raishxn.ufo.item.ModArmor.UFO_CHESTPLATE.get()) hasChest = true;
+            if (item == com.raishxn.ufo.item.ModArmor.THERMAL_RESISTOR_PANTS.get() || item == com.raishxn.ufo.item.ModArmor.UFO_LEGGINGS.get()) hasLegs = true;
+            if (item == com.raishxn.ufo.item.ModArmor.THERMAL_RESISTOR_BOOTS.get() || item == com.raishxn.ufo.item.ModArmor.UFO_BOOTS.get()) hasBoots = true;
         }
         return hasHelm && hasChest && hasLegs && hasBoots;
     }

@@ -9,7 +9,7 @@ import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
 import com.raishxn.ufo.UFOConfig; // <-- IMPORT CORRIGIDO!
-import com.raishxn.ufo.item.custom.InfinityCell;
+import com.raishxn.ufo.item.InfinityCell;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public class InfinityCellInventory implements StorageCell {
 
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-        return what.equals(this.record) ? 0 : amount;
+        return what.equals(this.record) ? amount : 0;
     }
 
     @Override

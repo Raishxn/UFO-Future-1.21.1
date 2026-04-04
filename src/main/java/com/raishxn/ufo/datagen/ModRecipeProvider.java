@@ -10,6 +10,9 @@ import com.raishxn.ufo.core.MegaCraftingStorageTier;
 import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.item.ModCellItems;
 import com.raishxn.ufo.item.ModItems;
+import com.raishxn.ufo.item.ModArmor;
+import com.raishxn.ufo.item.ModTools;
+import com.raishxn.ufo.item.ModCells;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -235,7 +238,7 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     private void buildStaffAndAnomaly(RecipeOutput c) {
-        DMARecipeBuilder.create("dma/ufo_staff").output(ModItems.UFO_STAFF.get()).inputItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get()).inputItem(ModItems.QUANTUM_ANOMALY.get(), 2).inputItem(ModItems.PROTO_MATTER.get(), 2).inputItem(Items.NETHERITE_INGOT, 4).inputItem(AEItems.MATTER_BALL.get(), 16).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 2000).energy(12000000).time(2400).save(c);
+        DMARecipeBuilder.create("dma/ufo_staff").output(ModTools.UFO_STAFF.get()).inputItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get()).inputItem(ModItems.QUANTUM_ANOMALY.get(), 2).inputItem(ModItems.PROTO_MATTER.get(), 2).inputItem(Items.NETHERITE_INGOT, 4).inputItem(AEItems.MATTER_BALL.get(), 16).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 2000).energy(12000000).time(2400).save(c);
         DMARecipeBuilder.create("dma/charged_enriched_neutronium_sphere").output(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get()).inputItem(ModItems.ENRICHED_NEUTRONIUM_SPHERE.get()).inputItem(ModItems.NUCLEAR_STAR.get()).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 4000).energy(10000000).time(4000).save(c);
         DMARecipeBuilder.create("dma/quantum_anomaly").output(ModItems.QUANTUM_ANOMALY.get()).inputItem(ModItems.PULSAR_FRAGMENT_DUST.get(), 12).inputItem(ModItems.OBSIDIAN_MATRIX.get()).inputFluid(ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID.get(), 8000).energy(6000000).time(1200).save(c);
     }
@@ -261,15 +264,15 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     private void buildArmorsDMA(RecipeOutput c) {
-        DMARecipeBuilder.create("dma/thermal_resistor_plating").output(ModItems.THERMAL_RESISTOR_PLATING.get()).inputItem(Items.NETHERITE_INGOT).inputItem(ModItems.OBSIDIAN_MATRIX.get()).inputItem(Items.BLUE_ICE, 2).inputFluid(Fluids.WATER, 500).energy(50000).time(100).save(c);
-        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_MASK, Items.NETHERITE_HELMET, ModItems.THERMAL_RESISTOR_PLATING, 5, 1000000);
-        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_CHEST, Items.NETHERITE_CHESTPLATE, ModItems.THERMAL_RESISTOR_PLATING, 8, 1500000);
-        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_PANTS, Items.NETHERITE_LEGGINGS, ModItems.THERMAL_RESISTOR_PLATING, 7, 1200000);
-        this.createArmorDMA(c, ModItems.THERMAL_RESISTOR_BOOTS, Items.NETHERITE_BOOTS, ModItems.THERMAL_RESISTOR_PLATING, 4, 800000);
-        this.createUfoArmorDMA(c, ModItems.UFO_HELMET, ModItems.THERMAL_RESISTOR_MASK, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
-        this.createUfoArmorDMA(c, ModItems.UFO_CHESTPLATE, ModItems.THERMAL_RESISTOR_CHEST, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
-        this.createUfoArmorDMA(c, ModItems.UFO_LEGGINGS, ModItems.THERMAL_RESISTOR_PANTS, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
-        this.createUfoArmorDMA(c, ModItems.UFO_BOOTS, ModItems.THERMAL_RESISTOR_BOOTS, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
+        DMARecipeBuilder.create("dma/thermal_resistor_plating").output(ModArmor.THERMAL_RESISTOR_PLATING.get()).inputItem(Items.NETHERITE_INGOT).inputItem(ModItems.OBSIDIAN_MATRIX.get()).inputItem(Items.BLUE_ICE, 2).inputFluid(Fluids.WATER, 500).energy(50000).time(100).save(c);
+        this.createArmorDMA(c, ModArmor.THERMAL_RESISTOR_MASK, Items.NETHERITE_HELMET, ModArmor.THERMAL_RESISTOR_PLATING, 5, 1000000);
+        this.createArmorDMA(c, ModArmor.THERMAL_RESISTOR_CHEST, Items.NETHERITE_CHESTPLATE, ModArmor.THERMAL_RESISTOR_PLATING, 8, 1500000);
+        this.createArmorDMA(c, ModArmor.THERMAL_RESISTOR_PANTS, Items.NETHERITE_LEGGINGS, ModArmor.THERMAL_RESISTOR_PLATING, 7, 1200000);
+        this.createArmorDMA(c, ModArmor.THERMAL_RESISTOR_BOOTS, Items.NETHERITE_BOOTS, ModArmor.THERMAL_RESISTOR_PLATING, 4, 800000);
+        this.createUfoArmorDMA(c, ModArmor.UFO_HELMET, ModArmor.THERMAL_RESISTOR_MASK, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
+        this.createUfoArmorDMA(c, ModArmor.UFO_CHESTPLATE, ModArmor.THERMAL_RESISTOR_CHEST, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
+        this.createUfoArmorDMA(c, ModArmor.UFO_LEGGINGS, ModArmor.THERMAL_RESISTOR_PANTS, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
+        this.createUfoArmorDMA(c, ModArmor.UFO_BOOTS, ModArmor.THERMAL_RESISTOR_BOOTS, ModItems.ENRICHED_NEUTRONIUM_SPHERE);
     }
 
     private void createArmorDMA(RecipeOutput c, Supplier<Item> output, Item baseArmor, Supplier<Item> material, int amount, int energy) {
@@ -292,37 +295,37 @@ public class ModRecipeProvider extends RecipeProvider {
 
     private void buildInfinityCellsDMA(RecipeOutput c) {
         Map<ItemLike, ItemLike> vanillaMap = new HashMap<>();
-        vanillaMap.put(ModItems.INFINITY_WATER_CELL.get(), Items.WATER_BUCKET);
-        vanillaMap.put(ModItems.INFINITY_COBBLESTONE_CELL.get(), Items.COBBLESTONE);
-        vanillaMap.put(ModItems.INFINITY_COBBLED_DEEPSLATE_CELL.get(), Items.COBBLED_DEEPSLATE);
-        vanillaMap.put(ModItems.INFINITY_END_STONE_CELL.get(), Items.END_STONE);
-        vanillaMap.put(ModItems.INFINITY_NETHERRACK_CELL.get(), Items.NETHERRACK);
-        vanillaMap.put(ModItems.INFINITY_SAND_CELL.get(), Items.SAND);
-        vanillaMap.put(ModItems.INFINITY_LAVA_CELL.get(), Items.LAVA_BUCKET);
-        vanillaMap.put(ModItems.INFINITY_OBSIDIAN_CELL.get(), Items.OBSIDIAN);
-        vanillaMap.put(ModItems.INFINITY_GRAVEL_CELL.get(), Items.GRAVEL);
-        vanillaMap.put(ModItems.INFINITY_OAK_LOG_CELL.get(), Items.OAK_LOG);
-        vanillaMap.put(ModItems.INFINITY_GLASS_CELL.get(), Items.GLASS);
-        vanillaMap.put(ModItems.INFINITY_AMETHYST_SHARD_CELL.get(), Items.AMETHYST_SHARD);
-        vanillaMap.put(ModItems.INFINITY_WHITE_DYE_CELL.get(), Items.WHITE_DYE);
-        vanillaMap.put(ModItems.INFINITY_ORANGE_DYE_CELL.get(), Items.ORANGE_DYE);
-        vanillaMap.put(ModItems.INFINITY_MAGENTA_DYE_CELL.get(), Items.MAGENTA_DYE);
-        vanillaMap.put(ModItems.INFINITY_LIGHT_BLUE_DYE_CELL.get(), Items.LIGHT_BLUE_DYE);
-        vanillaMap.put(ModItems.INFINITY_YELLOW_DYE_CELL.get(), Items.YELLOW_DYE);
-        vanillaMap.put(ModItems.INFINITY_LIME_DYE_CELL.get(), Items.LIME_DYE);
-        vanillaMap.put(ModItems.INFINITY_PINK_DYE_CELL.get(), Items.PINK_DYE);
-        vanillaMap.put(ModItems.INFINITY_GRAY_DYE_CELL.get(), Items.GRAY_DYE);
-        vanillaMap.put(ModItems.INFINITY_LIGHT_GRAY_DYE_CELL.get(), Items.LIGHT_GRAY_DYE);
-        vanillaMap.put(ModItems.INFINITY_CYAN_DYE_CELL.get(), Items.CYAN_DYE);
-        vanillaMap.put(ModItems.INFINITY_PURPLE_DYE_CELL.get(), Items.PURPLE_DYE);
-        vanillaMap.put(ModItems.INFINITY_BLUE_DYE_CELL.get(), Items.BLUE_DYE);
-        vanillaMap.put(ModItems.INFINITY_BROWN_DYE_CELL.get(), Items.BROWN_DYE);
-        vanillaMap.put(ModItems.INFINITY_GREEN_DYE_CELL.get(), Items.GREEN_DYE);
-        vanillaMap.put(ModItems.INFINITY_RED_DYE_CELL.get(), Items.RED_DYE);
-        vanillaMap.put(ModItems.INFINITY_BLACK_DYE_CELL.get(), Items.BLACK_DYE);
+        vanillaMap.put(ModCells.INFINITY_WATER_CELL.get(), Items.WATER_BUCKET);
+        vanillaMap.put(ModCells.INFINITY_COBBLESTONE_CELL.get(), Items.COBBLESTONE);
+        vanillaMap.put(ModCells.INFINITY_COBBLED_DEEPSLATE_CELL.get(), Items.COBBLED_DEEPSLATE);
+        vanillaMap.put(ModCells.INFINITY_END_STONE_CELL.get(), Items.END_STONE);
+        vanillaMap.put(ModCells.INFINITY_NETHERRACK_CELL.get(), Items.NETHERRACK);
+        vanillaMap.put(ModCells.INFINITY_SAND_CELL.get(), Items.SAND);
+        vanillaMap.put(ModCells.INFINITY_LAVA_CELL.get(), Items.LAVA_BUCKET);
+        vanillaMap.put(ModCells.INFINITY_OBSIDIAN_CELL.get(), Items.OBSIDIAN);
+        vanillaMap.put(ModCells.INFINITY_GRAVEL_CELL.get(), Items.GRAVEL);
+        vanillaMap.put(ModCells.INFINITY_OAK_LOG_CELL.get(), Items.OAK_LOG);
+        vanillaMap.put(ModCells.INFINITY_GLASS_CELL.get(), Items.GLASS);
+        vanillaMap.put(ModCells.INFINITY_AMETHYST_SHARD_CELL.get(), Items.AMETHYST_SHARD);
+        vanillaMap.put(ModCells.INFINITY_WHITE_DYE_CELL.get(), Items.WHITE_DYE);
+        vanillaMap.put(ModCells.INFINITY_ORANGE_DYE_CELL.get(), Items.ORANGE_DYE);
+        vanillaMap.put(ModCells.INFINITY_MAGENTA_DYE_CELL.get(), Items.MAGENTA_DYE);
+        vanillaMap.put(ModCells.INFINITY_LIGHT_BLUE_DYE_CELL.get(), Items.LIGHT_BLUE_DYE);
+        vanillaMap.put(ModCells.INFINITY_YELLOW_DYE_CELL.get(), Items.YELLOW_DYE);
+        vanillaMap.put(ModCells.INFINITY_LIME_DYE_CELL.get(), Items.LIME_DYE);
+        vanillaMap.put(ModCells.INFINITY_PINK_DYE_CELL.get(), Items.PINK_DYE);
+        vanillaMap.put(ModCells.INFINITY_GRAY_DYE_CELL.get(), Items.GRAY_DYE);
+        vanillaMap.put(ModCells.INFINITY_LIGHT_GRAY_DYE_CELL.get(), Items.LIGHT_GRAY_DYE);
+        vanillaMap.put(ModCells.INFINITY_CYAN_DYE_CELL.get(), Items.CYAN_DYE);
+        vanillaMap.put(ModCells.INFINITY_PURPLE_DYE_CELL.get(), Items.PURPLE_DYE);
+        vanillaMap.put(ModCells.INFINITY_BLUE_DYE_CELL.get(), Items.BLUE_DYE);
+        vanillaMap.put(ModCells.INFINITY_BROWN_DYE_CELL.get(), Items.BROWN_DYE);
+        vanillaMap.put(ModCells.INFINITY_GREEN_DYE_CELL.get(), Items.GREEN_DYE);
+        vanillaMap.put(ModCells.INFINITY_RED_DYE_CELL.get(), Items.RED_DYE);
+        vanillaMap.put(ModCells.INFINITY_BLACK_DYE_CELL.get(), Items.BLACK_DYE);
         vanillaMap.forEach((cell, target) -> this.createInfinityCellRecipe(c, cell, target, null));
         
-        this.createInfinityCellRecipe(c, ModItems.INFINITY_SKY_STONE_CELL.get(), AEBlocks.SKY_STONE_BLOCK, "ae2");
+        this.createInfinityCellRecipe(c, ModCells.INFINITY_SKY_STONE_CELL.get(), AEBlocks.SKY_STONE_BLOCK, "ae2");
     }
 
     private void buildHousingRecipes(RecipeOutput c) {
@@ -359,7 +362,7 @@ public class ModRecipeProvider extends RecipeProvider {
         
         // Add UFO Staff Recipe as requested
         DMARecipeBuilder.create("dma/ufo_staff_alt")
-                .output(ModItems.UFO_STAFF.get())
+                .output(ModTools.UFO_STAFF.get())
                 .inputItem(Items.NETHERITE_SWORD)
                 .inputItem(Items.NETHERITE_PICKAXE)
                 .inputItem(Items.NETHERITE_AXE)
@@ -474,3 +477,4 @@ public class ModRecipeProvider extends RecipeProvider {
         }
     }
 }
+

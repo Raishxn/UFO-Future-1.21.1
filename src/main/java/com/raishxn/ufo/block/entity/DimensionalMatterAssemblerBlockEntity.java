@@ -171,6 +171,16 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         handleThermalLogic();
     }
 
+    /**
+     * Executes the thermal simulation loop, regulating machine heat based on production.
+     * <p><b>Thermal Engine Lifecycle:</b></p>
+     * <ul>
+     *      <li><b>Generation</b>: While working, block adds heat dynamically based on its upgrades (+1 HU/2ticks).</li>
+     *      <li><b>Passive Cooling</b>: While idle, ambient block surfaces slowly radiate heat back to the environment (-1 HU/40ticks).</li>
+     *      <li><b>Active Synergies</b>: Fluids injected into the Cooling Tank are instantly consumed to suppress excess heat.
+     *          Each fluid class (e.g., Starlight vs Gelid Cryotheum) is balanced with specific HU/mB ratios.</li>
+     * </ul>
+     */
     private void handleThermalLogic() {
         if (this.level == null || this.level.isClientSide())
             return;
@@ -1076,14 +1086,15 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             return super.isAllowedIn(slot, what);
         }
 
+        /**
+         * Custom insertion logic for the DMA's fluid tanks.
+         * Default GenericStackInv merges all identical fluids into the first matching slot.
+         * The DMA uses slot 2 for coolants and slot 3 for base recipe fluids, so they MUST be kept separate.
+         * This code dynamically routes the fluid into the correct slot depending on its type while still
+         * properly tracking merging / remainder math when a slot is partially full.
+         */
         @Override
         public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-            // Override default insert to route fluids into input slots (2 and 3)
-            // independently.
-            // Default GenericStackInv.insert() would merge identical fluids into the first
-            // matching slot,
-            // which breaks recipes that use the same fluid in both coolant (slot 2) and
-            // base fluid (slot 3).
             if (!(what instanceof AEFluidKey)) {
                 return super.insert(what, amount, mode, source);
             }
@@ -1097,17 +1108,24 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
                 var stack = this.getStack(slot);
                 if (stack == null) {
-                    // Empty slot — fill it
+                    // Empty slot — fill it as much as possible
                     long toInsert = Math.min(remaining, this.getMaxAmount(what));
                     if (mode == Actionable.MODULATE) {
                         this.setStack(slot, new GenericStack(what, toInsert));
                     }
                     remaining -= toInsert;
+                } else if (stack.what().equals(what)) {
+                    // Partially full matching slot — merge into it
+                    long space = this.getMaxAmount(what) - stack.amount();
+                    if (space > 0) {
+                        long toInsert = Math.min(remaining, space);
+                        if (mode == Actionable.MODULATE) {
+                            this.setStack(slot, new GenericStack(what, stack.amount() + toInsert));
+                        }
+                        remaining -= toInsert;
+                    }
                 }
-                // If slot already has ANY fluid (same or different), skip to next slot.
-                // This ensures that when a recipe needs the same fluid in both coolant and
-                // base,
-                // each bucket goes into a separate slot instead of both merging into slot 2.
+                // If it's a completely different fluid, we simply bypass and check the next slot (if any).
             }
 
             return amount - remaining;

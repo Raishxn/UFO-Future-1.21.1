@@ -2,13 +2,14 @@ package com.raishxn.ufo.util;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.item.ModItems;
+import com.raishxn.ufo.item.ModTools;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
 public class ModItemProperties {
     public static void addCustomItemProperties() {
-        makeCustomBow(ModItems.UFO_BOW.get());
+        makeCustomBow(ModTools.UFO_BOW.get());
     }
 
     private static void makeCustomBow(Item item) {

@@ -1,4 +1,4 @@
-package com.raishxn.ufo.item.custom;
+package com.raishxn.ufo.item;
 
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;

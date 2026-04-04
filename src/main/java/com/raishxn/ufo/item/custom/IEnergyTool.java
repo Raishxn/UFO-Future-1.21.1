@@ -2,6 +2,7 @@ package com.raishxn.ufo.item.custom;
 
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.item.ModItems;
+import com.raishxn.ufo.item.ModTools;
 import com.raishxn.ufo.util.UfoPersistentEnergyStorage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -27,9 +28,9 @@ import java.util.function.Supplier;
 public interface IEnergyTool {
 
     List<Supplier<? extends Item>> TOOL_CYCLE = List.of(
-            ModItems.UFO_STAFF, ModItems.UFO_SWORD, ModItems.UFO_PICKAXE, ModItems.UFO_AXE,
-            ModItems.UFO_SHOVEL, ModItems.UFO_HOE, ModItems.UFO_HAMMER, ModItems.UFO_GREATSWORD,
-            ModItems.UFO_FISHING_ROD, ModItems.UFO_BOW
+            ModTools.UFO_STAFF, ModTools.UFO_SWORD, ModTools.UFO_PICKAXE, ModTools.UFO_AXE,
+            ModTools.UFO_SHOVEL, ModTools.UFO_HOE, ModTools.UFO_HAMMER, ModTools.UFO_GREATSWORD,
+            ModTools.UFO_FISHING_ROD, ModTools.UFO_BOW
     );
 
     int getEnergyPerUse();

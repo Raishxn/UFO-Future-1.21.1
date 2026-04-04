@@ -28,4 +28,19 @@ public record PacketChangeSideConfig(BlockPos pos, Direction side, int typeOrdin
 
     @Override
     public Type<? extends CustomPacketPayload> type() { return TYPE; }
+
+    public static void handle(final PacketChangeSideConfig packet, final IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer player)) return;
+            
+            // Anti-exploit: check distance
+            if (player.blockPosition().distSqr(packet.pos()) > 64.0) return;
+
+            BlockEntity be = player.level().getBlockEntity(packet.pos());
+            // Se a máquina DMA implementa os métodos, ou um helper
+            if (be instanceof com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity dma) {
+                // To do: implement real side config logic here or on DMA
+            }
+        });
+    }
 }

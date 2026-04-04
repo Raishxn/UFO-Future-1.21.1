@@ -37,45 +37,45 @@ public class UFORegistryHandler {
         StorageCells.addCellHandler(InfinityCellInventory.HANDLER);
         StorageCells.addCellHandler(AEBigIntegerCellHandler.INSTANCE);
         // --- Infinity Cells → 3D drive model (purple/cosmic) ---
-        StorageCellModels.registerModel(ModItems.INFINITY_WATER_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_COBBLESTONE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_COBBLED_DEEPSLATE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_END_STONE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_NETHERRACK_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_LAVA_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_SAND_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_SKY_STONE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_ANTIMATTER_PELLET_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_WATER_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_COBBLESTONE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_COBBLED_DEEPSLATE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_END_STONE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_NETHERRACK_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_LAVA_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_SAND_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_SKY_STONE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_ANTIMATTER_PELLET_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
 
         // Additional infinity cells (Mekanism)
-        StorageCellModels.registerModel(ModItems.INFINITY_PLUTONIUM_PELLET_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_POLONIUM_PELLET_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_HDPE_PELLET_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_PLUTONIUM_PELLET_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_POLONIUM_PELLET_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_HDPE_PELLET_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
 
         // Additional infinity cells (Vanilla)
-        StorageCellModels.registerModel(ModItems.INFINITY_OBSIDIAN_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_GRAVEL_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_OAK_LOG_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_GLASS_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_AMETHYST_SHARD_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_OBSIDIAN_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_GRAVEL_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_OAK_LOG_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_GLASS_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_AMETHYST_SHARD_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
 
         // Dye cells
-        StorageCellModels.registerModel(ModItems.INFINITY_WHITE_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_ORANGE_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_MAGENTA_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_LIGHT_BLUE_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_YELLOW_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_LIME_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_PINK_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_GRAY_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_LIGHT_GRAY_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_CYAN_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_PURPLE_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_BLUE_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_BROWN_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_GREEN_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_RED_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
-        StorageCellModels.registerModel(ModItems.INFINITY_BLACK_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_WHITE_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_ORANGE_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_MAGENTA_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_LIGHT_BLUE_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_YELLOW_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_LIME_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_PINK_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_GRAY_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_LIGHT_GRAY_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_CYAN_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_PURPLE_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_BLUE_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_BROWN_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_GREEN_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_RED_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_BLACK_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
 
         // --- White Dwarf Item Cells → 3D drive model (gray/silver) ---
         StorageCellModels.registerModel(ModCellItems.ITEM_CELL_40M.get(), UfoMod.id("drive/cells/white_dwarf_cell"));

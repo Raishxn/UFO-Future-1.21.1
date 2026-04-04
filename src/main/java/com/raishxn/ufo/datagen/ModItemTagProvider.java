@@ -2,6 +2,8 @@ package com.raishxn.ufo.datagen;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.item.ModItems;
+import com.raishxn.ufo.item.ModArmor;
+import com.raishxn.ufo.item.ModTools;
 import com.raishxn.ufo.util.ModTags;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.TagConventionLogWarning;
@@ -31,30 +33,30 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(Items.STICK)
                 .add(Items.COMPASS);
         tag(ItemTags.SWORDS)
-                .add(ModItems.UFO_SWORD.get())
-                .add(ModItems.UFO_GREATSWORD.get());
+                .add(ModTools.UFO_SWORD.get())
+                .add(ModTools.UFO_GREATSWORD.get());
         tag(ItemTags.PICKAXES)
-                .add(ModItems.UFO_PICKAXE.get());
+                .add(ModTools.UFO_PICKAXE.get());
         tag(ItemTags.SHOVELS)
-                .add(ModItems.UFO_SHOVEL.get());
+                .add(ModTools.UFO_SHOVEL.get());
         tag(ItemTags.AXES)
-                .add(ModItems.UFO_AXE.get());
+                .add(ModTools.UFO_AXE.get());
         tag(ItemTags.HOES)
-                .add(ModItems.UFO_HOE.get());
+                .add(ModTools.UFO_HOE.get());
         tag(ItemTags.FISHING_ENCHANTABLE)
-                .add(ModItems.UFO_FISHING_ROD.get());
+                .add(ModTools.UFO_FISHING_ROD.get());
         tag(ItemTags.BOW_ENCHANTABLE)
-                .add(ModItems.UFO_BOW.get());
+                .add(ModTools.UFO_BOW.get());
         tag(ModTags.Items.STAFF)
-                .add(ModItems.UFO_STAFF.get());
+                .add(ModTools.UFO_STAFF.get());
         tag(ItemTags.HEAD_ARMOR)
-                .add(ModItems.UFO_HELMET.get());
+                .add(ModArmor.UFO_HELMET.get());
         tag(ItemTags.CHEST_ARMOR)
-                .add(ModItems.UFO_CHESTPLATE.get());
+                .add(ModArmor.UFO_CHESTPLATE.get());
         tag(ItemTags.LEG_ARMOR)
-                .add(ModItems.UFO_LEGGINGS.get());
+                .add(ModArmor.UFO_LEGGINGS.get());
         tag(ItemTags.FOOT_ARMOR)
-                .add(ModItems.UFO_BOOTS.get());
+                .add(ModArmor.UFO_BOOTS.get());
 
 
         tag(ModTags.Items.HAZARDOUS).add(
@@ -123,3 +125,4 @@ public class ModItemTagProvider extends ItemTagsProvider {
         );
     }
 }
+

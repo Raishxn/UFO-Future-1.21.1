@@ -4,6 +4,8 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.item.ModItems;
+import com.raishxn.ufo.item.ModArmor;
+import com.raishxn.ufo.item.ModTools;
 import com.raishxn.ufo.item.custom.AetherContainmentCapsuleItem;
 import com.raishxn.ufo.util.ConfigType;
 import com.raishxn.ufo.util.IOMode;
@@ -56,27 +58,27 @@ public class ModCapabilityEvents {
         // --- Ferramentas e Armas Já Existentes ---
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_SWORD.get()
+                ModTools.UFO_SWORD.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_PICKAXE.get()
+                ModTools.UFO_PICKAXE.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_AXE.get()
+                ModTools.UFO_AXE.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_SHOVEL.get()
+                ModTools.UFO_SHOVEL.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_HOE.get()
+                ModTools.UFO_HOE.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_STAFF.get()
+                ModTools.UFO_STAFF.get()
         );
 
         // --- ADICIONE ESTES BLOCOS ABAIXO ---
@@ -84,44 +86,45 @@ public class ModCapabilityEvents {
         // Hammer
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_HAMMER.get()
+                ModTools.UFO_HAMMER.get()
         );
 
         // Greatsword
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_GREATSWORD.get()
+                ModTools.UFO_GREATSWORD.get()
         );
 
         // Fishing Rod
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_FISHING_ROD.get()
+                ModTools.UFO_FISHING_ROD.get()
         );
 
         // Bow
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_BOW.get()
+                ModTools.UFO_BOW.get()
         );
 
         // --- Armaduras ---
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_HELMET.get()
+                ModArmor.UFO_HELMET.get()
         );
         // Peitoral com mais capacidade (exemplo mantido do seu código original)
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_CHESTPLATE.get()
+                ModArmor.UFO_CHESTPLATE.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_LEGGINGS.get()
+                ModArmor.UFO_LEGGINGS.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (stack, context) ->
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
-                ModItems.UFO_BOOTS.get()
+                ModArmor.UFO_BOOTS.get()
         );
     }
     }
+
