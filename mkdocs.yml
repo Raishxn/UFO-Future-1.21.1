@@ -1,6 +1,21 @@
 site_name: UFO Future Documentation
-theme: readthedocs
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: indigo
+    accent: purple
+  features:
+    - navigation.tabs
+    - content.code.copy
 nav:
   - Home: index.md
-  - Machines:
+  - Wiki:
     - Dimensional Matter Assembler: dma.md
+    - Catalysts: catalysts.md
+    - KubeJS Recipes: kubejs-recipes.md
+    - Tools & Weapons: tools.md
+    - Armor Sets: armor.md
+    - Storage Cells: storage-cells.md
+    - Materials & Fluids: materials.md
+    - Crafting Progression: progression.md
