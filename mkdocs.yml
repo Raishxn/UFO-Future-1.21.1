@@ -1,4 +1,5 @@
 site_name: UFO Future Documentation
+site_url: https://raishxn.github.io/UFO-Future-1.21.1/
 theme:
   name: material
   palette:
