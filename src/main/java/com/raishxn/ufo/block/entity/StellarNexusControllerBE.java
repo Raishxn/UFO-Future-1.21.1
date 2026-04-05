@@ -272,6 +272,10 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
     // ──────────────────── Start Operation ────────────────────
 
+    public boolean isActive() {
+        return this.running;
+    }
+
     /**
      * Called from the network packet when the player clicks "Start Operation".
      * Performs pre-flight checks and begins the simulation cycle.
@@ -361,13 +365,13 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         IActionSource src = IActionSource.ofMachine(nodeBE);
         MEStorage storage = grid.getStorageService().getInventory();
 
-        // Heat generation — increases based on recipe cooling requirement
+        // Heat generation — increases based on recipe Efficiency requirement
         int heatPerTick = recipe.getCoolingLevel() + 1; // 1-4 heat per tick
         this.heatLevel = Math.min(MAX_HEAT, this.heatLevel + heatPerTick);
 
-        // Coolant consumption from Coolant Fluid Hatch — reduces heat
-        int coolingApplied = consumeCoolant(grid);
-        this.heatLevel = Math.max(0, this.heatLevel - coolingApplied);
+        // Coolant consumption from Stellar Fuel Hatch — reduces heat
+        int EfficiencyApplied = consumeFuel(grid);
+        this.heatLevel = Math.max(0, this.heatLevel - EfficiencyApplied);
 
         // Overheat check
         if (this.heatLevel >= MAX_HEAT) {
@@ -452,24 +456,24 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         return highest;
     }
 
-    // ──────────────────── Coolant System ────────────────────
+    // ──────────────────── Fuel System ────────────────────
 
-    /** Amount of fluid (in mB, where 1 bucket = 1000) consumed per tick for cooling. */
-    private static final long COOLANT_CONSUMPTION_PER_TICK = 100; // 100 mB/tick = 5 buckets/second
+    /** Amount of fluid (in mB, where 1 bucket = 1000) consumed per tick for Efficiency. */
+    private static final long FUEL_CONSUMPTION_PER_TICK = 100; // 100 mB/tick = 5 buckets/second
 
     /**
-     * Tries to extract coolant from the AE2 network via the Coolant Fluid Hatch.
-     * Returns the cooling power applied this tick (heat units to subtract).
+     * Tries to extract coolant from the AE2 network via the Stellar Fuel Hatch.
+     * Returns the Efficiency power applied this tick (heat units to subtract).
      * <p>
      * Coolant effectiveness:
      * <ul>
-     *   <li>Water: 2 cooling per mB consumed</li>
-     *   <li>Lava (for exotic builds): 0 cooling (it's hot!)</li>
-     *   <li>Any other fluid: 3 cooling per mB (generic coolant tier)</li>
+     *   <li>Water: 2 Efficiency per mB consumed</li>
+     *   <li>Lava (for exotic builds): 0 Efficiency (it's hot!)</li>
+     *   <li>Any other fluid: 3 Efficiency per mB (generic coolant tier)</li>
      * </ul>
      */
-    private int consumeCoolant(IGrid grid) {
-        AENetworkedBlockEntity coolantHatch = getCoolantHatch();
+    private int consumeFuel(IGrid grid) {
+        AENetworkedBlockEntity coolantHatch = getFuelHatch();
         if (coolantHatch == null) return 0;
         
         IActionSource src = IActionSource.ofMachine(coolantHatch);
@@ -478,20 +482,20 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         // Try to extract water first (most common coolant)
         AEFluidKey waterKey = AEFluidKey.of(net.minecraft.world.level.material.Fluids.WATER);
         
-        long extracted = storage.extract(waterKey, COOLANT_CONSUMPTION_PER_TICK, Actionable.MODULATE, src);
+        long extracted = storage.extract(waterKey, FUEL_CONSUMPTION_PER_TICK, Actionable.MODULATE, src);
         if (extracted > 0) {
-            // Water: 2 cooling per mB
-            return (int) (extracted * 2 / COOLANT_CONSUMPTION_PER_TICK) * (recipe_coolingBonus() + 1);
+            // Water: 2 Efficiency per mB
+            return (int) (extracted * 2 / FUEL_CONSUMPTION_PER_TICK) * (recipe_EfficiencyBonus() + 1);
         }
         
         // Try any available fluid in the network as generic coolant
         // Iterate over what's available and try to extract the first fluid
         for (var entry : storage.getAvailableStacks()) {
             if (entry.getKey() instanceof AEFluidKey fluidKey) {
-                extracted = storage.extract(fluidKey, COOLANT_CONSUMPTION_PER_TICK, Actionable.MODULATE, src);
+                extracted = storage.extract(fluidKey, FUEL_CONSUMPTION_PER_TICK, Actionable.MODULATE, src);
                 if (extracted > 0) {
-                    // Generic fluid: 3 cooling per mB
-                    return (int) (extracted * 3 / COOLANT_CONSUMPTION_PER_TICK) * (recipe_coolingBonus() + 1);
+                    // Generic fluid: 3 Efficiency per mB
+                    return (int) (extracted * 3 / FUEL_CONSUMPTION_PER_TICK) * (recipe_EfficiencyBonus() + 1);
                 }
             }
         }
@@ -500,23 +504,23 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     }
 
     /** 
-     * Bonus cooling multiplier based on the recipe's cooling level.
-     * Higher cooling requirements → more cooling needed, but better coolant infrastructure
-     * also provides better cooling.
+     * Bonus Efficiency multiplier based on the recipe's Efficiency level.
+     * Higher Efficiency requirements → more Efficiency needed, but better coolant infrastructure
+     * also provides better Efficiency.
      */
-    private int recipe_coolingBonus() {
+    private int recipe_EfficiencyBonus() {
         return this.fieldLevel; // T1=1x, T2=2x, T3=3x multiplier
     }
 
     /**
-     * Find the Coolant Fluid Hatch block entity among the multiblock parts.
+     * Find the Stellar Fuel Hatch block entity among the multiblock parts.
      */
     @Nullable
-    private AENetworkedBlockEntity getCoolantHatch() {
+    private AENetworkedBlockEntity getFuelHatch() {
         if (this.level == null) return null;
         for (BlockPos p : this.parts) {
             BlockState state = this.level.getBlockState(p);
-            if (state.is(MultiblockBlocks.COOLANT_FLUID_HATCH.get())) {
+            if (state.is(MultiblockBlocks.STELLAR_FUEL_HATCH.get())) {
                 if (this.level.getBlockEntity(p) instanceof AENetworkedBlockEntity hatchBE) {
                     return hatchBE;
                 }

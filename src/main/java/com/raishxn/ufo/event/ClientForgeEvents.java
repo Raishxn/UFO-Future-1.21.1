@@ -31,7 +31,7 @@ public class ClientForgeEvents {
         if (event.getLevel().isClientSide() && event.getEntity().isShiftKeyDown() && event.getItemStack().isEmpty()) {
             net.minecraft.world.level.block.state.BlockState state = event.getLevel().getBlockState(event.getPos());
             if (state.is(com.raishxn.ufo.block.MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get())) {
-                net.minecraft.core.Direction facing = state.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING);
+                net.minecraft.core.Direction facing = state.getValue(net.minecraft.world.level.block.DirectionalBlock.FACING);
                 com.raishxn.ufo.client.GhostHologramRenderer.toggleHologram(event.getPos(), facing);
                 
                 if (com.raishxn.ufo.client.GhostHologramRenderer.isActive(event.getPos())) {

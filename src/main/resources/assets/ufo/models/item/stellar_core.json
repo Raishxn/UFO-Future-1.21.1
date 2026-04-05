@@ -1,0 +1,5 @@
+{
+  "loader": "neoforge:obj",
+  "model": "ufo:models/obj/star.obj",
+  "flip_v": true
+}

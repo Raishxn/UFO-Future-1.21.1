@@ -24,6 +24,10 @@ import com.raishxn.ufo.init.ModMenus;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import com.raishxn.ufo.client.renderer.StellarNexusRenderer;
+import com.raishxn.ufo.init.ModBlockEntities;
 
 @Mod(value = UfoMod.MOD_ID, dist = Dist.CLIENT)
 public class UfoModClient {
@@ -33,6 +37,8 @@ public class UfoModClient {
         NeoForge.EVENT_BUS.register(ModTooltipEventHandler.class);
         eventBus.addListener(this::onRegisterKeyMappings);
         eventBus.addListener(this::registerScreens); // <--- Adicione esta linha
+        eventBus.addListener(this::registerRenderers);
+        eventBus.addListener(this::registerAdditionalModels);
     }
 
     private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
@@ -46,6 +52,14 @@ public class UfoModClient {
     private void registerScreens(RegisterMenuScreensEvent event) {
         InitScreens.register(event, UFOMenus.DIMENSIONAL_MATTER_ASSEMBLER.get(), DimensionalMatterAssemblerScreen::new, "/screens/dimensional_matter_assembler.json");
         event.register(ModMenus.STELLAR_NEXUS_CONTROLLER_MENU.get(), StellarNexusControllerScreen::new);
+    }
+
+    private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModBlockEntities.STELLAR_NEXUS_CONTROLLER_BE.get(), StellarNexusRenderer::new);
+    }
+
+    private void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
+        event.register(new net.minecraft.client.resources.model.ModelResourceLocation(StellarNexusRenderer.STAR_MODEL, "inventory"));
     }
 
 

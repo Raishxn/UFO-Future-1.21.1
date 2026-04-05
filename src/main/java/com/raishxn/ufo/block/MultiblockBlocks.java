@@ -86,7 +86,7 @@ public class MultiblockBlocks {
                     .strength(25.0f, 600.0f)
                     .requiresCorrectToolForDrops()));
 
-    public static final DeferredBlock<MassiveOutputHatchBlock> COOLANT_FLUID_HATCH = BLOCKS.register("coolant_fluid_hatch",
+    public static final DeferredBlock<MassiveOutputHatchBlock> STELLAR_FUEL_HATCH = BLOCKS.register("stellar_fuel_hatch",
             () -> new MassiveOutputHatchBlock(BlockBehaviour.Properties.of()
                     .strength(25.0f, 600.0f)
                     .requiresCorrectToolForDrops()));

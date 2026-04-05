@@ -20,45 +20,26 @@ public class GhostHologramRenderer {
 
     private static BlockPos activeControllerPos = null;
     private static net.minecraft.core.Direction activeFacing = null;
+    private static java.util.List<HologramBlock> cachedBlocks = new java.util.ArrayList<>();
+
+    private record HologramBlock(BlockPos pos, BlockState state) {}
     
     public static void toggleHologram(BlockPos pos, net.minecraft.core.Direction facing) {
         if (activeControllerPos != null && activeControllerPos.equals(pos)) {
             activeControllerPos = null;
             activeFacing = null;
+            cachedBlocks.clear();
         } else {
             activeControllerPos = pos;
             activeFacing = facing;
+            rebuildCache();
         }
     }
     
-    public static boolean isActive(BlockPos pos) {
-        return activeControllerPos != null && activeControllerPos.equals(pos);
-    }
-
-    @SubscribeEvent
-    public static void onRenderLevelStage(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
+    private static void rebuildCache() {
+        cachedBlocks.clear();
         if (activeControllerPos == null || activeFacing == null) return;
-
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null) return;
-
-        if (!mc.level.getBlockState(activeControllerPos).is(com.raishxn.ufo.block.MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get())) {
-            activeControllerPos = null;
-            return;
-        }
-
-        if (mc.player.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(activeControllerPos)) > 64 * 64) {
-            return;
-        }
-
-        PoseStack poseStack = event.getPoseStack();
-        net.minecraft.world.phys.Vec3 cameraPos = event.getCamera().getPosition();
-        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
-
-        poseStack.pushPose();
-        poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-
+        
         MultiblockPattern pattern = StellarNexusPatternFactory.getPattern();
         Map<Character, BlockState> defaults = StellarNexusPatternFactory.getDefaultCreativeStates();
 
@@ -81,31 +62,64 @@ public class GhostHologramRenderer {
                     int offsetZ = z - controllerRow;
 
                     BlockPos worldPos = getRotatedPos(activeControllerPos, offsetX, offsetY, offsetZ, activeFacing);
-
-                    BlockState existingState = mc.level.getBlockState(worldPos);
-                    if (!existingState.isAir() && existingState.getFluidState().isEmpty()) {
-                        continue;
-                    }
-
-                    poseStack.pushPose();
-                    poseStack.translate(worldPos.getX(), worldPos.getY(), worldPos.getZ());
-                    
-                    RenderType renderType = net.minecraft.client.renderer.RenderType.translucent();
-                    com.mojang.blaze3d.vertex.VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
-                    
-                    mc.getBlockRenderer().renderBatched(
-                            targetState,
-                            worldPos,
-                            mc.level,
-                            poseStack,
-                            vertexConsumer,
-                            true,
-                            mc.level.getRandom()
-                    );
-                    
-                    poseStack.popPose();
+                    cachedBlocks.add(new HologramBlock(worldPos, targetState));
                 }
             }
+        }
+    }
+    
+    public static boolean isActive(BlockPos pos) {
+        return activeControllerPos != null && activeControllerPos.equals(pos);
+    }
+
+    @SubscribeEvent
+    public static void onRenderLevelStage(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
+        if (activeControllerPos == null || activeFacing == null) return;
+
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null || mc.player == null) return;
+
+        if (!mc.level.getBlockState(activeControllerPos).is(com.raishxn.ufo.block.MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get())) {
+            activeControllerPos = null;
+            cachedBlocks.clear();
+            return;
+        }
+
+        if (mc.player.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(activeControllerPos)) > 64 * 64) {
+            return;
+        }
+
+        PoseStack poseStack = event.getPoseStack();
+        net.minecraft.world.phys.Vec3 cameraPos = event.getCamera().getPosition();
+        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
+
+        poseStack.pushPose();
+        poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+
+        RenderType renderType = net.minecraft.client.renderer.RenderType.translucent();
+        com.mojang.blaze3d.vertex.VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
+
+        for (HologramBlock hb : cachedBlocks) {
+            BlockState existingState = mc.level.getBlockState(hb.pos());
+            if (!existingState.isAir() && existingState.getFluidState().isEmpty()) {
+                continue;
+            }
+
+            poseStack.pushPose();
+            poseStack.translate(hb.pos().getX(), hb.pos().getY(), hb.pos().getZ());
+            
+            mc.getBlockRenderer().renderBatched(
+                    hb.state(),
+                    hb.pos(),
+                    mc.level,
+                    poseStack,
+                    vertexConsumer,
+                    true,
+                    mc.level.getRandom()
+            );
+            
+            poseStack.popPose();
         }
         
         bufferSource.endBatch();
