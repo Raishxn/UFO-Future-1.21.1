@@ -22,7 +22,7 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public StellarNexusControllerMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(3));
+        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(9));
     }
 
     public StellarNexusControllerMenu(int id, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -32,10 +32,10 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
         this.levelAccess = ContainerLevelAccess.create(entity.getLevel(), entity.getBlockPos());
         this.data = data;
         
-        // Data mapping
-        // 0 = progress
-        // 1 = total time (cached from recipe or BE)
-        // 2 = assembled (0 or 1)
+        // Data mapping:
+        // 0 = progress, 1 = maxProgress, 2 = assembled
+        // 3 = fieldLevel, 4 = fuelPercent, 5 = running
+        // 6 = heatLevel (0-1000), 7 = safeMode, 8 = cooldownTimer
         addDataSlots(this.data);
     }
 
@@ -53,6 +53,31 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
 
     public int getTotalTime() {
         return this.data.get(1);
+    }
+
+    public int getFieldLevel() {
+        return this.data.get(3);
+    }
+
+    public int getFuelPercent() {
+        return this.data.get(4);
+    }
+
+    public boolean isRunning() {
+        return this.data.get(5) == 1;
+    }
+
+    /** Heat level 0-1000 (display as 0.0% to 100.0%) */
+    public int getHeatLevel() {
+        return this.data.get(6);
+    }
+
+    public boolean isSafeMode() {
+        return this.data.get(7) == 1;
+    }
+
+    public int getCooldownTimer() {
+        return this.data.get(8);
     }
 
     @Override

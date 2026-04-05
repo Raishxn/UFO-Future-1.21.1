@@ -22,7 +22,7 @@
     { "#": 2000000, "#t": "ae2:i", "id": "minecraft:copper_ingot" }
   ],
   "fluid_outputs": [],
-  "energy": 2500000,
+  "fuel": 2500000,
   "time": 24000,
   "cooling_level": 1,
   "field_tier": 1

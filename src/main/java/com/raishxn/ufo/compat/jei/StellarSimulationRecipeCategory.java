@@ -49,10 +49,6 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     private static final int WIDTH = 191;
     private static final int HEIGHT = 128;
 
-    // Progress bar
-    private static final int PROGRESS_X = 94;
-    private static final int PROGRESS_Y = 38;
-
     private final IDrawable icon;
     private final IDrawable background;
 
@@ -202,9 +198,9 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         // "só mostrs os valores dos outputs/ intpus das recipes ao passar o mouse por cima no JEI porque os valores que você tinha colocado estão muito grandes. ou então formate para ficar perfeito."
         // That means the values LIKE ENERGY/COOLING should be formatted. The user explicitly defined "box onde mostra o consumo". Let's draw formatted strings centered in those boxes!
 
-        // Box: AE/t: 10,74 to 49,84 -> center is (29, 75)
-        String energyStr = formatAmount(recipe.getEnergy()) + "/t";
-        drawScaledCenteredString(gfx, font, energyStr, 29, 76, 0x00FFFF, 0.8f);
+        // Box: Fuel: 10,74 to 49,84 -> center is (29, 75)
+        String fuelStr = formatAmount(recipe.getFuelCost()) + " AE";
+        drawScaledCenteredString(gfx, font, fuelStr, 29, 76, 0x00FFFF, 0.8f);
 
         // Box: Cooling: 53,74 to 98,84 -> center is (75, 75)
         String coolingStr = "Lv." + recipe.getCoolingLevel();
@@ -239,7 +235,7 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
         // Add tooltips matching the box layout for clarity:
         if (mouseY >= 74 && mouseY <= 84 && mouseX >= 10 && mouseX <= 49) {
-            tips.add(Component.literal("§b⚡ Energy Demand: " + formatAmount(recipe.getEnergy()) + " AE/t"));
+            tips.add(Component.literal("§b⚡ Total Fuel Required: " + formatAmount(recipe.getFuelCost()) + " AE"));
             return tips;
         }
         if (mouseY >= 74 && mouseY <= 84 && mouseX >= 53 && mouseX <= 98) {

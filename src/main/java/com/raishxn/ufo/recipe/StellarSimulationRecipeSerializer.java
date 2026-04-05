@@ -30,7 +30,7 @@ import appeng.api.stacks.GenericStack;
  *   "fluid_inputs": [...],
  *   "item_outputs": [...],
  *   "fluid_outputs": [...],
- *   "energy": 5000000,
+ *   "fuel": 500000000,
  *   "time": 24000,
  *   "cooling_level": 2,
  *   "field_tier": 1
@@ -56,8 +56,8 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
                     .forGetter(StellarSimulationRecipe::getItemOutputs),
             GenericStack.CODEC.listOf().fieldOf("fluid_outputs")
                     .forGetter(StellarSimulationRecipe::getFluidOutputs),
-            Codec.INT.fieldOf("energy")
-                    .forGetter(StellarSimulationRecipe::getEnergy),
+            Codec.INT.fieldOf("fuel")
+                    .forGetter(StellarSimulationRecipe::getFuelCost),
             Codec.INT.fieldOf("time")
                     .forGetter(StellarSimulationRecipe::getTime),
             Codec.INT.optionalFieldOf("cooling_level", 0)
@@ -90,7 +90,7 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
         GenericStack.STREAM_CODEC.apply(net.minecraft.network.codec.ByteBufCodecs.list())
                 .encode(buf, recipe.getFluidOutputs());
         // Scalars
-        buf.writeInt(recipe.getEnergy());
+        buf.writeInt(recipe.getFuelCost());
         buf.writeInt(recipe.getTime());
         buf.writeInt(recipe.getCoolingLevel());
         buf.writeInt(recipe.getFieldTier());
@@ -105,14 +105,14 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
                 .apply(net.minecraft.network.codec.ByteBufCodecs.list()).decode(buf);
         var fluidOutputs = GenericStack.STREAM_CODEC
                 .apply(net.minecraft.network.codec.ByteBufCodecs.list()).decode(buf);
-        int energy = buf.readInt();
+        int fuel = buf.readInt();
         int time = buf.readInt();
         int coolingLevel = buf.readInt();
         int fieldTier = buf.readInt();
 
         return new StellarSimulationRecipe(
                 itemInputs, fluidInputs, itemOutputs, fluidOutputs,
-                energy, time, coolingLevel, fieldTier);
+                fuel, time, coolingLevel, fieldTier);
     }
 
     // ═══════════════════════════════════════════════════════════

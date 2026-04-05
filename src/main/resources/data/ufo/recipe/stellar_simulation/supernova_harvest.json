@@ -42,7 +42,7 @@
     { "#": 1000000, "#t": "ae2:i", "id": "minecraft:nether_star" }
   ],
   "fluid_outputs": [],
-  "energy": 10000000,
+  "fuel": 10000000,
   "time": 36000,
   "cooling_level": 3,
   "field_tier": 3

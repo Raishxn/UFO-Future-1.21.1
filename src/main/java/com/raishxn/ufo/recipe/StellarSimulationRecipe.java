@@ -44,7 +44,7 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
     protected final List<GenericStack> itemOutputs;
     protected final List<GenericStack> fluidOutputs;
 
-    protected final int energy;       // AE power per tick
+    protected final int fuel;         // Total AE fuel cost for the simulation
     protected final int time;         // Total ticks for the simulation
     protected final int coolingLevel; // 0 = none, 1 = basic, 2 = advanced, 3 = extreme
     protected final int fieldTier;    // 1 = Mk.I, 2 = Mk.II, 3 = Mk.III
@@ -54,7 +54,7 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
             List<IngredientStack.Fluid> fluidInputs,
             List<GenericStack> itemOutputs,
             List<GenericStack> fluidOutputs,
-            int energy,
+            int fuel,
             int time,
             int coolingLevel,
             int fieldTier) {
@@ -62,7 +62,7 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
         this.fluidInputs = fluidInputs;
         this.itemOutputs = itemOutputs;
         this.fluidOutputs = fluidOutputs;
-        this.energy = energy;
+        this.fuel = fuel;
         this.time = time > 0 ? time : 24000; // default 20 minutes
         this.coolingLevel = Math.clamp(coolingLevel, 0, 3);
         this.fieldTier = Math.clamp(fieldTier, 1, 3);
@@ -157,9 +157,9 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
         return validInputs;
     }
 
-    /** AE power consumed per tick. */
-    public int getEnergy() {
-        return energy;
+    /** Total AE fuel cost for the entire simulation. */
+    public int getFuelCost() {
+        return fuel;
     }
 
     /** Total ticks for the simulation cycle. */
@@ -178,11 +178,10 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
     }
 
     /**
-     * Total energy cost for the entire simulation.
-     * @return energy per tick × total ticks
+     * Total fuel cost (same as getFuelCost for display).
      */
     public long getTotalEnergy() {
-        return (long) energy * time;
+        return fuel;
     }
 
     /**

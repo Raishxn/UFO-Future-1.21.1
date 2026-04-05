@@ -42,7 +42,7 @@
   "fluid_outputs": [
     { "#": 50000, "#t": "ae2:f", "id": "ufo:liquid_starlight" }
   ],
-  "energy": 15000000,
+  "fuel": 15000000,
   "time": 48000,
   "cooling_level": 3,
   "field_tier": 3

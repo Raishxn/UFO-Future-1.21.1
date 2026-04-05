@@ -28,7 +28,7 @@
     { "#": 2000000, "#t": "ae2:i", "id": "minecraft:ender_pearl" }
   ],
   "fluid_outputs": [],
-  "energy": 5000000,
+  "fuel": 5000000,
   "time": 30000,
   "cooling_level": 2,
   "field_tier": 2

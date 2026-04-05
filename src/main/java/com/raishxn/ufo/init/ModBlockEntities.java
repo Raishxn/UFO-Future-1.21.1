@@ -91,7 +91,10 @@ public class ModBlockEntities {
                 var type = BlockEntityType.Builder.of(
                         (pos, state) -> new com.raishxn.ufo.block.entity.MassiveOutputHatchBE(typeHolder.get(), pos, state),
                         com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get(),
-                        com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()
+                        com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get(),
+                        com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get(),
+                        com.raishxn.ufo.block.MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get(),
+                        com.raishxn.ufo.block.MultiblockBlocks.COOLANT_FLUID_HATCH.get()
                 ).build(null);
                 typeHolder.set(type);
                 // Register item mapping for AE2 wrench/network tool compatibility
