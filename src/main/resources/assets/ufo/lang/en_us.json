@@ -214,5 +214,13 @@
   "recipe.ufo.stellar_simulation.diamond_pressure": "Diamond Pressure",
   "recipe.ufo.stellar_simulation.neutron_bombardment": "Neutron Bombardment",
   "recipe.ufo.stellar_simulation.supernova_harvest": "Supernova Harvest",
-  "recipe.ufo.stellar_simulation.stellar_synthesis": "Stellar Synthesis"
+  "recipe.ufo.stellar_simulation.stellar_synthesis": "Stellar Synthesis",
+  "gui.ufo.previous": "Previous",
+  "gui.ufo.next": "Next",
+  
+  "item.ufo.structure_scanner": "Structure Scanner",
+  "item.ufo.structure_scanner.tooltip.0": "Right-click on a multiblock controller",
+  "item.ufo.structure_scanner.tooltip.1": "to detect missing or invalid structure parts.",
+  "message.ufo.structure_formed": "Structure is perfectly formed!",
+  "message.ufo.structure_error": "Missing or Invalid Part at %s, %s, %s. Expected: %s"
 }

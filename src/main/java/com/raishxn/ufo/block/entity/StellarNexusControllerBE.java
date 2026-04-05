@@ -114,10 +114,32 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     @Override
     public void scanStructure(Level level) {
         MultiblockPattern pattern = getPattern();
-        MultiblockPattern.MatchResult result = pattern.match(level, this.worldPosition);
+        BlockState currentState = level.getBlockState(this.worldPosition);
+        net.minecraft.core.Direction facing = net.minecraft.core.Direction.NORTH;
+        if (currentState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING)) {
+            facing = currentState.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING);
+        }
+        MultiblockPattern.MatchResult result = pattern.match(level, this.worldPosition, facing);
 
         boolean wasAssembled = this.assembled;
         this.assembled = result.isValid();
+
+        // Global Hatch Validation
+        if (this.assembled) {
+            int itemOutputs = 0;
+            int fluidOutputs = 0;
+            for (BlockPos partPos : result.partPositions()) {
+                Block block = level.getBlockState(partPos).getBlock();
+                if (block == com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get()) itemOutputs++;
+                if (block == com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()) fluidOutputs++;
+            }
+
+            if (itemOutputs != 1 || fluidOutputs != 1) {
+                this.assembled = false;
+                // A structure scanner click will just say "invalid" at the controller if we don't pass an error,
+                // but at least it successfully prevents formation.
+            }
+        }
 
         // Update tracked parts
         this.parts.clear();
@@ -134,10 +156,10 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
         // Update block state visual
         if (wasAssembled != this.assembled) {
-            BlockState currentState = level.getBlockState(this.worldPosition);
-            if (currentState.getBlock() instanceof StellarNexusControllerBlock) {
+            BlockState finalState = level.getBlockState(this.worldPosition);
+            if (finalState.getBlock() instanceof StellarNexusControllerBlock) {
                 level.setBlock(this.worldPosition,
-                        currentState.setValue(StellarNexusControllerBlock.ASSEMBLED, this.assembled),
+                        finalState.setValue(StellarNexusControllerBlock.ASSEMBLED, this.assembled),
                         Block.UPDATE_CLIENTS);
             }
             this.setChanged();

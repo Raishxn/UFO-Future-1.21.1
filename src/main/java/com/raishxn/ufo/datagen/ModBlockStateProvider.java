@@ -50,6 +50,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         stellarNexusControllerBlock(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER);
         directionalMultiblockCube(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH);
         directionalMultiblockCube(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH);
+        directionalMultiblockCube(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH);
+        directionalMultiblockCube(MultiblockBlocks.AE_ENERGY_INPUT_HATCH);
+        directionalMultiblockCube(MultiblockBlocks.COOLANT_FLUID_HATCH);
         multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1);
         multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2);
         multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3);

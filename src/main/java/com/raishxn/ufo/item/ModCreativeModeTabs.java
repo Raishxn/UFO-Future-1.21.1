@@ -92,6 +92,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.SCAR.get());
                         output.accept(ModItems.SCRAP.get());
                         output.accept(ModItems.SCRAP_BOX.get());
+                        output.accept(ModItems.STRUCTURE_SCANNER.get());
                         output.accept(ModItems.DUST_CRYOTHEUM.get());
                         output.accept(ModItems.DUST_BLIZZ.get());
                         output.accept(ModItems.OBSIDIAN_MATRIX.get());

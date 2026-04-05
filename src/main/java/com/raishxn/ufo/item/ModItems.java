@@ -206,6 +206,18 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get(), new Item.Properties(),
                      ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.BLUE));
 
+     public static final DeferredItem<Item> ME_MASSIVE_INPUT_HATCH = ITEMS.register("me_massive_input_hatch",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.WHITE));
+
+     public static final DeferredItem<Item> AE_ENERGY_INPUT_HATCH = ITEMS.register("ae_energy_input_hatch",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get(), new Item.Properties(),
+                     ChatFormatting.YELLOW, ChatFormatting.GOLD, ChatFormatting.WHITE));
+
+     public static final DeferredItem<Item> COOLANT_FLUID_HATCH = ITEMS.register("coolant_fluid_hatch",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.COOLANT_FLUID_HATCH.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.BLUE, ChatFormatting.DARK_BLUE));
+
      public static final DeferredItem<Item> STELLAR_FIELD_GENERATOR_T1 = ITEMS.register("stellar_field_generator_t1",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get(), new Item.Properties(),
                      ChatFormatting.WHITE, ChatFormatting.GRAY, ChatFormatting.YELLOW));
@@ -280,6 +292,10 @@ public class ModItems {
             () -> new Item(new Item.Properties()
                     .stacksTo(16)
                     .rarity(Rarity.UNCOMMON)));
+
+    public static final DeferredItem<Item> STRUCTURE_SCANNER = ITEMS.register("structure_scanner",
+            () -> new StructureScannerItem(new Item.Properties()
+                    .rarity(Rarity.RARE)));
 
     // ---------- Esferas / componentes avançados ----------
     public static final DeferredItem<Item> NEUTRONIUM_SPHERE = ITEMS.register("neutronium_sphere",

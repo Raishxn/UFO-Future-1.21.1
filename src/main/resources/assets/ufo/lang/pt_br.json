@@ -214,5 +214,13 @@
   "recipe.ufo.stellar_simulation.diamond_pressure": "Pressão de Diamante",
   "recipe.ufo.stellar_simulation.neutron_bombardment": "Bombardeamento de Nêutrons",
   "recipe.ufo.stellar_simulation.supernova_harvest": "Colheita de Supernova",
-  "recipe.ufo.stellar_simulation.stellar_synthesis": "Síntese Estelar"
+  "recipe.ufo.stellar_simulation.stellar_synthesis": "Síntese Estelar",
+  "gui.ufo.previous": "Anterior",
+  "gui.ufo.next": "Próximo",
+  
+  "item.ufo.structure_scanner": "Escâner de Estrutura",
+  "item.ufo.structure_scanner.tooltip.0": "Clique com o botão direito em um controlador",
+  "item.ufo.structure_scanner.tooltip.1": "para detectar blocos faltando ou inválidos.",
+  "message.ufo.structure_formed": "A estrutura está perfeitamente formada!",
+  "message.ufo.structure_error": "Bloco Inválido ou Ausente em %s, %s, %s. Esperado: %s"
 }

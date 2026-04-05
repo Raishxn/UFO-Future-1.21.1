@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.client.gui.components.Tooltip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,14 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
     private List<RecipeHolder<StellarSimulationRecipe>> availableRecipes = new ArrayList<>();
     private int currentRecipeIndex = 0;
+    
+    private Button prevButton;
+    private Button nextButton;
 
     public StellarNexusControllerScreen(StellarNexusControllerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        this.imageWidth = 200;
-        this.imageHeight = 120;
+        this.imageWidth = 191;
+        this.imageHeight = 160;
     }
 
     @Override
@@ -53,12 +57,30 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
             }
         }
 
-        int recipeY = this.topPos + 45;
-        this.addRenderableWidget(Button.builder(Component.literal("◀"), btn -> cycleRecipe(-1))
-                .bounds(this.leftPos + 20, recipeY, 20, 20).build());
+        int recipeY = this.topPos + 64;
+        this.prevButton = this.addRenderableWidget(Button.builder(Component.literal("<"), btn -> cycleRecipe(-1))
+                .bounds(this.leftPos + 19, recipeY, 22, 22).build());
 
-        this.addRenderableWidget(Button.builder(Component.literal("▶"), btn -> cycleRecipe(1))
-                .bounds(this.leftPos + this.imageWidth - 40, recipeY, 20, 20).build());
+        this.nextButton = this.addRenderableWidget(Button.builder(Component.literal(">"), btn -> cycleRecipe(1))
+                .bounds(this.leftPos + 150, recipeY, 22, 22).build());
+        
+        updateButtonTooltips();
+    }
+
+    private void updateButtonTooltips() {
+        if (this.availableRecipes.isEmpty() || this.prevButton == null || this.nextButton == null) return;
+        
+        int prevIndex = (this.currentRecipeIndex - 1 + this.availableRecipes.size()) % this.availableRecipes.size();
+        int nextIndex = (this.currentRecipeIndex + 1) % this.availableRecipes.size();
+        
+        ResourceLocation prevId = this.availableRecipes.get(prevIndex).id();
+        ResourceLocation nextId = this.availableRecipes.get(nextIndex).id();
+        
+        Component prevComp = Component.translatable("gui.ufo.previous").append(": ").append(Component.literal(formatRecipeId(prevId)));
+        Component nextComp = Component.translatable("gui.ufo.next").append(": ").append(Component.literal(formatRecipeId(nextId)));
+        
+        this.prevButton.setTooltip(Tooltip.create(prevComp));
+        this.nextButton.setTooltip(Tooltip.create(nextComp));
     }
 
     private void cycleRecipe(int delta) {
@@ -71,6 +93,7 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
         ResourceLocation newId = this.availableRecipes.get(this.currentRecipeIndex).id();
         ModPackets.sendToServer(new PacketChangeStellarRecipe(this.menu.getBlockEntity().getBlockPos(), newId));
+        updateButtonTooltips();
     }
 
     @Override
@@ -78,15 +101,16 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         
         // Draw the background texture (you'll create this)
-        guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        // Draw 191x160 from texture.
+        guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, 191, 160);
 
         // Progress Bar Calculation
         int p = this.menu.getProgress();
         int max = this.menu.getTotalTime();
         if (max > 0 && p > 0) {
-            int progressWidth = (int) ((float) p / max * 160.0f);
-            // Assuming your texture has the filled progress bar below the main GUI at 0, 120
-            guiGraphics.blit(TEXTURE, this.leftPos + 20, this.topPos + 80, 0, 120, progressWidth, 10);
+            int progressWidth = (int) ((float) p / max * 157.0f); // 174 - 17 = 157
+            // Target Box: (17, 106). Source Box: u=17, v=180, width=157, height=12
+            guiGraphics.blit(TEXTURE, this.leftPos + 17, this.topPos + 106, 17, 180, progressWidth, 12);
         }
     }
 
@@ -99,32 +123,63 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        // Render Title
-        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 0x404040, false);
+        // Removed Title rendering as requested.
 
-        // Render Status
+        // Render Status Mode (13,43)
         Component statusText = this.menu.isAssembled() ? 
-                Component.literal("Status: Assembled").withStyle(net.minecraft.ChatFormatting.GREEN) : 
-                Component.literal("Status: Incomplete").withStyle(net.minecraft.ChatFormatting.RED);
+                Component.literal("Assembled").withStyle(net.minecraft.ChatFormatting.GREEN) : 
+                Component.literal("Offline").withStyle(net.minecraft.ChatFormatting.RED);
         
-        guiGraphics.drawString(this.font, statusText, 10, 25, 0xFFFFFF);
+        guiGraphics.drawString(this.font, statusText, 15, 44, 0xFFFFFF);
+
+        // Render Coolant Placeholder (125,43)
+        guiGraphics.drawString(this.font, "Stable", 127, 44, 0x00FFFF);
 
         // Render Recipe Selection
         Component recipeName = Component.literal("No Program");
         if (!this.availableRecipes.isEmpty()) {
-            recipeName = Component.translatable("recipe.ufo.stellar_simulation." + this.availableRecipes.get(this.currentRecipeIndex).id().getPath());
+            recipeName = Component.literal(formatRecipeId(this.availableRecipes.get(this.currentRecipeIndex).id()));
         }
         
         int textWidth = this.font.width(recipeName);
-        int textX = (this.imageWidth - textWidth) / 2;
-        guiGraphics.drawString(this.font, recipeName, textX, 51, 0xFFFFFF); // Centered between the arrows
+        // Center space is from X=44 to X=147 (width 103)
+        int textX = 44 + ((103 - textWidth) / 2);
+        // Box is Y=66 to 86, so center is roughly 71
+        guiGraphics.drawString(this.font, recipeName, textX, 72, 0xFFFFFF);
         
-        // Render Progress Text
+        // Render Progress Text (22,95)
         int p = this.menu.getProgress();
         int max = this.menu.getTotalTime();
         if (max > 0) {
             String prog = String.format("%.1f %%", (p / (float)max) * 100f);
-            guiGraphics.drawString(this.font, prog, 20, 70, 0xAAAAAA);
+            guiGraphics.drawString(this.font, prog, 22, 95, 0x00FF00); // Green color for %.
         }
+        
+        // Render Field Level (13,129 to 66,139)
+        String fieldLevel = "Max"; // To be synced later
+        guiGraphics.drawString(this.font, fieldLevel, 15, 131, 0xAA00AA);
+        
+        // Render Current Fuel (125,129 to 178,139)
+        String fuelAmount = "100%"; // To be synced later
+        guiGraphics.drawString(this.font, fuelAmount, 127, 131, 0x00AAAA);
+    }
+
+    private String formatRecipeId(ResourceLocation id) {
+        String path = id.getPath();
+        int slashIndex = path.lastIndexOf('/');
+        if (slashIndex != -1) {
+            path = path.substring(slashIndex + 1);
+        }
+        if (path.startsWith("stellar_")) {
+            path = path.substring("stellar_".length());
+        }
+        String[] words = path.split("_");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            if (word.length() > 0) {
+                sb.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 }

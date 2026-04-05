@@ -27,6 +27,25 @@ import java.util.List;
 public class ClientForgeEvents {
 
     @SubscribeEvent
+    public static void onRightClickBlock(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+        if (event.getLevel().isClientSide() && event.getEntity().isShiftKeyDown() && event.getItemStack().isEmpty()) {
+            net.minecraft.world.level.block.state.BlockState state = event.getLevel().getBlockState(event.getPos());
+            if (state.is(com.raishxn.ufo.block.MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get())) {
+                net.minecraft.core.Direction facing = state.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING);
+                com.raishxn.ufo.client.GhostHologramRenderer.toggleHologram(event.getPos(), facing);
+                
+                if (com.raishxn.ufo.client.GhostHologramRenderer.isActive(event.getPos())) {
+                    event.getEntity().displayClientMessage(Component.literal("§d[Stellar Nexus] §7Ghost Hologram rendering ENABLED").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE), true);
+                } else {
+                    event.getEntity().displayClientMessage(Component.literal("§d[Stellar Nexus] §7Ghost Hologram rendering DISABLED").withStyle(net.minecraft.ChatFormatting.GRAY), true);
+                }
+                event.setCanceled(true);
+                event.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onRenderHighlight(RenderHighlightEvent.Block event) {
         Player player = Minecraft.getInstance().player;
         if (player == null) {

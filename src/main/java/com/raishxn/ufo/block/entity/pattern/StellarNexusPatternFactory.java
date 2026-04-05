@@ -2,6 +2,7 @@ package com.raishxn.ufo.block.entity.pattern;
 
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 
 public class StellarNexusPatternFactory {
@@ -90,8 +91,11 @@ public class StellarNexusPatternFactory {
      * into the Ufo MultiblockPattern (Y_BottomToTop, Z, X).
      */
     public static MultiblockPattern getPattern() {
-        // Z-axis layers (18 slices deep total)
-        int depthSize = EOH_RAW_AISLES.length;
+        // Z-axis layers (front half + controller pane)
+        int halfDepthSize = EOH_RAW_AISLES.length; // 18
+        // Total depth = 18 (front->center) + 17 (center-1 -> back) = 35
+        int totalDepthSize = halfDepthSize * 2 - 1;
+        
         // Y-axis height (33 rows)
         int heightSize = EOH_RAW_AISLES[0].length;
         
@@ -100,47 +104,79 @@ public class StellarNexusPatternFactory {
                 
         // MultiblockPattern builds layer by layer from the bottom up.
         // EOH_RAW_AISLES has strings ordered from top (index 0) to bottom (index 32).
-        for (int y = 0; y < heightSize; y++) { // y is the index of layer starting from bottom
-            int gtY = (heightSize - 1) - y; // The index in the GT array (0 is top, 32 is bottom)
+        for (int y = 0; y < heightSize; y++) {
+            int gtY = (heightSize - 1) - y;
             
-            String[] layerStrLines = new String[depthSize];
-            for (int z = 0; z < depthSize; z++) { // z represents the aisle array (depth)
-                layerStrLines[z] = EOH_RAW_AISLES[z][gtY];
+            String[] layerStrLines = new String[totalDepthSize];
+            for (int z = 0; z < totalDepthSize; z++) {
+                // If z is past the center pane, we reflect it
+                int mappedZ = z < halfDepthSize ? z : (halfDepthSize - 1) - (z - halfDepthSize + 1);
+                layerStrLines[z] = EOH_RAW_AISLES[mappedZ][gtY];
             }
             builder.layer(layerStrLines);
         }
 
         // Apply predicates according to user request mapping
+        // Apply predicates according to user request mapping
         builder.where('A', (state, level, pos) -> {
             Block block = state.getBlock();
-            return block == MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get();
-        });
+            return block == MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()
+                || block == MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get()
+                || block == MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()
+                || block == MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get()
+                || block == MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()
+                || block == MultiblockBlocks.COOLANT_FLUID_HATCH.get();
+        }, Component.literal("Entropy Singularity Casing or ME Hatches"));
+        
         builder.where('B', (state, level, pos) -> {
             Block block = state.getBlock();
             return block == MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get()
                 || block == MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get()
-                || block == MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get();
-        });
+                || block == MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()
+                || block == MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get()
+                || block == MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()
+                || block == MultiblockBlocks.COOLANT_FLUID_HATCH.get();
+        }, Component.literal("Core Casing or Huge ME Hatch"));
+        
         builder.where('D', (state, level, pos) -> {
             Block block = state.getBlock();
             return block == MultiblockBlocks.ENTROPY_COOLANT_MATRIX_COMPONENTS.get();
-        });
+        }, Component.translatable(MultiblockBlocks.ENTROPY_COOLANT_MATRIX_COMPONENTS.get().getDescriptionId()));
+        
         builder.where('E', (state, level, pos) -> {
             Block block = state.getBlock();
             return block == MultiblockBlocks.ENTROPY_CATALYST_BANK_COMPONENTS.get();
-        });
+        }, Component.translatable(MultiblockBlocks.ENTROPY_CATALYST_BANK_COMPONENTS.get().getDescriptionId()));
+        
         builder.where('F', (state, level, pos) -> {
             Block block = state.getBlock();
             return block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get()
                 || block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get()
                 || block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get();
-        });
+        }, Component.literal("Stellar Field Generator"));
+        
         builder.where('G', (state, level, pos) -> {
             Block block = state.getBlock();
             return block == MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get();
-        });
-        builder.where(' ', (state, level, pos) -> state.isAir());
+        }, Component.translatable(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get().getDescriptionId()));
+        
+        builder.where(' ', (state, level, pos) -> state.isAir(), Component.literal("Air / Empty Space"));
 
         return builder.build();
+    }
+
+    /**
+     * Returns the default block states to place when auto-building the pattern in Creative Mode.
+     */
+    public static java.util.Map<Character, net.minecraft.world.level.block.state.BlockState> getDefaultCreativeStates() {
+        return java.util.Map.of(
+            'A', MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get().defaultBlockState(),
+            'B', MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get().defaultBlockState(),
+            'D', MultiblockBlocks.ENTROPY_COOLANT_MATRIX_COMPONENTS.get().defaultBlockState(),
+            'E', MultiblockBlocks.ENTROPY_CATALYST_BANK_COMPONENTS.get().defaultBlockState(),
+            'F', MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get().defaultBlockState(),
+            'G', MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get().defaultBlockState(),
+            ' ', net.minecraft.world.level.block.Blocks.AIR.defaultBlockState()
+        );
     }
 }

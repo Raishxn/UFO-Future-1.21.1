@@ -46,31 +46,23 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
             RecipeType.create(UfoMod.MOD_ID, "stellar_simulation", StellarSimulationRecipe.class);
 
     // Layout constants
-    private static final int WIDTH = 176;
-    private static final int HEIGHT = 120;
-
-    // Input area (left side)
-    private static final int INPUT_START_X = 4;
-    private static final int INPUT_START_Y = 22;
-
-    // Output area (right side)
-    private static final int OUTPUT_START_X = 112;
-    private static final int OUTPUT_START_Y = 22;
+    private static final int WIDTH = 191;
+    private static final int HEIGHT = 128;
 
     // Progress bar
-    private static final int PROGRESS_X = 76;
-    private static final int PROGRESS_Y = 32;
-
-    // Info bar
-    private static final int INFO_BAR_Y = 80;
-    private static final int INFO_BAR_H = 36;
+    private static final int PROGRESS_X = 94;
+    private static final int PROGRESS_Y = 38;
 
     private final IDrawable icon;
+    private final IDrawable background;
 
     public StellarSimulationRecipeCategory(IJeiHelpers helpers) {
         var guiHelper = helpers.getGuiHelper();
         icon = guiHelper.createDrawableItemStack(
                 MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get().asItem().getDefaultInstance());
+        background = guiHelper.createDrawable(
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "textures/gui/stellar_nexus_jei.png"),
+                0, 0, WIDTH, HEIGHT);
     }
 
     @Override
@@ -89,6 +81,11 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     }
 
     @Override
+    public IDrawable getBackground() {
+        return background;
+    }
+
+    @Override
     public int getWidth() {
         return WIDTH;
     }
@@ -104,51 +101,75 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, StellarSimulationRecipe recipe, IFocusGroup focuses) {
-        // --- INPUTS (left side) ---
+        // --- INPUTS ---
 
-        // Item inputs: up to 6 slots in a 3×2 grid
+        // Item inputs: 3x3 grid spanning from (11, 16) to (64, 69)
         var itemInputs = recipe.getItemInputs();
-        for (int i = 0; i < itemInputs.size() && i < 6; i++) {
+        for (int i = 0; i < itemInputs.size() && i < 9; i++) {
             if (!itemInputs.get(i).isEmpty()) {
                 int col = i % 3;
                 int row = i / 3;
-                builder.addInputSlot(INPUT_START_X + (col * 18), INPUT_START_Y + (row * 18))
-                        .addIngredients(UfoJeiPlugin.stackOf(itemInputs.get(i)));
+                int finalI = i;
+                builder.addInputSlot(11 + (col * 18), 16 + (row * 18))
+                        .addIngredients(UfoJeiPlugin.stackOf(itemInputs.get(i)))
+                        .addRichTooltipCallback((recipeSlotView, tooltip) -> {
+                            var stacks = UfoJeiPlugin.stackOf(itemInputs.get(finalI));
+                            if (!stacks.isEmpty()) {
+                                tooltip.add(Component.literal("§7Amount Required: §e" + stacks.getItems()[0].getCount()));
+                            }
+                        });
             }
         }
 
-        // Fluid inputs: up to 2 tall fluid columns next to item inputs
+        // Fluid inputs: 3 slots vertically: 71,16 | 71,36 | 71,56 (11x14 dimensions)
         var fluidInputs = recipe.getFluidInputs();
-        for (int i = 0; i < fluidInputs.size() && i < 2; i++) {
+        for (int i = 0; i < fluidInputs.size() && i < 3; i++) {
             if (!fluidInputs.get(i).isEmpty()) {
-                var slot = builder.addInputSlot(INPUT_START_X + 56 + (i * 16), INPUT_START_Y)
-                        .setFluidRenderer(1000000, false, 12, 34);
-                slot.addIngredients(NeoForgeTypes.FLUID_STACK, UfoJeiPlugin.stackOf(fluidInputs.get(i)));
+                int yPos = 16 + (i * 20);
+                int finalI = i;
+                var slot = builder.addInputSlot(71, yPos)
+                        .setFluidRenderer(1000000, false, 11, 14);
+                slot.addIngredients(NeoForgeTypes.FLUID_STACK, UfoJeiPlugin.stackOf(fluidInputs.get(i)))
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> {
+                         var fluids = UfoJeiPlugin.stackOf(fluidInputs.get(finalI));
+                         if (!fluids.isEmpty()) {
+                             tooltip.add(Component.literal("§7Amount Required: §b" + fluids.get(0).getAmount() + " mB"));
+                         }
+                    });
             }
         }
 
-        // --- OUTPUTS (right side) ---
+        // --- OUTPUTS ---
 
-        // Item outputs: up to 6 slots in a 3×2 grid
+        // Item outputs: 3x3 grid starting at (127, 16)
         var itemOutputs = recipe.getItemOutputs();
-        for (int i = 0; i < itemOutputs.size() && i < 6; i++) {
+        for (int i = 0; i < itemOutputs.size() && i < 9; i++) {
             if (itemOutputs.get(i).what() instanceof AEItemKey itemKey) {
                 int col = i % 3;
                 int row = i / 3;
-                // Display count is capped at Integer.MAX_VALUE for ItemStack
-                int displayCount = (int) Math.min(itemOutputs.get(i).amount(), Integer.MAX_VALUE);
-                builder.addOutputSlot(OUTPUT_START_X + (col * 18), OUTPUT_START_Y + (row * 18))
-                        .addItemStack(itemKey.toStack(displayCount));
+                int finalI = i;
+                builder.addOutputSlot(127 + (col * 18), 16 + (row * 18))
+                        .addItemStack(itemKey.toStack(1)) // Show 1 visually to prevent huge text clipping
+                        .addRichTooltipCallback((recipeSlotView, tooltip) -> {
+                            tooltip.add(Component.literal("§7Amount Produced: §e" + formatAmount(itemOutputs.get(finalI).amount())));
+                        });
             }
         }
 
-        // Fluid outputs: column at the right
+        // Fluid outputs: up to 6 slots
         var fluidOutputs = recipe.getFluidOutputs();
-        for (int i = 0; i < fluidOutputs.size() && i < 2; i++) {
+        for (int i = 0; i < fluidOutputs.size() && i < 6; i++) {
             if (fluidOutputs.get(i).what() instanceof AEFluidKey fluidKey) {
-                var slot = builder.addOutputSlot(OUTPUT_START_X + 54 + (i * 16), OUTPUT_START_Y)
-                        .setFluidRenderer(1000000, false, 12, 34);
-                slot.addFluidStack(fluidKey.getFluid(), (int) Math.min(fluidOutputs.get(i).amount(), Integer.MAX_VALUE));
+                int col = i % 3;
+                int row = i / 3;
+                int finalI = i;
+                int xOffsets[] = {127, 148, 169}; // Defined specifically for fluid layout
+                var slot = builder.addOutputSlot(xOffsets[col], 75 + (row * 20))
+                        .setFluidRenderer(1000000, false, 11, 14);
+                slot.addFluidStack(fluidKey.getFluid(), 1000) // Visual minimum to show texture
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> {
+                         tooltip.add(Component.literal("§7Amount Produced: §b" + formatAmount(fluidOutputs.get(finalI).amount()) + " mB"));
+                    });
             }
         }
     }
@@ -167,76 +188,83 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
         var font = Minecraft.getInstance().font;
 
-        // ── Background panel ──
-        gfx.fill(0, 0, WIDTH, HEIGHT, 0xCC1A1A2E);          // Dark purple-black bg
-        gfx.fill(1, 1, WIDTH - 1, HEIGHT - 1, 0xCC0D0D1A);  // Slightly darker inner
+        // Note: The UI image 'stellar_nexus_jei.png' already has titles and backgrounds baked in!
+        // So we only draw dynamic text that is not covered by the background texture.
 
-        // ── Top title area ──
-        gfx.fillGradient(0, 0, WIDTH, 14, 0xFF1E0A3E, 0xFF0E0520);
-        gfx.drawCenteredString(font, "§d§l✦ Stellar Simulation ✦", WIDTH / 2, 3, 0xFFE0B0FF);
+        // ── Progress area ──
+        // From 94, 38 to 114, 49
+        int pWidth = 20;
+        int animWidth = (int) ((System.currentTimeMillis() / 40) % pWidth);
+        gfx.fillGradient(94, 38, 94 + animWidth, 49, 0x558B5CF6, 0x556D28D9);
 
-        // ── Section labels ──
-        gfx.drawString(font, "§7Inputs", INPUT_START_X, INPUT_START_Y - 10, 0xFFAAAAAA, false);
-        gfx.drawString(font, "§7Outputs", OUTPUT_START_X, OUTPUT_START_Y - 10, 0xFFAAAAAA, false);
+        // We DO NOT draw Energy, Cooling, Time here! The user requested we move this information 
+        // to Tooltips or draw them ONLY if we are hovering certain boxes. Wait, the user said:
+        // "só mostrs os valores dos outputs/ intpus das recipes ao passar o mouse por cima no JEI porque os valores que você tinha colocado estão muito grandes. ou então formate para ficar perfeito."
+        // That means the values LIKE ENERGY/COOLING should be formatted. The user explicitly defined "box onde mostra o consumo". Let's draw formatted strings centered in those boxes!
 
-        // ── Progress arrow area ──
-        // Draw a simple animated arrow placeholder
-        gfx.fill(PROGRESS_X, PROGRESS_Y, PROGRESS_X + 24, PROGRESS_Y + 17, 0x44FFFFFF);
-        // Animated fill
-        int animWidth = (int) ((System.currentTimeMillis() / 40) % 24);
-        gfx.fillGradient(PROGRESS_X, PROGRESS_Y, PROGRESS_X + animWidth, PROGRESS_Y + 17,
-                0xAA8B5CF6, 0xAA6D28D9);
-        gfx.drawCenteredString(font, "§f►", PROGRESS_X + 12, PROGRESS_Y + 5, 0xFFFFFFFF);
+        // Box: AE/t: 10,74 to 49,84 -> center is (29, 75)
+        String energyStr = formatAmount(recipe.getEnergy()) + "/t";
+        drawScaledCenteredString(gfx, font, energyStr, 29, 76, 0x00FFFF, 0.8f);
 
-        // ── Info bar (bottom section) ──
-        int infoY = INFO_BAR_Y;
-        gfx.fill(2, infoY, WIDTH - 2, infoY + INFO_BAR_H, 0xCC161625);
+        // Box: Cooling: 53,74 to 98,84 -> center is (75, 75)
+        String coolingStr = "Lv." + recipe.getCoolingLevel();
+        drawScaledCenteredString(gfx, font, coolingStr, 75, 76, 0x00FFFF, 0.8f);
 
-        // Row 1: Energy + Time
-        String energyStr = "§b⚡ " + formatEnergy(recipe.getEnergy()) + "/t";
-        String timeStr = "§e⏱ " + recipe.getFormattedTime();
-        gfx.drawString(font, energyStr, 6, infoY + 4, 0xFFFFFFFF, true);
-        gfx.drawString(font, timeStr, WIDTH / 2, infoY + 4, 0xFFFFFFFF, true);
+        // Box: Total Time: 10,86 to 49,96 -> center is (29, 87)
+        String timeStr = recipe.getFormattedTime();
+        drawScaledCenteredString(gfx, font, timeStr, 29, 88, 0xFFFFFF, 0.8f);
 
-        // Row 2: Cooling + Field Tier
-        String coolingStr = "§3❄ Cooling: Lv." + recipe.getCoolingLevel();
-        String fieldStr = "§d⚛ Field: Mk." + toRoman(recipe.getFieldTier());
-        gfx.drawString(font, coolingStr, 6, infoY + 16, 0xFFCCCCCC, true);
-        gfx.drawString(font, fieldStr, WIDTH / 2, infoY + 16, 0xFFCCCCCC, true);
+        // Box: Field Level: 53,86 to 92,96 -> center is (73, 87)
+        String fieldStr = "Mk." + toRoman(recipe.getFieldTier());
+        drawScaledCenteredString(gfx, font, fieldStr, 73, 88, 0xFFFFFF, 0.8f);
 
-        // Row 3: Total energy
-        String totalStr = "§8Total: " + formatEnergy((int) Math.min(recipe.getTotalEnergy(), Integer.MAX_VALUE));
-        gfx.drawString(font, totalStr, 6, infoY + 27, 0xFF888888, true);
+        // Box: Total usage of energy: 32,98 to 71,108 -> center is (51, 99)
+        String totalStr = formatAmount((long) recipe.getTotalEnergy());
+        drawScaledCenteredString(gfx, font, totalStr, 51, 100, 0xFFDF00, 0.8f);
     }
-
-    // ═══════════════════════════════════════════════════════════
-    //  Tooltips
-    // ═══════════════════════════════════════════════════════════
+    
+    // Helper to draw text slightly scaled down to fit constraints beautifully
+    private void drawScaledCenteredString(GuiGraphics gfx, net.minecraft.client.gui.Font font, String text, int x, int y, int color, float scale) {
+        gfx.pose().pushPose();
+        gfx.pose().translate(x, y, 0);
+        gfx.pose().scale(scale, scale, 1.0f);
+        gfx.drawString(font, text, -font.width(text) / 2, 0, color, false);
+        gfx.pose().popPose();
+    }
 
     @Override
     public List<Component> getTooltipStrings(StellarSimulationRecipe recipe, IRecipeSlotsView recipeSlotsView,
                                               double mouseX, double mouseY) {
-        // Tooltip on info bar
-        if (mouseY >= INFO_BAR_Y && mouseY <= INFO_BAR_Y + INFO_BAR_H) {
-            List<Component> tips = new ArrayList<>();
-            tips.add(Component.literal("§b⚡ Energy: " + formatEnergy(recipe.getEnergy()) + " AE per tick"));
-            tips.add(Component.literal("§e⏱ Duration: " + recipe.getFormattedTime()
-                    + " (" + recipe.getTime() + " ticks)"));
+        List<Component> tips = new ArrayList<>();
+
+        // Add tooltips matching the box layout for clarity:
+        if (mouseY >= 74 && mouseY <= 84 && mouseX >= 10 && mouseX <= 49) {
+            tips.add(Component.literal("§b⚡ Energy Demand: " + formatAmount(recipe.getEnergy()) + " AE/t"));
+            return tips;
+        }
+        if (mouseY >= 74 && mouseY <= 84 && mouseX >= 53 && mouseX <= 98) {
             tips.add(Component.literal("§3❄ Minimum Cooling Level: " + recipe.getCoolingLevel() + "/3"));
-            tips.add(Component.literal("§d⚛ Minimum Field Generator: Mk." + toRoman(recipe.getFieldTier())));
-            tips.add(Component.literal(""));
-            tips.add(Component.literal("§8Total Energy: " + formatEnergy(
-                    (int) Math.min(recipe.getTotalEnergy(), Integer.MAX_VALUE))));
-            tips.add(Component.literal("§7Outputs are injected directly into the ME Network"));
+            return tips;
+        }
+        if (mouseY >= 86 && mouseY <= 96 && mouseX >= 10 && mouseX <= 49) {
+            tips.add(Component.literal("§e⏱ Duration: " + recipe.getFormattedTime() + " (" + recipe.getTime() + " ticks)"));
+            return tips;
+        }
+        if (mouseY >= 86 && mouseY <= 96 && mouseX >= 53 && mouseX <= 92) {
+            tips.add(Component.literal("§d⚛ Required Stellar Field Generator: Mk." + toRoman(recipe.getFieldTier())));
+            return tips;
+        }
+        if (mouseY >= 98 && mouseY <= 108 && mouseX >= 32 && mouseX <= 71) {
+            tips.add(Component.literal("§8Total Energy Required: " + formatAmount((long) recipe.getTotalEnergy()) + " AE"));
             return tips;
         }
 
-        // Tooltip on progress arrow
-        if (mouseX >= PROGRESS_X && mouseX <= PROGRESS_X + 24
-                && mouseY >= PROGRESS_Y && mouseY <= PROGRESS_Y + 17) {
+        // Tooltip on progress bar
+        if (mouseX >= 94 && mouseX <= 114 && mouseY >= 38 && mouseY <= 49) {
             return List.of(
                     Component.literal("§e" + recipe.getFormattedTime()),
-                    Component.literal("§7(" + recipe.getTime() + " ticks)")
+                    Component.literal("§7(" + recipe.getTime() + " ticks)"),
+                    Component.literal("§7Outputs directly into ME Network")
             );
         }
 
@@ -247,22 +275,7 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     //  Helpers
     // ═══════════════════════════════════════════════════════════
 
-    private static String formatEnergy(int energy) {
-        if (energy >= 1_000_000_000) {
-            double val = energy / 1_000_000_000.0;
-            if (val == (long) val) return (long) val + "G AE";
-            return String.format("%.1fG AE", val);
-        } else if (energy >= 1_000_000) {
-            double val = energy / 1_000_000.0;
-            if (val == (long) val) return (long) val + "M AE";
-            return String.format("%.1fM AE", val);
-        } else if (energy >= 1_000) {
-            double val = energy / 1_000.0;
-            if (val == (long) val) return (long) val + "K AE";
-            return String.format("%.1fK AE", val);
-        }
-        return energy + " AE";
-    }
+    // Helper isn't needed anymore with the updated formating logic.
 
     /**
      * Formats an amount for display (e.g., 5000000 → "5M").

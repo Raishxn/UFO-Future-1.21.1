@@ -76,6 +76,21 @@ public class MultiblockBlocks {
                     .strength(25.0f, 600.0f)
                     .requiresCorrectToolForDrops()));
 
+    public static final DeferredBlock<MassiveOutputHatchBlock> ME_MASSIVE_INPUT_HATCH = BLOCKS.register("me_massive_input_hatch",
+            () -> new MassiveOutputHatchBlock(BlockBehaviour.Properties.of()
+                    .strength(25.0f, 600.0f)
+                    .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<MassiveOutputHatchBlock> AE_ENERGY_INPUT_HATCH = BLOCKS.register("ae_energy_input_hatch",
+            () -> new MassiveOutputHatchBlock(BlockBehaviour.Properties.of()
+                    .strength(25.0f, 600.0f)
+                    .requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<MassiveOutputHatchBlock> COOLANT_FLUID_HATCH = BLOCKS.register("coolant_fluid_hatch",
+            () -> new MassiveOutputHatchBlock(BlockBehaviour.Properties.of()
+                    .strength(25.0f, 600.0f)
+                    .requiresCorrectToolForDrops()));
+
     public static final DeferredBlock<StellarNexusPartBlock> STELLAR_FIELD_GENERATOR_T1 = BLOCKS.register("stellar_field_generator_t1",
             () -> new StellarNexusPartBlock(BlockBehaviour.Properties.of()
                     .strength(25.0f, 600.0f)
