@@ -48,11 +48,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         // ═══════════════════ STELLAR NEXUS ═══════════════════
         stellarNexusControllerBlock(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER);
-        directionalMultiblockCube(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH);
-        directionalMultiblockCube(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH);
-        directionalMultiblockCube(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH);
-        directionalMultiblockCube(MultiblockBlocks.AE_ENERGY_INPUT_HATCH);
-        directionalMultiblockCube(MultiblockBlocks.COOLANT_FLUID_HATCH);
+        hatchWithOverlay(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH, "me_massive_output_hatch_overlay");
+        hatchWithOverlay(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH, "me_massive_fluid_hatch_overlay");
+        hatchWithOverlay(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH, "me_massive_input_hatch_overlay");
+        hatchWithOverlay(MultiblockBlocks.AE_ENERGY_INPUT_HATCH, "ae_energy_input_hatch_overlay");
+        hatchWithOverlay(MultiblockBlocks.COOLANT_FLUID_HATCH, "coolant_fluid_hatch_overlay");
         multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1);
         multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2);
         multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3);
@@ -203,11 +203,25 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     private void stellarNexusControllerBlock(DeferredBlock<? extends Block> block) {
         String name = block.getId().getPath();
-        ResourceLocation texture = modLoc("block/multiblock/" + name);
-        ResourceLocation textureAssembled = modLoc("block/multiblock/" + name + "_assembled");
+        ResourceLocation baseTexture = modLoc("block/multiblock/entropy_singularity_casing");
+        ResourceLocation overlayTexture = modLoc("block/multiblock/overlay_front");
 
-        ModelFile normalModel = models().cubeAll(name, texture);
-        ModelFile assembledModel = models().cubeAll(name + "_assembled", textureAssembled);
+        ModelFile normalModel = models().withExistingParent(name, "block/block")
+                .renderType("cutout")
+                .texture("particle", baseTexture)
+                .texture("base", baseTexture)
+                .texture("overlay", overlayTexture)
+                .element().from(0, 0, 0).to(16, 16, 16).allFaces((dir, face) -> face.texture("#base").cullface(dir)).end()
+                .element().from(0, 0, 0).to(16, 16, 16).face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end().end();
+
+        ResourceLocation assembledBase = modLoc("block/multiblock/entropy_assembler_core_casing");
+        ModelFile assembledModel = models().withExistingParent(name + "_assembled", "block/block")
+                .renderType("cutout")
+                .texture("particle", assembledBase)
+                .texture("base", assembledBase)
+                .texture("overlay", overlayTexture)
+                .element().from(0, 0, 0).to(16, 16, 16).allFaces((dir, face) -> face.texture("#base").cullface(dir)).end()
+                .element().from(0, 0, 0).to(16, 16, 16).face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end().end();
 
         getVariantBuilder(block.get()).forAllStates(state -> {
             Direction dir = state.getValue(DirectionalBlock.FACING);
@@ -220,5 +234,40 @@ public class ModBlockStateProvider extends BlockStateProvider {
         });
 
         simpleBlockItem(block.get(), normalModel);
+    }
+
+    /**
+     * Hatch block with entropy_singularity_casing as base + a per-hatch overlay on the front face.
+     * Uses cutout render type to support animated overlay textures.
+     */
+    private void hatchWithOverlay(DeferredBlock<? extends Block> block, String overlayName) {
+        String name = block.getId().getPath();
+        ResourceLocation baseTexture = modLoc("block/multiblock/entropy_singularity_casing");
+        ResourceLocation overlayTexture = modLoc("block/multiblock/" + overlayName);
+
+        ModelFile modelFile = models().withExistingParent(name, "block/block")
+                .renderType("cutout")
+                .texture("particle", baseTexture)
+                .texture("base", baseTexture)
+                .texture("overlay", overlayTexture)
+                .element()
+                    .from(0, 0, 0).to(16, 16, 16)
+                    .allFaces((direction, faceBuilder) -> faceBuilder.texture("#base").cullface(direction))
+                .end()
+                .element()
+                    .from(0, 0, 0).to(16, 16, 16)
+                    .face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end()
+                .end();
+
+        getVariantBuilder(block.get()).forAllStates(state -> {
+            Direction dir = state.getValue(DirectionalBlock.FACING);
+            return ConfiguredModel.builder()
+                    .modelFile(modelFile)
+                    .rotationX(dir == Direction.DOWN ? 90 : dir == Direction.UP ? -90 : 0)
+                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + 180) % 360)
+                    .build();
+        });
+
+        simpleBlockItem(block.get(), modelFile);
     }
 }

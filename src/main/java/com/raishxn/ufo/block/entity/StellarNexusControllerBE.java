@@ -365,9 +365,9 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         int heatPerTick = recipe.getCoolingLevel() + 1; // 1-4 heat per tick
         this.heatLevel = Math.min(MAX_HEAT, this.heatLevel + heatPerTick);
 
-        // TODO: Coolant consumption from Coolant Fluid Hatch reduces heat
-        // For now, natural passive cooling of 1 per tick if coolant is available
-        // (placeholder until fluid hatch logic is implemented)
+        // Coolant consumption from Coolant Fluid Hatch — reduces heat
+        int coolingApplied = consumeCoolant(grid);
+        this.heatLevel = Math.max(0, this.heatLevel - coolingApplied);
 
         // Overheat check
         if (this.heatLevel >= MAX_HEAT) {
@@ -450,6 +450,79 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get()) highest = Math.max(highest, 1);
         }
         return highest;
+    }
+
+    // ──────────────────── Coolant System ────────────────────
+
+    /** Amount of fluid (in mB, where 1 bucket = 1000) consumed per tick for cooling. */
+    private static final long COOLANT_CONSUMPTION_PER_TICK = 100; // 100 mB/tick = 5 buckets/second
+
+    /**
+     * Tries to extract coolant from the AE2 network via the Coolant Fluid Hatch.
+     * Returns the cooling power applied this tick (heat units to subtract).
+     * <p>
+     * Coolant effectiveness:
+     * <ul>
+     *   <li>Water: 2 cooling per mB consumed</li>
+     *   <li>Lava (for exotic builds): 0 cooling (it's hot!)</li>
+     *   <li>Any other fluid: 3 cooling per mB (generic coolant tier)</li>
+     * </ul>
+     */
+    private int consumeCoolant(IGrid grid) {
+        AENetworkedBlockEntity coolantHatch = getCoolantHatch();
+        if (coolantHatch == null) return 0;
+        
+        IActionSource src = IActionSource.ofMachine(coolantHatch);
+        MEStorage storage = grid.getStorageService().getInventory();
+        
+        // Try to extract water first (most common coolant)
+        AEFluidKey waterKey = AEFluidKey.of(net.minecraft.world.level.material.Fluids.WATER);
+        
+        long extracted = storage.extract(waterKey, COOLANT_CONSUMPTION_PER_TICK, Actionable.MODULATE, src);
+        if (extracted > 0) {
+            // Water: 2 cooling per mB
+            return (int) (extracted * 2 / COOLANT_CONSUMPTION_PER_TICK) * (recipe_coolingBonus() + 1);
+        }
+        
+        // Try any available fluid in the network as generic coolant
+        // Iterate over what's available and try to extract the first fluid
+        for (var entry : storage.getAvailableStacks()) {
+            if (entry.getKey() instanceof AEFluidKey fluidKey) {
+                extracted = storage.extract(fluidKey, COOLANT_CONSUMPTION_PER_TICK, Actionable.MODULATE, src);
+                if (extracted > 0) {
+                    // Generic fluid: 3 cooling per mB
+                    return (int) (extracted * 3 / COOLANT_CONSUMPTION_PER_TICK) * (recipe_coolingBonus() + 1);
+                }
+            }
+        }
+        
+        return 0; // No coolant available — heat will continue to rise!
+    }
+
+    /** 
+     * Bonus cooling multiplier based on the recipe's cooling level.
+     * Higher cooling requirements → more cooling needed, but better coolant infrastructure
+     * also provides better cooling.
+     */
+    private int recipe_coolingBonus() {
+        return this.fieldLevel; // T1=1x, T2=2x, T3=3x multiplier
+    }
+
+    /**
+     * Find the Coolant Fluid Hatch block entity among the multiblock parts.
+     */
+    @Nullable
+    private AENetworkedBlockEntity getCoolantHatch() {
+        if (this.level == null) return null;
+        for (BlockPos p : this.parts) {
+            BlockState state = this.level.getBlockState(p);
+            if (state.is(MultiblockBlocks.COOLANT_FLUID_HATCH.get())) {
+                if (this.level.getBlockEntity(p) instanceof AENetworkedBlockEntity hatchBE) {
+                    return hatchBE;
+                }
+            }
+        }
+        return null;
     }
 
     public ResourceLocation getActiveRecipeId() {
