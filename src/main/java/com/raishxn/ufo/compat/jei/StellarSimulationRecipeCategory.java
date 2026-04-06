@@ -106,13 +106,19 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
                 int col = i % 3;
                 int row = i / 3;
                 int finalI = i;
+                
+                var visualStacks = java.util.Arrays.stream(UfoJeiPlugin.stackOf(itemInputs.get(i)).getItems())
+                        .map(stack -> {
+                            var copy = stack.copy();
+                            copy.setCount(1);
+                            return copy;
+                        }).toList();
+                        
                 builder.addInputSlot(11 + (col * 18), 16 + (row * 18))
-                        .addIngredients(UfoJeiPlugin.stackOf(itemInputs.get(i)))
+                        .addItemStacks(visualStacks)
                         .addRichTooltipCallback((recipeSlotView, tooltip) -> {
-                            var stacks = UfoJeiPlugin.stackOf(itemInputs.get(finalI));
-                            if (!stacks.isEmpty()) {
-                                tooltip.add(Component.literal("§7Amount Required: §e" + stacks.getItems()[0].getCount()));
-                            }
+                            long amt = itemInputs.get(finalI).getAmount();
+                            tooltip.add(Component.literal("§7Amount Required: §e" + formatAmount(amt)));
                         });
             }
         }
@@ -123,14 +129,17 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
             if (!fluidInputs.get(i).isEmpty()) {
                 int yPos = 16 + (i * 20);
                 int finalI = i;
+                
+                var visualFluids = UfoJeiPlugin.stackOf(fluidInputs.get(i)).stream()
+                        .map(stack -> new net.neoforged.neoforge.fluids.FluidStack(stack.getFluid(), 1000))
+                        .toList();
+                        
                 var slot = builder.addInputSlot(71, yPos)
                         .setFluidRenderer(1000000, false, 11, 14);
-                slot.addIngredients(NeoForgeTypes.FLUID_STACK, UfoJeiPlugin.stackOf(fluidInputs.get(i)))
+                slot.addIngredients(NeoForgeTypes.FLUID_STACK, visualFluids)
                     .addRichTooltipCallback((recipeSlotView, tooltip) -> {
-                         var fluids = UfoJeiPlugin.stackOf(fluidInputs.get(finalI));
-                         if (!fluids.isEmpty()) {
-                             tooltip.add(Component.literal("§7Amount Required: §b" + fluids.get(0).getAmount() + " mB"));
-                         }
+                         long amt = fluidInputs.get(finalI).getAmount();
+                         tooltip.add(Component.literal("§7Amount Required: §b" + formatAmount(amt) + " mB"));
                     });
             }
         }
@@ -184,42 +193,51 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
         var font = Minecraft.getInstance().font;
 
-        // Note: The UI image 'stellar_nexus_jei.png' already has titles and backgrounds baked in!
-        // So we only draw dynamic text that is not covered by the background texture.
+        // ── Simulation Name Title ──
+        String simName = recipe.getSimulationName();
+        if (simName == null || simName.isEmpty()) simName = "Unknown Simulation";
+        drawScaledCenteredString(gfx, font, "⚛ " + simName, WIDTH / 2, 4, 0x00FFFF, 1.0f);
 
-        // ── Progress area ──
-        // From 94, 38 to 114, 49
+        // ── Progress area animation ──
         int pWidth = 20;
         int animWidth = (int) ((System.currentTimeMillis() / 40) % pWidth);
         gfx.fillGradient(94, 38, 94 + animWidth, 49, 0x558B5CF6, 0x556D28D9);
 
-        // We DO NOT draw Energy, Cooling, Time here! The user requested we move this information 
-        // to Tooltips or draw them ONLY if we are hovering certain boxes. Wait, the user said:
-        // "só mostrs os valores dos outputs/ intpus das recipes ao passar o mouse por cima no JEI porque os valores que você tinha colocado estão muito grandes. ou então formate para ficar perfeito."
-        // That means the values LIKE ENERGY/COOLING should be formatted. The user explicitly defined "box onde mostra o consumo". Let's draw formatted strings centered in those boxes!
+        // Box: Fuel Fluid: 10,74 to 49,84
+        String fuelStr;
+        if (!recipe.getFuelFluid().isEmpty()) {
+            fuelStr = formatFluidName(net.minecraft.resources.ResourceLocation.parse(recipe.getFuelFluid()).getPath());
+        } else {
+            fuelStr = "None";
+        }
+        drawScaledCenteredString(gfx, font, fuelStr, 29, 76, 0x00FFFF, 0.7f);
 
-        // Box: Fuel: 10,74 to 49,84 -> center is (29, 75)
-        String fuelStr = formatAmount(recipe.getFuelCost()) + " AE";
-        drawScaledCenteredString(gfx, font, fuelStr, 29, 76, 0x00FFFF, 0.8f);
+        // Box: Coolant: 53,74 to 98,84
+        String coolantStr;
+        if (!recipe.getCoolantFluid().isEmpty()) {
+            String cPath = net.minecraft.resources.ResourceLocation.parse(recipe.getCoolantFluid()).getPath();
+            if (cPath.contains("temporal_fluid")) coolantStr = "❄ Temp. Fluid";
+            else if (cPath.contains("stable_coolant")) coolantStr = "❄ Stable Coolant";
+            else if (cPath.contains("gelid_cryotheum")) coolantStr = "❄ Gelid Cryotheum";
+            else coolantStr = "❄ " + formatFluidName(cPath);
+        } else {
+            coolantStr = "Coolant Lv." + recipe.getCoolingLevel();
+        }
+        drawScaledCenteredString(gfx, font, coolantStr, 75, 76, 0x00FFFF, 0.7f);
 
-        // Box: Cooling: 53,74 to 98,84 -> center is (75, 75)
-        String coolingStr = "Lv." + recipe.getCoolingLevel();
-        drawScaledCenteredString(gfx, font, coolingStr, 75, 76, 0x00FFFF, 0.8f);
-
-        // Box: Total Time: 10,86 to 49,96 -> center is (29, 87)
+        // Box: Total Time: 10,86 to 49,96
         String timeStr = recipe.getFormattedTime();
         drawScaledCenteredString(gfx, font, timeStr, 29, 88, 0xFFFFFF, 0.8f);
 
-        // Box: Field Level: 53,86 to 92,96 -> center is (73, 87)
+        // Box: Field Level: 53,86 to 92,96
         String fieldStr = "Mk." + toRoman(recipe.getFieldTier());
         drawScaledCenteredString(gfx, font, fieldStr, 73, 88, 0xFFFFFF, 0.8f);
 
-        // Box: Total usage of energy: 32,98 to 71,108 -> center is (51, 99)
-        String totalStr = formatAmount((long) recipe.getTotalEnergy());
-        drawScaledCenteredString(gfx, font, totalStr, 51, 100, 0xFFDF00, 0.8f);
+        // Box: Total Energy: 32,98 to 71,108
+        String totalStr = formatAmount(recipe.getTotalEnergy()) + " AE";
+        drawScaledCenteredString(gfx, font, totalStr, 51, 100, 0xFFDF00, 0.7f);
     }
     
-    // Helper to draw text slightly scaled down to fit constraints beautifully
     private void drawScaledCenteredString(GuiGraphics gfx, net.minecraft.client.gui.Font font, String text, int x, int y, int color, float scale) {
         gfx.pose().pushPose();
         gfx.pose().translate(x, y, 0);
@@ -233,29 +251,53 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
                                               double mouseX, double mouseY) {
         List<Component> tips = new ArrayList<>();
 
-        // Add tooltips matching the box layout for clarity:
+        // Fuel box tooltip (10,74 to 49,84)
         if (mouseY >= 74 && mouseY <= 84 && mouseX >= 10 && mouseX <= 49) {
-            tips.add(Component.literal("§b⚡ Total Fuel Required: " + formatAmount(recipe.getFuelCost()) + " AE"));
+            if (!recipe.getFuelFluid().isEmpty() && recipe.getFuelAmount() > 0) {
+                net.minecraft.resources.ResourceLocation fuelRL = net.minecraft.resources.ResourceLocation.parse(recipe.getFuelFluid());
+                tips.add(Component.literal("§b🔥 Fuel Required: " + formatFluidName(fuelRL.getPath())));
+                tips.add(Component.literal("§7Amount: §e" + formatAmount(recipe.getFuelAmount()) + " mB"));
+                tips.add(Component.literal("§7Extracted from ME storage on start."));
+            } else {
+                tips.add(Component.literal("§7No fuel liquid required."));
+            }
             return tips;
         }
+
+        // Coolant box tooltip (53,74 to 98,84)
         if (mouseY >= 74 && mouseY <= 84 && mouseX >= 53 && mouseX <= 98) {
-            tips.add(Component.literal("§3❄ Minimum Cooling Level: " + recipe.getCoolingLevel() + "/3"));
+            if (!recipe.getCoolantFluid().isEmpty() && recipe.getCoolantAmount() > 0) {
+                net.minecraft.resources.ResourceLocation coolantRL = net.minecraft.resources.ResourceLocation.parse(recipe.getCoolantFluid());
+                tips.add(Component.literal("§3❄ Coolant Required: " + formatFluidName(coolantRL.getPath())));
+                tips.add(Component.literal("§7Amount: §e" + formatAmount(recipe.getCoolantAmount()) + " mB"));
+                tips.add(Component.literal("§7Consumed during operation to control heat."));
+            } else {
+                tips.add(Component.literal("§3❄ Cooling Level: " + recipe.getCoolingLevel() + "/3"));
+                tips.add(Component.literal("§7Generic coolant from ME network."));
+            }
             return tips;
         }
+
+        // Time tooltip (10,86 to 49,96)
         if (mouseY >= 86 && mouseY <= 96 && mouseX >= 10 && mouseX <= 49) {
             tips.add(Component.literal("§e⏱ Duration: " + recipe.getFormattedTime() + " (" + recipe.getTime() + " ticks)"));
             return tips;
         }
+
+        // Field tier tooltip (53,86 to 92,96)
         if (mouseY >= 86 && mouseY <= 96 && mouseX >= 53 && mouseX <= 92) {
             tips.add(Component.literal("§d⚛ Required Stellar Field Generator: Mk." + toRoman(recipe.getFieldTier())));
             return tips;
         }
+
+        // Energy tooltip (32,98 to 71,108)
         if (mouseY >= 98 && mouseY <= 108 && mouseX >= 32 && mouseX <= 71) {
-            tips.add(Component.literal("§8Total Energy Required: " + formatAmount((long) recipe.getTotalEnergy()) + " AE"));
+            tips.add(Component.literal("§e⚡ Total AE Energy Required: " + String.format("%,d", recipe.getTotalEnergy()) + " AE"));
+            tips.add(Component.literal("§7Charged passively from AE grid via Energy Hatch."));
             return tips;
         }
 
-        // Tooltip on progress bar
+        // Progress bar tooltip
         if (mouseX >= 94 && mouseX <= 114 && mouseY >= 38 && mouseY <= 49) {
             return List.of(
                     Component.literal("§e" + recipe.getFormattedTime()),
@@ -271,13 +313,12 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     //  Helpers
     // ═══════════════════════════════════════════════════════════
 
-    // Helper isn't needed anymore with the updated formating logic.
-
-    /**
-     * Formats an amount for display (e.g., 5000000 → "5M").
-     */
     public static String formatAmount(long amount) {
-        if (amount >= 1_000_000) {
+        if (amount >= 1_000_000_000L) {
+            double val = amount / 1_000_000_000.0;
+            if (val == (long) val) return (long) val + "G";
+            return String.format("%.1fG", val);
+        } else if (amount >= 1_000_000) {
             double val = amount / 1_000_000.0;
             if (val == (long) val) return (long) val + "M";
             return String.format("%.1fM", val);
@@ -287,6 +328,25 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
             return String.format("%.1fK", val);
         }
         return String.valueOf(amount);
+    }
+
+    /**
+     * Converts a fluid registry path to a human-readable name.
+     * e.g., "source_gelid_cryotheum" → "Gelid Cryotheum"
+     */
+    private static String formatFluidName(String path) {
+        // Remove common prefixes
+        if (path.startsWith("source_")) path = path.substring(7);
+        if (path.startsWith("flowing_")) path = path.substring(8);
+        
+        String[] words = path.split("_");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                sb.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 
     private static String toRoman(int tier) {

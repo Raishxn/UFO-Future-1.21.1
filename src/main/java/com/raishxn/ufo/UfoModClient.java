@@ -11,8 +11,6 @@ import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.event.ModTooltipEventHandler;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -25,11 +23,9 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
 import com.raishxn.ufo.client.renderer.StellarNexusRenderer;
 import com.raishxn.ufo.init.ModBlockEntities;
 
-@Mod(value = UfoMod.MOD_ID, dist = Dist.CLIENT)
 public class UfoModClient {
 
     public UfoModClient(IEventBus eventBus) {
@@ -38,7 +34,6 @@ public class UfoModClient {
         eventBus.addListener(this::onRegisterKeyMappings);
         eventBus.addListener(this::registerScreens); // <--- Adicione esta linha
         eventBus.addListener(this::registerRenderers);
-        eventBus.addListener(this::registerAdditionalModels);
     }
 
     private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
@@ -58,9 +53,6 @@ public class UfoModClient {
         event.registerBlockEntityRenderer(ModBlockEntities.STELLAR_NEXUS_CONTROLLER_BE.get(), StellarNexusRenderer::new);
     }
 
-    private void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
-        event.register(new net.minecraft.client.resources.model.ModelResourceLocation(StellarNexusRenderer.STAR_MODEL, "inventory"));
-    }
 
 
     private void onClientSetup(FMLClientSetupEvent event) {
