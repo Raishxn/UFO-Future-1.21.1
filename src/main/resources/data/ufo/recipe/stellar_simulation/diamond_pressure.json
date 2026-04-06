@@ -1,5 +1,6 @@
 {
   "type": "ufo:stellar_simulation",
+  "simulation_name": "Diamond Pressure",
   "item_inputs": [
     {
       "amount": 8,
@@ -16,20 +17,24 @@
   ],
   "fluid_inputs": [
     {
-      "amount": 100000,
+      "amount": 200000,
       "ingredient": {
         "fluid": "ufo:raw_star_matter_plasma"
       }
     }
   ],
   "item_outputs": [
-    { "#": 3000000, "#t": "ae2:i", "id": "minecraft:diamond" },
-    { "#": 2000000, "#t": "ae2:i", "id": "minecraft:emerald" },
-    { "#": 2000000, "#t": "ae2:i", "id": "minecraft:amethyst_shard" }
+    { "#": 10000000, "#t": "ae2:i", "id": "minecraft:diamond" },
+    { "#": 10000000, "#t": "ae2:i", "id": "minecraft:emerald" },
+    { "#": 10000000, "#t": "ae2:i", "id": "minecraft:amethyst_shard" }
   ],
   "fluid_outputs": [],
-  "fuel": 5000000,
+  "energy": 350000000,
   "time": 30000,
   "cooling_level": 2,
-  "field_tier": 2
+  "field_tier": 2,
+  "fuel_fluid": "mekanism:oxygen",
+  "fuel_amount": 20000,
+  "coolant_fluid": "ufo:source_stable_coolant",
+  "coolant_amount": 20000
 }

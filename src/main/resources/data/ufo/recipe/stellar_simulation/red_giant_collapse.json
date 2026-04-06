@@ -1,5 +1,6 @@
 {
   "type": "ufo:stellar_simulation",
+  "simulation_name": "Red Giant Collapse",
   "item_inputs": [
     {
       "amount": 4,
@@ -10,20 +11,24 @@
   ],
   "fluid_inputs": [
     {
-      "amount": 50000,
+      "amount": 100000,
       "ingredient": {
         "fluid": "ufo:raw_star_matter_plasma"
       }
     }
   ],
   "item_outputs": [
-    { "#": 5000000, "#t": "ae2:i", "id": "minecraft:redstone" },
-    { "#": 3000000, "#t": "ae2:i", "id": "minecraft:lapis_lazuli" },
-    { "#": 2000000, "#t": "ae2:i", "id": "minecraft:glowstone_dust" }
+    { "#": 15000000, "#t": "ae2:i", "id": "minecraft:redstone" },
+    { "#": 10000000, "#t": "ae2:i", "id": "minecraft:lapis_lazuli" },
+    { "#": 10000000, "#t": "ae2:i", "id": "minecraft:glowstone_dust" }
   ],
   "fluid_outputs": [],
-  "fuel": 2500000,
+  "energy": 150000000,
   "time": 24000,
   "cooling_level": 1,
-  "field_tier": 1
+  "field_tier": 1,
+  "fuel_fluid": "mekanism:hydrogen",
+  "fuel_amount": 20000,
+  "coolant_fluid": "ufo:source_gelid_cryotheum",
+  "coolant_amount": 10000
 }
