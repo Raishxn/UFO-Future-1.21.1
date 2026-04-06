@@ -67,10 +67,11 @@ public class UfoMod {
         ModPackets.register(event);
     }
     private void commonSetup(final FMLCommonSetupEvent event) {
+        // Run synchronously to avoid AE2 parallel processing initialization crashes
+        UFORegistryHandler.INSTANCE.onInit();
         event.enqueueWork(() -> {
             // Force-load custom slot semantics so they are registered before any screen JSON is parsed
             java.util.Objects.requireNonNull(com.raishxn.ufo.menu.UFOSlotSemantics.MACHINE_OUTPUT_2);
-            UFORegistryHandler.INSTANCE.onInit();
             LazyInits.initCommon();
         });
     }
