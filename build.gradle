@@ -89,15 +89,11 @@ dependencies {
     // We add the full version to localRuntime, not runtimeOnly, so that we do not publish a dependency on it
     // localRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
     implementation "curse.maven:applied-energistics-2-223794:7027323"
-    compileOnly "curse.maven:applied-energistics-2-223794:7027323"
     implementation "curse.maven:guideme-1173950:6812025"
-    compileOnly "curse.maven:guideme-1173950:6812025"
     implementation "curse.maven:geckolib-388172:7023453"
     implementation "curse.maven:ldlib-626676:6260254"
     compileOnly "curse.maven:mekanism-268560:7017663"
     implementation "curse.maven:glodium-957920:5821676"
-    compileOnly "curse.maven:ex-pattern-provider-892005:7129221"
-    compileOnly "curse.maven:mega-cells-622112:6853076"
     compileOnly "curse.maven:jei-238222:7129287"
     compileOnly "curse.maven:kubejs-238086:5810100"
     compileOnly "curse.maven:rhino-416294:5691686"
@@ -106,7 +102,7 @@ dependencies {
     //local test
     localRuntime "curse.maven:mega-cells-622112:6853076"
     localRuntime "curse.maven:mekanism-268560:7017663"
-    localRuntime "curse.maven:ex-pattern-provider-892005:7129221"
+    localRuntime "curse.maven:ex-pattern-provider-892005:7871693"
     localRuntime "curse.maven:jei-238222:7129287"
     localRuntime "curse.maven:ae2-jei-integration-1074338:5748513"
     localRuntime "curse.maven:mmmmmmmmmmmm-225738:7206981"
@@ -114,6 +110,8 @@ dependencies {
     localRuntime "curse.maven:kubejs-238086:5810100"
     localRuntime "curse.maven:rhino-416294:5691686"
     localRuntime "curse.maven:advancedae-1084104:7849217"
+    localRuntime "curse.maven:kubejs-238086:5810100"
+    localRuntime "curse.maven:rhino-416294:5691686"
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
     // The group id is ignored when searching -- in this case, it is "blank"

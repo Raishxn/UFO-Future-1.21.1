@@ -86,10 +86,8 @@ public class MultiblockBlocks {
                     .strength(25.0f, 600.0f)
                     .requiresCorrectToolForDrops()));
 
-    public static final DeferredBlock<MassiveOutputHatchBlock> STELLAR_FUEL_HATCH = BLOCKS.register("stellar_fuel_hatch",
-            () -> new MassiveOutputHatchBlock(BlockBehaviour.Properties.of()
-                    .strength(25.0f, 600.0f)
-                    .requiresCorrectToolForDrops()));
+
+
 
     public static final DeferredBlock<StellarNexusPartBlock> STELLAR_FIELD_GENERATOR_T1 = BLOCKS.register("stellar_field_generator_t1",
             () -> new StellarNexusPartBlock(BlockBehaviour.Properties.of()

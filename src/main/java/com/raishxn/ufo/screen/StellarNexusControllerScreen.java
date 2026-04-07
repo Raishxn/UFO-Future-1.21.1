@@ -5,6 +5,7 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.init.ModRecipes;
 import com.raishxn.ufo.network.ModPackets;
 import com.raishxn.ufo.network.packet.PacketChangeStellarRecipe;
+import com.raishxn.ufo.network.packet.PacketScanStellarStructure;
 import com.raishxn.ufo.network.packet.PacketStartStellarOperation;
 import com.raishxn.ufo.network.packet.PacketToggleStellarSafeMode;
 import com.raishxn.ufo.recipe.StellarSimulationRecipe;
@@ -21,6 +22,7 @@ import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.core.BlockPos;
 
 public class StellarNexusControllerScreen extends AbstractContainerScreen<StellarNexusControllerMenu> {
     private static final ResourceLocation TEXTURE =
@@ -33,6 +35,7 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
     private Button nextButton;
     private Button startButton;
     private Button safeModeButton;
+    private Button scanButton;
 
     public StellarNexusControllerScreen(StellarNexusControllerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -50,7 +53,7 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         if (this.minecraft != null && this.minecraft.level != null) {
             this.availableRecipes = new ArrayList<>(this.minecraft.level.getRecipeManager().getAllRecipesFor(ModRecipes.STELLAR_SIMULATION_TYPE.get()));
             
-            // Try to align current index with BE's active recipe
+            // Persist: align current index with BE's active recipe (remembered from last session)
             ResourceLocation activeId = this.menu.getBlockEntity().getActiveRecipeId();
             if (activeId != null) {
                 for (int i = 0; i < this.availableRecipes.size(); i++) {
@@ -69,21 +72,65 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         this.nextButton = this.addRenderableWidget(Button.builder(Component.literal(">"), btn -> cycleRecipe(1))
                 .bounds(this.leftPos + 150, recipeY, 22, 22).build());
         
-        // Start Operation button — positioned between Field Level (13-66,129-139) and Fuel (125-178,129-139)
-        // Center horizontally: midpoint of 66 and 125 = 95, width ~50 -> x=70
+        // Start Operation button
         this.startButton = this.addRenderableWidget(Button.builder(
                 Component.literal("\u25B6 START"), btn -> {
                     ModPackets.sendToServer(new PacketStartStellarOperation(this.menu.getBlockEntity().getBlockPos()));
                 })
                 .bounds(this.leftPos + 70, this.topPos + 126, 52, 16).build());
 
-        // Safe Mode toggle — small button next to the heat display
+        // Safe Mode toggle
         this.safeModeButton = this.addRenderableWidget(Button.builder(
                 Component.literal("\u2697"), btn -> {
                     ModPackets.sendToServer(new PacketToggleStellarSafeMode(this.menu.getBlockEntity().getBlockPos()));
                 })
-                .bounds(this.leftPos + 174, this.topPos + 90, 14, 14).build());
-        
+                .bounds(this.leftPos + 174, this.topPos + 40, 14, 14).build());
+
+        // Scan Structure button
+        this.scanButton = this.addRenderableWidget(Button.builder(
+                Component.literal("\uD83D\uDD0D Scan"), btn -> {
+                    ModPackets.sendToServer(new PacketScanStellarStructure(this.menu.getBlockEntity().getBlockPos()));
+                    
+                    if (this.minecraft != null && this.minecraft.level != null && this.minecraft.player != null) {
+                        BlockPos pos = this.menu.getBlockEntity().getBlockPos();
+                        net.minecraft.world.level.block.state.BlockState state = this.minecraft.level.getBlockState(pos);
+                        net.minecraft.core.Direction facing = net.minecraft.core.Direction.NORTH;
+                        if (state.hasProperty(net.minecraft.world.level.block.DirectionalBlock.FACING)) {
+                            facing = state.getValue(net.minecraft.world.level.block.DirectionalBlock.FACING);
+                        }
+                        com.raishxn.ufo.api.multiblock.MultiblockPattern.MatchResult result = com.raishxn.ufo.block.entity.pattern.StellarNexusPatternFactory.getPattern().match(this.minecraft.level, pos, facing);
+                        
+                        if (!result.isValid()) {
+                            java.util.List<com.raishxn.ufo.api.multiblock.MultiblockPattern.PatternError> errors = result.allErrors();
+                            if (errors != null && !errors.isEmpty()) {
+                                int shown = Math.min(errors.size(), 10);
+                                this.minecraft.player.displayClientMessage(Component.literal("§e[Stellar Nexus] §c" + errors.size() + " block(s) missing or misplaced:"), false);
+                                for (int i = 0; i < shown; i++) {
+                                    var error = errors.get(i);
+                                    BlockPos errorPos = error.pos();
+                                    Component message = Component.literal("  §7• [" + errorPos.getX() + ", " + errorPos.getY() + ", " + errorPos.getZ() + "] §fExpected: ")
+                                            .append(error.expected().copy().withStyle(net.minecraft.ChatFormatting.YELLOW));
+                                    this.minecraft.player.displayClientMessage(message, false);
+                                }
+                                if (errors.size() > shown) {
+                                    this.minecraft.player.displayClientMessage(Component.literal("  §7... and " + (errors.size() - shown) + " more."), false);
+                                }
+                                int maxHighlight = Math.min(errors.size(), 50);
+                                for (int i = 0; i < maxHighlight; i++) {
+                                    com.raishxn.ufo.client.render.StructureHighlightRenderer.highlight(errors.get(i).pos(), 5000);
+                                }
+                            }
+                        } else if (!this.menu.getBlockEntity().isAssembled()) {
+                             this.minecraft.player.displayClientMessage(Component.literal("§e[Stellar Nexus] §cStructure shape is valid, but hatch requirements are not met!"), false);
+                             this.minecraft.player.displayClientMessage(Component.literal("§7Required: exactly 1 of each: ME Output Hatch, ME Fluid Hatch, ME Input Hatch, AE Energy Hatch."), false);
+                        } else {
+                            this.minecraft.player.displayClientMessage(Component.translatable("message.ufo.structure_formed").withStyle(net.minecraft.ChatFormatting.GREEN), true);
+                        }
+                    }
+                })
+                .bounds(this.leftPos - 52, this.topPos + this.imageHeight - 18, 50, 16).build());
+        this.scanButton.setTooltip(Tooltip.create(Component.literal("§e\uD83D\uDD0D Scan Structure\n§7Force re-scan the multiblock.\n§7Missing blocks will be reported.")));
+
         updateButtonTooltips();
     }
 
@@ -93,37 +140,81 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         int prevIndex = (this.currentRecipeIndex - 1 + this.availableRecipes.size()) % this.availableRecipes.size();
         int nextIndex = (this.currentRecipeIndex + 1) % this.availableRecipes.size();
         
-        ResourceLocation prevId = this.availableRecipes.get(prevIndex).id();
-        ResourceLocation nextId = this.availableRecipes.get(nextIndex).id();
-        
-        Component prevComp = Component.translatable("gui.ufo.previous").append(": ").append(Component.literal(formatRecipeId(prevId)));
-        Component nextComp = Component.translatable("gui.ufo.next").append(": ").append(Component.literal(formatRecipeId(nextId)));
+        Component prevComp = Component.translatable("gui.ufo.previous").append(": ").append(Component.literal(getRecipeDisplayName(this.availableRecipes.get(prevIndex))));
+        Component nextComp = Component.translatable("gui.ufo.next").append(": ").append(Component.literal(getRecipeDisplayName(this.availableRecipes.get(nextIndex))));
         
         this.prevButton.setTooltip(Tooltip.create(prevComp));
         this.nextButton.setTooltip(Tooltip.create(nextComp));
         
-        // Update start button state
+        // Update start button state with detailed checklist
         if (this.startButton != null) {
             boolean canStart = this.menu.isAssembled() && !this.menu.isRunning() && this.menu.getCooldownTimer() == 0;
-            this.startButton.active = canStart;
             
+            StellarSimulationRecipe recipe = this.availableRecipes.isEmpty() ? null : this.availableRecipes.get(this.currentRecipeIndex).value();
+
             List<Component> tipLines = new ArrayList<>();
             tipLines.add(Component.literal("§e▶ Start Stellar Simulation"));
-            if (!this.menu.isAssembled()) {
-                tipLines.add(Component.literal("§c✗ Structure not assembled"));
-            }
-            if (this.menu.isRunning()) {
-                tipLines.add(Component.literal("§c✗ Already in operation"));
-            }
-            if (this.menu.getCooldownTimer() > 0) {
-                int secLeft = this.menu.getCooldownTimer() / 20;
-                tipLines.add(Component.literal("§c✗ Cooling down: " + secLeft + "s remaining"));
-            }
-            if (this.menu.getFuelPercent() < 100) {
-                tipLines.add(Component.literal("§c✗ Fuel: " + this.menu.getFuelPercent() + "% (need 100%)"));
+            
+            if (recipe != null) {
+                // Structure check
+                if (this.menu.isAssembled()) {
+                    tipLines.add(Component.literal("§a✓ Structure assembled"));
+                } else {
+                    tipLines.add(Component.literal("§c✗ Structure not assembled"));
+                    canStart = false;
+                }
+                
+                // Running check
+                if (this.menu.isRunning()) {
+                    tipLines.add(Component.literal("§c✗ Already in operation"));
+                    canStart = false;
+                }
+                
+                // Cooldown check
+                if (this.menu.getCooldownTimer() > 0) {
+                    int secLeft = this.menu.getCooldownTimer() / 20;
+                    tipLines.add(Component.literal("§c✗ Cooling down: " + secLeft + "s remaining"));
+                    canStart = false;
+                }
+                
+                // Field tier check
+                int fl = this.menu.getFieldLevel();
+                if (fl >= recipe.getFieldTier()) {
+                    tipLines.add(Component.literal("§a✓ Field Generator: Mk." + toRoman(fl) + " (Req: Mk." + toRoman(recipe.getFieldTier()) + ")"));
+                } else {
+                    tipLines.add(Component.literal("§c✗ Field Generator: Mk." + toRoman(fl) + " (Req: Mk." + toRoman(recipe.getFieldTier()) + ")"));
+                    canStart = false;
+                }
+                
+                // Energy check
+                long eBuffer = this.menu.getEnergyBuffer();
+                double multiplier = this.menu.isSafeMode() ? 2.5 : 1.0;
+                long eCost = (long)(recipe.getEnergyCost() * multiplier);
+                String safeNote = this.menu.isSafeMode() ? " (2.5x Safe Mode)" : "";
+                if (eBuffer >= eCost) {
+                    tipLines.add(Component.literal("§a✓ Energy: " + formatAmount(eBuffer) + " / " + formatAmount(eCost) + " AE" + safeNote));
+                } else {
+                    tipLines.add(Component.literal("§c✗ Energy: " + formatAmount(eBuffer) + " / " + formatAmount(eCost) + " AE" + safeNote));
+                    canStart = false;
+                }
+                
+                if (recipe.getFuelAmount() > 0 && !recipe.getFuelFluid().isEmpty()) {
+                    ResourceLocation fRL = ResourceLocation.parse(recipe.getFuelFluid());
+                    tipLines.add(Component.literal("§7◇ Requires " + formatAmount(recipe.getFuelAmount()) + "mB " + fRL.getPath()));
+                }
+                if (recipe.getCoolantAmount() > 0 && !recipe.getCoolantFluid().isEmpty()) {
+                    ResourceLocation cRL = ResourceLocation.parse(recipe.getCoolantFluid());
+                    tipLines.add(Component.literal("§7◇ Requires " + formatAmount(recipe.getCoolantAmount()) + "mB " + cRL.getPath()));
+                }
+                if (!recipe.getItemInputs().isEmpty() || !recipe.getFluidInputs().isEmpty()) {
+                    tipLines.add(Component.literal("§7◇ Items/Fluids must be in ME Network"));
+                }
             } else {
-                tipLines.add(Component.literal("§a✓ Fuel: Ready"));
+                tipLines.add(Component.literal("§c✗ No program selected"));
+                canStart = false;
             }
+            
+            this.startButton.active = canStart;
             
             // Build tooltip
             Component combined = tipLines.get(0);
@@ -174,9 +265,63 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         renderBackground(guiGraphics, mouseX, mouseY, delta);
         super.render(guiGraphics, mouseX, mouseY, delta);
         renderTooltip(guiGraphics, mouseX, mouseY);
-        
-        // Update button states each frame
+
+        renderCustomTooltips(guiGraphics, mouseX, mouseY);
         updateButtonTooltips();
+    }
+
+    private void renderCustomTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        int localX = mouseX - this.leftPos;
+        int localY = mouseY - this.topPos;
+
+        // Field Level area (13,129 to 66,139)
+        if (localX >= 13 && localX <= 66 && localY >= 129 && localY <= 139) {
+            int fl = this.menu.getFieldLevel();
+            List<Component> tips = new ArrayList<>();
+            tips.add(Component.literal("§d⚛ Stellar Field Generator"));
+            if (fl > 0) {
+                tips.add(Component.literal("§7Current Tier: §e Mk." + toRoman(fl)));
+                tips.add(Component.literal("§7Higher tiers enable more advanced simulations."));
+            } else {
+                tips.add(Component.literal("§cNo Field Generator detected."));
+                tips.add(Component.literal("§7Place a Stellar Field Generator in the structure."));
+            }
+            guiGraphics.renderTooltip(this.font, tips, java.util.Optional.empty(), mouseX, mouseY);
+        }
+
+        // Energy area (125,129 to 178,139) — previously labeled "Fuel"
+        if (localX >= 125 && localX <= 178 && localY >= 129 && localY <= 139) {
+            int energyPct = this.menu.getEnergyPercent();
+            long energyBuffer = this.menu.getEnergyBuffer();
+            long energyCapacity = this.menu.getEnergyCapacity();
+            List<Component> tips = new ArrayList<>();
+            tips.add(Component.literal("§b⚡ Global AE Energy Buffer"));
+            tips.add(Component.literal("§7Stored: §e" + String.format("%,d", energyBuffer) + " / " + String.format("%,d", energyCapacity) + " AE"));
+            tips.add(Component.literal("§7Charged: §e" + energyPct + "%"));
+            tips.add(Component.literal("§7This is a universal buffer shared by all"));
+            tips.add(Component.literal("§7simulations. High-tier safe mode runs"));
+            tips.add(Component.literal("§7may require > 1 Billion AE."));
+            if (energyPct >= 100) {
+                tips.add(Component.literal("§a✓ Energy fully charged."));
+            }
+            guiGraphics.renderTooltip(this.font, tips, java.util.Optional.empty(), mouseX, mouseY);
+        }
+
+        // Heat area (125,40 to 175,55)
+        if (localX >= 125 && localX <= 175 && localY >= 40 && localY <= 55) {
+            int heat = this.menu.getHeatLevel();
+            float heatPct = heat / 10.0f;
+            List<Component> tips = new ArrayList<>();
+            tips.add(Component.literal("§c🌡 Thermal Status"));
+            tips.add(Component.literal("§7Heat Level: §e" + String.format("%.1f%%", heatPct)));
+            tips.add(Component.literal("§7Coolant reduces heat during operation."));
+            if (this.menu.isSafeMode()) {
+                tips.add(Component.literal("§a⚗ Safe Mode: Auto-shutdown on overheat"));
+            } else {
+                tips.add(Component.literal("§4⚗ WARNING: Explosion on overheat!"));
+            }
+            guiGraphics.renderTooltip(this.font, tips, java.util.Optional.empty(), mouseX, mouseY);
+        }
     }
 
     @Override
@@ -199,7 +344,7 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
         // Thermal status (125,43)
         int heat = this.menu.getHeatLevel();
-        float heatPct = heat / 10.0f; // 0-1000 → 0.0%-100.0%
+        float heatPct = heat / 10.0f;
         int heatColor;
         String heatStr;
         if (heat == 0) {
@@ -217,10 +362,10 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         }
         guiGraphics.drawString(this.font, heatStr, 127, 44, heatColor);
 
-        // Recipe Selection
+        // Recipe Selection — use simulationName if available
         Component recipeName = Component.literal("No Program");
         if (!this.availableRecipes.isEmpty()) {
-            recipeName = Component.literal(formatRecipeId(this.availableRecipes.get(this.currentRecipeIndex).id()));
+            recipeName = Component.literal(getRecipeDisplayName(this.availableRecipes.get(this.currentRecipeIndex)));
         }
         
         int textWidth = this.font.width(recipeName);
@@ -237,18 +382,31 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         
         // Field Level (13,129 to 66,139)
         int fl = this.menu.getFieldLevel();
-        String fieldLevel = fl > 0 ? "Mk." + toRoman(fl) : "N/A";
-        guiGraphics.drawString(this.font, fieldLevel, 15, 131, 0xAA00AA);
+        String fieldLevel = fl > 0 ? "Mk." + toRoman(fl) : "Lv. 0";
+        int fieldColor = fl >= 3 ? 0xFF00FF : (fl >= 2 ? 0xAA00AA : (fl >= 1 ? 0x8800AA : 0x666666));
+        guiGraphics.drawString(this.font, fieldLevel, 15, 131, fieldColor);
         
-        // Current Fuel (125,129 to 178,139)
-        int fuelPct = this.menu.getFuelPercent();
-        String fuelAmount = fuelPct + "%";
-        int fuelColor = fuelPct >= 100 ? 0x00FF00 : (fuelPct > 50 ? 0xFFFF00 : 0xFF4444);
-        guiGraphics.drawString(this.font, fuelAmount, 127, 131, fuelColor);
-        
-        // Safe Mode indicator (small icon near heat)
+        // Current Energy (125,129 to 178,139) — label changed from Fuel to Energy
+        int energyPct = this.menu.getEnergyPercent();
+        String energyAmount = energyPct + "%";
+        int energyColor = energyPct >= 100 ? 0x00FF00 : (energyPct > 50 ? 0xFFFF00 : 0xFF4444);
+        guiGraphics.drawString(this.font, energyAmount, 127, 131, energyColor);
+
+        // Safe Mode indicator
         boolean safeMode = this.menu.isSafeMode();
-        guiGraphics.drawString(this.font, safeMode ? "§a\u2697" : "§c\u2697", 170, 95, 0xFFFFFF);
+        guiGraphics.drawString(this.font, safeMode ? "§a●" : "§c●", 176, 56, 0xFFFFFF);
+    }
+
+    /**
+     * Gets the display name for a recipe.
+     * Uses the simulationName field if available, otherwise formats the recipe ID.
+     */
+    private String getRecipeDisplayName(RecipeHolder<StellarSimulationRecipe> holder) {
+        String simName = holder.value().getSimulationName();
+        if (simName != null && !simName.isEmpty()) {
+            return simName;
+        }
+        return formatRecipeId(holder.id());
     }
 
     private String formatRecipeId(ResourceLocation id) {
@@ -268,6 +426,13 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
             }
         }
         return sb.toString().trim();
+    }
+    
+    private static String formatAmount(long amount) {
+        if (amount >= 1_000_000_000) return String.format("%.1fB", amount / 1_000_000_000.0);
+        if (amount >= 1_000_000) return String.format("%.1fM", amount / 1_000_000.0);
+        if (amount >= 1_000) return String.format("%.1fK", amount / 1_000.0);
+        return String.valueOf(amount);
     }
     
     private static String toRoman(int tier) {

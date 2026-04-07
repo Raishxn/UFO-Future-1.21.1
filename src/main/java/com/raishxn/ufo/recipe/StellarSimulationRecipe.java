@@ -2,12 +2,14 @@ package com.raishxn.ufo.recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 
 import com.raishxn.ufo.init.ModRecipes;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -22,19 +24,22 @@ import appeng.api.stacks.GenericStack;
 /**
  * A Stellar Simulation recipe — the "programs" that run inside the Stellar Nexus.
  * <p>
- * Each recipe represents a complete stellar simulation cycle (~20 minutes),
- * consuming massive amounts of energy, plasma, and optional item catalysts
+ * Each recipe represents a complete stellar simulation cycle,
+ * consuming massive amounts of energy, fuel (liquid), coolant, and item/fluid catalysts
  * to produce millions of items injected directly into the ME network.
  * <p>
- * <b>Design decision (Option C):</b> The Controller pulls inputs directly from
- * the connected ME grid. No input hatches or manual slot insertion required.
- * The player only needs the items/fluids in their ME storage and selects
- * the program via the Controller GUI.
- * <p>
- * Additional fields beyond the DMA pattern:
+ * <b>Terminology:</b>
  * <ul>
- *   <li>{@code coolingLevel} — minimum cooling score required (0-3)</li>
- *   <li>{@code fieldTier} — minimum Stellar Field Generator tier (1-3)</li>
+ *   <li><b>Energy</b> = AE power (e.g., 500M AE) — charged passively from AE network</li>
+ *   <li><b>Fuel</b> = liquid combustible (e.g., Hydrogen) — extracted from ME storage on start</li>
+ *   <li><b>Coolant</b> = liquid refrigerant with tiers — consumed during operation</li>
+ * </ul>
+ * <p>
+ * Coolant Tiers:
+ * <ul>
+ *   <li>1 = Gelid Cryotheum (ufo:source_gelid_cryotheum)</li>
+ *   <li>2 = Stable Coolant (ufo:source_stable_coolant)</li>
+ *   <li>3 = Temporal Fluid (ufo:source_temporal_fluid)</li>
  * </ul>
  */
 public class StellarSimulationRecipe implements Recipe<RecipeInput> {
@@ -44,28 +49,57 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
     protected final List<GenericStack> itemOutputs;
     protected final List<GenericStack> fluidOutputs;
 
-    protected final int fuel;         // Total AE fuel cost for the simulation
-    protected final int time;         // Total ticks for the simulation
-    protected final int coolingLevel; // 0 = none, 1 = basic, 2 = advanced, 3 = extreme
-    protected final int fieldTier;    // 1 = Mk.I, 2 = Mk.II, 3 = Mk.III
+    protected final String simulationName;      // Display name for the simulation
+    protected final int energy;                  // Total AE power cost
+    protected final int time;                    // Total ticks for the simulation
+    protected final int coolingLevel;            // 0 = none, 1 = basic, 2 = advanced, 3 = extreme
+    protected final int fieldTier;               // 1 = Mk.I, 2 = Mk.II, 3 = Mk.III
+    protected final String fuelFluid;            // ResourceLocation string of fuel fluid (e.g., "mekanism:hydrogen")
+    protected final long fuelAmount;             // Amount of fuel fluid required (mB)
+    protected final String coolantFluid;         // ResourceLocation string of coolant fluid
+    protected final long coolantAmount;          // Amount of coolant fluid required (mB)
 
     public StellarSimulationRecipe(
             List<IngredientStack.Item> itemInputs,
             List<IngredientStack.Fluid> fluidInputs,
             List<GenericStack> itemOutputs,
             List<GenericStack> fluidOutputs,
-            int fuel,
+            String simulationName,
+            int energy,
             int time,
             int coolingLevel,
-            int fieldTier) {
+            int fieldTier,
+            String fuelFluid,
+            long fuelAmount,
+            String coolantFluid,
+            long coolantAmount) {
         this.itemInputs = itemInputs;
         this.fluidInputs = fluidInputs;
         this.itemOutputs = itemOutputs;
         this.fluidOutputs = fluidOutputs;
-        this.fuel = fuel;
+        this.simulationName = simulationName != null && !simulationName.isEmpty() ? simulationName : "";
+        this.energy = energy;
         this.time = time > 0 ? time : 24000; // default 20 minutes
         this.coolingLevel = Math.clamp(coolingLevel, 0, 3);
         this.fieldTier = Math.clamp(fieldTier, 1, 3);
+        this.fuelFluid = fuelFluid != null ? fuelFluid : "";
+        this.fuelAmount = fuelAmount;
+        this.coolantFluid = coolantFluid != null ? coolantFluid : "";
+        this.coolantAmount = coolantAmount;
+    }
+
+    // Legacy constructor for backward compatibility with old 8-param format
+    public StellarSimulationRecipe(
+            List<IngredientStack.Item> itemInputs,
+            List<IngredientStack.Fluid> fluidInputs,
+            List<GenericStack> itemOutputs,
+            List<GenericStack> fluidOutputs,
+            int energy,
+            int time,
+            int coolingLevel,
+            int fieldTier) {
+        this(itemInputs, fluidInputs, itemOutputs, fluidOutputs,
+                "", energy, time, coolingLevel, fieldTier, "", 0, "", 0);
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -157,9 +191,20 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
         return validInputs;
     }
 
-    /** Total AE fuel cost for the entire simulation. */
+    /** Display name for this simulation program. */
+    public String getSimulationName() {
+        return simulationName;
+    }
+
+    /** Total AE power cost for the entire simulation. */
+    public int getEnergyCost() {
+        return energy;
+    }
+
+    /** @deprecated Use {@link #getEnergyCost()} instead. Kept for backward compat. */
+    @Deprecated
     public int getFuelCost() {
-        return fuel;
+        return energy;
     }
 
     /** Total ticks for the simulation cycle. */
@@ -177,11 +222,31 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
         return fieldTier;
     }
 
+    /** ResourceLocation string of the required fuel fluid (e.g. "mekanism:hydrogen"). Empty if none. */
+    public String getFuelFluid() {
+        return fuelFluid;
+    }
+
+    /** Amount of fuel fluid required in mB. */
+    public long getFuelAmount() {
+        return fuelAmount;
+    }
+
+    /** ResourceLocation string of the required coolant fluid. Empty if none. */
+    public String getCoolantFluid() {
+        return coolantFluid;
+    }
+
+    /** Amount of coolant fluid required in mB. */
+    public long getCoolantAmount() {
+        return coolantAmount;
+    }
+
     /**
-     * Total fuel cost (same as getFuelCost for display).
+     * Total energy cost (same as getEnergyCost for display).
      */
     public long getTotalEnergy() {
-        return fuel;
+        return energy;
     }
 
     /**
@@ -192,5 +257,21 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
         return String.format("%dm %02ds", minutes, seconds);
+    }
+
+    /**
+     * Resolves the fuel fluid ResourceLocation, or empty if not set.
+     */
+    public Optional<ResourceLocation> getFuelFluidRL() {
+        if (fuelFluid.isEmpty()) return Optional.empty();
+        return Optional.of(ResourceLocation.parse(fuelFluid));
+    }
+
+    /**
+     * Resolves the coolant fluid ResourceLocation, or empty if not set.
+     */
+    public Optional<ResourceLocation> getCoolantFluidRL() {
+        if (coolantFluid.isEmpty()) return Optional.empty();
+        return Optional.of(ResourceLocation.parse(coolantFluid));
     }
 }

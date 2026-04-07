@@ -1,0 +1,9 @@
+{
+  "loader": "neoforge:obj",
+  "flip_v": true,
+  "model": "ufo:models/obj/climber.obj",
+  "textures": {
+    "texture0": "ufo:block/obj/climber_overlay",
+    "particle": "ufo:block/obj/climber_overlay"
+  }
+}

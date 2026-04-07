@@ -47,6 +47,11 @@ public class ModPackets {
                 PacketToggleStellarSafeMode.STREAM_CODEC,
                 PacketToggleStellarSafeMode::handle
         );
+        registrar.playToServer(
+                PacketScanStellarStructure.TYPE,
+                PacketScanStellarStructure.STREAM_CODEC,
+                PacketScanStellarStructure::handle
+        );
     }
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {

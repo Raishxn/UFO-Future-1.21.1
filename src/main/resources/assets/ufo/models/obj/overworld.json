@@ -1,0 +1,9 @@
+{
+  "loader": "neoforge:obj",
+  "flip_v": true,
+  "model": "ufo:models/obj/star.obj",
+  "textures": {
+    "texture0": "ufo:block/dim_markers/overworld/west",
+    "particle": "ufo:block/dim_markers/overworld/west"
+  }
+}

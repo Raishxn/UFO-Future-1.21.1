@@ -214,9 +214,7 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get(), new Item.Properties(),
                      ChatFormatting.YELLOW, ChatFormatting.GOLD, ChatFormatting.WHITE));
 
-     public static final DeferredItem<Item> STELLAR_FUEL_HATCH = ITEMS.register("stellar_fuel_hatch",
-             () -> new AnimatedNameBlockItem(MultiblockBlocks.STELLAR_FUEL_HATCH.get(), new Item.Properties(),
-                     ChatFormatting.AQUA, ChatFormatting.BLUE, ChatFormatting.DARK_BLUE));
+
 
      public static final DeferredItem<Item> STELLAR_FIELD_GENERATOR_T1 = ITEMS.register("stellar_field_generator_t1",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get(), new Item.Properties(),
@@ -258,6 +256,9 @@ public class ModItems {
              () -> new BucketItem(ModFluids.SOURCE_UU_AMPLIFIER_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final DeferredItem<Item> GELID_CRYOTHEUM_BUCKET = ITEMS.register("gelid_cryotheum_bucket",
             () -> new BucketItem(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    public static final DeferredItem<Item> STABLE_COOLANT_BUCKET = ITEMS.register("stable_coolant_bucket",
+            () -> new BucketItem(ModFluids.SOURCE_STABLE_COOLANT.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     public static final DeferredItem<Item> TEMPORAL_FLUID_BUCKET = ITEMS.register("temporal_fluid_bucket",
             () -> new BucketItem(ModFluids.SOURCE_TEMPORAL_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));

@@ -87,6 +87,9 @@ public class ModBlocks extends BlockRegistry {
     public static final DeferredBlock<LiquidBlock> GELID_CRYOTHEUM_BLOCK = BLOCKS.register("gelid_cryotheum_block",
             () -> new LiquidBlock(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
+    public static final DeferredBlock<LiquidBlock> STABLE_COOLANT_BLOCK = BLOCKS.register("stable_coolant_block",
+            () -> new LiquidBlock(ModFluids.SOURCE_STABLE_COOLANT.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+
     public static final DeferredBlock<LiquidBlock> TEMPORAL_FLUID_BLOCK = BLOCKS.register("temporal_fluid_block",
             () -> new LiquidBlock((FlowingFluid)ModFluids.SOURCE_TEMPORAL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 

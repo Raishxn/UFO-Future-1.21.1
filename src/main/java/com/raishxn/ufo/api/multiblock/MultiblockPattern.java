@@ -98,11 +98,12 @@ public class MultiblockPattern {
     public MatchResult match(Level level, BlockPos controllerPos, net.minecraft.core.Direction facing) {
         List<BlockPos> partPositions = new ArrayList<>();
         PatternError firstError = null;
+        List<PatternError> allErrors = new ArrayList<>();
         boolean valid = true;
 
-        for (int y = 0; y < pattern.length && valid; y++) {
-            for (int z = 0; z < pattern[y].length && valid; z++) {
-                for (int x = 0; x < pattern[y][z].length && valid; x++) {
+        for (int y = 0; y < pattern.length; y++) {
+            for (int z = 0; z < pattern[y].length; z++) {
+                for (int x = 0; x < pattern[y][z].length; x++) {
                     char c = pattern[y][z][x];
 
                     // Calculate world offset from controller
@@ -125,16 +126,19 @@ public class MultiblockPattern {
 
                     if (!level.isLoaded(worldPos)) {
                         valid = false;
-                        firstError = new PatternError(worldPos, Component.literal("Chunk not loaded"));
-                        break;
+                        PatternError err = new PatternError(worldPos, Component.literal("Chunk not loaded"));
+                        allErrors.add(err);
+                        if (firstError == null) firstError = err;
+                        continue;
                     }
 
                     BlockState state = level.getBlockState(worldPos);
                     if (!predicate.test(state, level, worldPos)) {
                         valid = false;
                         Component expected = legendNames.getOrDefault(c, Component.literal("Expected part"));
-                        firstError = new PatternError(worldPos, expected);
-                        break;
+                        PatternError err = new PatternError(worldPos, expected);
+                        allErrors.add(err);
+                        if (firstError == null) firstError = err;
                     } else {
                         partPositions.add(worldPos);
                     }
@@ -142,7 +146,7 @@ public class MultiblockPattern {
             }
         }
 
-        return new MatchResult(valid, valid ? Collections.unmodifiableList(partPositions) : Collections.emptyList(), Optional.ofNullable(firstError));
+        return new MatchResult(valid, valid ? Collections.unmodifiableList(partPositions) : Collections.emptyList(), Optional.ofNullable(firstError), Collections.unmodifiableList(allErrors));
     }
 
     /**
@@ -182,6 +186,9 @@ public class MultiblockPattern {
 
                     if (worldPos.equals(controllerPos)) continue;
 
+                    if (!level.isInWorldBounds(worldPos)) continue;
+                    if (!level.hasChunkAt(worldPos)) continue;
+
                     BlockPredicate predicate = legend.get(c);
                     BlockState targetState = defaultStates.get(c);
 
@@ -204,7 +211,7 @@ public class MultiblockPattern {
     /**
      * Result of a pattern match attempt.
      */
-    public record MatchResult(boolean isValid, List<BlockPos> partPositions, Optional<PatternError> error) {}
+    public record MatchResult(boolean isValid, List<BlockPos> partPositions, Optional<PatternError> error, List<PatternError> allErrors) {}
 
     // ──────────────────────── Builder ────────────────────────
 

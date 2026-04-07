@@ -1,5 +1,9 @@
 {
   "loader": "neoforge:obj",
   "model": "ufo:models/obj/star.obj",
-  "flip_v": true
+  "flip_v": true,
+  "textures": {
+    "texture0": "ufo:block/obj/star_layer",
+    "particle": "ufo:block/obj/star_layer"
+  }
 }

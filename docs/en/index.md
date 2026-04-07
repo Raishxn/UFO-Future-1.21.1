@@ -2,7 +2,7 @@
 
 Welcome to the official documentation for **UFO Future**, an advanced AE2 addon mod for Minecraft 1.21.1 (NeoForge).
 
-UFO Future introduces endgame stellar materials, a powerful custom machine, transformable energy tools, tiered armor sets, BigInteger storage cells, infinite cells, and a deep material progression system — all integrated with Applied Energistics 2.
+UFO Future introduces endgame stellar materials, powerful multiblock machines, transformable energy tools, tiered armor sets, BigInteger storage cells, infinite cells, and a deep material progression system — all integrated with Applied Energistics 2.
 
 ---
 
@@ -10,8 +10,9 @@ UFO Future introduces endgame stellar materials, a powerful custom machine, tran
 
 | Page | Description |
 |------|-------------|
+| [Stellar Nexus](stellar-nexus.md) | The ultimate 35×34×35 multiblock — stellar simulation, thermal management, explosion system |
 | [Dimensional Matter Assembler](dma.md) | The core machine — crafting, GUI, and thermal system |
-| [KubeJS Custom Recipes](kubejs-recipes.md) | How to create/modify DMA recipes via KubeJS |
+| [KubeJS Custom Recipes](kubejs-recipes.md) | How to create custom DMA and Stellar Nexus recipes via KubeJS |
 | [Catalysts](catalysts.md) | All 13 catalyst upgrades — families, tiers, stats, heat |
 | [Tools & Weapons](tools.md) | Energy-based transformable multi-tool system |
 | [Armor Sets](armor.md) | Thermal Resistor Exosuit & UFO Armor sets |
@@ -24,7 +25,7 @@ UFO Future introduces endgame stellar materials, a powerful custom machine, tran
 ## Quick Reference
 
 - **Mod ID**: `ufo`
-- **Recipe Type**: `ufo:dimensional_assembly`
+- **Recipe Types**: `ufo:dimensional_assembly`, `ufo:stellar_simulation`
 - **Namespace**: `com.raishxn.ufo`
 - **Minecraft**: 1.21.1
 - **Loader**: NeoForge

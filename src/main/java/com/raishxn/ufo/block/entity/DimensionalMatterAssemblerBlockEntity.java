@@ -187,6 +187,12 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
         this.thermalTicker++;
 
+        if (this.hasCreativeCatalyst) {
+            this.temperature = 0;
+            this.overloadTimer = -1;
+            return;
+        }
+
         // 1. Heat Generation: smooth +1 HU every 2 ticks while working (= +10 HU/s)
         // scaled by upgrades
         if (this.isWorking()) {
@@ -217,7 +223,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                 } else if (fluidId.contains("temporal")) {
                     heatPerMB = 100; // very efficient
                 } else if (fluidId.contains("gelid_cryotheum")) {
-                    mBPerHeat = 200; // 2000mB for 10 Heat
+                    mBPerHeat = 60; // 600mB for 10 Heat
                 } else {
                     heatPerMB = 15; // default
                 }
@@ -324,7 +330,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             if (this.overloadTimer == 0) {
                 net.minecraft.server.MinecraftServer server = this.level.getServer();
                 if (server != null) {
-                    java.lang.String msg = "[⚠ ALERTA TÉRMICO] Dimensional Matter Assembler explodiu catastróficamente em [X: "
+                    java.lang.String msg = "[⚠ THERMAL ALERT] Dimensional Matter Assembler exploded catastrophically at [X: "
                             +
                             this.worldPosition.getX() + ", Y: " + this.worldPosition.getY() + ", Z: " +
                             this.worldPosition.getZ() + "]!";
@@ -400,6 +406,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     private double currentHeatMultiplier = 1.0;
     private double currentSpeedMultiplier = 1.0;
     private double currentPowerMultiplier = 1.0;
+    private boolean hasCreativeCatalyst = false;
 
     private void recalculateUpgrades() {
         long newMaxPower = MAX_POWER_STORAGE;
@@ -411,29 +418,36 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         com.raishxn.ufo.item.custom.BaseCatalystItem firstCatalyst = null;
         boolean synergyPossible = true;
 
+        boolean foundCreative = false;
+
         for (int i = 0; i < this.upgrades.size(); i++) {
             ItemStack upgradeStack = this.upgrades.getStackInSlot(i);
-            if (!upgradeStack.isEmpty()
-                    && upgradeStack.getItem() instanceof com.raishxn.ufo.item.custom.BaseCatalystItem catalyst) {
-                newMaxPower *= catalyst.getBufferMultiplier();
+            if (!upgradeStack.isEmpty()) {
+                if (upgradeStack.getItem() instanceof com.raishxn.ufo.item.custom.DimensionalCatalystItem) {
+                    foundCreative = true;
+                } else if (upgradeStack.getItem() instanceof com.raishxn.ufo.item.custom.BaseCatalystItem catalyst) {
+                    newMaxPower *= catalyst.getBufferMultiplier();
 
-                // Thermal now multiplies heat generation (e.g. +400 static heat = 4x
-                // multiplier)
-                // We map getStaticHeat -> Multiplier: (e.g. 100 heat = 1.0 extra multiplier)
-                heatMult += Math.max(0, catalyst.getStaticHeat() / 100.0);
-                speedMult *= catalyst.getSpeedMultiplier();
-                powerMult *= catalyst.getPowerMultiplier();
+                    // Thermal now multiplies heat generation (e.g. +400 static heat = 4x
+                    // multiplier)
+                    // We map getStaticHeat -> Multiplier: (e.g. 100 heat = 1.0 extra multiplier)
+                    heatMult += Math.max(0, catalyst.getStaticHeat() / 100.0);
+                    speedMult *= catalyst.getSpeedMultiplier();
+                    powerMult *= catalyst.getPowerMultiplier();
 
-                if (firstCatalyst == null) {
-                    firstCatalyst = catalyst;
-                    identicalCount++;
-                } else if (firstCatalyst == catalyst) {
-                    identicalCount++;
+                    if (firstCatalyst == null) {
+                        firstCatalyst = catalyst;
+                        identicalCount++;
+                    } else if (firstCatalyst == catalyst) {
+                        identicalCount++;
+                    } else {
+                        synergyPossible = false;
+                    }
                 } else {
-                    synergyPossible = false;
+                    synergyPossible = false; // Missing or non-catalyst prevents synergy
                 }
             } else {
-                synergyPossible = false; // Missing or non-catalyst prevents synergy
+                synergyPossible = false;
             }
         }
 
@@ -449,6 +463,14 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             }
         }
 
+        if (foundCreative) {
+             heatMult = 0.0;
+             speedMult = 1000.0;
+             powerMult = 0.0;
+             newMaxPower = MAX_POWER_STORAGE;
+        }
+
+        this.hasCreativeCatalyst = foundCreative;
         this.currentHeatMultiplier = heatMult;
         this.currentSpeedMultiplier = speedMult;
         this.currentPowerMultiplier = powerMult;
@@ -746,7 +768,9 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                     for (int i = 0; i < out.getItemOutputs().size(); i++) {
                         if (out.getItemOutputs().get(i) != null
                                 && out.getItemOutputs().get(i).what() instanceof AEItemKey itemKey) {
-                            var toIns = itemKey.toStack((int) out.getItemOutputs().get(i).amount());
+                            int outAmount = (int) out.getItemOutputs().get(i).amount();
+                            if (this.hasCreativeCatalyst) outAmount *= 2; // 100% Bonus Drop
+                            var toIns = itemKey.toStack(outAmount);
                             this.outputInv.insertItem(i, toIns, false);
                         }
                     }
@@ -755,36 +779,42 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                     for (int i = 0; i < out.getFluidOutputs().size(); i++) {
                         if (out.getFluidOutputs().get(i) != null
                                 && out.getFluidOutputs().get(i).what() instanceof AEFluidKey fluidKey) {
-                            this.fluidInv.add(i, fluidKey, (int) out.getFluidOutputs().get(i).amount());
+                            int outAmount = (int) out.getFluidOutputs().get(i).amount();
+                            if (this.hasCreativeCatalyst) outAmount *= 2; // 100% Bonus Drop
+                            this.fluidInv.add(i, fluidKey, outAmount);
                         }
                     }
 
-                    // Consume inputs shapelessly
-                    for (var req : out.getItemInputs()) {
-                        if (req != null && !req.isEmpty()) {
-                            int amountNeeded = (int) req.getAmount();
-                            for (int i = 0; i < this.inputInv.size() && amountNeeded > 0; i++) {
-                                var currentStack = this.inputInv.getStackInSlot(i);
-                                if (req.getIngredient().test(currentStack)) {
-                                    int toTake = Math.min(currentStack.getCount(), amountNeeded);
-                                    currentStack.shrink(toTake);
-                                    this.inputInv.setItemDirect(i, currentStack);
-                                    amountNeeded -= toTake;
+                    if (!this.hasCreativeCatalyst) {
+                        // Consume inputs shapelessly
+                        for (var req : out.getItemInputs()) {
+                            if (req != null && !req.isEmpty()) {
+                                int amountNeeded = (int) req.getAmount();
+                                for (int i = 0; i < this.inputInv.size() && amountNeeded > 0; i++) {
+                                    var currentStack = this.inputInv.getStackInSlot(i);
+                                    if (req.getIngredient().test(currentStack)) {
+                                        int toTake = Math.min(currentStack.getCount(), amountNeeded);
+                                        currentStack.shrink(toTake);
+                                        this.inputInv.setItemDirect(i, currentStack);
+                                        amountNeeded -= toTake;
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    // Consume fluids (always from slot 3 = base fluid input)
-                    for (int i = 0; i < out.getFluidInputs().size(); i++) {
-                        if (out.getFluidInputs().get(i) != null && !out.getFluidInputs().get(i).isEmpty()) {
-                            var currentStack = this.fluidInv.getStack(3); // Always slot 3 (base fluid)
-                            var key = currentStack.what();
-                            long remaining = currentStack.amount() - out.getFluidInputs().get(i).getAmount();
-                            if (remaining > 0) {
-                                this.fluidInv.setStack(3, new GenericStack(key, remaining));
-                            } else {
-                                this.fluidInv.setStack(3, null);
+                        // Consume fluids (always from slot 3 = base fluid input)
+                        for (int i = 0; i < out.getFluidInputs().size(); i++) {
+                            if (out.getFluidInputs().get(i) != null && !out.getFluidInputs().get(i).isEmpty()) {
+                                var currentStack = this.fluidInv.getStack(3); // Always slot 3 (base fluid)
+                                if (currentStack != null) {
+                                    var key = currentStack.what();
+                                    long remaining = currentStack.amount() - out.getFluidInputs().get(i).getAmount();
+                                    if (remaining > 0) {
+                                        this.fluidInv.setStack(3, new GenericStack(key, remaining));
+                                    } else {
+                                        this.fluidInv.setStack(3, null);
+                                    }
+                                }
                             }
                         }
                     }

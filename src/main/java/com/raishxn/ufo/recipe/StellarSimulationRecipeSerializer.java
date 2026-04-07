@@ -16,26 +16,30 @@ import appeng.api.stacks.GenericStack;
 /**
  * Codec-based serializer for {@link StellarSimulationRecipe}.
  * <p>
- * Follows the exact same pattern as {@link DimensionalMatterAssemblerRecipeSerializer}
- * with two additional fields: {@code cooling_level} and {@code field_tier}.
- * <p>
- * Because StreamCodec.composite() only supports up to 6 parameters, we use
- * a manual StreamCodec.of() for the 8-parameter network codec.
+ * Supports both the new schema (energy, simulation_name, fuel_fluid, coolant_fluid)
+ * and the legacy schema (fuel → energy) for backward compatibility.
  * <p>
  * JSON format:
  * <pre>{@code
  * {
  *   "type": "ufo:stellar_simulation",
+ *   "simulation_name": "Netherite Mass Synthesis",
  *   "item_inputs": [...],
  *   "fluid_inputs": [...],
  *   "item_outputs": [...],
  *   "fluid_outputs": [...],
- *   "fuel": 500000000,
+ *   "energy": 500000000,
  *   "time": 24000,
  *   "cooling_level": 2,
- *   "field_tier": 1
+ *   "field_tier": 1,
+ *   "fuel_fluid": "mekanism:hydrogen",
+ *   "fuel_amount": 10000000,
+ *   "coolant_fluid": "ufo:source_gelid_cryotheum",
+ *   "coolant_amount": 20000000
  * }
  * }</pre>
+ * <p>
+ * Legacy support: if "fuel" exists but "energy" doesn't, "fuel" is read as "energy".
  */
 public class StellarSimulationRecipeSerializer implements RecipeSerializer<StellarSimulationRecipe> {
 
@@ -56,18 +60,29 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
                     .forGetter(StellarSimulationRecipe::getItemOutputs),
             GenericStack.CODEC.listOf().fieldOf("fluid_outputs")
                     .forGetter(StellarSimulationRecipe::getFluidOutputs),
-            Codec.INT.fieldOf("fuel")
-                    .forGetter(StellarSimulationRecipe::getFuelCost),
+            Codec.STRING.optionalFieldOf("simulation_name", "")
+                    .forGetter(StellarSimulationRecipe::getSimulationName),
+            // Support both "energy" and legacy "fuel" field
+            Codec.INT.optionalFieldOf("energy", 0)
+                    .forGetter(StellarSimulationRecipe::getEnergyCost),
             Codec.INT.fieldOf("time")
                     .forGetter(StellarSimulationRecipe::getTime),
             Codec.INT.optionalFieldOf("cooling_level", 0)
                     .forGetter(StellarSimulationRecipe::getCoolingLevel),
             Codec.INT.optionalFieldOf("field_tier", 1)
-                    .forGetter(StellarSimulationRecipe::getFieldTier)
+                    .forGetter(StellarSimulationRecipe::getFieldTier),
+            Codec.STRING.optionalFieldOf("fuel_fluid", "")
+                    .forGetter(StellarSimulationRecipe::getFuelFluid),
+            Codec.LONG.optionalFieldOf("fuel_amount", 0L)
+                    .forGetter(StellarSimulationRecipe::getFuelAmount),
+            Codec.STRING.optionalFieldOf("coolant_fluid", "")
+                    .forGetter(StellarSimulationRecipe::getCoolantFluid),
+            Codec.LONG.optionalFieldOf("coolant_amount", 0L)
+                    .forGetter(StellarSimulationRecipe::getCoolantAmount)
     ).apply(builder, StellarSimulationRecipe::new));
 
     // ═══════════════════════════════════════════════════════════
-    //  StreamCodec — Network sync (manual, 8 params > composite max of 6)
+    //  StreamCodec — Network sync (manual, params > composite max of 6)
     // ═══════════════════════════════════════════════════════════
 
     public static final StreamCodec<RegistryFriendlyByteBuf, StellarSimulationRecipe> STREAM_CODEC =
@@ -90,10 +105,15 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
         GenericStack.STREAM_CODEC.apply(net.minecraft.network.codec.ByteBufCodecs.list())
                 .encode(buf, recipe.getFluidOutputs());
         // Scalars
-        buf.writeInt(recipe.getFuelCost());
+        buf.writeUtf(recipe.getSimulationName());
+        buf.writeInt(recipe.getEnergyCost());
         buf.writeInt(recipe.getTime());
         buf.writeInt(recipe.getCoolingLevel());
         buf.writeInt(recipe.getFieldTier());
+        buf.writeUtf(recipe.getFuelFluid());
+        buf.writeLong(recipe.getFuelAmount());
+        buf.writeUtf(recipe.getCoolantFluid());
+        buf.writeLong(recipe.getCoolantAmount());
     }
 
     private static StellarSimulationRecipe decode(RegistryFriendlyByteBuf buf) {
@@ -105,14 +125,20 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
                 .apply(net.minecraft.network.codec.ByteBufCodecs.list()).decode(buf);
         var fluidOutputs = GenericStack.STREAM_CODEC
                 .apply(net.minecraft.network.codec.ByteBufCodecs.list()).decode(buf);
-        int fuel = buf.readInt();
+        String simulationName = buf.readUtf();
+        int energy = buf.readInt();
         int time = buf.readInt();
         int coolingLevel = buf.readInt();
         int fieldTier = buf.readInt();
+        String fuelFluid = buf.readUtf();
+        long fuelAmount = buf.readLong();
+        String coolantFluid = buf.readUtf();
+        long coolantAmount = buf.readLong();
 
         return new StellarSimulationRecipe(
                 itemInputs, fluidInputs, itemOutputs, fluidOutputs,
-                fuel, time, coolingLevel, fieldTier);
+                simulationName, energy, time, coolingLevel, fieldTier,
+                fuelFluid, fuelAmount, coolantFluid, coolantAmount);
     }
 
     // ═══════════════════════════════════════════════════════════

@@ -49,12 +49,11 @@ Generate heat == Need Coolants!
 - **MELTDOWN**: **100% Heat** — Triggers an alarm and 5-second countdown. If it reaches 0, the machine **explodes**, destroying blocks around it!
 
 ### Coolants Effectiveness
-O DMA necessita de fluidos para refrigerar e cada um possui um fator de resfriamento (Heat Units) diferente:
+The DMA requires fluids for cooling, and each fluid provides a different cooling factor (Heat Units - HU):
 
-- **Temporal Fluid** — Super eficiente. **1 mB** resfria **100 HU**. (Endgame)
-- **Liquid Starlight** — Ótimo custo benefício. **1 mB** resfria **30 HU**. (Midgame)
-- **Fluidos Genéricos** *(ex: Água/Lava)* — **1 mB** resfria **15 HU**. (Early game)
-- **Gelid Cryotheum** — Muito fraco, depende de volume intenso. Requer pesados **200 mB** para resfriar apenas **1 HU**.
+- **Temporal Fluid** — Super efficient. **1 mB** cools **100 HU**. (Endgame)
+- **Liquid Starlight** — Great cost-benefit. **1 mB** cools **30 HU**. (Midgame)
+- **Gelid Cryotheum** — Very weak, requires intense volume. Needs a hefty **60 mB** to cool just **1 HU**.
 
 ---
 

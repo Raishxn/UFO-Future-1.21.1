@@ -1,7 +1,4 @@
 {
-  "ldlib": {
-    "connection": "ufo:block/multiblock/entropy_assembler_core_casing_ctm"
-  },
   "animation": {
     "frametime": 1
   }

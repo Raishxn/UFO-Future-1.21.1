@@ -1,34 +1,37 @@
 package com.raishxn.ufo.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
+import com.raishxn.ufo.client.render.StellarModelRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import org.joml.Quaternionf;
+
+import java.util.List;
 
 /**
- * Renders a glowing, rotating star sphere at the center of the Stellar Nexus
- * multiblock while it is actively processing a simulation.
- * <p>
- * Uses a UV sphere built from triangles with the beacon beam render type
- * for the glowing effect (no external model dependency).
+ * Custom renderer for the Stellar Nexus multiblock.
+ * Renders a complete scene: outer space shell + central star + orbiting dimension objects.
+ * Based directly on GTO Core's EyeOfHarmonyRenderer.
  */
 public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusControllerBE> {
 
-    private static final ResourceLocation BEAM_TEXTURE =
-            ResourceLocation.withDefaultNamespace("textures/entity/beacon_beam.png");
-
-    // Sphere parameters
-    private static final int STACKS = 16;
-    private static final int SLICES = 24;
-    private static final float RADIUS = 3.5f;
+    private static final List<ResourceLocation> ORBIT_OBJECTS = List.of(
+            StellarModelRegistry.THE_NETHER,
+            StellarModelRegistry.OVERWORLD,
+            StellarModelRegistry.THE_END
+    );
 
     public StellarNexusRenderer(BlockEntityRendererProvider.Context context) {
     }
@@ -36,126 +39,188 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
     @Override
     public void render(StellarNexusControllerBE blockEntity, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        if (!blockEntity.isActive()) return;
+        if (!blockEntity.isAssembled()) return;
         if (blockEntity.getLevel() == null) return;
 
-        poseStack.pushPose();
+        boolean isActive = blockEntity.isActive();
 
-        // Calculate center offset based on controller facing direction
-        Direction facing = blockEntity.getBlockState().getValue(BlockStateProperties.FACING);
-
-        float xOffset = 0.5f;
-        float yOffset = 17.5f;
-        float zOffset = 0.5f;
-
-        switch (facing) {
-            case NORTH -> zOffset += 17f;
-            case SOUTH -> zOffset -= 17f;
-            case WEST  -> xOffset += 17f;
-            case EAST  -> xOffset -= 17f;
-            default -> {}
+        // Determine which star model to use based on active recipe
+        ResourceLocation starModelLoc = StellarModelRegistry.STAR;
+        if (isActive) {
+            String simulationName = "Unknown";
+            var recipeId = blockEntity.getActiveRecipeId();
+            if (recipeId != null) {
+                var recipe = blockEntity.getLevel().getRecipeManager().byKey(recipeId);
+                if (recipe.isPresent() && recipe.get().value() instanceof com.raishxn.ufo.recipe.StellarSimulationRecipe stellarRecipe) {
+                    simulationName = stellarRecipe.getSimulationName();
+                }
+            }
+            starModelLoc = StellarModelRegistry.getModelForSimulation(simulationName);
         }
 
-        poseStack.translate(xOffset, yOffset, zOffset);
+        // Calculate animation tick
+        float tick = blockEntity.getLevel().getGameTime() + partialTick;
 
-        // Rotation animation
-        long time = blockEntity.getLevel().getGameTime();
-        float rotation = (time + partialTick) * 2.0f;
-        poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
-        poseStack.mulPose(Axis.XP.rotationDegrees(rotation * 0.3f));
+        // Calculate center offset based on controller facing direction
+        // The multiblock is 35x34x35 — translate rendering to the center
+        Direction facing = blockEntity.getBlockState().getValue(BlockStateProperties.FACING);
+        double x = 0.5, y = 17.0, z = 0.5; // Default: center vertically at half-height
+        switch (facing) {
+            case NORTH -> z += 16;
+            case SOUTH -> z -= 16;
+            case WEST  -> x += 16;
+            case EAST  -> x -= 16;
+            case UP    -> y -= 16;
+            case DOWN  -> y += 16;
+        }
 
-        // Pulsing scale effect
-        float pulse = 1.0f + 0.08f * (float) Math.sin((time + partialTick) * 0.1);
-        poseStack.scale(pulse, pulse, pulse);
-
-        // == Outer glow layer (larger, semi-transparent) ==
         poseStack.pushPose();
-        float outerScale = 1.4f;
-        poseStack.scale(outerScale, outerScale, outerScale);
-        renderSphere(poseStack, bufferSource, 0.4f, 0.6f, 1.0f, 0.25f); // blue glow
-        poseStack.popPose();
+        poseStack.translate(x, y, z);
 
-        // == Core sphere (bright white-yellow) ==
-        renderSphere(poseStack, bufferSource, 1.0f, 0.95f, 0.7f, 0.9f); // warm white core
+        // 1. Render outer space shell (largest layer)
+        renderOuterSpaceShell(tick, poseStack, bufferSource);
 
-        // == Inner hot core (small, bright orange) ==
-        poseStack.pushPose();
-        float innerScale = 0.6f;
-        poseStack.scale(innerScale, innerScale, innerScale);
-        renderSphere(poseStack, bufferSource, 1.0f, 0.6f, 0.2f, 1.0f); // orange inner
-        poseStack.popPose();
+        // 2. Render the central star (SUN — large and dominant)
+        renderStar(tick, starModelLoc, poseStack, bufferSource, isActive);
+
+        // 3. Render orbiting dimension objects (smaller, orbiting)
+        if (isActive) {
+            renderOrbitObjects(tick, poseStack, bufferSource);
+        }
 
         poseStack.popPose();
     }
 
     /**
-     * Renders a UV sphere using the beacon beam render type for that classic MC glow.
+     * Renders the central star (SUN) — the dominant object.
+     * Scale 0.06F makes it visually large inside the space shell.
      */
-    private void renderSphere(PoseStack poseStack, MultiBufferSource bufferSource,
-                              float r, float g, float b, float a) {
-        VertexConsumer consumer = bufferSource.getBuffer(RenderType.beaconBeam(BEAM_TEXTURE, true));
+    private static void renderStar(float tick, ResourceLocation modelLoc, PoseStack poseStack,
+                                    MultiBufferSource buffer, boolean isActive) {
+        BakedModel model = StellarModelRegistry.getBakedModel(modelLoc);
+        if (model == null) return;
 
-        for (int i = 0; i < STACKS; i++) {
-            float phi1 = (float) Math.PI * i / STACKS;
-            float phi2 = (float) Math.PI * (i + 1) / STACKS;
+        poseStack.pushPose();
 
-            for (int j = 0; j < SLICES; j++) {
-                float theta1 = 2.0f * (float) Math.PI * j / SLICES;
-                float theta2 = 2.0f * (float) Math.PI * (j + 1) / SLICES;
+        // LARGE star: scale 0.06 (3x bigger than GTO Core's 0.02)
+        float scale = isActive ? 0.06F : 0.035F;
+        poseStack.scale(scale, scale, scale);
 
-                // Four corners of this quad
-                float x1 = RADIUS * (float) (Math.sin(phi1) * Math.cos(theta1));
-                float y1 = RADIUS * (float) Math.cos(phi1);
-                float z1 = RADIUS * (float) (Math.sin(phi1) * Math.sin(theta1));
+        // Rotation: GTO Core pattern
+        poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(0.0F, 1.0F, 1.0F, (tick / 2) % 360.0F));
 
-                float x2 = RADIUS * (float) (Math.sin(phi1) * Math.cos(theta2));
-                float y2 = RADIUS * (float) Math.cos(phi1);
-                float z2 = RADIUS * (float) (Math.sin(phi1) * Math.sin(theta2));
+        // Pulse effect when active
+        if (isActive) {
+            float pulse = 1.0F + 0.08F * (float) Math.sin(tick * 0.15);
+            poseStack.scale(pulse, pulse, pulse);
+        }
 
-                float x3 = RADIUS * (float) (Math.sin(phi2) * Math.cos(theta2));
-                float y3 = RADIUS * (float) Math.cos(phi2);
-                float z3 = RADIUS * (float) (Math.sin(phi2) * Math.sin(theta2));
+        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
+                poseStack.last(),
+                buffer.getBuffer(RenderType.translucent()),
+                null,
+                model,
+                1.0F, 1.0F, 1.0F,
+                LightTexture.FULL_BRIGHT,
+                OverlayTexture.NO_OVERLAY,
+                ModelData.EMPTY,
+                RenderType.translucent()
+        );
 
-                float x4 = RADIUS * (float) (Math.sin(phi2) * Math.cos(theta1));
-                float y4 = RADIUS * (float) Math.cos(phi2);
-                float z4 = RADIUS * (float) (Math.sin(phi2) * Math.sin(theta1));
+        poseStack.popPose();
+    }
 
-                // UV mapping
-                float u1 = (float) j / SLICES;
-                float u2 = (float) (j + 1) / SLICES;
-                float v1 = (float) i / STACKS;
-                float v2 = (float) (i + 1) / STACKS;
+    /**
+     * Renders orbiting dimension objects — smaller than the star.
+     * 3 objects (Nether, Overworld, End) orbit at different speeds and distances.
+     */
+    private static void renderOrbitObjects(float tick, PoseStack poseStack, MultiBufferSource buffer) {
+        for (int a = 1; a < 4; a++) {
+            BakedModel model = StellarModelRegistry.getBakedModel(ORBIT_OBJECTS.get(a - 1));
+            if (model == null) continue;
 
-                PoseStack.Pose pose = poseStack.last();
+            // Planets are SMALLER than the star (0.01 to 0.018)
+            float scale = 0.008F + 0.004F * a;
 
-                // Triangle 1: top-left, bottom-left, bottom-right
-                vertex(consumer, pose, x1, y1, z1, u1, v1, r, g, b, a);
-                vertex(consumer, pose, x4, y4, z4, u1, v2, r, g, b, a);
-                vertex(consumer, pose, x3, y3, z3, u2, v2, r, g, b, a);
-                vertex(consumer, pose, x2, y2, z2, u2, v1, r, g, b, a);
-            }
+            poseStack.pushPose();
+            poseStack.scale(scale, scale, scale);
+
+            // Tilt + rotate
+            poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(1.0F, 0.0F, 1.0F, (tick * 1.5F / a) % 360.0F));
+
+            // Orbital translation — distance proportional to orbit index
+            double orbitRadius = (a * 80 + 120);
+            double orbitSpeed = tick * 0.8 / a;
+            poseStack.translate(
+                    orbitRadius * Math.sin(orbitSpeed + a * 2.094), // 120° apart
+                    0,
+                    orbitRadius * Math.cos(orbitSpeed + a * 2.094)
+            );
+
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
+                    poseStack.last(),
+                    buffer.getBuffer(RenderType.solid()),
+                    null,
+                    model,
+                    1.0F, 1.0F, 1.0F,
+                    LightTexture.FULL_BRIGHT,
+                    OverlayTexture.NO_OVERLAY,
+                    ModelData.EMPTY,
+                    RenderType.solid()
+            );
+
+            poseStack.popPose();
         }
     }
 
-    private void vertex(VertexConsumer consumer, PoseStack.Pose pose,
-                        float x, float y, float z,
-                        float u, float v,
-                        float r, float g, float b, float a) {
-        consumer.addVertex(pose.pose(), x, y, z)
-                .setColor(r, g, b, a)
-                .setUv(u, v)
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(15728880)
-                .setNormal(pose, x / RADIUS, y / RADIUS, z / RADIUS);
+    /**
+     * Renders the outer space sphere shell — the largest object wrapping everything.
+     * Scale 0.01 * 17.5 = 0.175 for the 35-block structure.
+     */
+    private static void renderOuterSpaceShell(float tick, PoseStack poseStack, MultiBufferSource buffer) {
+        BakedModel model = StellarModelRegistry.getBakedModel(StellarModelRegistry.SPACE);
+        if (model == null) return;
+
+        float scale = 0.01F * 17.0F;
+
+        poseStack.pushPose();
+        poseStack.scale(scale, scale, scale);
+
+        // Very slow rotation for ambient effect
+        poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(0.0F, 1.0F, 0.0F, (tick * 0.05F) % 360.0F));
+
+        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
+                poseStack.last(),
+                buffer.getBuffer(RenderType.translucent()),
+                null,
+                model,
+                1.0F, 1.0F, 1.0F,
+                LightTexture.FULL_BRIGHT,
+                OverlayTexture.NO_OVERLAY,
+                ModelData.EMPTY,
+                RenderType.translucent()
+        );
+
+        poseStack.popPose();
     }
 
     @Override
     public boolean shouldRenderOffScreen(StellarNexusControllerBE blockEntity) {
-        return true;
+        return true; // Always render — the model extends far beyond the controller block
     }
 
     @Override
     public int getViewDistance() {
         return 256;
+    }
+
+    @Override
+    public AABB getRenderBoundingBox(StellarNexusControllerBE blockEntity) {
+        // Return a massive bounding box so the renderer is never culled
+        // This prevents the model from disappearing when the player gets close
+        return new AABB(
+                blockEntity.getBlockPos().getX() - 50, blockEntity.getBlockPos().getY() - 50, blockEntity.getBlockPos().getZ() - 50,
+                blockEntity.getBlockPos().getX() + 50, blockEntity.getBlockPos().getY() + 50, blockEntity.getBlockPos().getZ() + 50
+        );
     }
 }

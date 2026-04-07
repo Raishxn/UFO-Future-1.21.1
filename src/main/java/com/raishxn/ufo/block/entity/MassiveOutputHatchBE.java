@@ -64,6 +64,7 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
         super(type, pos, state);
         // Configure AE2 grid node: no idle power draw, connectable on all sides
         this.getMainNode()
+                .setExposedOnSides(java.util.EnumSet.allOf(Direction.class))
                 .setFlags()                          // No special flags
                 .setIdlePowerUsage(0)                // No passive drain
                 .addService(IGridTickable.class, this); // Register for tick callbacks

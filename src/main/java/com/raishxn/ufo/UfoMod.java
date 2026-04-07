@@ -37,12 +37,15 @@ import org.slf4j.Logger;
 @Mod(UfoMod.MOD_ID)
 public class UfoMod {
     public static final String MOD_ID = "ufo";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
     public UfoMod(IEventBus modEventBus, ModContainer modContainer) {
+        if (net.neoforged.fml.loading.FMLEnvironment.dist == net.neoforged.api.distmarker.Dist.CLIENT) {
+            new UfoModClient(modEventBus);
+        }
         ModDataComponents.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
         com.raishxn.ufo.fluid.ModFluidTypes.register(modEventBus);
@@ -67,9 +70,10 @@ public class UfoMod {
         ModPackets.register(event);
     }
     private void commonSetup(final FMLCommonSetupEvent event) {
-        // Run synchronously to avoid AE2 parallel processing initialization crashes
-        UFORegistryHandler.INSTANCE.onInit();
         event.enqueueWork(() -> {
+            // Register UFO storage handlers and upgrades within the enqueueWork to ensure
+            // proper lifecycle timing with AE2's own initialization
+            UFORegistryHandler.INSTANCE.onInit();
             // Force-load custom slot semantics so they are registered before any screen JSON is parsed
             java.util.Objects.requireNonNull(com.raishxn.ufo.menu.UFOSlotSemantics.MACHINE_OUTPUT_2);
             LazyInits.initCommon();

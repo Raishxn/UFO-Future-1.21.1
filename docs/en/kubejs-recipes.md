@@ -1,6 +1,6 @@
-# KubeJS Custom Recipes — DMA
+# KubeJS Custom Recipes — DMA & Stellar Nexus
 
-This page documents how to create, modify, and remove **Dimensional Matter Assembler (DMA)** recipes using [KubeJS](https://kubejs.com/) for Minecraft 1.21.1 (NeoForge).
+This page documents how to create, modify, and remove recipes for the **Dimensional Matter Assembler (DMA)** and the **Stellar Nexus** multiblock using [KubeJS](https://kubejs.com/) for Minecraft 1.21.1 (NeoForge).
 
 ---
 
@@ -340,3 +340,135 @@ Using the same JSON format shown in the [DMA page](dma.md#recipe-json-format).
 ---
 
 *See also: [DMA](dma.md) · [Catalysts](catalysts.md) · [Materials & Fluids](materials.md)*
+
+---
+
+# Stellar Nexus — KubeJS Recipes
+
+## Recipe Type
+
+```
+ufo:stellar_simulation
+```
+
+## Complete Recipe Example
+
+```js
+// kubejs/server_scripts/stellar_nexus_recipes.js
+
+ServerEvents.recipes(event => {
+  event.custom({
+    type: 'ufo:stellar_simulation',
+
+    // Name displayed in the Controller GUI
+    simulation_name: 'Custom Void Harvest',
+
+    // Item inputs — consumed from ME network when START is pressed
+    item_inputs: [
+      {
+        amount: 8,
+        ingredient: { item: 'ufo:enriched_neutronium_sphere' }
+      },
+      {
+        amount: 4,
+        ingredient: { item: 'minecraft:nether_star' }
+      }
+    ],
+
+    // Fluid inputs — consumed from ME network when START is pressed
+    fluid_inputs: [
+      {
+        amount: 200000,  // 200 buckets of Raw Star Matter Plasma
+        ingredient: { fluid: 'ufo:raw_star_matter_plasma' }
+      }
+    ],
+
+    // Item outputs — AE2 GenericStack format
+    // '#' = amount, '#t' = 'ae2:i' (item), 'id' = registry ID
+    item_outputs: [
+      { '#': 5000000, '#t': 'ae2:i', id: 'minecraft:ender_pearl' },
+      { '#': 2000000, '#t': 'ae2:i', id: 'minecraft:blaze_rod' }
+    ],
+
+    // Fluid outputs — '#t' = 'ae2:f' for fluids
+    fluid_outputs: [
+      { '#': 100000, '#t': 'ae2:f', id: 'ufo:liquid_starlight' }
+    ],
+
+    // Total AE energy consumed instantly on start
+    energy: 300000000,  // 300 million AE
+
+    // Duration in ticks (20 ticks = 1 second)
+    time: 30000,  // 25 minutes
+
+    // Thermal stress (0-3). Higher = more heat per tick
+    cooling_level: 2,
+
+    // Minimum Stellar Field Generator tier (1-3)
+    field_tier: 2,
+
+    // Fuel fluid consumed from ME storage on start
+    fuel_fluid: 'mekanism:hydrogen',
+    fuel_amount: 20000,  // 20 buckets
+
+    // Coolant fluid consumed every tick during operation
+    coolant_fluid: 'ufo:source_gelid_cryotheum',
+    coolant_amount: 25000  // 25 buckets
+  }).id('kubejs:custom_void_harvest')
+})
+```
+
+## Field Reference
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `type` | String | ✅ | Must be `ufo:stellar_simulation` |
+| `simulation_name` | String | ✅ | Display name in Controller GUI |
+| `item_inputs` | Array | ✅ | Items consumed from ME network |
+| `fluid_inputs` | Array | ❌ | Fluids consumed from ME network |
+| `item_outputs` | Array | ❌ | Items produced (AE2 GenericStack) |
+| `fluid_outputs` | Array | ❌ | Fluids produced (AE2 GenericStack) |
+| `energy` | Integer | ✅ | Total AE energy cost |
+| `time` | Integer | ✅ | Duration in ticks |
+| `cooling_level` | Integer | ✅ | Heat stress level (0–3) |
+| `field_tier` | Integer | ✅ | Min Field Generator tier (1–3) |
+| `fuel_fluid` | String | ❌ | Fuel fluid registry ID |
+| `fuel_amount` | Integer | ❌ | Fuel amount in mB |
+| `coolant_fluid` | String | ❌ | Coolant fluid registry ID |
+| `coolant_amount` | Integer | ❌ | Coolant amount in mB |
+
+## AE2 GenericStack Output Format
+
+```json
+{ "#": 15000000, "#t": "ae2:i", "id": "minecraft:iron_ingot" }
+```
+
+- `#` — Amount (supports very large numbers, even above Integer.MAX_VALUE)
+- `#t` — Type key: `ae2:i` = item, `ae2:f` = fluid
+- `id` — Full registry ID
+
+## Removing / Modifying Stellar Nexus Recipes
+
+```js
+ServerEvents.recipes(event => {
+  // Remove a specific simulation by ID
+  event.remove({ id: 'ufo:stellar_simulation/iron_core_fusion' })
+
+  // Remove ALL stellar simulation recipes
+  event.remove({ type: 'ufo:stellar_simulation' })
+})
+```
+
+## Scaling Tips
+
+| Tier | Energy Range | Duration | Fuel |
+|------|-------------|----------|------|
+| T1 (Mk.I) | 150M AE | 20 min | Hydrogen 20K mB |
+| T2 (Mk.II) | 350M AE | 25 min | Hydrogen 20K mB |
+| T3 (Mk.III) | 750M–1G AE | 30–40 min | Ethene 20K mB |
+
+> ⚠️ **Safe Mode Penalty**: Players with Safe Mode ON consume **2.5×** your specified fuel, energy, and coolant amounts. Design recipes with this in mind.
+
+---
+
+*See also: [Stellar Nexus](stellar-nexus.md) · [DMA](dma.md) · [Catalysts](catalysts.md) · [Materials & Fluids](materials.md)*

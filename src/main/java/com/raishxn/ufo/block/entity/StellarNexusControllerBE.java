@@ -79,15 +79,17 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private boolean running = false;
     private final ContainerData data;
 
-    // Energy buffer — AE power charged passively from AE2 network via Energy Input Hatch
+    // Energy buffer — AE power charged passively from AE2 network via Energy Input
+    // Hatch
     private long energyBuffer = 0;
-    private long energyCapacity = 0; // Set from recipe's energy cost when recipe is selected
+    private static final long GLOBAL_ENERGY_CAPACITY = 20_000_000_000L; // 2 Billion AE global buffer
+    private long energyCapacity = GLOBAL_ENERGY_CAPACITY;
 
     // Thermal system
-    private int heatLevel = 0;        // 0-1000 (displayed as 0.0% - 100.0%)
+    private int heatLevel = 0; // 0-1000 (displayed as 0.0% - 100.0%)
     private static final int MAX_HEAT = 1000;
-    private boolean safeMode = true;  // Default ON: auto-shutdown at 100% heat
-    private int cooldownTimer = 0;    // Ticks remaining for 30-min cooldown after overheat
+    private boolean safeMode = true; // Default ON: auto-shutdown at 100% heat
+    private int cooldownTimer = 0; // Ticks remaining for 30-min cooldown after overheat
     private static final int COOLDOWN_DURATION = 36000; // 30 minutes = 36000 ticks
 
     // Safe mode penalty — consumes 2.5x more resources
@@ -106,7 +108,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private static MultiblockPattern PATTERN;
 
     // Energy charge rates per Field Generator tier (AE per tick)
-    private static final long[] ENERGY_RATE_BY_TIER = {0, 500_000, 1_000_000, 2_000_000};
+    private static final long[] ENERGY_RATE_BY_TIER = { 0, 500_000, 1_000_000, 2_000_000 };
 
     public StellarNexusControllerBE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -131,7 +133,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                     case 2 -> StellarNexusControllerBE.this.assembled ? 1 : 0;
                     case 3 -> StellarNexusControllerBE.this.fieldLevel;
                     case 4 -> StellarNexusControllerBE.this.energyCapacity > 0
-                            ? (int) (StellarNexusControllerBE.this.energyBuffer * 100 / StellarNexusControllerBE.this.energyCapacity)
+                            ? (int) (StellarNexusControllerBE.this.energyBuffer * 100
+                                    / StellarNexusControllerBE.this.energyCapacity)
                             : 0;
                     case 5 -> StellarNexusControllerBE.this.running ? 1 : 0;
                     case 6 -> StellarNexusControllerBE.this.heatLevel;
@@ -141,10 +144,10 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                     case 10 -> (int) ((StellarNexusControllerBE.this.energyBuffer >> 16) & 0xFFFF);
                     case 11 -> (int) ((StellarNexusControllerBE.this.energyBuffer >> 32) & 0xFFFF);
                     case 12 -> (int) ((StellarNexusControllerBE.this.energyBuffer >> 48) & 0xFFFF);
-                    case 13 -> (int) (StellarNexusControllerBE.this.energyCapacity & 0xFFFF);
-                    case 14 -> (int) ((StellarNexusControllerBE.this.energyCapacity >> 16) & 0xFFFF);
-                    case 15 -> (int) ((StellarNexusControllerBE.this.energyCapacity >> 32) & 0xFFFF);
-                    case 16 -> (int) ((StellarNexusControllerBE.this.energyCapacity >> 48) & 0xFFFF);
+                    case 13 -> (int) (GLOBAL_ENERGY_CAPACITY & 0xFFFF);
+                    case 14 -> (int) ((GLOBAL_ENERGY_CAPACITY >> 16) & 0xFFFF);
+                    case 15 -> (int) ((GLOBAL_ENERGY_CAPACITY >> 32) & 0xFFFF);
+                    case 16 -> (int) ((GLOBAL_ENERGY_CAPACITY >> 48) & 0xFFFF);
                     default -> 0;
                 };
             }
@@ -199,10 +202,14 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
             for (BlockPos partPos : result.partPositions()) {
                 Block block = level.getBlockState(partPos).getBlock();
-                if (block == MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get()) itemOutputs++;
-                else if (block == MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()) fluidOutputs++;
-                else if (block == MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get()) itemInputs++;
-                else if (block == MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()) energyInputs++;
+                if (block == MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())
+                    itemOutputs++;
+                else if (block == MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
+                    fluidOutputs++;
+                else if (block == MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
+                    itemInputs++;
+                else if (block == MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
+                    energyInputs++;
             }
 
             // Require exactly 1 of each hatch (no fuel hatch anymore)
@@ -262,7 +269,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     // ──────────────────── Server Tick ────────────────────
 
     public void serverTick() {
-        if (this.level == null || this.level.isClientSide()) return;
+        if (this.level == null || this.level.isClientSide())
+            return;
 
         // Handle ongoing catastrophic explosion (spread across ticks)
         if (this.exploding) {
@@ -329,7 +337,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             return errors;
         }
 
-        if (this.level == null) return errors;
+        if (this.level == null)
+            return errors;
 
         var recipeOpt = this.level.getRecipeManager().byKey(this.activeRecipeId);
         if (recipeOpt.isEmpty() || !(recipeOpt.get().value() instanceof StellarSimulationRecipe recipe)) {
@@ -339,19 +348,21 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
         // Field tier check
         if (this.fieldLevel < recipe.getFieldTier()) {
-            errors.add(Component.literal("§c✗ Field Generator too low: Mk." + toRoman(this.fieldLevel) + " (need Mk." + toRoman(recipe.getFieldTier()) + ")"));
+            errors.add(Component.literal("§c✗ Field Generator too low: Mk." + toRoman(this.fieldLevel) + " (need Mk."
+                    + toRoman(recipe.getFieldTier()) + ")"));
         }
 
         // Compute effective costs (safe mode = 2.5x)
         double multiplier = this.safeMode ? SAFE_MODE_MULTIPLIER : 1.0;
-        long effectiveEnergyCost = (long)(recipe.getEnergyCost() * multiplier);
-        long effectiveFuelAmount = (long)(recipe.getFuelAmount() * multiplier);
+        long effectiveEnergyCost = (long) (recipe.getEnergyCost() * multiplier);
+        long effectiveFuelAmount = (long) (recipe.getFuelAmount() * multiplier);
 
         // Energy check
         if (this.energyBuffer < effectiveEnergyCost) {
-            int pct = this.energyCapacity > 0 ? (int)(this.energyBuffer * 100 / this.energyCapacity) : 0;
+            int pct = this.energyCapacity > 0 ? (int) (this.energyBuffer * 100 / this.energyCapacity) : 0;
             String safeNote = this.safeMode ? " §7(2.5x Safe Mode)" : "";
-            errors.add(Component.literal("§c✗ Energy: " + formatAmount(this.energyBuffer) + " / " + formatAmount(effectiveEnergyCost) + " AE" + safeNote));
+            errors.add(Component.literal("§c✗ Energy: " + formatAmount(this.energyBuffer) + " / "
+                    + formatAmount(effectiveEnergyCost) + " AE" + safeNote));
         }
 
         // Fuel liquid check (from ME storage)
@@ -372,7 +383,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                     if (available < effectiveFuelAmount) {
                         String fluidName = formatFluidName(fuelRL.getPath());
                         String safeNote = this.safeMode ? " §7(2.5x Safe Mode)" : "";
-                        errors.add(Component.literal("§c✗ Fuel: " + formatAmount(available) + " / " + formatAmount(effectiveFuelAmount) + " mB §f" + fluidName + safeNote));
+                        errors.add(Component.literal("§c✗ Fuel: " + formatAmount(available) + " / "
+                                + formatAmount(effectiveFuelAmount) + " mB §f" + fluidName + safeNote));
                     }
                 }
             }
@@ -394,7 +406,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                         if (matches.length > 0) {
                             itemName = matches[0].getHoverName().getString();
                         }
-                        errors.add(Component.literal("§c✗ Missing: " + formatAmount(available) + " / " + formatAmount(req.getAmount()) + "x §f" + itemName));
+                        errors.add(Component.literal("§c✗ Missing: " + formatAmount(available) + " / "
+                                + formatAmount(req.getAmount()) + "x §f" + itemName));
                     }
                 }
             }
@@ -409,7 +422,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                             ResourceLocation fluidRL = BuiltInRegistries.FLUID.getKey(fluidStacks[0].getFluid());
                             fluidName = formatFluidName(fluidRL.getPath());
                         }
-                        errors.add(Component.literal("§c✗ Missing: " + formatAmount(available) + " / " + formatAmount(req.getAmount()) + " mB §f" + fluidName));
+                        errors.add(Component.literal("§c✗ Missing: " + formatAmount(available) + " / "
+                                + formatAmount(req.getAmount()) + " mB §f" + fluidName));
                     }
                 }
             }
@@ -424,9 +438,11 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
      */
     public List<Component> startOperation() {
         List<Component> errors = getStartErrors();
-        if (!errors.isEmpty()) return errors;
+        if (!errors.isEmpty())
+            return errors;
 
-        if (this.level == null || this.level.isClientSide()) return List.of(Component.literal("§c✗ Internal error"));
+        if (this.level == null || this.level.isClientSide())
+            return List.of(Component.literal("§c✗ Internal error"));
 
         var recipeOpt = this.level.getRecipeManager().byKey(this.activeRecipeId);
         if (recipeOpt.isEmpty() || !(recipeOpt.get().value() instanceof StellarSimulationRecipe recipe)) {
@@ -434,9 +450,11 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
 
         AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
-        if (nodeBE == null || nodeBE.getActionableNode() == null) return List.of(Component.literal("§c✗ No network"));
+        if (nodeBE == null || nodeBE.getActionableNode() == null)
+            return List.of(Component.literal("§c✗ No network"));
         IGridNode node = nodeBE.getActionableNode();
-        if (node.getGrid() == null) return List.of(Component.literal("§c✗ No grid"));
+        if (node.getGrid() == null)
+            return List.of(Component.literal("§c✗ No grid"));
 
         IGrid grid = node.getGrid();
         IActionSource src = IActionSource.ofMachine(nodeBE);
@@ -444,8 +462,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
         // Compute effective costs (safe mode = 2.5x)
         double multiplier = this.safeMode ? SAFE_MODE_MULTIPLIER : 1.0;
-        long effectiveEnergyCost = (long)(recipe.getEnergyCost() * multiplier);
-        long effectiveFuelAmount = (long)(recipe.getFuelAmount() * multiplier);
+        long effectiveEnergyCost = (long) (recipe.getEnergyCost() * multiplier);
+        long effectiveFuelAmount = (long) (recipe.getFuelAmount() * multiplier);
 
         // Extract fuel liquid from ME storage (if required)
         if (!recipe.getFuelFluid().isEmpty() && recipe.getFuelAmount() > 0) {
@@ -489,16 +507,17 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     }
 
     private void processMachineTick() {
-        if (this.activeRecipeId == null) return;
+        if (this.activeRecipeId == null)
+            return;
 
         var recipeOpt = this.level.getRecipeManager().byKey(this.activeRecipeId);
         if (recipeOpt.isEmpty() || !(recipeOpt.get().value() instanceof StellarSimulationRecipe recipe)) {
             return;
         }
 
-        // Cache the time and energy capacity for UI
+        // Cache the time for UI
         this.maxProgress = recipe.getTime();
-        this.energyCapacity = recipe.getEnergyCost();
+        this.energyCapacity = GLOBAL_ENERGY_CAPACITY; // Ensure it stays global
 
         AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
 
@@ -509,7 +528,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                 if (node.getGrid() != null) {
                     IEnergyService energy = node.getGrid().getEnergyService();
                     long chargeRate = this.fieldLevel >= 1 && this.fieldLevel <= 3
-                            ? ENERGY_RATE_BY_TIER[this.fieldLevel] : 0;
+                            ? ENERGY_RATE_BY_TIER[this.fieldLevel]
+                            : 0;
                     long spaceLeft = this.energyCapacity - this.energyBuffer;
                     long toCharge = Math.min(chargeRate, spaceLeft);
                     if (toCharge > 0) {
@@ -523,9 +543,11 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
 
         // ── Active processing ──
-        if (nodeBE == null || nodeBE.getActionableNode() == null) return;
+        if (nodeBE == null || nodeBE.getActionableNode() == null)
+            return;
         IGridNode node = nodeBE.getActionableNode();
-        if (node.getGrid() == null) return;
+        if (node.getGrid() == null)
+            return;
 
         IGrid grid = node.getGrid();
         IActionSource src = IActionSource.ofMachine(nodeBE);
@@ -549,9 +571,10 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                 if (this.level != null) {
                     BlockPos pos = this.worldPosition;
                     this.level.players().forEach(p -> p.displayClientMessage(
-                            Component.literal("§c§l[STELLAR NEXUS] §eSafe Mode activated at " + pos.toShortString() + " — 30 minute cooldown initiated."),
+                            Component.literal("§c§l[STELLAR NEXUS] §eSafe Mode activated at " + pos.toShortString()
+                                    + " — 30 minute cooldown initiated."),
                             false));
-                    
+
                     BlockState state = this.level.getBlockState(this.worldPosition);
                     this.level.sendBlockUpdated(this.worldPosition, state, state, 3);
                 }
@@ -568,7 +591,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             injectOutputs(recipe, storage, src);
             this.progress = 0;
             this.running = false;
-            
+
             if (this.level != null) {
                 BlockState state = this.level.getBlockState(this.worldPosition);
                 this.level.sendBlockUpdated(this.worldPosition, state, state, 3);
@@ -578,11 +601,13 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     }
 
     private void triggerStellarExplosion() {
-        if (this.level == null) return;
+        if (this.level == null)
+            return;
         BlockPos pos = this.worldPosition;
 
         this.level.players().forEach(p -> p.displayClientMessage(
-                Component.literal("§4§l[STELLAR NEXUS] §c§lCRITICAL THERMAL FAILURE at " + pos.toShortString() + "! CATASTROPHIC EXPLOSION!"),
+                Component.literal("§4§l[STELLAR NEXUS] §c§lCRITICAL THERMAL FAILURE at " + pos.toShortString()
+                        + "! CATASTROPHIC EXPLOSION!"),
                 false));
 
         // Initial vanilla explosion at center
@@ -622,8 +647,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         this.explosionTick++;
 
         // Calculate which radial shell to process this tick
-        int currentRadius = (int)((float) this.explosionTick / EXPLOSION_DURATION_TICKS * EXPLOSION_RADIUS);
-        int prevRadius = (int)((float) (this.explosionTick - 1) / EXPLOSION_DURATION_TICKS * EXPLOSION_RADIUS);
+        int currentRadius = (int) ((float) this.explosionTick / EXPLOSION_DURATION_TICKS * EXPLOSION_RADIUS);
+        int prevRadius = (int) ((float) (this.explosionTick - 1) / EXPLOSION_DURATION_TICKS * EXPLOSION_RADIUS);
 
         if (currentRadius > EXPLOSION_RADIUS) {
             this.exploding = false;
@@ -633,13 +658,14 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             var entities = this.level.getEntitiesOfClass(
                     net.minecraft.world.entity.LivingEntity.class,
                     new net.minecraft.world.phys.AABB(
-                            center.getX() - EXPLOSION_RADIUS, center.getY() - EXPLOSION_RADIUS, center.getZ() - EXPLOSION_RADIUS,
-                            center.getX() + EXPLOSION_RADIUS, center.getY() + EXPLOSION_RADIUS, center.getZ() + EXPLOSION_RADIUS
-                    ));
+                            center.getX() - EXPLOSION_RADIUS, center.getY() - EXPLOSION_RADIUS,
+                            center.getZ() - EXPLOSION_RADIUS,
+                            center.getX() + EXPLOSION_RADIUS, center.getY() + EXPLOSION_RADIUS,
+                            center.getZ() + EXPLOSION_RADIUS));
             for (var entity : entities) {
                 double dist = entity.distanceToSqr(center.getX(), center.getY(), center.getZ());
                 if (dist < EXPLOSION_RADIUS * EXPLOSION_RADIUS) {
-                    float damage = (float)(200.0 * (1.0 - Math.sqrt(dist) / EXPLOSION_RADIUS));
+                    float damage = (float) (200.0 * (1.0 - Math.sqrt(dist) / EXPLOSION_RADIUS));
                     entity.hurt(this.level.damageSources().explosion(null), damage);
                     entity.setRemainingFireTicks(600); // 30 seconds of fire
                 }
@@ -657,36 +683,42 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
         for (int rr = rMin; rr <= rMax; rr++) {
             // Sample points on the shell surface
-            int pointsOnShell = Math.max(1, (int)(4 * Math.PI * rr * rr / 16)); // ~1 point per 4 blocks
+            int pointsOnShell = Math.max(1, (int) (4 * Math.PI * rr * rr / 16)); // ~1 point per 4 blocks
             var random = this.level.getRandom();
 
             for (int p = 0; p < pointsOnShell && p < 2000; p++) {
                 // Random point on sphere of radius rr
                 double theta = random.nextDouble() * 2 * Math.PI;
                 double phi = Math.acos(2 * random.nextDouble() - 1);
-                int dx = (int)(rr * Math.sin(phi) * Math.cos(theta));
-                int dy = (int)(rr * Math.cos(phi));
-                int dz = (int)(rr * Math.sin(phi) * Math.sin(theta));
+                int dx = (int) (rr * Math.sin(phi) * Math.cos(theta));
+                int dy = (int) (rr * Math.cos(phi));
+                int dz = (int) (rr * Math.sin(phi) * Math.sin(theta));
 
                 BlockPos target = center.offset(dx, dy, dz);
-                if (!this.level.isLoaded(target)) continue;
+                if (!this.level.isLoaded(target))
+                    continue;
 
                 BlockState targetState = this.level.getBlockState(target);
-                if (targetState.isAir()) continue;
+                if (targetState.isAir())
+                    continue;
 
                 // Don't destroy bedrock
-                if (targetState.getDestroySpeed(this.level, target) < 0) continue;
+                if (targetState.getDestroySpeed(this.level, target) < 0)
+                    continue;
 
                 if (rr < innerLavaRadius) {
                     // Inner zone: replace with lava
-                    this.level.setBlock(target, net.minecraft.world.level.block.Blocks.LAVA.defaultBlockState(), Block.UPDATE_CLIENTS);
+                    this.level.setBlock(target, net.minecraft.world.level.block.Blocks.LAVA.defaultBlockState(),
+                            Block.UPDATE_CLIENTS);
                 } else {
                     // Outer zone: destroy block and place fire on top
-                    this.level.setBlock(target, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+                    this.level.setBlock(target, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),
+                            Block.UPDATE_CLIENTS);
                     BlockPos above = target.above();
                     BlockState aboveState = this.level.getBlockState(above);
                     if (aboveState.isAir()) {
-                        this.level.setBlock(above, net.minecraft.world.level.block.Blocks.FIRE.defaultBlockState(), Block.UPDATE_CLIENTS);
+                        this.level.setBlock(above, net.minecraft.world.level.block.Blocks.FIRE.defaultBlockState(),
+                                Block.UPDATE_CLIENTS);
                     }
                 }
             }
@@ -705,7 +737,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     }
 
     private AENetworkedBlockEntity getConnectedNetworkNode() {
-        if (this.level == null) return null;
+        if (this.level == null)
+            return null;
         for (BlockPos p : this.parts) {
             if (this.level.getBlockEntity(p) instanceof AENetworkedBlockEntity nodeBE) {
                 if (nodeBE.getActionableNode() != null && nodeBE.getActionableNode().getGrid() != null) {
@@ -718,12 +751,16 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
     private int getHighestFieldTier() {
         int highest = 0;
-        if (this.level == null) return 0;
+        if (this.level == null)
+            return 0;
         for (BlockPos p : this.parts) {
             Block block = this.level.getBlockState(p).getBlock();
-            if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get()) return 3;
-            if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get()) highest = Math.max(highest, 2);
-            if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get()) highest = Math.max(highest, 1);
+            if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get())
+                return 3;
+            if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())
+                highest = Math.max(highest, 2);
+            if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())
+                highest = Math.max(highest, 1);
         }
         return highest;
     }
@@ -742,15 +779,16 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
      * <p>
      * Coolant effectiveness per tier:
      * <ul>
-     *   <li>Gelid Cryotheum (T1): 3 cooling/mB</li>
-     *   <li>Stable Coolant (T2): 5 cooling/mB</li>
-     *   <li>Temporal Fluid (T3): 8 cooling/mB</li>
-     *   <li>Water (fallback): 1 cooling/mB</li>
+     * <li>Gelid Cryotheum (T1): 3 cooling/mB</li>
+     * <li>Stable Coolant (T2): 5 cooling/mB</li>
+     * <li>Temporal Fluid (T3): 8 cooling/mB</li>
+     * <li>Water (fallback): 1 cooling/mB</li>
      * </ul>
      */
     private int consumeCoolant(StellarSimulationRecipe recipe, IGrid grid) {
         AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
-        if (nodeBE == null) return 0;
+        if (nodeBE == null)
+            return 0;
 
         IActionSource src = IActionSource.ofMachine(nodeBE);
         MEStorage storage = grid.getStorageService().getInventory();
@@ -787,7 +825,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
         // Safe mode consumes 2.5x more coolant per tick
         long effectiveCoolantPerTick = this.safeMode
-                ? (long)(COOLANT_CONSUMPTION_PER_TICK * SAFE_MODE_MULTIPLIER)
+                ? (long) (COOLANT_CONSUMPTION_PER_TICK * SAFE_MODE_MULTIPLIER)
                 : COOLANT_CONSUMPTION_PER_TICK;
 
         long extracted = storage.extract(coolantKey, effectiveCoolantPerTick, Actionable.MODULATE, src);
@@ -825,18 +863,22 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private boolean extractInputs(StellarSimulationRecipe recipe, MEStorage storage, IActionSource src) {
         // SIMULATE pass guarantees all inputs exist
         for (var req : recipe.getItemInputs()) {
-            if (!req.isEmpty() && simulateExtractItem(req, storage, src) < req.getAmount()) return false;
+            if (!req.isEmpty() && simulateExtractItem(req, storage, src) < req.getAmount())
+                return false;
         }
         for (var req : recipe.getFluidInputs()) {
-            if (!req.isEmpty() && simulateExtractFluid(req, storage, src) < req.getAmount()) return false;
+            if (!req.isEmpty() && simulateExtractFluid(req, storage, src) < req.getAmount())
+                return false;
         }
 
         // MODULATE pass actually consumes them
         for (var req : recipe.getItemInputs()) {
-            if (!req.isEmpty()) modulateExtractItem(req, storage, src);
+            if (!req.isEmpty())
+                modulateExtractItem(req, storage, src);
         }
         for (var req : recipe.getFluidInputs()) {
-            if (!req.isEmpty()) modulateExtractFluid(req, storage, src);
+            if (!req.isEmpty())
+                modulateExtractFluid(req, storage, src);
         }
         return true;
     }
@@ -848,7 +890,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             long ext = storage.extract(AEItemKey.of(match), needed, Actionable.SIMULATE, src);
             extracted += ext;
             needed -= ext;
-            if (needed <= 0) break;
+            if (needed <= 0)
+                break;
         }
         return extracted;
     }
@@ -858,7 +901,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         for (ItemStack match : req.getIngredient().getItems()) {
             long ext = storage.extract(AEItemKey.of(match), needed, Actionable.MODULATE, src);
             needed -= ext;
-            if (needed <= 0) break;
+            if (needed <= 0)
+                break;
         }
     }
 
@@ -869,7 +913,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             long ext = storage.extract(AEFluidKey.of(match.getFluid()), needed, Actionable.SIMULATE, src);
             extracted += ext;
             needed -= ext;
-            if (needed <= 0) break;
+            if (needed <= 0)
+                break;
         }
         return extracted;
     }
@@ -879,7 +924,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         for (FluidStack match : req.getIngredient().getStacks()) {
             long ext = storage.extract(AEFluidKey.of(match.getFluid()), needed, Actionable.MODULATE, src);
             needed -= ext;
-            if (needed <= 0) break;
+            if (needed <= 0)
+                break;
         }
     }
 
@@ -898,7 +944,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     }
 
     public void onControllerBroken() {
-        if (this.level == null) return;
+        if (this.level == null)
+            return;
         for (BlockPos partPos : this.parts) {
             if (this.level.getBlockEntity(partPos) instanceof IMultiblockPart part) {
                 part.unlinkFromController();
@@ -911,9 +958,12 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     // ──────────────────── Utility ────────────────────
 
     private static String formatAmount(long amount) {
-        if (amount >= 1_000_000_000) return String.format("%.1fB", amount / 1_000_000_000.0);
-        if (amount >= 1_000_000) return String.format("%.1fM", amount / 1_000_000.0);
-        if (amount >= 1_000) return String.format("%.1fK", amount / 1_000.0);
+        if (amount >= 1_000_000_000)
+            return String.format("%.1fB", amount / 1_000_000_000.0);
+        if (amount >= 1_000_000)
+            return String.format("%.1fM", amount / 1_000_000.0);
+        if (amount >= 1_000)
+            return String.format("%.1fK", amount / 1_000.0);
         return String.valueOf(amount);
     }
 
@@ -931,8 +981,10 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
      * e.g., "source_gelid_cryotheum" → "Gelid Cryotheum"
      */
     private static String formatFluidName(String path) {
-        if (path.startsWith("source_")) path = path.substring(7);
-        if (path.startsWith("flowing_")) path = path.substring(8);
+        if (path.startsWith("source_"))
+            path = path.substring(7);
+        if (path.startsWith("flowing_"))
+            path = path.substring(8);
         String[] words = path.split("_");
         StringBuilder sb = new StringBuilder();
         for (String word : words) {

@@ -6,7 +6,8 @@
   "mixins": [
     "AccessorBuiltInModelHooks",
     "MixinCPUSelectionList",
-    "MixinCraftingCPUCluster"
+    "MixinCraftingCPUCluster",
+    "MixinAppEngBase"
   ],
   "client": [
     "MixinModelBakery"

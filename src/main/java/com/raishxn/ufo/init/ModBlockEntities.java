@@ -93,8 +93,7 @@ public class ModBlockEntities {
                         com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get(),
                         com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get(),
                         com.raishxn.ufo.block.MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get(),
-                        com.raishxn.ufo.block.MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get(),
-                        com.raishxn.ufo.block.MultiblockBlocks.STELLAR_FUEL_HATCH.get()
+                        com.raishxn.ufo.block.MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()
                 ).build(null);
                 typeHolder.set(type);
                 // Register item mapping for AE2 wrench/network tool compatibility

@@ -52,7 +52,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
         hatchWithOverlay(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH, "me_massive_fluid_hatch_overlay");
         hatchWithOverlay(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH, "me_massive_input_hatch_overlay");
         hatchWithOverlay(MultiblockBlocks.AE_ENERGY_INPUT_HATCH, "ae_energy_input_hatch_overlay");
-        hatchWithOverlay(MultiblockBlocks.STELLAR_FUEL_HATCH, "stellar_fuel_hatch_overlay");
         multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1);
         multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2);
         multiblockCube(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3);

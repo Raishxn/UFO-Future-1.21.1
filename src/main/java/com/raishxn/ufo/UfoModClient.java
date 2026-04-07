@@ -34,6 +34,7 @@ public class UfoModClient {
         eventBus.addListener(this::onRegisterKeyMappings);
         eventBus.addListener(this::registerScreens); // <--- Adicione esta linha
         eventBus.addListener(this::registerRenderers);
+        eventBus.addListener(com.raishxn.ufo.client.render.StellarModelRegistry::registerAdditional);
     }
 
     private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {

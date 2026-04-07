@@ -22,20 +22,22 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public StellarNexusControllerMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(9));
+        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(17));
     }
 
     public StellarNexusControllerMenu(int id, Inventory inv, BlockEntity entity, ContainerData data) {
         super(ModMenus.STELLAR_NEXUS_CONTROLLER_MENU.get(), id);
-        checkContainerSize(inv, 0); // No items in controller
+        checkContainerSize(inv, 0);
         this.blockEntity = (StellarNexusControllerBE) entity;
         this.levelAccess = ContainerLevelAccess.create(entity.getLevel(), entity.getBlockPos());
         this.data = data;
-        
+
         // Data mapping:
         // 0 = progress, 1 = maxProgress, 2 = assembled
-        // 3 = fieldLevel, 4 = fuelPercent, 5 = running
+        // 3 = fieldLevel, 4 = energyPercent, 5 = running
         // 6 = heatLevel (0-1000), 7 = safeMode, 8 = cooldownTimer
+        // 9-12: energyBuffer (4 shorts for 64-bit long)
+        // 13-16: energyCapacity (4 shorts for 64-bit long)
         addDataSlots(this.data);
     }
 
@@ -59,7 +61,8 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
         return this.data.get(3);
     }
 
-    public int getFuelPercent() {
+    /** Energy charge percentage 0-100 */
+    public int getEnergyPercent() {
         return this.data.get(4);
     }
 
@@ -78,6 +81,22 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
 
     public int getCooldownTimer() {
         return this.data.get(8);
+    }
+
+    /** Current AE energy stored (64-bit reassembled from 4 shorts) */
+    public long getEnergyBuffer() {
+        return (this.data.get(9) & 0xFFFFL) |
+               ((this.data.get(10) & 0xFFFFL) << 16) |
+               ((this.data.get(11) & 0xFFFFL) << 32) |
+               ((this.data.get(12) & 0xFFFFL) << 48);
+    }
+
+    /** Maximum AE energy capacity (64-bit reassembled from 4 shorts) */
+    public long getEnergyCapacity() {
+        return (this.data.get(13) & 0xFFFFL) |
+               ((this.data.get(14) & 0xFFFFL) << 16) |
+               ((this.data.get(15) & 0xFFFFL) << 32) |
+               ((this.data.get(16) & 0xFFFFL) << 48);
     }
 
     @Override

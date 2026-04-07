@@ -75,6 +75,12 @@ public class ModFluids {
     public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_GELID_CRYOTHEUM = FLUIDS.register("flowing_gelid_cryotheum",
             GelidCryotheumFluid.Flowing::new);
 
+    // --- STABLE COOLANT ---
+    public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_STABLE_COOLANT = FLUIDS.register("source_stable_coolant",
+            StableCoolantFluid.Source::new);
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_STABLE_COOLANT = FLUIDS.register("flowing_stable_coolant",
+            StableCoolantFluid.Flowing::new);
+
     // --- TEMPORAL FLUID ---
     public static final DeferredHolder<Fluid, FlowingFluid> SOURCE_TEMPORAL_FLUID = FLUIDS.register("source_temporal_fluid",
             TemporalFluid.Source::new);

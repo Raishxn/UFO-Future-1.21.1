@@ -9,7 +9,12 @@ import com.raishxn.ufo.item.custom.cell.InfinityCellInventory;
 public class UFORegistryHandler {
 
     public static final UFORegistryHandler INSTANCE = new UFORegistryHandler();
+
+    private boolean initialized = false;
+
     public void onInit() {
+        if (initialized) return;
+        initialized = true;
         this.registerStorageHandler();
         this.registerUpgrades();
     }

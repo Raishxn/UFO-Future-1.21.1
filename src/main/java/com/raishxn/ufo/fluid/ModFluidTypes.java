@@ -67,6 +67,19 @@ public class ModFluidTypes {
                     .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_POWDER_SNOW)
     ));
 
+    public static final DeferredHolder<FluidType, FluidType> STABLE_COOLANT_TYPE = FLUID_TYPES.register("stable_coolant", () -> new BaseFluidType(
+            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/stable_coolant_still"),
+            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/stable_coolant_flow"),
+            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/stable_coolant_still"),
+            0xFF88DDFF,
+            new Vector3f(0.2f, 0.8f, 0.9f),
+            FluidType.Properties.create()
+                    .temperature(-200)
+                    .density(3500)
+                    .viscosity(5000)
+                    .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_POWDER_SNOW)
+                    .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_POWDER_SNOW)
+    ));
 
 
 

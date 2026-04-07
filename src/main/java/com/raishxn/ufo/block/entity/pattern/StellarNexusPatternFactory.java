@@ -3,7 +3,7 @@ package com.raishxn.ufo.block.entity.pattern;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.Block;
+
 import net.minecraft.world.level.block.state.BlockState;
 import java.util.Map;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ public class StellarNexusPatternFactory {
         map.put('D', MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get().defaultBlockState());
         map.put('E', MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().defaultBlockState());
         map.put('F', MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get().defaultBlockState());
-        map.put('G', MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get().defaultBlockState());
+        map.put('G', MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get().defaultBlockState());
         return map;
     }
 
@@ -1320,15 +1320,15 @@ public class StellarNexusPatternFactory {
 
 
         // Configure the mapping
-        builder.where(' ', (state, level, pos) -> state.isAir(), Component.literal("Air"))
-               .where('A', (state, level, pos) -> state.isAir(), Component.literal("Air"))
-               .where('^', (state, level, pos) -> state.isAir(), Component.literal("Air"))
+        builder.where(' ', (state, level, pos) -> true, Component.literal("Any"))
+               .where('A', (state, level, pos) -> true, Component.literal("Any"))
+               .where('^', (state, level, pos) -> true, Component.literal("Any"))
                .where('B', (state, level, pos) -> 
                    state.is(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()) ||
                    state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get()) ||
-                   state.is(MultiblockBlocks.STELLAR_FUEL_HATCH.get()),
+                   state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()) ,
                    Component.literal("Singularity Casing or Hatch"))
                .where('C', MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
                .where('D', MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
@@ -1343,7 +1343,7 @@ public class StellarNexusPatternFactory {
                    state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get()) ||
-                   state.is(MultiblockBlocks.STELLAR_FUEL_HATCH.get()),
+                   state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()) ,
                    Component.literal("Singularity Casing or Hatch"))
                .where('H', MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get());
 

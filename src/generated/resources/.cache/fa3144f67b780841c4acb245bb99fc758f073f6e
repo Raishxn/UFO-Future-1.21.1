@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-05T14:13:27.6563614	Block States: ufo
+// 1.21.1	2026-04-06T15:48:03.1747834	Block States: ufo
 69293416073dbd99798343145db9756641321663 assets/ufo/blockstates/150m_mega_co_processor.json
 4a94fb489b7a997f738f10e05252f01c4bd984ab assets/ufo/blockstates/1b_mega_crafting_storage.json
 a6330df476a03cc6c616786ed69474c38443ddb7 assets/ufo/blockstates/1qd_mega_crafting_storage.json
@@ -10,7 +10,6 @@ b47d88959b9efe28fbeed5dd2ef530b52d67b9d6 assets/ufo/blockstates/2b_mega_co_proce
 d0793fc570dd50a7c2b75afa099c4892877b96b1 assets/ufo/blockstates/50m_mega_co_processor.json
 242d29eb8a0a12c7d06b0598ff7a8fda9d385795 assets/ufo/blockstates/750m_mega_co_processor.json
 ceb803a13aff1ded5c6b5293d2e0133b047427ea assets/ufo/blockstates/ae_energy_input_hatch.json
-711fbc5ea73fa30dded12dfd95a12f284fe40015 assets/ufo/blockstates/coolant_fluid_hatch.json
 ecffdd0bad4dd47ce1a08609b19ad5f67235ca18 assets/ufo/blockstates/entropy_assembler_core_casing.json
 3c10602c25b683e9e88cae8fc5b5fcd3d2933b11 assets/ufo/blockstates/entropy_catalyst_bank_components.json
 cb176db30fc97a64158d820dc41b75392486c290 assets/ufo/blockstates/entropy_computer_condensation_matrix.json
@@ -51,7 +50,6 @@ bf21a9e8fbc5a3846fb05b4fa0859e0917b2202f assets/ufo/models/block/50m_mega_co_pro
 e1859b2141105b29c3429e84f4ae36acff8ec17c assets/ufo/models/block/750m_mega_co_processor.json
 bf21a9e8fbc5a3846fb05b4fa0859e0917b2202f assets/ufo/models/block/750m_mega_co_processor_formed.json
 6fbea5a3a6be02d7d219e23debcec11d2929f709 assets/ufo/models/block/ae_energy_input_hatch.json
-9c6fc28392182f53e0b13ae79bdc59881f4651eb assets/ufo/models/block/coolant_fluid_hatch.json
 1c3169aef9214356b4fcfa07c4106d3ee30731cc assets/ufo/models/block/entropy_assembler_core_casing.json
 abc0e24b4b463a1a3968956562cd2d09ba9e0d71 assets/ufo/models/block/entropy_catalyst_bank_components.json
 1b6d912582a548e7ce96e5d631947929b33ec752 assets/ufo/models/block/entropy_computer_condensation_matrix.json
@@ -84,7 +82,6 @@ cef72bd0a8a22218ecaef044cadad29e517ca0d2 assets/ufo/models/block/white_dwarf_fra
 6ace5289086485820268b0b00e4a7385e274651c assets/ufo/models/item/50m_mega_co_processor.json
 288c5422b01ca7116cdb74306d24507dd6e5e38f assets/ufo/models/item/750m_mega_co_processor.json
 92a0ea457b8cef93493e921fd97e139e8b324c19 assets/ufo/models/item/ae_energy_input_hatch.json
-bafe5caf6b34d0b08557e018c4530cbe8c5664e7 assets/ufo/models/item/coolant_fluid_hatch.json
 0950c2995a09b614896e92c110bcc77e30ee37f7 assets/ufo/models/item/entropy_assembler_core_casing.json
 1f6b9bee428726a6480b1d97f16675cb89a31fe4 assets/ufo/models/item/entropy_catalyst_bank_components.json
 e9a162b86eefce6558dc07f844d7a961603a2127 assets/ufo/models/item/entropy_computer_condensation_matrix.json
