@@ -47,6 +47,19 @@ public class ModRecipes {
     public static final Supplier<RecipeSerializer<StellarSimulationRecipe>> STELLAR_SIMULATION_SERIALIZER =
             SERIALIZERS.register(STELLAR_SIMULATION_ID, () -> StellarSimulationRecipeSerializer.INSTANCE);
 
+    // ═══════════════════ QUANTUM MATTER FABRICATOR ═══════════════════
+    public static final String QMF_ID = "qmf_recipe";
+
+    public static final Supplier<RecipeType<com.raishxn.ufo.recipe.QMFRecipe>> QMF_TYPE = RECIPE_TYPES.register(QMF_ID, () -> new RecipeType<com.raishxn.ufo.recipe.QMFRecipe>() {
+        @Override
+        public String toString() {
+            return QMF_ID;
+        }
+    });
+
+    public static final Supplier<RecipeSerializer<com.raishxn.ufo.recipe.QMFRecipe>> QMF_SERIALIZER =
+            SERIALIZERS.register(QMF_ID, com.raishxn.ufo.recipe.QMFRecipe.Serializer::new);
+
     public static void register(IEventBus eventBus) {
         SERIALIZERS.register(eventBus);
         RECIPE_TYPES.register(eventBus);

@@ -2,10 +2,8 @@ package com.raishxn.ufo.block;
 
 import com.mojang.serialization.MapCodec;
 import com.raishxn.ufo.UfoMod;
-import com.raishxn.ufo.item.ModItems;
+import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -35,6 +33,34 @@ public class MultiblockBlocks {
 
 
 
+
+    // ═══════════════════════════════════════════════════════════
+    //  QUANTUM MATTER FABRICATOR — Multiblock Components
+    // ═══════════════════════════════════════════════════════════
+
+    public static final DeferredBlock<Block> QUANTUM_ENTROPY_CASING = registerBlock("quantum_entropy_casing",
+            () -> new Block(BlockBehaviour.Properties.of().strength(10.0f).requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<Block> QUANTUM_HYPER_MECHANICAL_CASING = registerBlock("quantum_hyper_mechanical_casing",
+            () -> new Block(BlockBehaviour.Properties.of().strength(12.0f, 1200.0f).requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<ControllerBlock> QUANTUM_MATTER_FABRICATOR_CONTROLLER = BLOCKS.register("quantum_matter_fabricator_controller",
+            () -> new ControllerBlock(BlockBehaviour.Properties.of()
+                    .strength(50.0f, 1200.0f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> state.getValue(ControllerBlock.ACTIVE) ? 14 : 0)));
+
+    public static final DeferredBlock<QuantumSlicerControllerBlock> QUANTUM_SLICER_CONTROLLER = BLOCKS.register("quantum_slicer_controller",
+            () -> new QuantumSlicerControllerBlock(BlockBehaviour.Properties.of()
+                    .strength(50.0f, 1200.0f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> state.getValue(AbstractSimpleMultiblockControllerBlock.ACTIVE) ? 14 : 0)));
+
+    public static final DeferredBlock<QuantumProcessorAssemblerControllerBlock> QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER = BLOCKS.register("quantum_processor_assembler_controller",
+            () -> new QuantumProcessorAssemblerControllerBlock(BlockBehaviour.Properties.of()
+                    .strength(50.0f, 1200.0f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> state.getValue(AbstractSimpleMultiblockControllerBlock.ACTIVE) ? 14 : 0)));
 
     // ═══════════════════════════════════════════════════════════
     //  STELLAR NEXUS — Multiblock Components
@@ -125,12 +151,79 @@ public class MultiblockBlocks {
         }
     }
 
-    public static class ControllerBlock extends DirectionalBlock {
+    public static class ControllerBlock extends DirectionalBlock implements net.minecraft.world.level.block.EntityBlock {
         public static final MapCodec<ControllerBlock> CODEC = simpleCodec(ControllerBlock::new);
         public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
-        public ControllerBlock(Properties properties) { super(properties); this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ACTIVE, false)); }
-        @Override protected MapCodec<? extends DirectionalBlock> codec() { return CODEC; }
-        @Override public BlockState getStateForPlacement(BlockPlaceContext context) { return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite()); }
-        @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) { builder.add(FACING, ACTIVE); }
+
+        public ControllerBlock(Properties properties) {
+            super(properties);
+            this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ACTIVE, false));
+        }
+
+        @Override
+        protected MapCodec<? extends DirectionalBlock> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public BlockState getStateForPlacement(BlockPlaceContext context) {
+            return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+        }
+
+        @Override
+        protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+            builder.add(FACING, ACTIVE);
+        }
+
+        @Override
+        protected net.minecraft.world.InteractionResult useWithoutItem(BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, net.minecraft.world.entity.player.Player player, net.minecraft.world.phys.BlockHitResult hitResult) {
+            if (player.isShiftKeyDown()) {
+                if (level.isClientSide) {
+                    com.raishxn.ufo.client.GhostHologramRenderer.toggleHologram(pos, state.getValue(FACING));
+                }
+                return net.minecraft.world.InteractionResult.sidedSuccess(level.isClientSide);
+            }
+
+            if (!level.isClientSide) {
+                net.minecraft.world.level.block.entity.BlockEntity entity = level.getBlockEntity(pos);
+                if (entity instanceof com.raishxn.ufo.block.entity.QmfControllerBE controller) {
+                    player.openMenu(controller, pos);
+                }
+            }
+            return net.minecraft.world.InteractionResult.sidedSuccess(level.isClientSide);
+        }
+
+        @org.jetbrains.annotations.Nullable
+        @Override
+        public net.minecraft.world.level.block.entity.BlockEntity newBlockEntity(net.minecraft.core.BlockPos pos, BlockState state) {
+            return new com.raishxn.ufo.block.entity.QmfControllerBE(pos, state);
+        }
+
+        @org.jetbrains.annotations.Nullable
+        @Override
+        public <T extends net.minecraft.world.level.block.entity.BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(net.minecraft.world.level.Level level, BlockState state, net.minecraft.world.level.block.entity.BlockEntityType<T> type) {
+            if (level.isClientSide()) return null;
+            return type == com.raishxn.ufo.init.ModBlockEntities.QMF_CONTROLLER.get()
+                    ? (lvl, pos, st, be) -> ((com.raishxn.ufo.block.entity.QmfControllerBE) be).serverTick()
+                    : null;
+        }
+
+        @Override
+        public void neighborChanged(BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, Block changedBlock, net.minecraft.core.BlockPos changedPos, boolean isMoving) {
+            super.neighborChanged(state, level, pos, changedBlock, changedPos, isMoving);
+            if (!level.isClientSide() && level.getBlockEntity(pos) instanceof com.raishxn.ufo.block.entity.QmfControllerBE be) {
+                be.markStructureDirty();
+            }
+        }
+
+        @Override
+        public void onRemove(BlockState state, net.minecraft.world.level.Level level, net.minecraft.core.BlockPos pos, BlockState newState, boolean moved) {
+            if (!state.is(newState.getBlock())) {
+                if (level.getBlockEntity(pos) instanceof com.raishxn.ufo.block.entity.QmfControllerBE be) {
+                    be.onControllerBroken();
+                }
+            }
+            super.onRemove(state, level, pos, newState, moved);
+        }
     }
 }

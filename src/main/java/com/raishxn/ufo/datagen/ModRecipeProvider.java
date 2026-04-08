@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
+import com.raishxn.ufo.datagen.StellarSimulationRecipeBuilder;
 
 public class ModRecipeProvider extends RecipeProvider {
 
@@ -56,6 +57,7 @@ public class ModRecipeProvider extends RecipeProvider {
         this.buildInfinityCellsDMA(c);
         this.buildHousingRecipes(c);
         this.buildMachineAndStorageRecipes(c);
+        this.buildMassiveStellarSimulations(c);
     }
 
     private void buildBasicConversions(RecipeOutput c) {
@@ -467,6 +469,53 @@ public class ModRecipeProvider extends RecipeProvider {
         } else {
             builder.save(c);
         }
+    }
+
+    private void buildMassiveStellarSimulations(RecipeOutput c) {
+        StellarSimulationRecipeBuilder.create("stellar_nexus/massive_iron_synthesis")
+                .output(Items.IRON_INGOT, 15000000)
+                .inputItem(ModItems.ENRICHED_NEUTRONIUM_SPHERE.get(), 100)
+                .inputFluid(ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID.get(), 5000000)
+                .fuel(ModFluids.SOURCE_STABLE_COOLANT.get(), 50000) // Using stable coolant as proxy for ethene if not present
+                .coolant(ModFluids.SOURCE_TEMPORAL_FLUID.get(), 100000)
+                .fieldLevel(3)
+                .energy(2000000000) // 2 Billion
+                .time(54000) // 45 minutes * 20 ticks * 60 seconds
+                .save(c);
+
+        StellarSimulationRecipeBuilder.create("stellar_nexus/massive_copper_synthesis")
+                .output(Items.COPPER_INGOT, 15000000)
+                .inputItem(ModItems.ENRICHED_NEUTRONIUM_SPHERE.get(), 100)
+                .inputFluid(ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID.get(), 5000000)
+                .fuel(ModFluids.SOURCE_STABLE_COOLANT.get(), 50000)
+                .coolant(ModFluids.SOURCE_TEMPORAL_FLUID.get(), 100000)
+                .fieldLevel(3)
+                .energy(2000000000)
+                .time(54000)
+                .save(c);
+
+        StellarSimulationRecipeBuilder.create("stellar_nexus/massive_gold_synthesis")
+                .output(Items.GOLD_INGOT, 15000000)
+                .inputItem(ModItems.ENRICHED_NEUTRONIUM_SPHERE.get(), 150)
+                .inputFluid(ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID.get(), 6000000)
+                .fuel(ModFluids.SOURCE_STABLE_COOLANT.get(), 60000)
+                .coolant(ModFluids.SOURCE_TEMPORAL_FLUID.get(), 150000)
+                .fieldLevel(3)
+                .energy(2500000000L) // 2.5 Billion
+                .time(60000) // 50m
+                .save(c);
+
+        StellarSimulationRecipeBuilder.create("stellar_nexus/massive_netherite_synthesis")
+                .output(Items.NETHERITE_INGOT, 5000000)
+                .inputItem(ModItems.ENRICHED_NEUTRONIUM_SPHERE.get(), 200)
+                .inputFluid(ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID.get(), 10000000)
+                .inputFluid(ModFluids.SOURCE_UU_MATTER_FLUID.get(), 1000000)
+                .fuel(ModFluids.SOURCE_STABLE_COOLANT.get(), 100000)
+                .coolant(ModFluids.SOURCE_TEMPORAL_FLUID.get(), 250000)
+                .fieldLevel(3)
+                .energy(5000000000L) // 5 Billion
+                .time(96000) // 1h 20m
+                .save(c);
     }
 }
 

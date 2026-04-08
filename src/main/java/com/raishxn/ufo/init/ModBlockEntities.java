@@ -59,6 +59,31 @@ public class ModBlockEntities {
             });
 
     // ═══════════════════════════════════════════════════════════
+    //  QUANTUM MATTER FABRICATOR — Block Entities
+    // ═══════════════════════════════════════════════════════════
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QmfControllerBE>> QMF_CONTROLLER =
+            BLOCK_ENTITIES.register("qmf_controller", () -> {
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.QmfControllerBE(pos, state),
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get()
+                ).build(null);
+                return type;
+            });
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumSlicerControllerBE>> QUANTUM_SLICER_CONTROLLER_BE =
+            BLOCK_ENTITIES.register("quantum_slicer_controller", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> new com.raishxn.ufo.block.entity.QuantumSlicerControllerBE(pos, state),
+                    com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get()
+            ).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumProcessorAssemblerControllerBE>> QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_BE =
+            BLOCK_ENTITIES.register("quantum_processor_assembler_controller", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> new com.raishxn.ufo.block.entity.QuantumProcessorAssemblerControllerBE(pos, state),
+                    com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get()
+            ).build(null));
+
+    // ═══════════════════════════════════════════════════════════
     //  STELLAR NEXUS — Block Entities
     // ═══════════════════════════════════════════════════════════
 

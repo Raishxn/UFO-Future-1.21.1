@@ -1,0 +1,41 @@
+{
+  "type": "ufo:stellar_simulation",
+  "coolant_amount": 250000,
+  "cooling_level": 3,
+  "energy": 2147483647,
+  "field_tier": 3,
+  "fluid_inputs": [
+    {
+      "amount": 10000000,
+      "ingredient": {
+        "fluid": "ufo:raw_star_matter_plasma"
+      }
+    },
+    {
+      "amount": 1000000,
+      "ingredient": {
+        "fluid": "ufo:uu_matter"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "fuel_amount": 100000,
+  "fuel_fluid": "ufo:source_stable_coolant",
+  "item_inputs": [
+    {
+      "amount": 200,
+      "ingredient": {
+        "item": "ufo:enriched_neutronium_sphere"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 5000000,
+      "#t": "ae2:i",
+      "id": "minecraft:netherite_ingot"
+    }
+  ],
+  "simulation_name": "stellar_nexus/massive_netherite_synthesis",
+  "time": 96000
+}

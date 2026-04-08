@@ -1,0 +1,32 @@
+{
+  "type": "ufo:stellar_simulation",
+  "simulation_name": "Massive Gold Synthesis",
+  "item_inputs": [
+    {
+      "amount": 150,
+      "ingredient": {
+        "item": "ufo:enriched_neutronium_sphere"
+      }
+    }
+  ],
+  "fluid_inputs": [
+    {
+      "amount": 6000000,
+      "ingredient": {
+        "fluid": "ufo:raw_star_matter_plasma"
+      }
+    }
+  ],
+  "item_outputs": [
+    { "#": 15000000, "#t": "ae2:i", "id": "minecraft:gold_ingot" }
+  ],
+  "fluid_outputs": [],
+  "energy": 2500000000,
+  "time": 60000,
+  "cooling_level": 3,
+  "field_tier": 3,
+  "fuel_fluid": "mekanism:ethene",
+  "fuel_amount": 60000,
+  "coolant_fluid": "ufo:source_temporal_fluid",
+  "coolant_amount": 150000
+}

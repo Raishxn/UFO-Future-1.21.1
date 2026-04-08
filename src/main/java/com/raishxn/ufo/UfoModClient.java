@@ -16,6 +16,8 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import appeng.init.client.InitScreens;
 import com.raishxn.ufo.client.gui.DimensionalMatterAssemblerScreen;
+import com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerScreen;
+import com.raishxn.ufo.screen.QuantumSlicerControllerScreen;
 import com.raishxn.ufo.screen.StellarNexusControllerScreen;
 import com.raishxn.ufo.menu.UFOMenus;
 import com.raishxn.ufo.init.ModMenus;
@@ -48,6 +50,9 @@ public class UfoModClient {
     private void registerScreens(RegisterMenuScreensEvent event) {
         InitScreens.register(event, UFOMenus.DIMENSIONAL_MATTER_ASSEMBLER.get(), DimensionalMatterAssemblerScreen::new, "/screens/dimensional_matter_assembler.json");
         event.register(ModMenus.STELLAR_NEXUS_CONTROLLER_MENU.get(), StellarNexusControllerScreen::new);
+        event.register(ModMenus.QMF_CONTROLLER_MENU.get(), com.raishxn.ufo.screen.QmfControllerScreen::new);
+        event.register(ModMenus.QUANTUM_SLICER_CONTROLLER_MENU.get(), QuantumSlicerControllerScreen::new);
+        event.register(ModMenus.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU.get(), QuantumProcessorAssemblerControllerScreen::new);
     }
 
     private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

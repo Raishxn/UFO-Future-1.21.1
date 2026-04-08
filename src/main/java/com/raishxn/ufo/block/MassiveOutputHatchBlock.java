@@ -84,6 +84,7 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
                 BlockPos controllerPos = hatch.getControllerPos();
                 if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
                     controller.removePart(pos);
+                    controller.scanStructure(level);
                 }
                 hatch.unlinkFromController();
             }
@@ -96,9 +97,8 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
         super.neighborChanged(state, level, pos, changedBlock, changedPos, isMoving);
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof MassiveOutputHatchBE hatch) {
             BlockPos controllerPos = hatch.getControllerPos();
-            if (controllerPos != null
-                    && level.getBlockEntity(controllerPos) instanceof com.raishxn.ufo.block.entity.StellarNexusControllerBE cbe) {
-                cbe.markStructureDirty();
+            if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
+                controller.scanStructure(level);
             }
         }
     }

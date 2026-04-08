@@ -1,47 +1,71 @@
 package com.raishxn.ufo.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinition;
+import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
-import com.raishxn.ufo.block.entity.pattern.StellarNexusPatternFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class GhostHologramRenderer {
 
-    private static BlockPos activeControllerPos = null;
-    private static net.minecraft.core.Direction activeFacing = null;
-    private static java.util.List<HologramBlock> cachedBlocks = new java.util.ArrayList<>();
+    private static BlockPos activeControllerPos;
+    private static net.minecraft.core.Direction activeFacing;
+    private static final List<HologramBlock> cachedBlocks = new ArrayList<>();
 
-    private record HologramBlock(BlockPos pos, BlockState state) {}
-    
+    private record HologramBlock(BlockPos pos, BlockState state) {
+    }
+
     public static void toggleHologram(BlockPos pos, net.minecraft.core.Direction facing) {
         if (activeControllerPos != null && activeControllerPos.equals(pos)) {
             activeControllerPos = null;
             activeFacing = null;
             cachedBlocks.clear();
-        } else {
-            activeControllerPos = pos;
-            activeFacing = facing;
-            rebuildCache();
+            return;
         }
+
+        activeControllerPos = pos;
+        activeFacing = facing;
+        rebuildCache();
     }
-    
+
+    public static boolean isActive(BlockPos pos) {
+        return activeControllerPos != null && activeControllerPos.equals(pos);
+    }
+
     private static void rebuildCache() {
         cachedBlocks.clear();
-        if (activeControllerPos == null || activeFacing == null) return;
-        
-        MultiblockPattern pattern = StellarNexusPatternFactory.getPattern();
-        Map<Character, BlockState> defaults = StellarNexusPatternFactory.getDefaultCreativeStates();
+        if (activeControllerPos == null || activeFacing == null) {
+            return;
+        }
+
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null) {
+            return;
+        }
+
+        Optional<MultiblockControllerDefinition> definitionOpt = getDefinition(mc.level.getBlockEntity(activeControllerPos));
+        if (definitionOpt.isEmpty()) {
+            return;
+        }
+
+        MultiblockControllerDefinition definition = definitionOpt.get();
+        MultiblockPattern pattern = definition.pattern();
+        Map<Character, BlockState> defaults = definition.defaultCreativeStates();
 
         char[][][] charPattern = pattern.getPattern();
         int controllerCol = pattern.getControllerCol();
@@ -52,10 +76,14 @@ public class GhostHologramRenderer {
             for (int z = 0; z < charPattern[y].length; z++) {
                 for (int x = 0; x < charPattern[y][z].length; x++) {
                     char c = charPattern[y][z][x];
-                    if (c == ' ' || c == pattern.getControllerChar()) continue;
+                    if (c == ' ' || c == 'A' || c == pattern.getControllerChar()) {
+                        continue;
+                    }
 
                     BlockState targetState = defaults.get(c);
-                    if (targetState == null) continue;
+                    if (targetState == null) {
+                        continue;
+                    }
 
                     int offsetX = x - controllerCol;
                     int offsetY = y - controllerLayer;
@@ -67,21 +95,28 @@ public class GhostHologramRenderer {
             }
         }
     }
-    
-    public static boolean isActive(BlockPos pos) {
-        return activeControllerPos != null && activeControllerPos.equals(pos);
+
+    private static Optional<MultiblockControllerDefinition> getDefinition(BlockEntity be) {
+        return be == null ? Optional.empty() : MultiblockControllerDefinitions.getDefinition(be);
     }
 
     @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
-        if (activeControllerPos == null || activeFacing == null) return;
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
+            return;
+        }
+        if (activeControllerPos == null || activeFacing == null) {
+            return;
+        }
 
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null) return;
+        if (mc.level == null || mc.player == null) {
+            return;
+        }
 
-        if (!mc.level.getBlockState(activeControllerPos).is(com.raishxn.ufo.block.MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get())) {
+        if (!MultiblockControllerDefinitions.isSupportedController(mc.level.getBlockState(activeControllerPos))) {
             activeControllerPos = null;
+            activeFacing = null;
             cachedBlocks.clear();
             return;
         }
@@ -97,8 +132,7 @@ public class GhostHologramRenderer {
         poseStack.pushPose();
         poseStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 
-        RenderType renderType = net.minecraft.client.renderer.RenderType.translucent();
-        com.mojang.blaze3d.vertex.VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
+        var vertexConsumer = bufferSource.getBuffer(RenderType.translucent());
 
         for (HologramBlock hb : cachedBlocks) {
             BlockState existingState = mc.level.getBlockState(hb.pos());
@@ -108,7 +142,6 @@ public class GhostHologramRenderer {
 
             poseStack.pushPose();
             poseStack.translate(hb.pos().getX(), hb.pos().getY(), hb.pos().getZ());
-            
             mc.getBlockRenderer().renderBatched(
                     hb.state(),
                     hb.pos(),
@@ -116,22 +149,20 @@ public class GhostHologramRenderer {
                     poseStack,
                     vertexConsumer,
                     true,
-                    mc.level.getRandom()
-            );
-            
+                    mc.level.getRandom());
             poseStack.popPose();
         }
-        
+
         bufferSource.endBatch();
         poseStack.popPose();
     }
 
     private static BlockPos getRotatedPos(BlockPos center, int localX, int localY, int localZ, net.minecraft.core.Direction facing) {
-        switch (facing) {
-            case SOUTH: return center.offset(-localX, localY, -localZ);
-            case WEST: return center.offset(localZ, localY, -localX);
-            case EAST: return center.offset(-localZ, localY, localX);
-            case NORTH: default: return center.offset(localX, localY, localZ);
-        }
+        return switch (facing) {
+            case SOUTH -> center.offset(-localX, localY, -localZ);
+            case WEST -> center.offset(localZ, localY, -localX);
+            case EAST -> center.offset(-localZ, localY, localX);
+            case NORTH, UP, DOWN -> center.offset(localX, localY, localZ);
+        };
     }
 }

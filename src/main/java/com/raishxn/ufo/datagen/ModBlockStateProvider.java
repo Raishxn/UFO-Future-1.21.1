@@ -36,6 +36,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
         multiblockCube(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING);
         multiblockCube(MultiblockBlocks.ENTROPY_SINGULARITY_CASING);
         multiblockCube(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX);
+        multiblockCube(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING);
+        qmfControllerBlock(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER);
+        controllerWithBase(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER, "quantum_hyper_mechanical_casing");
+        controllerWithBase(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER, "quantum_hyper_mechanical_casing");
 
         // ═══════════════════ STELLAR NEXUS ═══════════════════
         stellarNexusControllerBlock(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER);
@@ -189,6 +193,66 @@ public class ModBlockStateProvider extends BlockStateProvider {
         });
 
         simpleBlockItem(block.get(), inactiveModel.end());
+    }
+
+    private void controllerWithBase(DeferredBlock<? extends Block> block, String baseTextureName) {
+        String name = block.getId().getPath();
+        ResourceLocation baseTexture = modLoc("block/multiblock/" + baseTextureName);
+        ResourceLocation overlayTexture = modLoc("block/multiblock/overlay_front");
+
+        ModelFile model = models().withExistingParent(name, "block/block")
+                .renderType("cutout")
+                .texture("particle", baseTexture)
+                .texture("base", baseTexture)
+                .texture("overlay", overlayTexture)
+                .element().from(0, 0, 0).to(16, 16, 16).allFaces((dir, face) -> face.texture("#base").cullface(dir)).end()
+                .element().from(0, 0, 0).to(16, 16, 16).face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end().end();
+
+        getVariantBuilder(block.get()).forAllStates(state -> {
+            Direction dir = state.getValue(DirectionalBlock.FACING);
+            return ConfiguredModel.builder()
+                    .modelFile(model)
+                    .rotationX(dir == Direction.DOWN ? 90 : dir == Direction.UP ? -90 : 0)
+                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + 180) % 360)
+                    .build();
+        });
+
+        simpleBlockItem(block.get(), model);
+    }
+
+    private void qmfControllerBlock(DeferredBlock<? extends Block> block) {
+        String name = block.getId().getPath();
+        ResourceLocation baseTexture = modLoc("block/multiblock/quantum_hyper_mechanical_casing");
+        ResourceLocation overlayInactive = modLoc("block/qmf/overlay_front");
+        ResourceLocation overlayActive = modLoc("block/qmf/overlay_front_active");
+
+        ModelFile inactiveModel = models().withExistingParent(name, "block/block")
+                .renderType("cutout")
+                .texture("particle", baseTexture)
+                .texture("base", baseTexture)
+                .texture("overlay", overlayInactive)
+                .element().from(0, 0, 0).to(16, 16, 16).allFaces((dir, face) -> face.texture("#base").cullface(dir)).end()
+                .element().from(0, 0, 0).to(16, 16, 16).face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end().end();
+
+        ModelFile activeModel = models().withExistingParent(name + "_active", "block/block")
+                .renderType("cutout")
+                .texture("particle", baseTexture)
+                .texture("base", baseTexture)
+                .texture("overlay", overlayActive)
+                .element().from(0, 0, 0).to(16, 16, 16).allFaces((dir, face) -> face.texture("#base").cullface(dir)).end()
+                .element().from(0, 0, 0).to(16, 16, 16).face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end().end();
+
+        getVariantBuilder(block.get()).forAllStates(state -> {
+            Direction dir = state.getValue(DirectionalBlock.FACING);
+            boolean active = state.getValue(com.raishxn.ufo.block.MultiblockBlocks.ControllerBlock.ACTIVE);
+            return ConfiguredModel.builder()
+                    .modelFile(active ? activeModel : inactiveModel)
+                    .rotationX(dir == Direction.DOWN ? 90 : dir == Direction.UP ? -90 : 0)
+                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + 180) % 360)
+                    .build();
+        });
+
+        simpleBlockItem(block.get(), inactiveModel);
     }
 
     private void stellarNexusControllerBlock(DeferredBlock<? extends Block> block) {

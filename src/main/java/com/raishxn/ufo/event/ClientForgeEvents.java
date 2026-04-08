@@ -2,6 +2,7 @@ package com.raishxn.ufo.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
 import com.raishxn.ufo.item.custom.HammerItem;
 import com.raishxn.ufo.item.custom.IHasModeHUD;
 import com.raishxn.ufo.item.custom.UfoEnergyHoeItem;
@@ -29,15 +30,15 @@ public class ClientForgeEvents {
     @SubscribeEvent
     public static void onRightClickBlock(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
         if (event.getLevel().isClientSide() && event.getEntity().isShiftKeyDown() && event.getItemStack().isEmpty()) {
-            net.minecraft.world.level.block.state.BlockState state = event.getLevel().getBlockState(event.getPos());
-            if (state.is(com.raishxn.ufo.block.MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get())) {
-                net.minecraft.core.Direction facing = state.getValue(net.minecraft.world.level.block.DirectionalBlock.FACING);
+            var state = event.getLevel().getBlockState(event.getPos());
+            if (MultiblockControllerDefinitions.isSupportedController(state)) {
+                var facing = state.getValue(net.minecraft.world.level.block.DirectionalBlock.FACING);
                 com.raishxn.ufo.client.GhostHologramRenderer.toggleHologram(event.getPos(), facing);
-                
+
                 if (com.raishxn.ufo.client.GhostHologramRenderer.isActive(event.getPos())) {
-                    event.getEntity().displayClientMessage(Component.literal("§d[Stellar Nexus] §7Ghost Hologram rendering ENABLED").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE), true);
+                    event.getEntity().displayClientMessage(Component.literal("Ghost multiblock hologram enabled.").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE), true);
                 } else {
-                    event.getEntity().displayClientMessage(Component.literal("§d[Stellar Nexus] §7Ghost Hologram rendering DISABLED").withStyle(net.minecraft.ChatFormatting.GRAY), true);
+                    event.getEntity().displayClientMessage(Component.literal("Ghost multiblock hologram disabled.").withStyle(net.minecraft.ChatFormatting.GRAY), true);
                 }
                 event.setCanceled(true);
                 event.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);
@@ -59,16 +60,11 @@ public class ClientForgeEvents {
         if (heldStack.getItem() instanceof HammerItem) {
             range = HammerItem.getRange(heldStack);
             if (range > 0) {
-                // CORREÇÃO AQUI:
-                // Substituído 'getPositions' por 'getBlocksToBeDestroyed'
-                // Isso usa o RayTrace para desenhar a linha na área exata que será quebrada
                 positions = HammerItem.getBlocksToBeDestroyed(range, event.getTarget().getBlockPos(), player);
             }
         } else if (heldStack.getItem() instanceof UfoEnergyHoeItem) {
             range = UfoEnergyHoeItem.getRange(heldStack);
             if (range > 0) {
-                // Assume-se que a Enxada (Hoe) ainda usa a lógica antiga.
-                // Se tiver erro aqui também, precisaremos atualizar a Enxada.
                 positions = UfoEnergyHoeItem.getPositions(event.getTarget().getBlockPos(), range);
             }
         }
@@ -96,21 +92,16 @@ public class ClientForgeEvents {
     @SubscribeEvent
     public static void onRenderGui(RenderGuiEvent.Post event) {
         Player player = Minecraft.getInstance().player;
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
 
         ItemStack heldStack = player.getMainHandItem();
-        // Verifica se o item implementa a interface do HUD
         if (heldStack.getItem() instanceof IHasModeHUD hudItem) {
             Component hudText = hudItem.getModeHudComponent(heldStack);
             GuiGraphics guiGraphics = event.getGuiGraphics();
-            int screenHeight = event.getGuiGraphics().guiHeight();
-
-            // Posição do texto (canto inferior esquerdo)
-            int x = 10;
-            int y = screenHeight - 20;
-
-            // Desenha o texto com sombra
-            guiGraphics.drawString(Minecraft.getInstance().font, hudText, x, y, 0xFFFFFF, true);
+            int screenHeight = guiGraphics.guiHeight();
+            guiGraphics.drawString(Minecraft.getInstance().font, hudText, 10, screenHeight - 20, 0xFFFFFF, true);
         }
     }
 }

@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-08T06:22:20.0021242	Recipes
+// 1.21.1	2026-04-08T07:49:45.2584251	Recipes
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
 eb7866de442289af9a906bdbf371421bb9e18e5a data/ufo/advancement/recipes/misc/coprocessor_2b.json
 2da6c174cfadc6187c64a460466526bf7370f743 data/ufo/advancement/recipes/misc/coprocessor_300m.json
@@ -163,6 +163,10 @@ b21707b4dda6d4d272f5a3aec5935fee367edd8f data/ufo/recipe/pulsar_fragment_ingot_f
 556d93393ed9053916675ee8f9cf228a2dad7bfa data/ufo/recipe/pulsar_fragment_ingot_from_nugget.json
 d75c15674fcca4dd88e4cf83891764db5c60c8e7 data/ufo/recipe/pulsar_fragment_nugget.json
 bd6df17b9e946e44bae722511cc14fbe4986a1c4 data/ufo/recipe/quantum_lattice_frame.json
+a445a240720718b8f3506c27059c4fdaf7db9fa1 data/ufo/recipe/stellar_nexus/massive_copper_synthesis.json
+460ba6094e20bafe99964d7e4a17df882cfbe7d5 data/ufo/recipe/stellar_nexus/massive_gold_synthesis.json
+4e1cc17f0c40c552419c113cad557c81f8fc0b78 data/ufo/recipe/stellar_nexus/massive_iron_synthesis.json
+db0b42762bb07f4b93f43ba5092b95d855304656 data/ufo/recipe/stellar_nexus/massive_netherite_synthesis.json
 a4dc32d8c981d25327516a754005c7c4f8af5f16 data/ufo/recipe/storage_1b.json
 6c293c8a8fed4d847763646c5f0a3484636c53f5 data/ufo/recipe/storage_1qd.json
 e21705ce06c39676f34befa0f937e0dc994a81cd data/ufo/recipe/storage_1t.json

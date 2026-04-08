@@ -890,8 +890,6 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         IActionSource src = IActionSource.ofMachine(nodeBE);
         MEStorage storage = grid.getStorageService().getInventory();
 
-        int coolingLevel = recipe.getCoolingLevel();
-
         // Try getting fluids based on tier
         AEFluidKey t3 = AEFluidKey.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("ufo:source_temporal_fluid")));
         AEFluidKey t2 = AEFluidKey.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("ufo:source_stable_coolant")));
@@ -899,10 +897,15 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         AEFluidKey fallback = AEFluidKey.of(net.minecraft.world.level.material.Fluids.WATER);
 
         AEFluidKey[] toTry;
-        if (coolingLevel >= 3) toTry = new AEFluidKey[]{t3};
-        else if (coolingLevel == 2) toTry = new AEFluidKey[]{t3, t2};
-        else if (coolingLevel == 1) toTry = new AEFluidKey[]{t3, t2, t1};
-        else toTry = new AEFluidKey[]{fallback};
+        if (this.fieldLevel == 3) {
+            toTry = new AEFluidKey[]{t3, t2, t1, fallback};
+        } else if (this.fieldLevel == 2) {
+            toTry = new AEFluidKey[]{t2, t3, t1, fallback};
+        } else if (this.fieldLevel == 1) {
+            toTry = new AEFluidKey[]{t1, t2, t3, fallback};
+        } else {
+            toTry = new AEFluidKey[]{fallback};
+        }
 
         // Safe mode consumes 2.5x more coolant per tick
         double multiplier = this.safeMode ? SAFE_MODE_MULTIPLIER : 1.0;

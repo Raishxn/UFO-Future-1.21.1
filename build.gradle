@@ -13,11 +13,29 @@ version = mod_version
 group = mod_group_id
 
 repositories {
+    mavenCentral() // AE2, GuideMe, ae2addonlib (published on Sonatype Maven Central)
     maven {
-        // Curse Forge File
+        // CurseMaven - for mods without their own Maven repo
+        name 'CurseMaven'
         url "https://cursemaven.com/"
         content {
             includeGroup "curse.maven"
+        }
+    }
+    maven {
+        // ModMaven - Mekanism
+        name 'ModMaven'
+        url "https://modmaven.dev/"
+        content {
+            includeGroup "mekanism"
+        }
+    }
+    maven {
+        // GeckoLib
+        name 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroup "software.bernie.geckolib"
         }
     }
 }
@@ -82,50 +100,45 @@ configurations {
 }
 
 dependencies {
-    // Example optional mod dependency with JEI
-    // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
-    // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
-    // compileOnly "mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}"
-    // We add the full version to localRuntime, not runtimeOnly, so that we do not publish a dependency on it
-    // localRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
-    implementation "curse.maven:applied-energistics-2-223794:7027323"
-    implementation "curse.maven:guideme-1173950:6812025"
-    implementation "curse.maven:geckolib-388172:7023453"
-    implementation "curse.maven:ldlib-626676:6260254"
-    compileOnly "curse.maven:mekanism-268560:7017663"
-    implementation "curse.maven:glodium-957920:5821676"
-    compileOnly "curse.maven:jei-238222:7129287"
-    compileOnly "curse.maven:kubejs-238086:5810100"
-    compileOnly "curse.maven:rhino-416294:5691686"
-    implementation "curse.maven:ae2addonlib-1366135:7222312"
-    compileOnly "curse.maven:applied-flux-965012:6649565"
-    //local test
-    localRuntime "curse.maven:mega-cells-622112:6853076"
-    localRuntime "curse.maven:mekanism-268560:7017663"
-    localRuntime "curse.maven:ex-pattern-provider-892005:7871693"
-    localRuntime "curse.maven:jei-238222:7129287"
-    localRuntime "curse.maven:ae2-jei-integration-1074338:5748513"
-    localRuntime "curse.maven:mmmmmmmmmmmm-225738:7206981"
-    localRuntime "curse.maven:selene-499980:7238829"
-    localRuntime "curse.maven:kubejs-238086:5810100"
-    localRuntime "curse.maven:rhino-416294:5691686"
-    localRuntime "curse.maven:advancedae-1084104:7849217"
-    localRuntime "curse.maven:kubejs-238086:5810100"
-    localRuntime "curse.maven:rhino-416294:5691686"
-    // Example mod dependency using a mod jar from ./libs with a flat dir repository
-    // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
-    // The group id is ignored when searching -- in this case, it is "blank"
-    // implementation "blank:coolmod-${mc_version}:${coolmod_version}"
+    // ===========================================
+    // Implementation - Maven (version by name)
+    // ===========================================
+    implementation "org.appliedenergistics:appliedenergistics2:${ae2_version}"
+    implementation "io.github.pedroksl:ae2addonlib:${ae2addonlib_version}-${minecraft_version}"
+    implementation "org.appliedenergistics:guideme:${guideme_version}"
+    // GeckoLib was removed since it's not being used.
 
-    // Example mod dependency using a file as dependency
-    // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
+    // ===========================================
+    // Implementation - CurseForge (file ID)
+    // ===========================================
+    implementation "curse.maven:ldlib-626676:${ldlib_file_id}"
+    implementation "curse.maven:glodium-957920:${glodium_file_id}"
 
-    // Example project dependency using a sister or child project:
-    // implementation project(":myproject")
+    // ===========================================
+    // CompileOnly - API access only (not bundled)
+    // ===========================================
+    compileOnly "mekanism:Mekanism:${mekanism_version}"
+    compileOnly "mekanism:Mekanism:${mekanism_version}:generators"
+    compileOnly "curse.maven:jei-238222:${jei_file_id}"
+    compileOnly "curse.maven:kubejs-238086:${kubejs_file_id}"
+    compileOnly "curse.maven:rhino-416294:${rhino_file_id}"
+    compileOnly "curse.maven:applied-flux-965012:${applied_flux_file_id}"
 
-    // For more info:
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    // ===========================================
+    // Local Runtime - Dev test mods
+    // ===========================================
+    localRuntime "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    localRuntime "curse.maven:mega-cells-622112:${mega_file_id}"
+    localRuntime "mekanism:Mekanism:${mekanism_version}"
+    localRuntime "mekanism:Mekanism:${mekanism_version}:generators"
+    localRuntime "curse.maven:ex-pattern-provider-892005:${ex_pattern_file_id}"
+    localRuntime "curse.maven:jei-238222:${jei_file_id}"
+    localRuntime "curse.maven:ae2-jei-integration-1074338:${ae2_jei_integration_file_id}"
+    localRuntime "curse.maven:mmmmmmmmmmmm-225738:${mmmmmmmmmmmm_file_id}"
+    localRuntime "curse.maven:selene-499980:${selene_file_id}"
+    localRuntime "curse.maven:kubejs-238086:${kubejs_file_id}"
+    localRuntime "curse.maven:rhino-416294:${rhino_file_id}"
+    localRuntime "curse.maven:advancedae-1084104:${advancedae_file_id}"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

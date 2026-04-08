@@ -176,6 +176,30 @@ public class ModItems {
 
 
      // ═══════════════════════════════════════════════════════════
+     //  QUANTUM MATTER FABRICATOR — Block Items
+     // ═══════════════════════════════════════════════════════════
+
+     public static final DeferredItem<Item> QUANTUM_ENTROPY_CASING = ITEMS.register("quantum_entropy_casing",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_ENTROPY_CASING.get(), new Item.Properties(),
+                     ChatFormatting.WHITE, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.BLUE, ChatFormatting.DARK_AQUA, ChatFormatting.AQUA));
+
+     public static final DeferredItem<Item> QUANTUM_HYPER_MECHANICAL_CASING = ITEMS.register("quantum_hyper_mechanical_casing",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.BLUE, ChatFormatting.DARK_AQUA));
+
+     public static final DeferredItem<Item> QUANTUM_MATTER_FABRICATOR_CONTROLLER = ITEMS.register("quantum_matter_fabricator_controller",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.BLUE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE));
+
+     public static final DeferredItem<Item> QUANTUM_SLICER_CONTROLLER = ITEMS.register("quantum_slicer_controller",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.BLUE, ChatFormatting.DARK_AQUA));
+
+     public static final DeferredItem<Item> QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER = ITEMS.register("quantum_processor_assembler_controller",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get(), new Item.Properties(),
+                     ChatFormatting.LIGHT_PURPLE, ChatFormatting.AQUA, ChatFormatting.BLUE, ChatFormatting.WHITE));
+
+     // ═══════════════════════════════════════════════════════════
      //  STELLAR NEXUS — Block Items
      // ═══════════════════════════════════════════════════════════
 

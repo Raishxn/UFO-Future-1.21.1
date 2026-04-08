@@ -181,6 +181,10 @@ public class ModCreativeModeTabs {
 
                         // --- STELLAR NEXUS ---
                         output.accept(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get());
+                        output.accept(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get());
+                        output.accept(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get());
+                        output.accept(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get());
+                        output.accept(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get());
                         output.accept(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get());
                         output.accept(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get());
                         output.accept(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get());

@@ -36,10 +36,10 @@ public class StellarNexusPartBlock extends Block implements net.minecraft.world.
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock())) {
             if (level.getBlockEntity(pos) instanceof StellarNexusPartBE part) {
-                // Notify the controller that this part has been removed
                 BlockPos controllerPos = part.getControllerPos();
                 if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
                     controller.removePart(pos);
+                    controller.scanStructure(level);
                 }
                 part.unlinkFromController();
             }
@@ -50,12 +50,10 @@ public class StellarNexusPartBlock extends Block implements net.minecraft.world.
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block changedBlock, BlockPos changedPos, boolean isMoving) {
         super.neighborChanged(state, level, pos, changedBlock, changedPos, isMoving);
-        // Propagate neighbour changes to the controller for re-scan
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof StellarNexusPartBE part) {
             BlockPos controllerPos = part.getControllerPos();
-            if (controllerPos != null
-                    && level.getBlockEntity(controllerPos) instanceof com.raishxn.ufo.block.entity.StellarNexusControllerBE cbe) {
-                cbe.markStructureDirty();
+            if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
+                controller.scanStructure(level);
             }
         }
     }

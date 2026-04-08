@@ -1,0 +1,60 @@
+package com.raishxn.ufo.block.entity.pattern;
+
+import com.raishxn.ufo.api.multiblock.MultiblockPattern;
+import com.raishxn.ufo.block.MultiblockBlocks;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.Map;
+
+public class QmfPatternFactory {
+
+    public static Map<Character, BlockState> getDefaultCreativeStates() {
+        return QuantumPatternPredicates.getDefaultCreativeStates();
+    }
+
+    public static MultiblockPattern getPattern() {
+        return new MultiblockPattern.Builder()
+                .controllerChar('H')
+                .layer(new String[]{
+                        "ACCCA",
+                        "CCCCC",
+                        "CCCCC",
+                        "CCCCC",
+                        "ACCCA"
+                })
+                .layer(new String[]{
+                        "CGGGC",
+                        "GFFFG",
+                        "GFFFG",
+                        "GFFFG",
+                        "CGGGC"
+                })
+                .layer(new String[]{
+                        "CGHGC",
+                        "GFFFG",
+                        "GFFFG",
+                        "GFFFG",
+                        "CGGGC"
+                })
+                .layer(new String[]{
+                        "CGGGC",
+                        "GFFFG",
+                        "GFFFG",
+                        "GFFFG",
+                        "CGGGC"
+                })
+                .layer(new String[]{
+                        "ACCCA",
+                        "CGGGC",
+                        "CGGGC",
+                        "CGGGC",
+                        "ACCCA"
+                })
+                .where('H', (state, level, pos) -> state.is(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get()))
+                .where('C', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasingOrHatch(state), QuantumPatternPredicates.casingName())
+                .where('F', (state, level, pos) -> QuantumPatternPredicates.isAnyFieldGenerator(state), QuantumPatternPredicates.fieldName())
+                .where('G', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state), QuantumPatternPredicates.glassName())
+                .where('A', (state, level, pos) -> state.isAir())
+                .build();
+    }
+}

@@ -17,6 +17,18 @@ public class ModMenus {
             MENUS.register("stellar_nexus_controller_menu",
                     () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.StellarNexusControllerMenu::new));
 
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.QmfControllerMenu>> QMF_CONTROLLER_MENU =
+            MENUS.register("qmf_controller_menu",
+                    () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.QmfControllerMenu::new));
+
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumSlicerControllerMenu>> QUANTUM_SLICER_CONTROLLER_MENU =
+            MENUS.register("quantum_slicer_controller_menu",
+                    () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.QuantumSlicerControllerMenu::new));
+
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerMenu>> QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU =
+            MENUS.register("quantum_processor_assembler_controller_menu",
+                    () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerMenu::new));
+
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);
     }
