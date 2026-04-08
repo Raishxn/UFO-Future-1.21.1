@@ -110,7 +110,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
 
     public QmfControllerBE(BlockPos pos, BlockState state) {
         super(ModBlockEntities.QMF_CONTROLLER.get(), pos, state);
-        this.upgrades = UpgradeInventories.forMachine(state.getBlock().asItem(), 2, this::saveChanges);
+        this.upgrades = UpgradeInventories.forMachine(state.getBlock().asItem(), 4, this::saveChanges);
     }
 
     @Override

@@ -91,7 +91,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
 
     protected AbstractSimpleMultiblockControllerBE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        this.upgrades = UpgradeInventories.forMachine(state.getBlock().asItem(), 2, this::saveChanges);
+        this.upgrades = UpgradeInventories.forMachine(state.getBlock().asItem(), 4, this::saveChanges);
     }
 
     protected abstract MultiblockPattern getControllerPattern();

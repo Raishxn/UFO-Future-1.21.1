@@ -7,6 +7,7 @@ import com.raishxn.ufo.network.packet.PacketToggleUniversalOverclock;
 import com.raishxn.ufo.network.packet.PacketToggleUniversalSafeMode;
 import appeng.client.gui.implementations.UpgradeableScreen;
 import appeng.client.gui.style.ScreenStyle;
+import appeng.menu.SlotSemantics;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -33,15 +34,17 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
     @Override
     protected void init() {
         super.init();
+        setSlotsHidden(SlotSemantics.PLAYER_INVENTORY, true);
+        setSlotsHidden(SlotSemantics.PLAYER_HOTBAR, true);
         this.safeModeButton = this.addRenderableWidget(Button.builder(Component.literal("⚗"), btn ->
                         ModPackets.sendToServer(new PacketToggleUniversalSafeMode(this.menu.getBlockEntity().getBlockPos())))
-                .bounds(this.leftPos + this.imageWidth + 4, this.topPos + 24, 20, 20)
+                .bounds(this.leftPos + this.imageWidth - 44, this.topPos + this.imageHeight - 24, 20, 20)
                 .tooltip(Tooltip.create(Component.literal("Toggle Safe Mode")))
                 .build());
 
         this.overclockButton = this.addRenderableWidget(Button.builder(Component.literal("⚡"), btn ->
                         ModPackets.sendToServer(new PacketToggleUniversalOverclock(this.menu.getBlockEntity().getBlockPos())))
-                .bounds(this.leftPos + this.imageWidth + 4, this.topPos + 48, 20, 20)
+                .bounds(this.leftPos + this.imageWidth - 22, this.topPos + this.imageHeight - 24, 20, 20)
                 .tooltip(Tooltip.create(Component.literal("Toggle Overclock")))
                 .build());
     }
