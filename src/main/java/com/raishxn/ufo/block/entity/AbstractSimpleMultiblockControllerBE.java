@@ -114,6 +114,10 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
             this.structureDirty = false;
         }
 
+        machineTick();
+    }
+
+    protected void machineTick() {
         tickThermals();
     }
 

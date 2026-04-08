@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class QuantumProcessorAssemblerControllerBE extends AbstractSimpleMultiblockControllerBE {
+public class QuantumProcessorAssemblerControllerBE extends AbstractParallelMultiblockControllerBE {
 
     private static MultiblockPattern PATTERN;
 
@@ -36,5 +36,20 @@ public class QuantumProcessorAssemblerControllerBE extends AbstractSimpleMultibl
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
         return new QuantumProcessorAssemblerControllerMenu(id, playerInventory, this);
+    }
+
+    @Override
+    protected java.util.List<com.raishxn.ufo.block.entity.processing.MultiblockProcessingRecipe> getAvailableRecipes() {
+        if (this.level == null) {
+            return java.util.List.of();
+        }
+        java.util.List<com.raishxn.ufo.block.entity.processing.MultiblockProcessingRecipe> recipes = new java.util.ArrayList<>();
+        for (var holder : this.level.getRecipeManager().getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.UNIVERSAL_MULTIBLOCK_TYPE.get())) {
+            var recipe = holder.value();
+            if (recipe.getMachine() == com.raishxn.ufo.recipe.UniversalMultiblockMachineKind.QUANTUM_PROCESSOR_ASSEMBLER) {
+                recipes.add(com.raishxn.ufo.block.entity.processing.MultiblockProcessingRecipe.fromUniversal(holder.id(), recipe));
+            }
+        }
+        return recipes;
     }
 }

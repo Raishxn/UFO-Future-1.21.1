@@ -5,6 +5,7 @@ import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipeSerializer;
 import com.raishxn.ufo.recipe.StellarSimulationRecipe;
 import com.raishxn.ufo.recipe.StellarSimulationRecipeSerializer;
+import com.raishxn.ufo.recipe.UniversalMultiblockRecipe;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -59,6 +60,19 @@ public class ModRecipes {
 
     public static final Supplier<RecipeSerializer<com.raishxn.ufo.recipe.QMFRecipe>> QMF_SERIALIZER =
             SERIALIZERS.register(QMF_ID, com.raishxn.ufo.recipe.QMFRecipe.Serializer::new);
+
+    // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• UNIVERSAL MULTIBLOCK â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    public static final String UNIVERSAL_MULTIBLOCK_ID = "universal_multiblock";
+
+    public static final Supplier<RecipeType<UniversalMultiblockRecipe>> UNIVERSAL_MULTIBLOCK_TYPE = RECIPE_TYPES.register(UNIVERSAL_MULTIBLOCK_ID, () -> new RecipeType<UniversalMultiblockRecipe>() {
+        @Override
+        public String toString() {
+            return UNIVERSAL_MULTIBLOCK_ID;
+        }
+    });
+
+    public static final Supplier<RecipeSerializer<UniversalMultiblockRecipe>> UNIVERSAL_MULTIBLOCK_SERIALIZER =
+            SERIALIZERS.register(UNIVERSAL_MULTIBLOCK_ID, UniversalMultiblockRecipe.Serializer::new);
 
     public static void register(IEventBus eventBus) {
         SERIALIZERS.register(eventBus);
