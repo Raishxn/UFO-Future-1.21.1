@@ -51,6 +51,8 @@ public class QMFRecipe implements Recipe<RecipeInput> {
     @Override
     public ItemStack getResultItem(HolderLookup.Provider pRegistries) { return itemOutput; }
 
+    public ItemStack getResultItem() { return itemOutput.copy(); }
+
     @Override
     public RecipeSerializer<?> getSerializer() { return ModRecipes.QMF_SERIALIZER.get(); }
 

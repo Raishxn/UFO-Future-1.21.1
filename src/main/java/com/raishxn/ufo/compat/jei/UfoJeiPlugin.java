@@ -16,6 +16,7 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
+import com.raishxn.ufo.recipe.QMFRecipe;
 
 import net.pedroksl.ae2addonlib.recipes.IngredientStack;
 
@@ -40,6 +41,7 @@ public class UfoJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registry) {
         var jeiHelpers = registry.getJeiHelpers();
         registry.addRecipeCategories(new DimensionalMatterAssemblerRecipeCategory(jeiHelpers));
+        registry.addRecipeCategories(new QmfRecipeCategory(jeiHelpers));
         registry.addRecipeCategories(new StellarSimulationRecipeCategory(jeiHelpers));
     }
 
@@ -49,6 +51,11 @@ public class UfoJeiPlugin implements IModPlugin {
         registration.addRecipes(
                 DimensionalMatterAssemblerRecipeCategory.RECIPE_TYPE,
                 List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.DMA_RECIPE_TYPE.get()).stream()
+                        .map(RecipeHolder::value)
+                        .toList()));
+        registration.addRecipes(
+                QmfRecipeCategory.RECIPE_TYPE,
+                List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.QMF_TYPE.get()).stream()
                         .map(RecipeHolder::value)
                         .toList()));
         registration.addRecipes(
@@ -65,6 +72,9 @@ public class UfoJeiPlugin implements IModPlugin {
 
         var nexusController = MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get().asItem().getDefaultInstance();
         registration.addRecipeCatalyst(nexusController, StellarSimulationRecipeCategory.RECIPE_TYPE);
+
+        var qmfController = MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().asItem().getDefaultInstance();
+        registration.addRecipeCatalyst(qmfController, QmfRecipeCategory.RECIPE_TYPE);
     }
 
     public static Ingredient stackOf(IngredientStack.Item stack) {
@@ -80,5 +90,13 @@ public class UfoJeiPlugin implements IModPlugin {
         return Arrays.stream(ingredient.getStacks())
                 .map(oldStack -> oldStack.copyWithAmount(stack.getAmount()))
                 .toList();
+    }
+
+    public static Ingredient stackOfQmf(QMFRecipe.QMFRecipeIngredient stack) {
+        if (stack != null && !stack.ingredient().isEmpty() && stack.amount() > 0) {
+            return Ingredient.of(Arrays.stream(stack.ingredient().getItems())
+                    .map(oldStack -> oldStack.copyWithCount((int) Math.min(Integer.MAX_VALUE, stack.amount()))));
+        }
+        return Ingredient.of(ItemStack.EMPTY);
     }
 }
