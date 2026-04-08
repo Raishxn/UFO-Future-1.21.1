@@ -1,0 +1,35 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "ufo:stellar_simulation",
+  "simulation_name": "Fission Reactor Process",
+  "item_inputs": [
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "mekanism:pellet_plutonium"
+      }
+    }
+  ],
+  "fluid_inputs": [],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "mekanism:pellet_antimatter"
+    }
+  ],
+  "fluid_outputs": [],
+  "energy": 10000000,
+  "time": 12000,
+  "cooling_level": 3,
+  "field_tier": 2,
+  "fuel_fluid": "mekanism:sulfuric_acid",
+  "fuel_amount": 20000,
+  "coolant_fluid": "minecraft:water",
+  "coolant_amount": 100000
+}

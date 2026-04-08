@@ -191,10 +191,6 @@ public class ModCreativeModeTabs {
                         output.accept(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get());
                         output.accept(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get());
                         output.accept(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
-                        output.accept(MultiblockBlocks.ENTROPY_CONTAINMENT_CHAMBER_COMPONENTS.get());
-                        output.accept(MultiblockBlocks.ENTROPY_COOLANT_MATRIX_COMPONENTS.get());
-                        output.accept(MultiblockBlocks.ENTROPY_CATALYST_BANK_COMPONENTS.get());
-                        output.accept(MultiblockBlocks.ENTROPY_SINGULARITY_ARRAY_CONTROLLER.get());
 
                     }).build());
 

@@ -1,0 +1,35 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "advancedae"
+    }
+  ],
+  "type": "ufo:stellar_simulation",
+  "simulation_name": "Quantum Alloy Infusion",
+  "item_inputs": [
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "advancedae:quantum_infused_dust"
+      }
+    }
+  ],
+  "fluid_inputs": [],
+  "item_outputs": [
+    {
+      "#": 4,
+      "#t": "ae2:i",
+      "id": "advancedae:quantum_alloy"
+    }
+  ],
+  "fluid_outputs": [],
+  "energy": 10000000,
+  "time": 2500,
+  "cooling_level": 3,
+  "field_tier": 3,
+  "fuel_fluid": "ufo:raw_star_matter_plasma",
+  "fuel_amount": 10000,
+  "coolant_fluid": "ufo:source_gelid_cryotheum",
+  "coolant_amount": 100000
+}

@@ -56,8 +56,7 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
     protected final int fieldTier;               // 1 = Mk.I, 2 = Mk.II, 3 = Mk.III
     protected final String fuelFluid;            // ResourceLocation string of fuel fluid (e.g., "mekanism:hydrogen")
     protected final long fuelAmount;             // Amount of fuel fluid required (mB)
-    protected final String coolantFluid;         // ResourceLocation string of coolant fluid
-    protected final long coolantAmount;          // Amount of coolant fluid required (mB)
+    protected final long coolantAmount;          // Amount of coolant required (mB)
 
     public StellarSimulationRecipe(
             List<IngredientStack.Item> itemInputs,
@@ -71,7 +70,6 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
             int fieldTier,
             String fuelFluid,
             long fuelAmount,
-            String coolantFluid,
             long coolantAmount) {
         this.itemInputs = itemInputs;
         this.fluidInputs = fluidInputs;
@@ -84,7 +82,6 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
         this.fieldTier = Math.clamp(fieldTier, 1, 3);
         this.fuelFluid = fuelFluid != null ? fuelFluid : "";
         this.fuelAmount = fuelAmount;
-        this.coolantFluid = coolantFluid != null ? coolantFluid : "";
         this.coolantAmount = coolantAmount;
     }
 
@@ -99,7 +96,7 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
             int coolingLevel,
             int fieldTier) {
         this(itemInputs, fluidInputs, itemOutputs, fluidOutputs,
-                "", energy, time, coolingLevel, fieldTier, "", 0, "", 0);
+                "", energy, time, coolingLevel, fieldTier, "", 0, 0);
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -232,10 +229,7 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
         return fuelAmount;
     }
 
-    /** ResourceLocation string of the required coolant fluid. Empty if none. */
-    public String getCoolantFluid() {
-        return coolantFluid;
-    }
+
 
     /** Amount of coolant fluid required in mB. */
     public long getCoolantAmount() {
@@ -267,11 +261,5 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
         return Optional.of(ResourceLocation.parse(fuelFluid));
     }
 
-    /**
-     * Resolves the coolant fluid ResourceLocation, or empty if not set.
-     */
-    public Optional<ResourceLocation> getCoolantFluidRL() {
-        if (coolantFluid.isEmpty()) return Optional.empty();
-        return Optional.of(ResourceLocation.parse(coolantFluid));
-    }
+
 }

@@ -12,23 +12,25 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
-      "amount": 2,
+      "amount": 8,
       "ingredient": {
         "item": "ufo:dimensional_processor"
       }
     },
     {
+      "amount": 8,
       "ingredient": {
         "item": "ae2:cell_component_256k"
       }
     },
     {
-      "amount": 4,
+      "amount": 8,
       "ingredient": {
         "item": "ae2:quartz_vibrant_glass"
       }
     },
     {
+      "amount": 8,
       "ingredient": {
         "item": "minecraft:nether_star"
       }

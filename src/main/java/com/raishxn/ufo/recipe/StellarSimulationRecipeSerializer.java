@@ -34,7 +34,6 @@ import appeng.api.stacks.GenericStack;
  *   "field_tier": 1,
  *   "fuel_fluid": "mekanism:hydrogen",
  *   "fuel_amount": 10000000,
- *   "coolant_fluid": "ufo:source_gelid_cryotheum",
  *   "coolant_amount": 20000000
  * }
  * }</pre>
@@ -75,8 +74,6 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
                     .forGetter(StellarSimulationRecipe::getFuelFluid),
             Codec.LONG.optionalFieldOf("fuel_amount", 0L)
                     .forGetter(StellarSimulationRecipe::getFuelAmount),
-            Codec.STRING.optionalFieldOf("coolant_fluid", "")
-                    .forGetter(StellarSimulationRecipe::getCoolantFluid),
             Codec.LONG.optionalFieldOf("coolant_amount", 0L)
                     .forGetter(StellarSimulationRecipe::getCoolantAmount)
     ).apply(builder, StellarSimulationRecipe::new));
@@ -112,7 +109,6 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
         buf.writeInt(recipe.getFieldTier());
         buf.writeUtf(recipe.getFuelFluid());
         buf.writeLong(recipe.getFuelAmount());
-        buf.writeUtf(recipe.getCoolantFluid());
         buf.writeLong(recipe.getCoolantAmount());
     }
 
@@ -132,13 +128,12 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
         int fieldTier = buf.readInt();
         String fuelFluid = buf.readUtf();
         long fuelAmount = buf.readLong();
-        String coolantFluid = buf.readUtf();
         long coolantAmount = buf.readLong();
 
         return new StellarSimulationRecipe(
                 itemInputs, fluidInputs, itemOutputs, fluidOutputs,
                 simulationName, energy, time, coolingLevel, fieldTier,
-                fuelFluid, fuelAmount, coolantFluid, coolantAmount);
+                fuelFluid, fuelAmount, coolantAmount);
     }
 
     // ═══════════════════════════════════════════════════════════

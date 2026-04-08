@@ -136,6 +136,10 @@
   "item.ufo.pulsar_fragment_dust": "Pó de Fragmento de Pulsar",
   "item.ufo.pulsar_fragment_nugget": "Pepita de Fragmento de Pulsar",
   "item.ufo.pulsar_fragment_bucket": "Balde com Fragmento de Pulsar",
+  "item.ufo.stable_coolant_bucket": "Balde de Líquido de Resfriamento Estável",
+  "block.ufo.stable_coolant": "Líquido de Resfriamento Estável",
+  "fluid.ufo.stable_coolant": "Líquido de Resfriamento Estável",
+  
 
   "item.ufo.aether_containment_capsule": "Cápsula de Contenção de Éter (ACC)",
   "item.ufo.safe_containment_matter": "Matéria de Contenção Segura (SCM)",
@@ -164,6 +168,7 @@
   "item.ufo.obsidian_matrix": "Matriz de Obsidiana",
   "fluid_type.ufo.gelid_cryotheum": "Crioteu Gélido",
   "fluid_type.ufo.spatial_fluid": "Fluido Espacial",
+  "fluid_type.ufo.stable_coolant": "Fluidos Estáveis de Resfriamento",
   "fluid_type.ufo.temporal_fluid": "Fluido Temporal",
   "fluid_type.ufo.uu_amplifier_fluid": "Amplificador UU",
   "fluid_type.ufo.uu_matter_fluid": "Matéria UU",

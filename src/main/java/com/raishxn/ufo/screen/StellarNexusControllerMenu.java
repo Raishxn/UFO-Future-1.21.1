@@ -22,7 +22,7 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public StellarNexusControllerMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(17));
+        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(20));
     }
 
     public StellarNexusControllerMenu(int id, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -97,6 +97,18 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
                ((this.data.get(14) & 0xFFFFL) << 16) |
                ((this.data.get(15) & 0xFFFFL) << 32) |
                ((this.data.get(16) & 0xFFFFL) << 48);
+    }
+    
+    public boolean isAutoStart() {
+        return this.data.get(17) == 1;
+    }
+    
+    public boolean isSimulationLocked() {
+        return this.data.get(18) == 1;
+    }
+
+    public boolean isOverclocked() {
+        return this.data.get(19) == 1;
     }
 
     @Override

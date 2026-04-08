@@ -12,13 +12,13 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
-      "amount": 2,
+      "amount": 8,
       "ingredient": {
         "item": "ufo:tesseract_component_matrix"
       }
     },
     {
-      "amount": 4,
+      "amount": 8,
       "ingredient": {
         "item": "ufo:pulsar_matter"
       }

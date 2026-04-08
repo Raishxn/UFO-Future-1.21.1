@@ -11,7 +11,7 @@
   ],
   "fluid_outputs": [
     {
-      "#": 10,
+      "#": 250,
       "#t": "ae2:f",
       "id": "ufo:uu_matter"
     }
@@ -25,5 +25,5 @@
     }
   ],
   "item_outputs": [],
-  "time": 1200
+  "time": 300
 }

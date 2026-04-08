@@ -125,4 +125,25 @@ Server owners may gate the armor behind:
 
 ---
 
+# 🌋 Thermal Suit
+
+The **Thermal Suit** focuses mainly on environmental and heat protection, ensuring absolute safety when exploring hazardous areas or working closely with advanced thermal systems.
+
+<div style="display: flex; gap: 10px; margin-bottom: 20px;">
+  <ItemImage id="ufo:thermal_resistor_mask" scale="2" />
+  <ItemImage id="ufo:thermal_resistor_chest" scale="2" />
+  <ItemImage id="ufo:thermal_resistor_pants" scale="2" />
+  <ItemImage id="ufo:thermal_resistor_boots" scale="2" />
+</div>
+
+## ✔ **Absolute Heat Immunity**
+When wearing the Thermal Suit:
+- Completely negates all burns from the **Dimensional Matter Assembler (DMA)** HAZARD zones.
+- Grants immunity to natural fire, lava, and hot environments.
+- Protects the player from radiation or passive environmental heat damage.
+
+This makes the Thermal Suit the best starter-to-midgame gear for surviving while you build your first UFO setups!
+
+---
+
 *End of UFO Armor Guide.*

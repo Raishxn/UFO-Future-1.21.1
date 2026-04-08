@@ -59,11 +59,7 @@ public class UfoModClient {
     private void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
 
-            ItemBlockRenderTypes.setRenderLayer(MultiblockBlocks.ENTROPY_CONTAINMENT_CHAMBER_COMPONENTS.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(MultiblockBlocks.ENTROPY_COOLANT_MATRIX_COMPONENTS.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(MultiblockBlocks.ENTROPY_SINGULARITY_ARRAY_CONTROLLER.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(MultiblockBlocks.ENTROPY_CATALYST_BANK_COMPONENTS.get(), RenderType.cutout());
             // Loop para os Storages (já existente)
             for (var tier : MegaCraftingStorageTier.values()) {
                 String modelName = tier.getRegistryId() + "_mega_crafting_storage_formed";

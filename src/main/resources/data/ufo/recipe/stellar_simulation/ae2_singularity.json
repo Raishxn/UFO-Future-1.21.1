@@ -1,0 +1,42 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "type": "ufo:stellar_simulation",
+  "simulation_name": "Quantum Singularity Collapse",
+  "item_inputs": [
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "ae2:matter_ball"
+      }
+    }
+  ],
+  "fluid_inputs": [
+    {
+      "amount": 4000,
+      "ingredient": {
+        "fluid": "ufo:spatial_fluid"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 4,
+      "#t": "ae2:i",
+      "id": "ae2:singularity"
+    }
+  ],
+  "fluid_outputs": [],
+  "energy": 5000000,
+  "time": 1000,
+  "cooling_level": 2,
+  "field_tier": 2,
+  "fuel_fluid": "ufo:liquid_starlight",
+  "fuel_amount": 10000,
+  "coolant_fluid": "ufo:source_gelid_cryotheum",
+  "coolant_amount": 50000
+}

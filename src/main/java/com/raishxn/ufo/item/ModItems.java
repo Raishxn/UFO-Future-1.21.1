@@ -166,29 +166,14 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get(), new Item.Properties(),
                      ChatFormatting.WHITE, ChatFormatting.GRAY, ChatFormatting.DARK_GRAY, ChatFormatting.BLACK, ChatFormatting.DARK_GRAY, ChatFormatting.GRAY));
 
-     // components: cores rainbow
-     private static final ChatFormatting[] RAINBOW_COLORS = {
-             ChatFormatting.RED, ChatFormatting.GOLD, ChatFormatting.YELLOW, ChatFormatting.GREEN,
-             ChatFormatting.AQUA, ChatFormatting.BLUE, ChatFormatting.LIGHT_PURPLE
-     };
-     public static final DeferredItem<Item> ENTROPY_CONTAINMENT_CHAMBER_COMPONENTS = ITEMS.register("entropy_containment_chamber_components",
-             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_CONTAINMENT_CHAMBER_COMPONENTS.get(), new Item.Properties(), RAINBOW_COLORS));
 
-     public static final DeferredItem<Item> ENTROPY_COOLANT_MATRIX_COMPONENTS = ITEMS.register("entropy_coolant_matrix_components",
-             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_COOLANT_MATRIX_COMPONENTS.get(), new Item.Properties(), RAINBOW_COLORS));
-
-     public static final DeferredItem<Item> ENTROPY_CATALYST_BANK_COMPONENTS = ITEMS.register("entropy_catalyst_bank_components",
-             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_CATALYST_BANK_COMPONENTS.get(), new Item.Properties(), RAINBOW_COLORS));
 
      // entropy_computer_condensation_matrix: variacoes de vermelho,ciano e rosa
      public static final DeferredItem<Item> ENTROPY_COMPUTER_CONDENSATION_MATRIX = ITEMS.register("entropy_computer_condensation_matrix",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(), new Item.Properties(),
                      ChatFormatting.RED, ChatFormatting.DARK_RED, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.LIGHT_PURPLE));
 
-     // controller: variacoes de azul,roxo e rosa
-     public static final DeferredItem<Item> ENTROPY_SINGULARITY_ARRAY_CONTROLLER = ITEMS.register("entropy_singularity_array_controller",
-             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_SINGULARITY_ARRAY_CONTROLLER.get(), new Item.Properties(),
-                     ChatFormatting.BLUE, ChatFormatting.DARK_BLUE, ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED));
+
 
      // ═══════════════════════════════════════════════════════════
      //  STELLAR NEXUS — Block Items

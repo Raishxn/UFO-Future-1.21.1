@@ -12,13 +12,13 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
-      "amount": 2,
+      "amount": 8,
       "ingredient": {
         "item": "ufo:event_horizon_component_matrix"
       }
     },
     {
-      "amount": 2,
+      "amount": 8,
       "ingredient": {
         "item": "ufo:dark_matter"
       }

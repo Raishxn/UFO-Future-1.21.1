@@ -62,16 +62,14 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
         float tick = blockEntity.getLevel().getGameTime() + partialTick;
 
         // Calculate center offset based on controller facing direction
-        // The multiblock is 35x34x35 — translate rendering to the center
+        // Assume controller is horizontally centered relative to the shape
         Direction facing = blockEntity.getBlockState().getValue(BlockStateProperties.FACING);
-        double x = 0.5, y = 17.0, z = 0.5; // Default: center vertically at half-height
+        double x = 0.5, y = 0.5, z = 0.5; 
         switch (facing) {
             case NORTH -> z += 16;
             case SOUTH -> z -= 16;
             case WEST  -> x += 16;
             case EAST  -> x -= 16;
-            case UP    -> y -= 16;
-            case DOWN  -> y += 16;
         }
 
         poseStack.pushPose();
@@ -93,7 +91,6 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
 
     /**
      * Renders the central star (SUN) — the dominant object.
-     * Scale 0.06F makes it visually large inside the space shell.
      */
     private static void renderStar(float tick, ResourceLocation modelLoc, PoseStack poseStack,
                                     MultiBufferSource buffer, boolean isActive) {
@@ -102,8 +99,8 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
 
         poseStack.pushPose();
 
-        // LARGE star: scale 0.06 (3x bigger than GTO Core's 0.02)
-        float scale = isActive ? 0.06F : 0.035F;
+        // Star scale: larger when active
+        float scale = isActive ? 0.04F : 0.02F;
         poseStack.scale(scale, scale, scale);
 
         // Rotation: GTO Core pattern
@@ -111,7 +108,7 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
 
         // Pulse effect when active
         if (isActive) {
-            float pulse = 1.0F + 0.08F * (float) Math.sin(tick * 0.15);
+            float pulse = 1.0F + 0.05F * (float) Math.sin(tick * 0.15);
             poseStack.scale(pulse, pulse, pulse);
         }
 
@@ -149,8 +146,8 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
             poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(1.0F, 0.0F, 1.0F, (tick * 1.5F / a) % 360.0F));
 
             // Orbital translation — distance proportional to orbit index
-            double orbitRadius = (a * 80 + 120);
-            double orbitSpeed = tick * 0.8 / a;
+            double orbitRadius = (a * 120 + 80);
+            double orbitSpeed = tick * 0.02 / a; // Much slower orbit
             poseStack.translate(
                     orbitRadius * Math.sin(orbitSpeed + a * 2.094), // 120° apart
                     0,
@@ -188,6 +185,21 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
 
         // Very slow rotation for ambient effect
         poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(0.0F, 1.0F, 0.0F, (tick * 0.05F) % 360.0F));
+
+        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
+                poseStack.last(),
+                buffer.getBuffer(RenderType.translucent()),
+                null,
+                model,
+                1.0F, 1.0F, 1.0F,
+                LightTexture.FULL_BRIGHT,
+                OverlayTexture.NO_OVERLAY,
+                ModelData.EMPTY,
+                RenderType.translucent()
+        );
+
+        // Render a second time rotated 180 degrees to cover the texture/mesh gap on the sphere
+        poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(0.0F, 1.0F, 0.0F, 180.0F));
 
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
                 poseStack.last(),

@@ -35,26 +35,6 @@ public class MultiblockBlocks {
 
 
 
-// --- Blocos de Componentes (direcionais) ---
-
-    public static final DeferredBlock<Block> ENTROPY_CONTAINMENT_CHAMBER_COMPONENTS = registerBlock("entropy_containment_chamber_components",
-
-            () -> new OrientableMultiblock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
-
-
-    public static final DeferredBlock<Block> ENTROPY_COOLANT_MATRIX_COMPONENTS = registerBlock("entropy_coolant_matrix_components",
-
-            () -> new OrientableMultiblock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
-
-
-    public static final DeferredBlock<Block> ENTROPY_CATALYST_BANK_COMPONENTS = registerBlock("entropy_catalyst_bank_components",
-
-            () -> new OrientableMultiblock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
-
-
-    // --- Bloco Controlador ---
-    public static final DeferredBlock<Block> ENTROPY_SINGULARITY_ARRAY_CONTROLLER = registerBlock("entropy_singularity_array_controller",
-            () -> new ControllerBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
 
     // ═══════════════════════════════════════════════════════════
     //  STELLAR NEXUS — Multiblock Components

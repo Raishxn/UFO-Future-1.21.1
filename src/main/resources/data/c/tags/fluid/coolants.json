@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "ufo:source_stable_coolant",
+    "ufo:flowing_stable_coolant"
+  ]
+}

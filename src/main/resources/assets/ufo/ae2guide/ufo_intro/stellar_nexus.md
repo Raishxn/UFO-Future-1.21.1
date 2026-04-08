@@ -87,13 +87,14 @@ Each recipe specifies which coolant to use and the effectiveness varies:
 
 | Coolant Fluid | Cooling Efficiency |
 |---------------|-------------------|
-| Gelid Cryotheum | Standard |
-| Temporal Fluid | High |
-| Water (fallback) | Low |
+| Water (fallback) | Low (1x) |
+| Gelid Cryotheum | Standard (2x) |
+| Stable Coolant | High (5x) |
+| Temporal Fluid | Extreme (8x) |
 
 The thermal gauge in the GUI shows current heat (0.0% — 100.0%).
 
-### 6. Safe Mode & Overheat
+### 6. Safe Mode & Overclock
 
 #### Safe Mode ON (Default — Recommended)
 - Machine **safely shuts down** at 100% heat.
@@ -105,14 +106,20 @@ The thermal gauge in the GUI shows current heat (0.0% — 100.0%).
 #### Safe Mode OFF (Dangerous!)
 - **No safety shutdown** — the machine keeps running at 100% heat.
 - If heat reaches maximum: **🔥 CATASTROPHIC STELLAR EXPLOSION! 🔥**
-- **50-block radius** of destruction:
-  - Inner 20 blocks: Replaced with **lava**
+- Tier-based destruction radius (**30 blocks** for Mk.I, **50 blocks** for Mk.II, **100 blocks** for Mk.III):
+  - Inner core (40% of radius): Replaced with **lava**
   - Outer ring: Blocks destroyed, **fire** placed
   - All nearby entities take massive damage and burn
   - Sub-explosions every 5 ticks for dramatic effect
   - The explosion spreads across 3 seconds to reduce lag
 
 > ⚠️ **WARNING**: Disabling Safe Mode with insufficient coolant WILL destroy your base. The explosion is comparable to a nuclear meltdown.
+
+#### Overclock Mode
+- Activate via the **⚡ O.C.** button in the GUI.
+- **Benefits**: 5× processing speed.
+- **Costs**: 10× AE Energy, 5× Heat, and 5× Fuel requirement.
+- **Penalty**: If the machine overheats while Overclocked in Safe Mode, the cooldown period is massively increased to **2 hours** (instead of 30 minutes). Use at your own risk!
 
 ### 7. Completion
 When the simulation finishes (typically 20–40 minutes), the outputs are automatically injected into your ME network through the ME Massive Output Hatch.

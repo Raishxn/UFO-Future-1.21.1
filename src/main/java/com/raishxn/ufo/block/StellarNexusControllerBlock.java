@@ -47,6 +47,13 @@ public class StellarNexusControllerBlock extends DirectionalBlock implements net
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (player.isShiftKeyDown()) {
+            if (level.isClientSide) {
+                com.raishxn.ufo.client.GhostHologramRenderer.toggleHologram(pos, state.getValue(FACING));
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+
         if (!level.isClientSide) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof StellarNexusControllerBE controller) {

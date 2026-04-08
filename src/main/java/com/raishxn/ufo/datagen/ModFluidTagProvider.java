@@ -21,6 +21,8 @@ public class ModFluidTagProvider extends FluidTagsProvider {
         tag(ModTags.Fluids.COOLANTS).add(
                 ModFluids.SOURCE_GELID_CRYOTHEUM.get(),
                 ModFluids.FLOWING_GELID_CRYOTHEUM.get(),
+                ModFluids.SOURCE_STABLE_COOLANT.get(),
+                ModFluids.FLOWING_STABLE_COOLANT.get(),
                 ModFluids.SOURCE_TEMPORAL_FLUID.get(),
                 ModFluids.FLOWING_TEMPORAL_FLUID.get()
         );

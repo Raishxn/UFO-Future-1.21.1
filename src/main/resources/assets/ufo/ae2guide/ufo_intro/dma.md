@@ -45,7 +45,7 @@ Generate heat == Need Coolants!
 
 ### Zones
 - **SAFE**: below **50% Heat Capacity**
-- **HAZARD**: **≥50% Capacity** — Triggers the rotating 3D Flame rings. Burns players nearby!
+- **HAZARD**: **≥50% Capacity** — Triggers the rotating 3D Flame rings. Burns players nearby! (Negated by Thermal Suit)
 - **MELTDOWN**: **100% Heat** — Triggers an alarm and 5-second countdown. If it reaches 0, the machine **explodes**, destroying blocks around it!
 
 ### Coolants Effectiveness

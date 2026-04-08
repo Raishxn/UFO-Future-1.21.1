@@ -214,15 +214,12 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
         // Box: Coolant: 53,74 to 98,84
         String coolantStr;
-        if (!recipe.getCoolantFluid().isEmpty()) {
-            String cPath = net.minecraft.resources.ResourceLocation.parse(recipe.getCoolantFluid()).getPath();
-            if (cPath.contains("temporal_fluid")) coolantStr = "❄ Temp. Fluid";
-            else if (cPath.contains("stable_coolant")) coolantStr = "❄ Stable Coolant";
-            else if (cPath.contains("gelid_cryotheum")) coolantStr = "❄ Gelid Cryotheum";
-            else coolantStr = "❄ " + formatFluidName(cPath);
-        } else {
-            coolantStr = "Coolant Lv." + recipe.getCoolingLevel();
-        }
+        int coolingLevel = recipe.getCoolingLevel();
+        if (coolingLevel >= 3) coolantStr = "❄ Temp. Fluid";
+        else if (coolingLevel == 2) coolantStr = "❄ Stable Coolant";
+        else if (coolingLevel == 1) coolantStr = "❄ Gelid Cryotheum";
+        else coolantStr = "❄ None";
+        
         drawScaledCenteredString(gfx, font, coolantStr, 75, 76, 0x00FFFF, 0.7f);
 
         // Box: Total Time: 10,86 to 49,96
@@ -266,9 +263,14 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
         // Coolant box tooltip (53,74 to 98,84)
         if (mouseY >= 74 && mouseY <= 84 && mouseX >= 53 && mouseX <= 98) {
-            if (!recipe.getCoolantFluid().isEmpty() && recipe.getCoolantAmount() > 0) {
-                net.minecraft.resources.ResourceLocation coolantRL = net.minecraft.resources.ResourceLocation.parse(recipe.getCoolantFluid());
-                tips.add(Component.literal("§3❄ Coolant Required: " + formatFluidName(coolantRL.getPath())));
+            if (recipe.getCoolantAmount() > 0) {
+                String cName = "Water";
+                int cLevel = recipe.getCoolingLevel();
+                if (cLevel >= 3) cName = "Temporal Fluid";
+                else if (cLevel == 2) cName = "Stable Coolant";
+                else if (cLevel == 1) cName = "Gelid Cryotheum";
+                
+                tips.add(Component.literal("§3❄ Coolant Required: " + cName));
                 tips.add(Component.literal("§7Amount: §e" + formatAmount(recipe.getCoolantAmount()) + " mB"));
                 tips.add(Component.literal("§7Consumed during operation to control heat."));
             } else {

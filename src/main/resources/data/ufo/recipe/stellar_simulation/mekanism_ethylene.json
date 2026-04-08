@@ -1,0 +1,35 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "ufo:stellar_simulation",
+  "simulation_name": "Ethylene Enrichment",
+  "item_inputs": [
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "mekanism:substrate"
+      }
+    }
+  ],
+  "fluid_inputs": [],
+  "item_outputs": [
+    {
+      "#": 32,
+      "#t": "ae2:i",
+      "id": "mekanism:hdpe_sheet"
+    }
+  ],
+  "fluid_outputs": [],
+  "energy": 500000,
+  "time": 2000,
+  "cooling_level": 1,
+  "field_tier": 1,
+  "fuel_fluid": "mekanism:ethene",
+  "fuel_amount": 10000,
+  "coolant_fluid": "minecraft:water",
+  "coolant_amount": 20000
+}

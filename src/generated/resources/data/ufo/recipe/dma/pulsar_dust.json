@@ -15,6 +15,11 @@
       "ingredient": {
         "item": "ufo:pulsar_fragment_ingot"
       }
+    },
+    {
+      "ingredient": {
+        "item": "ae2:tiny_tnt"
+      }
     }
   ],
   "item_outputs": [

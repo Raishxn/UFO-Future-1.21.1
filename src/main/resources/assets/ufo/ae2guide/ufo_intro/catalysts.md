@@ -82,4 +82,10 @@ Catalysts are highly advanced processor cards placed inside the **Dimensional Ma
 <div style="display: flex; gap: 10px; margin-bottom: 20px;">
   <ItemImage id="ufo:dimensional_catalyst" scale="2" />
 </div>
-The **Dimensional Catalyst** is the ultimate combination of all T3 traits into a single unit. Use with extreme caution.
+**Dimensional Catalyst** is the Creative tier of Catalysts that provides:
+- Instant processing
+- 100% bonus drop
+- 0% failure risk
+- Zero cost of energy
+
+While also reducing temperature of the dimensional assembler. Use with extreme caution.

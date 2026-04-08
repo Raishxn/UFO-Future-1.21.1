@@ -204,6 +204,27 @@ public class MultiblockPattern {
     }
 
     /**
+     * Returns the exact world positions for a specific character in the pattern.
+     */
+    public List<BlockPos> getExpectedPositions(BlockPos controllerPos, net.minecraft.core.Direction facing, char targetChar) {
+        List<BlockPos> list = new ArrayList<>();
+        for (int y = 0; y < pattern.length; y++) {
+            for (int z = 0; z < pattern[y].length; z++) {
+                for (int x = 0; x < pattern[y][z].length; x++) {
+                    if (pattern[y][z][x] == targetChar) {
+                        int offsetX = x - controllerCol;
+                        int offsetY = y - controllerLayer;
+                        int offsetZ = z - controllerRow;
+                        BlockPos pos = getRotatedPos(controllerPos, offsetX, offsetY, offsetZ, facing);
+                        list.add(pos);
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
      * Represents a specific error in pattern matching.
      */
     public record PatternError(BlockPos pos, Component expected) {}

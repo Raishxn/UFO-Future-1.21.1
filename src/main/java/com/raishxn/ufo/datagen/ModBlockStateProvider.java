@@ -37,15 +37,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
         multiblockCube(MultiblockBlocks.ENTROPY_SINGULARITY_CASING);
         multiblockCube(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX);
 
-        // Blocos que são componentes direcionais com overlay
-        multiblockComponentBlock(MultiblockBlocks.ENTROPY_CONTAINMENT_CHAMBER_COMPONENTS);
-        multiblockComponentBlock(MultiblockBlocks.ENTROPY_COOLANT_MATRIX_COMPONENTS);
-        multiblockComponentBlock(MultiblockBlocks.ENTROPY_CATALYST_BANK_COMPONENTS);
-
-
-        // Bloco controlador com estados
-        controllerBlock(MultiblockBlocks.ENTROPY_SINGULARITY_ARRAY_CONTROLLER);
-
         // ═══════════════════ STELLAR NEXUS ═══════════════════
         stellarNexusControllerBlock(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER);
         hatchWithOverlay(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH, "me_massive_output_hatch_overlay");

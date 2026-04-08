@@ -68,9 +68,9 @@ public class ModFluidTypes {
     ));
 
     public static final DeferredHolder<FluidType, FluidType> STABLE_COOLANT_TYPE = FLUID_TYPES.register("stable_coolant", () -> new BaseFluidType(
-            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/stable_coolant_still"),
-            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/stable_coolant_flow"),
-            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/stable_coolant_still"),
+            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/fluid.stable_coolant"),
+            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/fluid.stable_coolant"),
+            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/fluid.stable_coolant"),
             0xFF88DDFF,
             new Vector3f(0.2f, 0.8f, 0.9f),
             FluidType.Properties.create()

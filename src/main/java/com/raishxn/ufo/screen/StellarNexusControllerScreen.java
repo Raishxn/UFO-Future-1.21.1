@@ -8,6 +8,9 @@ import com.raishxn.ufo.network.packet.PacketChangeStellarRecipe;
 import com.raishxn.ufo.network.packet.PacketScanStellarStructure;
 import com.raishxn.ufo.network.packet.PacketStartStellarOperation;
 import com.raishxn.ufo.network.packet.PacketToggleStellarSafeMode;
+import com.raishxn.ufo.network.packet.PacketToggleStellarAutoStart;
+import com.raishxn.ufo.network.packet.PacketToggleStellarLock;
+import com.raishxn.ufo.network.packet.PacketToggleStellarOverclock;
 import com.raishxn.ufo.recipe.StellarSimulationRecipe;
 
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,6 +39,9 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
     private Button startButton;
     private Button safeModeButton;
     private Button scanButton;
+    private Button autoStartButton;
+    private Button lockButton;
+    private Button overclockButton;
 
     public StellarNexusControllerScreen(StellarNexusControllerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -81,10 +87,31 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
         // Safe Mode toggle
         this.safeModeButton = this.addRenderableWidget(Button.builder(
-                Component.literal("\u2697"), btn -> {
+                Component.literal("\u2697 Safe"), btn -> {
                     ModPackets.sendToServer(new PacketToggleStellarSafeMode(this.menu.getBlockEntity().getBlockPos()));
                 })
-                .bounds(this.leftPos + 174, this.topPos + 40, 14, 14).build());
+                .bounds(this.leftPos - 52, this.topPos + this.imageHeight - 54, 50, 16).build());
+
+        // Auto Start toggle
+        this.autoStartButton = this.addRenderableWidget(Button.builder(
+                Component.literal("\u21BB Auto"), btn -> {
+                    ModPackets.sendToServer(new PacketToggleStellarAutoStart(this.menu.getBlockEntity().getBlockPos()));
+                })
+                .bounds(this.leftPos - 52, this.topPos + this.imageHeight - 72, 50, 16).build());
+
+        // Lock Simulation toggle
+        this.lockButton = this.addRenderableWidget(Button.builder(
+                Component.literal("\uD83D\uDD12 Lock"), btn -> {
+                    ModPackets.sendToServer(new PacketToggleStellarLock(this.menu.getBlockEntity().getBlockPos()));
+                })
+                .bounds(this.leftPos - 52, this.topPos + this.imageHeight - 36, 50, 16).build());
+
+        // Overclock toggle
+        this.overclockButton = this.addRenderableWidget(Button.builder(
+                Component.literal("\u26A1 O.C."), btn -> {
+                    ModPackets.sendToServer(new PacketToggleStellarOverclock(this.menu.getBlockEntity().getBlockPos()));
+                })
+                .bounds(this.leftPos - 52, this.topPos + this.imageHeight - 90, 50, 16).build());
 
         // Scan Structure button
         this.scanButton = this.addRenderableWidget(Button.builder(
@@ -189,8 +216,10 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
                 // Energy check
                 long eBuffer = this.menu.getEnergyBuffer();
                 double multiplier = this.menu.isSafeMode() ? 2.5 : 1.0;
+                if (this.menu.isOverclocked()) multiplier *= 10.0;
                 long eCost = (long)(recipe.getEnergyCost() * multiplier);
                 String safeNote = this.menu.isSafeMode() ? " (2.5x Safe Mode)" : "";
+                if (this.menu.isOverclocked()) safeNote += " (10x O.C.)";
                 if (eBuffer >= eCost) {
                     tipLines.add(Component.literal("§a✓ Energy: " + formatAmount(eBuffer) + " / " + formatAmount(eCost) + " AE" + safeNote));
                 } else {
@@ -200,11 +229,13 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
                 
                 if (recipe.getFuelAmount() > 0 && !recipe.getFuelFluid().isEmpty()) {
                     ResourceLocation fRL = ResourceLocation.parse(recipe.getFuelFluid());
-                    tipLines.add(Component.literal("§7◇ Requires " + formatAmount(recipe.getFuelAmount()) + "mB " + fRL.getPath()));
+                    double fMult = this.menu.isSafeMode() ? 2.5 : 1.0;
+                    if (this.menu.isOverclocked()) fMult *= 5.0;
+                    long fAmount = (long)(recipe.getFuelAmount() * fMult);
+                    tipLines.add(Component.literal("§7◇ Requires " + formatAmount(fAmount) + "mB " + fRL.getPath()));
                 }
-                if (recipe.getCoolantAmount() > 0 && !recipe.getCoolantFluid().isEmpty()) {
-                    ResourceLocation cRL = ResourceLocation.parse(recipe.getCoolantFluid());
-                    tipLines.add(Component.literal("§7◇ Requires " + formatAmount(recipe.getCoolantAmount()) + "mB " + cRL.getPath()));
+                if (recipe.getCoolantAmount() > 0) {
+                    tipLines.add(Component.literal("§7◇ Requires " + formatAmount(recipe.getCoolantAmount()) + "mB Coolant (Tier " + recipe.getCoolingLevel() + ")"));
                 }
                 if (!recipe.getItemInputs().isEmpty() || !recipe.getFluidInputs().isEmpty()) {
                     tipLines.add(Component.literal("§7◇ Items/Fluids must be in ME Network"));
@@ -231,10 +262,34 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
                     Component.literal(safe ? "§aSafe Mode: ON\n§7Auto-shutdown on overheat" : "§cSafe Mode: OFF\n§4WARNING: Explosion on overheat!")
             ));
         }
+
+        // Auto Start tooltip
+        if (this.autoStartButton != null) {
+            boolean auto = this.menu.isAutoStart();
+            this.autoStartButton.setTooltip(Tooltip.create(
+                    Component.literal(auto ? "§aAuto-Start: ON\n§7Automatically loops simulation." : "§cAuto-Start: OFF\n§7Manual start required.")
+            ));
+        }
+
+        // Lock Simulation tooltip
+        if (this.lockButton != null) {
+            boolean locked = this.menu.isSimulationLocked();
+            this.lockButton.setTooltip(Tooltip.create(
+                    Component.literal(locked ? "§aSimulation Locked\n§7Prevents changing recipe." : "§cSimulation Unlocked\n§7Recipe can be changed.")
+            ));
+        }
+
+        // Overclock tooltip
+        if (this.overclockButton != null) {
+            boolean isOC = this.menu.isOverclocked();
+            this.overclockButton.setTooltip(Tooltip.create(
+                    Component.literal(isOC ? "§aOverclock: ON\n§710x Energy, 5x Heat/Fuel/Speed.\n§cMassive cooldown penalty." : "§cOverclock: OFF\n§7Normal simulation values.")
+            ));
+        }
     }
 
     private void cycleRecipe(int delta) {
-        if (this.availableRecipes.isEmpty()) return;
+        if (this.availableRecipes.isEmpty() || this.menu.isSimulationLocked()) return;
         
         this.currentRecipeIndex = (this.currentRecipeIndex + delta) % this.availableRecipes.size();
         if (this.currentRecipeIndex < 0) {
@@ -394,7 +449,19 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
         // Safe Mode indicator
         boolean safeMode = this.menu.isSafeMode();
-        guiGraphics.drawString(this.font, safeMode ? "§a●" : "§c●", 176, 56, 0xFFFFFF);
+        guiGraphics.drawString(this.font, safeMode ? "§a●" : "§c●", -3, 110, 0xFFFFFF);
+
+        // Auto Start indicator
+        boolean autoStart = this.menu.isAutoStart();
+        guiGraphics.drawString(this.font, autoStart ? "§a●" : "§c●", -3, 92, 0xFFFFFF);
+
+        // Lock indicator
+        boolean isLocked = this.menu.isSimulationLocked();
+        guiGraphics.drawString(this.font, isLocked ? "§a●" : "§c●", -3, 128, 0xFFFFFF);
+
+        // Overclock indicator
+        boolean overclocked = this.menu.isOverclocked();
+        guiGraphics.drawString(this.font, overclocked ? "§a●" : "§c●", -3, 74, 0xFFFFFF);
     }
 
     /**

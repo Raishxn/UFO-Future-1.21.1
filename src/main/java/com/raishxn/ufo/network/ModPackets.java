@@ -52,6 +52,21 @@ public class ModPackets {
                 PacketScanStellarStructure.STREAM_CODEC,
                 PacketScanStellarStructure::handle
         );
+        registrar.playToServer(
+                PacketToggleStellarAutoStart.TYPE,
+                PacketToggleStellarAutoStart.STREAM_CODEC,
+                PacketToggleStellarAutoStart::handle
+        );
+        registrar.playToServer(
+                PacketToggleStellarLock.TYPE,
+                PacketToggleStellarLock.STREAM_CODEC,
+                PacketToggleStellarLock::handle
+        );
+        registrar.playToServer(
+                PacketToggleStellarOverclock.TYPE,
+                PacketToggleStellarOverclock.STREAM_CODEC,
+                PacketToggleStellarOverclock::handle
+        );
     }
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {
