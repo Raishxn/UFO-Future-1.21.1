@@ -1,0 +1,34 @@
+{
+  "type": "ufo:universal_multiblock",
+  "energy": 180000,
+  "fluid_inputs": [
+    {
+      "amount": 250,
+      "fluid": {
+        "amount": 1,
+        "id": "ufo:source_liquid_starlight_fluid"
+      }
+    }
+  ],
+  "item_inputs": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:white_dwarf_fragment_ingot"
+      }
+    },
+    {
+      "amount": 1,
+      "ingredient": {
+        "item": "ufo:dimensional_processor_press"
+      }
+    }
+  ],
+  "item_output": {
+    "count": 2,
+    "id": "ufo:printed_dimensional_processor"
+  },
+  "machine": "quantum_slicer",
+  "recipe_name": "universal/quantum_slicer/printed_dimensional_processor",
+  "time": 180
+}

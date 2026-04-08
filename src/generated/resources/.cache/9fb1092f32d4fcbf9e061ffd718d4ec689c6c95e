@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-08T13:43:59.2485759	Recipes
+// 1.21.1	2026-04-08T19:41:24.4864602	Recipes
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
 eb7866de442289af9a906bdbf371421bb9e18e5a data/ufo/advancement/recipes/misc/coprocessor_2b.json
 2da6c174cfadc6187c64a460466526bf7370f743 data/ufo/advancement/recipes/misc/coprocessor_300m.json
@@ -180,6 +180,9 @@ a4dc32d8c981d25327516a754005c7c4f8af5f16 data/ufo/recipe/storage_1b.json
 e21705ce06c39676f34befa0f937e0dc994a81cd data/ufo/recipe/storage_1t.json
 bd5a87482e51e0974efb171987947d7ed2092a83 data/ufo/recipe/storage_250t.json
 ec3111697df73d3543d65292dce873c17fb1ffd9 data/ufo/recipe/storage_50b.json
+582bdfe0222b00630bb87ba4d1ad70d4b5d8b94c data/ufo/recipe/universal/qmf/stable_coolant_polish.json
+656df72d4dde8906814f6edbbd48a9280a4f089b data/ufo/recipe/universal/quantum_processor_assembler/dimensional_processor.json
+109b4cb06bf3c3571cd0a0a5f8f70de2d3390d61 data/ufo/recipe/universal/quantum_slicer/printed_dimensional_processor.json
 6178e5360b8e5976220fe81eb351e4237001cb75 data/ufo/recipe/white_dwarf_cell_beaco.json
 e377510588267d476fa1ee921df7a26a918f1210 data/ufo/recipe/white_dwarf_cell_core.json
 6ca96cb43347450b0150b61c8f82771bb56e1d96 data/ufo/recipe/white_dwarf_cell_echo.json

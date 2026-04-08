@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import com.raishxn.ufo.datagen.StellarSimulationRecipeBuilder;
+import com.raishxn.ufo.recipe.UniversalMultiblockMachineKind;
 
 public class ModRecipeProvider extends RecipeProvider {
 
@@ -59,6 +60,7 @@ public class ModRecipeProvider extends RecipeProvider {
         this.buildHousingRecipes(c);
         this.buildMachineAndStorageRecipes(c);
         this.buildQuantumMultiblockRecipes(c);
+        this.buildUniversalMultiblockRecipes(c);
         this.buildMassiveStellarSimulations(c);
     }
 
@@ -470,6 +472,39 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('H', ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
                 .define('E', AEBlocks.CONTROLLER)
                 .unlockedBy("has_tesseract_component", has(ModItems.TESSERACT_COMPONENT_MATRIX.get()))
+                .save(c);
+    }
+
+    private void buildUniversalMultiblockRecipes(RecipeOutput c) {
+        UniversalMultiblockRecipeBuilder.create("universal/quantum_slicer/printed_dimensional_processor", UniversalMultiblockMachineKind.QUANTUM_SLICER)
+                .inputItem(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get(), 2)
+                .inputItem(ModItems.DIMENSIONAL_PROCESSOR_PRESS.get(), 1)
+                .inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 250)
+                .outputItem(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get(), 2)
+                .energy(180000)
+                .time(180)
+                .requiredTier(1)
+                .save(c);
+
+        UniversalMultiblockRecipeBuilder.create("universal/quantum_processor_assembler/dimensional_processor", UniversalMultiblockMachineKind.QUANTUM_PROCESSOR_ASSEMBLER)
+                .inputItem(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get(), 2)
+                .inputItem(AEItems.SILICON_PRINT, 2)
+                .inputItem(AEItems.FLUIX_DUST, 2)
+                .inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 400)
+                .outputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 2)
+                .energy(260000)
+                .time(220)
+                .requiredTier(1)
+                .save(c);
+
+        UniversalMultiblockRecipeBuilder.create("universal/qmf/stable_coolant_polish", UniversalMultiblockMachineKind.QMF)
+                .inputItem(Items.BLUE_ICE, 8)
+                .inputItem(ModItems.OBSIDIAN_MATRIX.get(), 1)
+                .inputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 4000)
+                .outputFluid(ModFluids.SOURCE_STABLE_COOLANT.get(), 4000)
+                .energy(1200000)
+                .time(300)
+                .requiredTier(1)
                 .save(c);
     }
 
