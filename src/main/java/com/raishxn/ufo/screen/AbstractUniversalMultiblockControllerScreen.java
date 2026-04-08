@@ -80,7 +80,7 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(buildStatusLine(), maxTextWidth), listX, listY + 10, 0xD0D7E6, false);
 
         List<UniversalDisplayedRecipe> recipes = this.menu.getDisplayedRecipes();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 8; i++) {
             int rowY = listY + 22 + i * lineHeight;
             if (i < recipes.size()) {
                 renderRecipeRow(guiGraphics, recipes.get(i), listX, rowY);
