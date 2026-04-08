@@ -3,6 +3,9 @@ package com.raishxn.ufo.block.entity;
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
+import appeng.api.upgrades.IUpgradeInventory;
+import appeng.api.upgrades.IUpgradeableObject;
+import appeng.api.upgrades.UpgradeInventories;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -13,7 +16,9 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -28,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity implements IMultiblockController, MenuProvider {
+public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity implements IMultiblockController, MenuProvider, IUniversalMultiblockController, IUpgradeableObject {
 
     protected boolean assembled = false;
     protected boolean structureDirty = true;
@@ -37,6 +42,12 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
     protected boolean running = false;
     protected int progress = 0;
     protected int maxProgress = 0;
+    protected int temperature = 0;
+    protected int maxTemperature = 1000;
+    protected boolean safeMode = true;
+    protected boolean overclocked = false;
+    protected final List<UniversalDisplayedRecipe> displayedRecipes = new ArrayList<>();
+    protected final IUpgradeInventory upgrades;
 
     protected final ContainerData data = new ContainerData() {
         @Override
@@ -46,6 +57,10 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
                 case 1 -> AbstractSimpleMultiblockControllerBE.this.running ? 1 : 0;
                 case 2 -> AbstractSimpleMultiblockControllerBE.this.progress;
                 case 3 -> AbstractSimpleMultiblockControllerBE.this.maxProgress;
+                case 4 -> AbstractSimpleMultiblockControllerBE.this.temperature;
+                case 5 -> AbstractSimpleMultiblockControllerBE.this.maxTemperature;
+                case 6 -> AbstractSimpleMultiblockControllerBE.this.safeMode ? 1 : 0;
+                case 7 -> AbstractSimpleMultiblockControllerBE.this.overclocked ? 1 : 0;
                 default -> 0;
             };
         }
@@ -57,6 +72,10 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
                 case 1 -> AbstractSimpleMultiblockControllerBE.this.running = value == 1;
                 case 2 -> AbstractSimpleMultiblockControllerBE.this.progress = value;
                 case 3 -> AbstractSimpleMultiblockControllerBE.this.maxProgress = value;
+                case 4 -> AbstractSimpleMultiblockControllerBE.this.temperature = value;
+                case 5 -> AbstractSimpleMultiblockControllerBE.this.maxTemperature = value;
+                case 6 -> AbstractSimpleMultiblockControllerBE.this.safeMode = value == 1;
+                case 7 -> AbstractSimpleMultiblockControllerBE.this.overclocked = value == 1;
                 default -> {
                 }
             }
@@ -64,12 +83,13 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
 
         @Override
         public int getCount() {
-            return 4;
+            return 8;
         }
     };
 
     protected AbstractSimpleMultiblockControllerBE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+        this.upgrades = UpgradeInventories.forMachine(state.getBlock().asItem(), 2, this::saveChanges);
     }
 
     protected abstract MultiblockPattern getControllerPattern();
@@ -90,6 +110,21 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
             scanStructure(this.level);
             this.scanCooldown = 40;
             this.structureDirty = false;
+        }
+
+        tickThermals();
+    }
+
+    protected void tickThermals() {
+        rebuildDisplayedRecipes();
+        if (this.running) {
+            this.temperature = Math.min(this.maxTemperature, this.temperature + (this.overclocked ? 8 : 2));
+            if (this.safeMode && this.temperature >= this.maxTemperature) {
+                this.running = false;
+                this.progress = 0;
+            }
+        } else if (this.temperature > 0) {
+            this.temperature = Math.max(0, this.temperature - 2);
         }
     }
 
@@ -131,6 +166,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
             this.running = false;
             this.progress = 0;
             this.maxProgress = 0;
+            this.temperature = 0;
         }
 
         updateControllerBlockState(level.getBlockState(this.worldPosition), wasAssembled);
@@ -173,6 +209,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         this.running = false;
         this.progress = 0;
         this.maxProgress = 0;
+        this.temperature = 0;
         this.setChanged();
     }
 
@@ -211,6 +248,11 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         tag.putBoolean("running", this.running);
         tag.putInt("progress", this.progress);
         tag.putInt("maxProgress", this.maxProgress);
+        tag.putInt("temperature", this.temperature);
+        tag.putInt("maxTemperature", this.maxTemperature);
+        tag.putBoolean("safeMode", this.safeMode);
+        tag.putBoolean("overclocked", this.overclocked);
+        this.upgrades.writeToNBT(tag, "upgrades", registries);
 
         ListTag partsList = new ListTag();
         for (BlockPos pos : this.parts) {
@@ -226,6 +268,12 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         this.running = tag.getBoolean("running");
         this.progress = tag.getInt("progress");
         this.maxProgress = tag.getInt("maxProgress");
+        this.temperature = tag.getInt("temperature");
+        if (tag.contains("maxTemperature")) {
+            this.maxTemperature = tag.getInt("maxTemperature");
+        }
+        this.safeMode = !tag.contains("safeMode") || tag.getBoolean("safeMode");
+        this.overclocked = tag.getBoolean("overclocked");
 
         this.parts.clear();
         if (tag.contains("parts", Tag.TAG_LIST)) {
@@ -234,6 +282,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
                 NbtUtils.readBlockPos(partsList.getCompound(i), "").ifPresent(this.parts::add);
             }
         }
+        this.upgrades.readFromNBT(tag, "upgrades", registries);
 
         this.structureDirty = true;
         this.scanCooldown = 0;
@@ -250,5 +299,97 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    public void saveChanges() {
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
+    public IUpgradeInventory getUpgrades() {
+        return this.upgrades;
+    }
+
+    @Override
+    public boolean isGuiAssembled() {
+        return this.assembled;
+    }
+
+    @Override
+    public boolean isGuiRunning() {
+        return this.running;
+    }
+
+    @Override
+    public int getGuiProgress() {
+        return this.progress;
+    }
+
+    @Override
+    public int getGuiMaxProgress() {
+        return this.maxProgress;
+    }
+
+    @Override
+    public int getGuiTemperature() {
+        return this.temperature;
+    }
+
+    @Override
+    public int getGuiMaxTemperature() {
+        return this.maxTemperature;
+    }
+
+    @Override
+    public boolean isGuiSafeMode() {
+        return this.safeMode;
+    }
+
+    @Override
+    public boolean isGuiOverclocked() {
+        return this.overclocked;
+    }
+
+    @Override
+    public void toggleSafeMode() {
+        this.safeMode = !this.safeMode;
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
+    public void toggleOverclock() {
+        this.overclocked = !this.overclocked;
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
+    public List<UniversalDisplayedRecipe> getDisplayedRecipes() {
+        return List.copyOf(this.displayedRecipes);
+    }
+
+    protected void rebuildDisplayedRecipes() {
+        this.displayedRecipes.clear();
+        if (this.running || this.progress > 0 || this.maxProgress > 0) {
+            String label = Component.translatable(getControllerTranslationKey()).getString();
+            if (label.endsWith(" Controller")) {
+                label = label.substring(0, label.length() - " Controller".length());
+            }
+            this.displayedRecipes.add(new UniversalDisplayedRecipe(
+                    ItemStack.EMPTY,
+                    net.neoforged.neoforge.fluids.FluidStack.EMPTY,
+                    Component.literal(label),
+                    1,
+                    this.progress,
+                    this.maxProgress));
+        }
     }
 }

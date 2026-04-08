@@ -49,11 +49,18 @@ Generate heat == Need Coolants!
 - **MELTDOWN**: **100% Heat** — Triggers an alarm and 5-second countdown. If it reaches 0, the machine **explodes**, destroying blocks around it!
 
 ### Coolants Effectiveness
-The DMA requires fluids for cooling, and each fluid provides a different cooling factor (Heat Units - HU):
+The DMA uses the coolant tank independently from recipes. The intended progression is:
 
-- **Temporal Fluid** — Super efficient. **1 mB** cools **100 HU**. (Endgame)
-- **Liquid Starlight** — Great cost-benefit. **1 mB** cools **30 HU**. (Midgame)
-- **Gelid Cryotheum** — Very weak, requires intense volume. Needs a hefty **60 mB** to cool just **1 HU**.
+- **Gelid Cryotheum** — Low efficiency entry coolant. Needs **120 mB** to cool **1 HU**.
+- **Stable Coolant** — Mid-tier progression coolant. **1 mB** cools **50 HU**.
+- **Temporal Fluid** — Extreme endgame coolant. **1 mB** cools **100 HU**.
+
+Other fluids can still cool the DMA, but they are fallback options rather than the main progression path.
+
+### Practical Guidance
+- Early DMA setups can survive on **Gelid Cryotheum**, but long Chrono-heavy runs will drain it quickly.
+- **Stable Coolant** is the intended step before Temporal Fluid and is much more efficient for sustained production.
+- **Temporal Fluid** is the premium choice for high-heat automation and large parallel crafting chains.
 
 ---
 

@@ -83,14 +83,14 @@ If any requirement is missing, the GUI shows **specific error messages** telling
 ### 5. Thermal Management
 During operation, the machine generates **heat** based on the recipe's cooling level. A **coolant fluid** is consumed automatically from your ME network every tick to reduce heat.
 
-Each recipe specifies which coolant to use and the effectiveness varies:
+Each recipe consumes coolant directly from the ME network. The intended progression is:
 
 | Coolant Fluid | Cooling Efficiency |
 |---------------|-------------------|
-| Water (fallback) | Low (1x) |
-| Gelid Cryotheum | Standard (2x) |
-| Stable Coolant | High (5x) |
+| Gelid Cryotheum | Low (1x) |
+| Stable Coolant | Medium (4x) |
 | Temporal Fluid | Extreme (8x) |
+| Water (fallback) | Emergency only (1x) |
 
 The thermal gauge in the GUI shows current heat (0.0% — 100.0%).
 
@@ -119,7 +119,7 @@ The thermal gauge in the GUI shows current heat (0.0% — 100.0%).
 - Activate via the **⚡ O.C.** button in the GUI.
 - **Benefits**: 5× processing speed.
 - **Costs**: 10× AE Energy, 5× Heat, and 5× Fuel requirement.
-- **Penalty**: If the machine overheats while Overclocked in Safe Mode, the cooldown period is massively increased to **2 hours** (instead of 30 minutes). Use at your own risk!
+- **Penalty**: If the machine overheats while Overclocked in Safe Mode, the cooldown period jumps to **2 hours** instead of 30 minutes. Use it carefully.
 
 ### 7. Completion
 When the simulation finishes (typically 20–40 minutes), the outputs are automatically injected into your ME network through the ME Massive Output Hatch.

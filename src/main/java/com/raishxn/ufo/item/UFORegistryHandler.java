@@ -21,21 +21,27 @@ public class UFORegistryHandler {
 
     private void registerUpgrades() {
         // Use the block's asItem() to ensure the same Item instance as UpgradeInventories.forMachine() in the BE constructor
-        net.minecraft.world.item.Item machineItem = com.raishxn.ufo.block.ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER_BLOCK.get().asItem();
-        
-        appeng.api.upgrades.Upgrades.add(ModItems.MATTERFLOW_CATALYST_T1.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.MATTERFLOW_CATALYST_T2.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.MATTERFLOW_CATALYST_T3.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.CHRONO_CATALYST_T1.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.CHRONO_CATALYST_T2.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.CHRONO_CATALYST_T3.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.OVERFLUX_CATALYST_T1.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.OVERFLUX_CATALYST_T2.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.OVERFLUX_CATALYST_T3.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.QUANTUM_CATALYST_T1.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.QUANTUM_CATALYST_T2.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.QUANTUM_CATALYST_T3.get(), machineItem, 4);
-        appeng.api.upgrades.Upgrades.add(ModItems.DIMENSIONAL_CATALYST.get(), machineItem, 4);
+        java.util.List<net.minecraft.world.item.Item> machineItems = java.util.List.of(
+                com.raishxn.ufo.block.ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER_BLOCK.get().asItem(),
+                com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().asItem(),
+                com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get().asItem(),
+                com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem());
+
+        for (var machineItem : machineItems) {
+            appeng.api.upgrades.Upgrades.add(ModItems.MATTERFLOW_CATALYST_T1.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.MATTERFLOW_CATALYST_T2.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.MATTERFLOW_CATALYST_T3.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.CHRONO_CATALYST_T1.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.CHRONO_CATALYST_T2.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.CHRONO_CATALYST_T3.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.OVERFLUX_CATALYST_T1.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.OVERFLUX_CATALYST_T2.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.OVERFLUX_CATALYST_T3.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.QUANTUM_CATALYST_T1.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.QUANTUM_CATALYST_T2.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.QUANTUM_CATALYST_T3.get(), machineItem, 4);
+            appeng.api.upgrades.Upgrades.add(ModItems.DIMENSIONAL_CATALYST.get(), machineItem, 4);
+        }
     }
 
     private void registerStorageHandler() {

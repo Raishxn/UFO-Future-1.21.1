@@ -2,6 +2,9 @@ package com.raishxn.ufo.block.entity;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
+import appeng.api.upgrades.IUpgradeInventory;
+import appeng.api.upgrades.IUpgradeableObject;
+import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyService;
@@ -46,7 +49,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class QmfControllerBE extends BlockEntity implements net.minecraft.world.MenuProvider, IMultiblockController {
+public class QmfControllerBE extends BlockEntity implements net.minecraft.world.MenuProvider, IMultiblockController, IUniversalMultiblockController, IUpgradeableObject {
 
     private boolean assembled = false;
     private boolean structureDirty = true;
@@ -59,6 +62,12 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
     private boolean running = false;
     private int progress = 0;
     private int maxProgress = 0;
+    private int temperature = 0;
+    private int maxTemperature = 1000;
+    private boolean safeMode = true;
+    private boolean overclocked = false;
+    private final List<UniversalDisplayedRecipe> displayedRecipes = new ArrayList<>();
+    private final IUpgradeInventory upgrades;
 
     // Buffer states
     private long energyBuffer = 0;
@@ -74,6 +83,10 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
                 case 1 -> running ? 1 : 0;
                 case 2 -> progress;
                 case 3 -> maxProgress;
+                case 4 -> temperature;
+                case 5 -> maxTemperature;
+                case 6 -> safeMode ? 1 : 0;
+                case 7 -> overclocked ? 1 : 0;
                 default -> 0;
             };
         }
@@ -85,7 +98,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
 
         @Override
         public int getCount() {
-            return 4;
+            return 8;
         }
     };
 
@@ -93,6 +106,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
 
     public QmfControllerBE(BlockPos pos, BlockState state) {
         super(ModBlockEntities.QMF_CONTROLLER.get(), pos, state);
+        this.upgrades = UpgradeInventories.forMachine(state.getBlock().asItem(), 2, this::saveChanges);
     }
 
     @Override
@@ -103,7 +117,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-        return new com.raishxn.ufo.screen.QmfControllerMenu(id, playerInventory, this, this.data);
+        return new com.raishxn.ufo.screen.QmfControllerMenu(id, playerInventory, this);
     }
 
     private static MultiblockPattern getPattern() {
@@ -119,8 +133,12 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
             this.structureDirty = false;
         }
 
+        rebuildDisplayedRecipes();
+
         if (this.assembled && this.running && this.cachedRecipe != null) {
             processTick();
+        } else if (this.temperature > 0) {
+            this.temperature = Math.max(0, this.temperature - 2);
         }
     }
 
@@ -184,7 +202,15 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
 
         // 3. Process if fulfilled
         if (materialsFulfilled && this.energyBuffer >= this.cachedRecipe.getEnergy()) {
-            this.progress++;
+            this.temperature = Math.min(this.maxTemperature, this.temperature + (this.overclocked ? 10 : 3));
+            if (this.safeMode && this.temperature >= this.maxTemperature) {
+                this.running = false;
+                this.progress = 0;
+                this.setChanged();
+                return;
+            }
+
+            this.progress += this.overclocked ? 5 : 1;
             if (this.progress >= this.maxProgress) {
                 // Done!
                 ItemStack out = this.cachedRecipe.getResultItem(this.level.registryAccess());
@@ -195,6 +221,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
                 for (int i = 0; i < this.itemBuffers.length; i++) this.itemBuffers[i] = 0;
                 for (int i = 0; i < this.fluidBuffers.length; i++) this.fluidBuffers[i] = 0;
                 this.energyBuffer = 0;
+                this.temperature = Math.max(0, this.temperature - 25);
             }
         }
 
@@ -275,6 +302,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
         this.assembled = false;
         this.running = false;
         this.progress = 0;
+        this.temperature = 0;
     }
 
     @Override
@@ -325,6 +353,11 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
         tag.putBoolean("running", this.running);
         tag.putInt("progress", this.progress);
         tag.putInt("maxProgress", this.maxProgress);
+        tag.putInt("temperature", this.temperature);
+        tag.putInt("maxTemperature", this.maxTemperature);
+        tag.putBoolean("safeMode", this.safeMode);
+        tag.putBoolean("overclocked", this.overclocked);
+        this.upgrades.writeToNBT(tag, "upgrades", registries);
         tag.putLong("energyBuffer", this.energyBuffer);
 
         ListTag partsList = new ListTag();
@@ -348,6 +381,12 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
         this.running = tag.getBoolean("running");
         this.progress = tag.getInt("progress");
         this.maxProgress = tag.getInt("maxProgress");
+        this.temperature = tag.getInt("temperature");
+        if (tag.contains("maxTemperature")) {
+            this.maxTemperature = tag.getInt("maxTemperature");
+        }
+        this.safeMode = !tag.contains("safeMode") || tag.getBoolean("safeMode");
+        this.overclocked = tag.getBoolean("overclocked");
         this.energyBuffer = tag.getLong("energyBuffer");
 
         this.parts.clear();
@@ -371,6 +410,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
 
         this.itemBuffers = tag.getLongArray("itemBuffers");
         this.fluidBuffers = tag.getLongArray("fluidBuffers");
+        this.upgrades.readFromNBT(tag, "upgrades", registries);
         this.structureDirty = true;
     }
 
@@ -385,5 +425,96 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    public void saveChanges() {
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
+    public IUpgradeInventory getUpgrades() {
+        return this.upgrades;
+    }
+
+    @Override
+    public boolean isGuiAssembled() {
+        return this.assembled;
+    }
+
+    @Override
+    public boolean isGuiRunning() {
+        return this.running;
+    }
+
+    @Override
+    public int getGuiProgress() {
+        return this.progress;
+    }
+
+    @Override
+    public int getGuiMaxProgress() {
+        return this.maxProgress;
+    }
+
+    @Override
+    public int getGuiTemperature() {
+        return this.temperature;
+    }
+
+    @Override
+    public int getGuiMaxTemperature() {
+        return this.maxTemperature;
+    }
+
+    @Override
+    public boolean isGuiSafeMode() {
+        return this.safeMode;
+    }
+
+    @Override
+    public boolean isGuiOverclocked() {
+        return this.overclocked;
+    }
+
+    @Override
+    public void toggleSafeMode() {
+        this.safeMode = !this.safeMode;
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
+    public void toggleOverclock() {
+        this.overclocked = !this.overclocked;
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
+    public List<UniversalDisplayedRecipe> getDisplayedRecipes() {
+        return List.copyOf(this.displayedRecipes);
+    }
+
+    private void rebuildDisplayedRecipes() {
+        this.displayedRecipes.clear();
+        if (this.cachedRecipe == null || this.level == null) {
+            return;
+        }
+
+        ItemStack out = this.cachedRecipe.getResultItem(this.level.registryAccess());
+        this.displayedRecipes.add(new UniversalDisplayedRecipe(
+                out,
+                FluidStack.EMPTY,
+                out.getHoverName(),
+                out.getCount(),
+                this.progress,
+                this.maxProgress));
     }
 }

@@ -35,6 +35,6 @@ public class QuantumSlicerControllerBE extends AbstractSimpleMultiblockControlle
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-        return new QuantumSlicerControllerMenu(id, playerInventory, this, this.getContainerData());
+        return new QuantumSlicerControllerMenu(id, playerInventory, this);
     }
 }

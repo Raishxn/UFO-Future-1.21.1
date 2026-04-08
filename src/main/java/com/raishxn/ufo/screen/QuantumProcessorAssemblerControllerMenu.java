@@ -6,47 +6,25 @@ import com.raishxn.ufo.init.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class QuantumProcessorAssemblerControllerMenu extends AbstractContainerMenu {
-
-    private final QuantumProcessorAssemblerControllerBE blockEntity;
-    private final ContainerLevelAccess levelAccess;
-    private final ContainerData data;
+public class QuantumProcessorAssemblerControllerMenu extends AbstractUniversalMultiblockControllerMenu<QuantumProcessorAssemblerControllerBE> {
 
     public QuantumProcessorAssemblerControllerMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
+        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
-    public QuantumProcessorAssemblerControllerMenu(int id, Inventory inv, BlockEntity entity, ContainerData data) {
-        super(ModMenus.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU.get(), id);
-        checkContainerSize(inv, 0);
-        this.blockEntity = (QuantumProcessorAssemblerControllerBE) entity;
-        this.levelAccess = ContainerLevelAccess.create(entity.getLevel(), entity.getBlockPos());
-        this.data = data;
-        addDataSlots(this.data);
-    }
-
-    public boolean isAssembled() {
-        return this.data.get(0) == 1;
-    }
-
-    public boolean isRunning() {
-        return this.data.get(1) == 1;
-    }
-
-    public int getProgress() {
-        return this.data.get(2);
-    }
-
-    public int getMaxProgress() {
-        return this.data.get(3);
+    public QuantumProcessorAssemblerControllerMenu(int id, Inventory inv, BlockEntity entity) {
+        super(
+                ModMenus.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU.get(),
+                id,
+                inv,
+                (QuantumProcessorAssemblerControllerBE) entity,
+                ContainerLevelAccess.create(entity.getLevel(), entity.getBlockPos()));
     }
 
     @Override
@@ -56,6 +34,11 @@ public class QuantumProcessorAssemblerControllerMenu extends AbstractContainerMe
 
     @Override
     public boolean stillValid(@NotNull Player player) {
-        return stillValid(this.levelAccess, player, MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get());
+        return stillValid(this.levelAccess, player, getValidBlock());
+    }
+
+    @Override
+    protected Block getValidBlock() {
+        return MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get();
     }
 }

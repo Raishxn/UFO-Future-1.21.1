@@ -35,6 +35,6 @@ public class QuantumProcessorAssemblerControllerBE extends AbstractSimpleMultibl
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-        return new QuantumProcessorAssemblerControllerMenu(id, playerInventory, this, this.getContainerData());
+        return new QuantumProcessorAssemblerControllerMenu(id, playerInventory, this);
     }
 }

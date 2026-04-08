@@ -218,14 +218,16 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                 int mBPerHeat = 0;
                 int heatPerMB = 0;
 
-                if (fluidId.contains("starlight")) {
-                    heatPerMB = 30; // double for starlight
-                } else if (fluidId.contains("temporal")) {
-                    heatPerMB = 100; // very efficient
+                if (fluidId.contains("temporal")) {
+                    heatPerMB = 100; // extreme endgame coolant
+                } else if (fluidId.contains("stable_coolant")) {
+                    heatPerMB = 50; // intended mid-tier progression coolant
+                } else if (fluidId.contains("starlight")) {
+                    heatPerMB = 30; // good utility coolant, but below stable coolant
                 } else if (fluidId.contains("gelid_cryotheum")) {
-                    mBPerHeat = 60; // 600mB for 10 Heat
+                    mBPerHeat = 120; // intentionally weak early coolant
                 } else {
-                    heatPerMB = 15; // default
+                    heatPerMB = 15; // default fallback for generic fluids
                 }
 
                 long amountToConsume = 0;

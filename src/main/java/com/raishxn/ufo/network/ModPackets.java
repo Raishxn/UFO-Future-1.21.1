@@ -67,6 +67,16 @@ public class ModPackets {
                 PacketToggleStellarOverclock.STREAM_CODEC,
                 PacketToggleStellarOverclock::handle
         );
+        registrar.playToServer(
+                PacketToggleUniversalSafeMode.TYPE,
+                PacketToggleUniversalSafeMode.STREAM_CODEC,
+                PacketToggleUniversalSafeMode::handle
+        );
+        registrar.playToServer(
+                PacketToggleUniversalOverclock.TYPE,
+                PacketToggleUniversalOverclock.STREAM_CODEC,
+                PacketToggleUniversalOverclock::handle
+        );
     }
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {

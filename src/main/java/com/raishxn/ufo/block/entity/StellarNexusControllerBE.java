@@ -679,9 +679,10 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                 this.setChanged();
                 if (this.level != null) {
                     BlockPos pos = this.worldPosition;
+                    int cooldownMinutes = this.cooldownTimer / 1200;
                     this.level.players().forEach(p -> p.displayClientMessage(
                             Component.literal("§c§l[STELLAR NEXUS] §eSafe Mode activated at " + pos.toShortString()
-                                    + " — 30 minute cooldown initiated."),
+                                    + " - " + cooldownMinutes + " minute cooldown initiated."),
                             false));
 
                     BlockState state = this.level.getBlockState(this.worldPosition);
@@ -876,8 +877,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
      * <p>
      * Coolant effectiveness per tier:
      * <ul>
-     * <li>Gelid Cryotheum (T1): 3 cooling/mB</li>
-     * <li>Stable Coolant (T2): 5 cooling/mB</li>
+     * <li>Gelid Cryotheum (T1): 1 cooling/mB</li>
+     * <li>Stable Coolant (T2): 4 cooling/mB</li>
      * <li>Temporal Fluid (T3): 8 cooling/mB</li>
      * <li>Water (fallback): 1 cooling/mB</li>
      * </ul>
@@ -919,8 +920,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                 int efficiency = 1;
                 String path = BuiltInRegistries.FLUID.getKey(coolantKey.getFluid()).getPath();
                 if (path.contains("temporal")) efficiency = 8;
-                else if (path.contains("stable")) efficiency = 5;
-                else if (path.contains("gelid_cryotheum")) efficiency = 2;
+                else if (path.contains("stable")) efficiency = 4;
+                else if (path.contains("gelid_cryotheum")) efficiency = 1;
 
                 return (int) (extracted * efficiency / effectiveCoolantPerTick) * (coolingTierBonus() + 1);
             }

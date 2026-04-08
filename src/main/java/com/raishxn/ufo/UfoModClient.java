@@ -50,9 +50,9 @@ public class UfoModClient {
     private void registerScreens(RegisterMenuScreensEvent event) {
         InitScreens.register(event, UFOMenus.DIMENSIONAL_MATTER_ASSEMBLER.get(), DimensionalMatterAssemblerScreen::new, "/screens/dimensional_matter_assembler.json");
         event.register(ModMenus.STELLAR_NEXUS_CONTROLLER_MENU.get(), StellarNexusControllerScreen::new);
-        event.register(ModMenus.QMF_CONTROLLER_MENU.get(), com.raishxn.ufo.screen.QmfControllerScreen::new);
-        event.register(ModMenus.QUANTUM_SLICER_CONTROLLER_MENU.get(), QuantumSlicerControllerScreen::new);
-        event.register(ModMenus.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU.get(), QuantumProcessorAssemblerControllerScreen::new);
+        InitScreens.register(event, ModMenus.QMF_CONTROLLER_MENU.get(), com.raishxn.ufo.screen.QmfControllerScreen::new, "/screens/universal_multiblock_controller.json");
+        InitScreens.register(event, ModMenus.QUANTUM_SLICER_CONTROLLER_MENU.get(), QuantumSlicerControllerScreen::new, "/screens/universal_multiblock_controller.json");
+        InitScreens.register(event, ModMenus.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU.get(), QuantumProcessorAssemblerControllerScreen::new, "/screens/universal_multiblock_controller.json");
     }
 
     private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
