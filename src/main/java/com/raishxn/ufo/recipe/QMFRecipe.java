@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.api.multiblock.MultiblockMachineTier;
 import com.raishxn.ufo.init.ModRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -23,14 +24,16 @@ public class QMFRecipe implements Recipe<RecipeInput> {
     private final ItemStack itemOutput;
     private final long energy;
     private final int time;
+    private final int requiredTier;
 
-    public QMFRecipe(String recipeName, List<QMFRecipeIngredient> itemInputs, List<QMFFluidIngredient> fluidInputs, ItemStack itemOutput, long energy, int time) {
+    public QMFRecipe(String recipeName, List<QMFRecipeIngredient> itemInputs, List<QMFFluidIngredient> fluidInputs, ItemStack itemOutput, long energy, int time, int requiredTier) {
         this.recipeName = recipeName;
         this.itemInputs = itemInputs;
         this.fluidInputs = fluidInputs;
         this.itemOutput = itemOutput;
         this.energy = energy;
         this.time = time;
+        this.requiredTier = Math.max(MultiblockMachineTier.MK1.level(), requiredTier);
     }
 
     public String getRecipeName() { return recipeName; }
@@ -38,6 +41,7 @@ public class QMFRecipe implements Recipe<RecipeInput> {
     public List<QMFFluidIngredient> getFluidInputs() { return fluidInputs; }
     public long getEnergy() { return energy; }
     public int getTime() { return time; }
+    public int getRequiredTier() { return requiredTier; }
 
     @Override
     public boolean matches(RecipeInput pInput, Level pLevel) { return false; }
@@ -90,7 +94,8 @@ public class QMFRecipe implements Recipe<RecipeInput> {
                 QMFFluidIngredient.CODEC.listOf().optionalFieldOf("fluid_inputs", List.of()).forGetter(QMFRecipe::getFluidInputs),
                 ItemStack.CODEC.fieldOf("output").forGetter(recipe -> recipe.itemOutput),
                 Codec.LONG.fieldOf("energy").forGetter(QMFRecipe::getEnergy),
-                Codec.INT.fieldOf("time").forGetter(QMFRecipe::getTime)
+                Codec.INT.fieldOf("time").forGetter(QMFRecipe::getTime),
+                Codec.INT.optionalFieldOf("required_tier", MultiblockMachineTier.MK1.level()).forGetter(QMFRecipe::getRequiredTier)
         ).apply(instance, QMFRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, QMFRecipe> STREAM_CODEC = StreamCodec.of(
@@ -101,6 +106,7 @@ public class QMFRecipe implements Recipe<RecipeInput> {
                 ItemStack.STREAM_CODEC.encode(buf, recipe.itemOutput);
                 buf.writeLong(recipe.energy);
                 buf.writeInt(recipe.time);
+                buf.writeInt(recipe.requiredTier);
             },
             buf -> new QMFRecipe(
                 buf.readUtf(),
@@ -108,6 +114,7 @@ public class QMFRecipe implements Recipe<RecipeInput> {
                 QMFFluidIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf),
                 ItemStack.STREAM_CODEC.decode(buf),
                 buf.readLong(),
+                buf.readInt(),
                 buf.readInt()
             )
         );

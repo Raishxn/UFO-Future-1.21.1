@@ -114,6 +114,8 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         }
         StringBuilder builder = new StringBuilder(this.menu.isRunning() ? "Status: Running" : "Status: Idle");
         builder.append(" | ");
+        builder.append("MK").append(this.menu.getMachineTier());
+        builder.append(" | ");
         builder.append(this.menu.isSafeMode() ? "Safe ON" : "Safe OFF");
         builder.append(" | ");
         builder.append(this.menu.isOverclocked() ? "OC ON" : "OC OFF");

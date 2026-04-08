@@ -15,6 +15,8 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.MEStorage;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
+import com.raishxn.ufo.api.multiblock.MultiblockMachineTier;
+import com.raishxn.ufo.api.multiblock.MultiblockTierScaling;
 import net.minecraft.world.inventory.ContainerData;
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
@@ -64,6 +66,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
     private int maxProgress = 0;
     private int temperature = 0;
     private int maxTemperature = 1000;
+    private int machineTier = MultiblockMachineTier.MK1.level();
     private boolean safeMode = true;
     private boolean overclocked = false;
     private final List<UniversalDisplayedRecipe> displayedRecipes = new ArrayList<>();
@@ -85,8 +88,9 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
                 case 3 -> maxProgress;
                 case 4 -> temperature;
                 case 5 -> maxTemperature;
-                case 6 -> safeMode ? 1 : 0;
-                case 7 -> overclocked ? 1 : 0;
+                case 6 -> machineTier;
+                case 7 -> safeMode ? 1 : 0;
+                case 8 -> overclocked ? 1 : 0;
                 default -> 0;
             };
         }
@@ -98,7 +102,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
 
         @Override
         public int getCount() {
-            return 8;
+            return 9;
         }
     };
 
@@ -157,8 +161,19 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
         IActionSource src = IActionSource.ofMachine(nodeBE);
 
         // 1. Charge Energy limit
-        if (this.energyBuffer < this.cachedRecipe.getEnergy()) {
-            long needed = this.cachedRecipe.getEnergy() - this.energyBuffer;
+        if (!MultiblockTierScaling.canRunRecipe(this.machineTier, this.cachedRecipe.getRequiredTier())) {
+            this.running = false;
+            this.progress = 0;
+            this.setChanged();
+            return;
+        }
+
+        long scaledEnergy = MultiblockTierScaling.adjustedEnergy(this.cachedRecipe.getEnergy(), this.machineTier, this.cachedRecipe.getRequiredTier());
+        int scaledMaxProgress = MultiblockTierScaling.adjustedTime(this.cachedRecipe.getTime(), this.machineTier, this.cachedRecipe.getRequiredTier());
+        this.maxProgress = scaledMaxProgress;
+
+        if (this.energyBuffer < scaledEnergy) {
+            long needed = scaledEnergy - this.energyBuffer;
             long chargeRate = 5_000_000; // Fast charge rate
             long toCharge = Math.min(needed, chargeRate);
             double extracted = energyService.extractAEPower(toCharge, Actionable.MODULATE, PowerMultiplier.CONFIG);
@@ -201,7 +216,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
         }
 
         // 3. Process if fulfilled
-        if (materialsFulfilled && this.energyBuffer >= this.cachedRecipe.getEnergy()) {
+        if (materialsFulfilled && this.energyBuffer >= scaledEnergy) {
             this.temperature = Math.min(this.maxTemperature, this.temperature + (this.overclocked ? 10 : 3));
             if (this.safeMode && this.temperature >= this.maxTemperature) {
                 this.running = false;
@@ -211,9 +226,9 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
             }
 
             this.progress += this.overclocked ? 5 : 1;
-            if (this.progress >= this.maxProgress) {
+            if (this.progress >= scaledMaxProgress) {
                 // Done!
-                ItemStack out = this.cachedRecipe.getResultItem(this.level.registryAccess());
+                ItemStack out = this.cachedRecipe.getResultItem();
                 inventory.insert(AEItemKey.of(out), out.getCount(), Actionable.MODULATE, src);
                 
                 // Reset loop
@@ -355,6 +370,7 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
         tag.putInt("maxProgress", this.maxProgress);
         tag.putInt("temperature", this.temperature);
         tag.putInt("maxTemperature", this.maxTemperature);
+        tag.putInt("machineTier", this.machineTier);
         tag.putBoolean("safeMode", this.safeMode);
         tag.putBoolean("overclocked", this.overclocked);
         this.upgrades.writeToNBT(tag, "upgrades", registries);
@@ -384,6 +400,9 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
         this.temperature = tag.getInt("temperature");
         if (tag.contains("maxTemperature")) {
             this.maxTemperature = tag.getInt("maxTemperature");
+        }
+        if (tag.contains("machineTier")) {
+            this.machineTier = Math.max(MultiblockMachineTier.MK1.level(), tag.getInt("machineTier"));
         }
         this.safeMode = !tag.contains("safeMode") || tag.getBoolean("safeMode");
         this.overclocked = tag.getBoolean("overclocked");
@@ -470,6 +489,11 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
     }
 
     @Override
+    public int getGuiMachineTier() {
+        return this.machineTier;
+    }
+
+    @Override
     public boolean isGuiSafeMode() {
         return this.safeMode;
     }
@@ -504,17 +528,22 @@ public class QmfControllerBE extends BlockEntity implements net.minecraft.world.
 
     private void rebuildDisplayedRecipes() {
         this.displayedRecipes.clear();
-        if (this.cachedRecipe == null || this.level == null) {
+        if (this.cachedRecipe == null) {
             return;
         }
 
-        ItemStack out = this.cachedRecipe.getResultItem(this.level.registryAccess());
+        ItemStack out = this.cachedRecipe.getResultItem();
+        int scaledProgress = MultiblockTierScaling.adjustedTime(this.cachedRecipe.getTime(), this.machineTier, this.cachedRecipe.getRequiredTier());
+        String label = out.getHoverName().getString();
+        if (!MultiblockTierScaling.canRunRecipe(this.machineTier, this.cachedRecipe.getRequiredTier())) {
+            label += " [Locked: MK" + this.cachedRecipe.getRequiredTier() + "]";
+        }
         this.displayedRecipes.add(new UniversalDisplayedRecipe(
                 out,
                 FluidStack.EMPTY,
-                out.getHoverName(),
+                net.minecraft.network.chat.Component.literal(label),
                 out.getCount(),
                 this.progress,
-                this.maxProgress));
+                scaledProgress));
     }
 }

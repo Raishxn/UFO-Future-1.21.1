@@ -31,6 +31,8 @@ public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockE
     protected int safeMode = 1;
     @GuiSync(27)
     protected int overclocked = 0;
+    @GuiSync(28)
+    protected int machineTier = 1;
 
     protected AbstractUniversalMultiblockControllerMenu(net.minecraft.world.inventory.MenuType<?> menuType, int id, Inventory playerInventory,
                                                         T blockEntity, ContainerLevelAccess levelAccess) {
@@ -53,6 +55,7 @@ public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockE
             this.maxTemperature = this.getHost().getGuiMaxTemperature();
             this.safeMode = this.getHost().isGuiSafeMode() ? 1 : 0;
             this.overclocked = this.getHost().isGuiOverclocked() ? 1 : 0;
+            this.machineTier = this.getHost().getGuiMachineTier();
         }
         super.standardDetectAndSendChanges();
     }
@@ -87,6 +90,10 @@ public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockE
 
     public boolean isOverclocked() {
         return this.overclocked == 1;
+    }
+
+    public int getMachineTier() {
+        return Math.max(1, this.machineTier);
     }
 
     public List<UniversalDisplayedRecipe> getDisplayedRecipes() {

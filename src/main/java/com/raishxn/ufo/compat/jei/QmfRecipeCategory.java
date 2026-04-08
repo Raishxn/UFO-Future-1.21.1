@@ -117,14 +117,16 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
                 && mouseY >= ENERGY_BAR_Y && mouseY <= ENERGY_BAR_Y + ENERGY_BAR_H) {
             return List.of(
                     Component.literal("Energy: " + formatEnergy(recipe.getEnergy())),
-                    Component.literal(String.format("Base Time: %.1fs (%d ticks)", recipe.getTime() / 20.0, recipe.getTime()))
+                    Component.literal(String.format("Base Time: %.1fs (%d ticks)", recipe.getTime() / 20.0, recipe.getTime())),
+                    Component.literal("Required Tier: MK" + recipe.getRequiredTier())
             );
         }
 
         if (mouseX >= 105 && mouseX <= 125 && mouseY >= 42 && mouseY <= 53) {
             return List.of(
                     Component.literal(recipe.getRecipeName()),
-                    Component.literal(String.format("Processing Time: %.1fs", recipe.getTime() / 20.0))
+                    Component.literal(String.format("Processing Time: %.1fs", recipe.getTime() / 20.0)),
+                    Component.literal("Required Tier: MK" + recipe.getRequiredTier())
             );
         }
 
