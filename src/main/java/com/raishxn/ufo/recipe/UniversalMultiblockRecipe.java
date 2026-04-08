@@ -47,9 +47,9 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
         this.recipeName = recipeName;
         this.itemInputs = itemInputs;
         this.fluidInputs = fluidInputs;
-        this.itemOutput = itemOutput;
-        this.fluidOutput = fluidOutput;
-        this.fluidOutputAmount = Math.max(0L, fluidOutputAmount);
+        this.itemOutput = itemOutput == null ? ItemStack.EMPTY : itemOutput;
+        this.fluidOutput = fluidOutput == null ? FluidStack.EMPTY : fluidOutput;
+        this.fluidOutputAmount = this.fluidOutput.isEmpty() ? 0L : Math.max(0L, fluidOutputAmount);
         this.energy = energy;
         this.time = time;
         this.requiredTier = Math.max(MultiblockMachineTier.MK1.level(), requiredTier);
@@ -176,24 +176,41 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                     ItemRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.itemInputs);
                     FluidRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.fluidInputs);
                     ItemStack.STREAM_CODEC.encode(buf, recipe.itemOutput);
-                    FluidStack.STREAM_CODEC.encode(buf, recipe.fluidOutput);
-                    buf.writeLong(recipe.fluidOutputAmount);
+                    boolean hasFluidOutput = !recipe.fluidOutput.isEmpty() && recipe.fluidOutputAmount > 0;
+                    buf.writeBoolean(hasFluidOutput);
+                    if (hasFluidOutput) {
+                        FluidStack.STREAM_CODEC.encode(buf, recipe.fluidOutput);
+                        buf.writeLong(recipe.fluidOutputAmount);
+                    }
                     buf.writeLong(recipe.energy);
                     buf.writeInt(recipe.time);
                     buf.writeInt(recipe.requiredTier);
                 },
-                buf -> new UniversalMultiblockRecipe(
-                        UniversalMultiblockMachineKind.fromSerializedName(buf.readUtf()),
-                        buf.readUtf(),
-                        ItemRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf),
-                        FluidRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf),
-                        ItemStack.STREAM_CODEC.decode(buf),
-                        FluidStack.STREAM_CODEC.decode(buf),
-                        buf.readLong(),
-                        buf.readLong(),
-                        buf.readInt(),
-                        buf.readInt()
-                )
+                buf -> {
+                    var machine = UniversalMultiblockMachineKind.fromSerializedName(buf.readUtf());
+                    var recipeName = buf.readUtf();
+                    var itemInputs = ItemRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
+                    var fluidInputs = FluidRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
+                    var itemOutput = ItemStack.STREAM_CODEC.decode(buf);
+                    boolean hasFluidOutput = buf.readBoolean();
+                    var fluidOutput = hasFluidOutput ? FluidStack.STREAM_CODEC.decode(buf) : FluidStack.EMPTY;
+                    long fluidOutputAmount = hasFluidOutput ? buf.readLong() : 0L;
+                    long energy = buf.readLong();
+                    int time = buf.readInt();
+                    int requiredTier = buf.readInt();
+                    return new UniversalMultiblockRecipe(
+                            machine,
+                            recipeName,
+                            itemInputs,
+                            fluidInputs,
+                            itemOutput,
+                            fluidOutput,
+                            fluidOutputAmount,
+                            energy,
+                            time,
+                            requiredTier
+                    );
+                }
         );
 
         @Override
