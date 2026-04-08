@@ -6,6 +6,7 @@ import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
 import appeng.items.AEBaseItem;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.core.MegaCoProcessorTier;
 import com.raishxn.ufo.core.MegaCraftingStorageTier;
@@ -57,6 +58,7 @@ public class ModRecipeProvider extends RecipeProvider {
         this.buildInfinityCellsDMA(c);
         this.buildHousingRecipes(c);
         this.buildMachineAndStorageRecipes(c);
+        this.buildQuantumMultiblockRecipes(c);
         this.buildMassiveStellarSimulations(c);
     }
 
@@ -421,6 +423,56 @@ public class ModRecipeProvider extends RecipeProvider {
         this.buildCoProcessor(c, ModBlocks.CO_PROCESSOR_BLOCKS.get(MegaCoProcessorTier.COPROCESSOR_2B).get(), ModBlocks.CO_PROCESSOR_BLOCKS.get(MegaCoProcessorTier.COPROCESSOR_750M).get(), "coprocessor_2b", false);
     }
 
+    private void buildQuantumMultiblockRecipes(RecipeOutput c) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get(), 4)
+                .pattern("NHN")
+                .pattern("HCH")
+                .pattern("NHN")
+                .define('N', ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get())
+                .define('H', ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
+                .define('C', ModBlocks.GRAVITON_PLATED_CASING.get())
+                .unlockedBy("has_hyper_dense_component", has(ModItems.HYPER_DENSE_COMPONENT_MATRIX.get()))
+                .save(c);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get())
+                .pattern("ACA")
+                .pattern("DQD")
+                .pattern("AEA")
+                .define('A', ModItems.QUANTUM_ANOMALY.get())
+                .define('C', ModItems.COSMIC_STRING_COMPONENT_MATRIX.get())
+                .define('D', ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER_BLOCK.get())
+                .define('Q', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
+                .define('E', AEBlocks.CONTROLLER)
+                .unlockedBy("has_quantum_anomaly", has(ModItems.QUANTUM_ANOMALY.get()))
+                .save(c);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get())
+                .pattern("PGP")
+                .pattern("QDQ")
+                .pattern("FEF")
+                .define('P', ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get())
+                .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                .define('Q', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
+                .define('D', ModItems.DIMENSIONAL_PROCESSOR.get())
+                .define('F', ModBlocks.QUANTUM_LATTICE_FRAME.get())
+                .define('E', AEItems.ENGINEERING_PROCESSOR)
+                .unlockedBy("has_dimensional_processor", has(ModItems.DIMENSIONAL_PROCESSOR.get()))
+                .save(c);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get())
+                .pattern("TST")
+                .pattern("QCQ")
+                .pattern("HEH")
+                .define('T', ModItems.TESSERACT_COMPONENT_MATRIX.get())
+                .define('S', AEItems.SINGULARITY)
+                .define('Q', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
+                .define('C', ModItems.COSMIC_STRING_COMPONENT_MATRIX.get())
+                .define('H', ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
+                .define('E', AEBlocks.CONTROLLER)
+                .unlockedBy("has_tesseract_component", has(ModItems.TESSERACT_COMPONENT_MATRIX.get()))
+                .save(c);
+    }
+
     private void buildStorageBlock(RecipeOutput c, ItemLike output, ItemLike component, String name) {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, output)
                 .requires(ModBlocks.GRAVITON_PLATED_CASING.get())
@@ -518,4 +570,3 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(c);
     }
 }
-

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "ufo:quantum_anomaly"
+    },
+    "C": {
+      "item": "ufo:cosmic_string_component_matrix"
+    },
+    "D": {
+      "item": "ufo:dimensional_matter_assembler"
+    },
+    "E": {
+      "item": "ae2:controller"
+    },
+    "Q": {
+      "item": "ufo:quantum_hyper_mechanical_casing"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "DQD",
+    "AEA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:quantum_matter_fabricator_controller"
+  }
+}

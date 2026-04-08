@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "ufo:dimensional_processor"
+    },
+    "E": {
+      "item": "ae2:engineering_processor"
+    },
+    "F": {
+      "item": "ufo:quantum_lattice_frame"
+    },
+    "G": {
+      "item": "ae2:quartz_vibrant_glass"
+    },
+    "P": {
+      "item": "ufo:phase_shift_component_matrix"
+    },
+    "Q": {
+      "item": "ufo:quantum_hyper_mechanical_casing"
+    }
+  },
+  "pattern": [
+    "PGP",
+    "QDQ",
+    "FEF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:quantum_slicer_controller"
+  }
+}

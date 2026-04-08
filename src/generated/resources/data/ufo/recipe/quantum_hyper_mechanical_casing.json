@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ufo:graviton_plated_casing"
+    },
+    "H": {
+      "item": "ufo:hyper_dense_component_matrix"
+    },
+    "N": {
+      "item": "ufo:neutron_star_fragment_ingot"
+    }
+  },
+  "pattern": [
+    "NHN",
+    "HCH",
+    "NHN"
+  ],
+  "result": {
+    "count": 4,
+    "id": "ufo:quantum_hyper_mechanical_casing"
+  }
+}

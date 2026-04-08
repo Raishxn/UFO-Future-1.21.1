@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ufo:cosmic_string_component_matrix"
+    },
+    "E": {
+      "item": "ae2:controller"
+    },
+    "H": {
+      "item": "ufo:hyper_dense_component_matrix"
+    },
+    "Q": {
+      "item": "ufo:quantum_hyper_mechanical_casing"
+    },
+    "S": {
+      "item": "ae2:singularity"
+    },
+    "T": {
+      "item": "ufo:tesseract_component_matrix"
+    }
+  },
+  "pattern": [
+    "TST",
+    "QCQ",
+    "HEH"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:quantum_processor_assembler_controller"
+  }
+}
