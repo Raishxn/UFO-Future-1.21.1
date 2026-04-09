@@ -67,7 +67,7 @@ public record MultiblockProcessingRecipe(
 
         List<OutputStack> outputs = new ArrayList<>();
         if (!recipe.getItemOutput().isEmpty()) {
-            outputs.add(new OutputStack(normalizeItem(recipe.getItemOutput()), FluidStack.EMPTY, recipe.getItemOutput().getCount()));
+            outputs.add(new OutputStack(normalizeItem(recipe.getItemOutput()), FluidStack.EMPTY, recipe.getItemOutputAmount()));
         }
         if (!recipe.getFluidOutput().isEmpty() && recipe.getFluidOutputAmount() > 0) {
             outputs.add(new OutputStack(ItemStack.EMPTY, recipe.getFluidOutput(), recipe.getFluidOutputAmount()));

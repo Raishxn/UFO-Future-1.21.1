@@ -36,6 +36,8 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
     private static final int ENERGY_BAR_Y = 81;
     private static final int ENERGY_BAR_W = 91;
     private static final int ENERGY_BAR_H = 10;
+    private static final int ITEM_OUTPUT_X = 132;
+    private static final int ITEM_OUTPUT_Y = 21;
 
     private final UniversalMultiblockMachineKind machineKind;
     private final Component title;
@@ -108,10 +110,10 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
         }
 
         if (!recipe.getItemOutput().isEmpty()) {
-            ItemStack itemOutput = recipe.getItemOutput().copy();
-            builder.addOutputSlot(132, 21)
+            ItemStack itemOutput = recipe.getDisplayedItemOutput();
+            builder.addOutputSlot(ITEM_OUTPUT_X, ITEM_OUTPUT_Y)
                     .addItemStack(itemOutput)
-                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Output: " + formatAmount(itemOutput.getCount()) + "x")));
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Output: " + formatAmount(recipe.getItemOutputAmount()) + "x")));
         }
 
         if (!recipe.getFluidOutput().isEmpty() && recipe.getFluidOutputAmount() > 0) {
@@ -144,6 +146,7 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
         int textWidth = font.width(energyText);
         int textX = ENERGY_BAR_X + (ENERGY_BAR_W - textWidth) / 2;
         guiGraphics.drawString(font, energyText, textX, ENERGY_BAR_Y + 1, 0xFFFFFFFF, true);
+
     }
 
     @Override

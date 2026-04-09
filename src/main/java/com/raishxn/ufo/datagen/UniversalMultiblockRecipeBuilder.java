@@ -20,6 +20,7 @@ public class UniversalMultiblockRecipeBuilder {
     private final List<UniversalMultiblockRecipe.ItemRequirement> itemInputs = new ArrayList<>();
     private final List<UniversalMultiblockRecipe.FluidRequirement> fluidInputs = new ArrayList<>();
     private ItemStack itemOutput = ItemStack.EMPTY;
+    private long itemOutputAmount = 0L;
     private FluidStack fluidOutput = FluidStack.EMPTY;
     private long fluidOutputAmount = 0L;
     private long energy = 0L;
@@ -46,7 +47,8 @@ public class UniversalMultiblockRecipeBuilder {
     }
 
     public UniversalMultiblockRecipeBuilder outputItem(ItemLike item, int amount) {
-        this.itemOutput = new ItemStack(item, amount);
+        this.itemOutput = new ItemStack(item, 1);
+        this.itemOutputAmount = amount;
         return this;
     }
 
@@ -82,6 +84,7 @@ public class UniversalMultiblockRecipeBuilder {
                 this.itemInputs,
                 this.fluidInputs,
                 this.itemOutput,
+                this.itemOutputAmount,
                 this.fluidOutput,
                 this.fluidOutputAmount,
                 this.energy,

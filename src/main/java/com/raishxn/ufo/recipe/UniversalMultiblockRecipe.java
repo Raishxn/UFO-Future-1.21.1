@@ -5,10 +5,13 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.raishxn.ufo.api.multiblock.MultiblockMachineTier;
 import com.raishxn.ufo.init.ModRecipes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -26,6 +29,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
     private final List<ItemRequirement> itemInputs;
     private final List<FluidRequirement> fluidInputs;
     private final ItemStack itemOutput;
+    private final long itemOutputAmount;
     private final FluidStack fluidOutput;
     private final long fluidOutputAmount;
     private final long energy;
@@ -38,6 +42,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
             List<ItemRequirement> itemInputs,
             List<FluidRequirement> fluidInputs,
             ItemStack itemOutput,
+            long itemOutputAmount,
             FluidStack fluidOutput,
             long fluidOutputAmount,
             long energy,
@@ -47,7 +52,8 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
         this.recipeName = recipeName;
         this.itemInputs = itemInputs;
         this.fluidInputs = fluidInputs;
-        this.itemOutput = itemOutput == null ? ItemStack.EMPTY : itemOutput;
+        this.itemOutput = normalizeItemOutput(itemOutput);
+        this.itemOutputAmount = this.itemOutput.isEmpty() ? 0L : Math.max(0L, itemOutputAmount);
         this.fluidOutput = fluidOutput == null ? FluidStack.EMPTY : fluidOutput;
         this.fluidOutputAmount = this.fluidOutput.isEmpty() ? 0L : Math.max(0L, fluidOutputAmount);
         this.energy = energy;
@@ -73,6 +79,18 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
 
     public ItemStack getItemOutput() {
         return itemOutput.copy();
+    }
+
+    public long getItemOutputAmount() {
+        return itemOutputAmount;
+    }
+
+    public ItemStack getDisplayedItemOutput() {
+        ItemStack stack = this.itemOutput.copy();
+        if (!stack.isEmpty()) {
+            stack.setCount((int) Math.min(Integer.MAX_VALUE, Math.max(1L, this.itemOutputAmount)));
+        }
+        return stack;
     }
 
     public FluidStack getFluidOutput() {
@@ -102,7 +120,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
 
     @Override
     public ItemStack assemble(RecipeInput pInput, HolderLookup.Provider pRegistries) {
-        return this.itemOutput.copy();
+        return getDisplayedItemOutput();
     }
 
     @Override
@@ -112,7 +130,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
-        return this.itemOutput;
+        return getDisplayedItemOutput();
     }
 
     @Override
@@ -155,19 +173,63 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
         );
     }
 
+    private static ItemStack normalizeItemOutput(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
+        ItemStack copy = stack.copy();
+        copy.setCount(1);
+        return copy;
+    }
+
+    public record ItemOutputDefinition(Item item, long amount) {
+        public static final MapCodec<ItemOutputDefinition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemOutputDefinition::item),
+                Codec.LONG.optionalFieldOf("count", 1L).forGetter(ItemOutputDefinition::amount)
+        ).apply(instance, ItemOutputDefinition::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, ItemOutputDefinition> STREAM_CODEC = StreamCodec.of(
+                (buf, output) -> {
+                    buf.writeResourceLocation(BuiltInRegistries.ITEM.getKey(output.item));
+                    buf.writeLong(output.amount);
+                },
+                buf -> new ItemOutputDefinition(BuiltInRegistries.ITEM.get(buf.readResourceLocation()), buf.readLong())
+        );
+
+        public ItemStack toStack() {
+            return new ItemStack(this.item, 1);
+        }
+    }
+
     public static class Serializer implements RecipeSerializer<UniversalMultiblockRecipe> {
         public static final MapCodec<UniversalMultiblockRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 UniversalMultiblockMachineKind.CODEC.fieldOf("machine").forGetter(UniversalMultiblockRecipe::getMachine),
                 Codec.STRING.optionalFieldOf("recipe_name", "Universal Multiblock Recipe").forGetter(UniversalMultiblockRecipe::getRecipeName),
                 ItemRequirement.CODEC.listOf().fieldOf("item_inputs").forGetter(UniversalMultiblockRecipe::getItemInputs),
                 FluidRequirement.CODEC.listOf().optionalFieldOf("fluid_inputs", List.of()).forGetter(UniversalMultiblockRecipe::getFluidInputs),
-                ItemStack.CODEC.optionalFieldOf("item_output", ItemStack.EMPTY).forGetter(recipe -> recipe.itemOutput),
-                FluidStack.CODEC.optionalFieldOf("fluid_output", FluidStack.EMPTY).forGetter(recipe -> recipe.fluidOutput),
+                ItemOutputDefinition.CODEC.codec().optionalFieldOf("item_output").forGetter((UniversalMultiblockRecipe recipe) -> recipe.itemOutput.isEmpty()
+                        ? java.util.Optional.empty()
+                        : java.util.Optional.of(new ItemOutputDefinition(recipe.itemOutput.getItem(), recipe.itemOutputAmount))),
+                FluidStack.CODEC.optionalFieldOf("fluid_output", FluidStack.EMPTY).forGetter((UniversalMultiblockRecipe recipe) -> recipe.fluidOutput),
                 Codec.LONG.optionalFieldOf("fluid_output_amount", 0L).forGetter(UniversalMultiblockRecipe::getFluidOutputAmount),
                 Codec.LONG.fieldOf("energy").forGetter(UniversalMultiblockRecipe::getEnergy),
                 Codec.INT.fieldOf("time").forGetter(UniversalMultiblockRecipe::getTime),
                 Codec.INT.optionalFieldOf("required_tier", MultiblockMachineTier.MK1.level()).forGetter(UniversalMultiblockRecipe::getRequiredTier)
-        ).apply(instance, UniversalMultiblockRecipe::new));
+        ).apply(instance, (machine, recipeName, itemInputs, fluidInputs, itemOutput, fluidOutput, fluidOutputAmount, energy, time, requiredTier) ->
+                new UniversalMultiblockRecipe(
+                        machine,
+                        recipeName,
+                        itemInputs,
+                        fluidInputs,
+                        itemOutput.map(ItemOutputDefinition::toStack).orElse(ItemStack.EMPTY),
+                        itemOutput.map(ItemOutputDefinition::amount).orElse(0L),
+                        fluidOutput,
+                        fluidOutputAmount,
+                        energy,
+                        time,
+                        requiredTier
+                )));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, UniversalMultiblockRecipe> STREAM_CODEC = StreamCodec.of(
                 (buf, recipe) -> {
@@ -178,7 +240,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                     boolean hasItemOutput = !recipe.itemOutput.isEmpty();
                     buf.writeBoolean(hasItemOutput);
                     if (hasItemOutput) {
-                        ItemStack.STREAM_CODEC.encode(buf, recipe.itemOutput);
+                        ItemOutputDefinition.STREAM_CODEC.encode(buf, new ItemOutputDefinition(recipe.itemOutput.getItem(), recipe.itemOutputAmount));
                     }
                     boolean hasFluidOutput = !recipe.fluidOutput.isEmpty() && recipe.fluidOutputAmount > 0;
                     buf.writeBoolean(hasFluidOutput);
@@ -196,7 +258,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                     var itemInputs = ItemRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
                     var fluidInputs = FluidRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
                     boolean hasItemOutput = buf.readBoolean();
-                    var itemOutput = hasItemOutput ? ItemStack.STREAM_CODEC.decode(buf) : ItemStack.EMPTY;
+                    var itemOutput = hasItemOutput ? ItemOutputDefinition.STREAM_CODEC.decode(buf) : null;
                     boolean hasFluidOutput = buf.readBoolean();
                     var fluidOutput = hasFluidOutput ? FluidStack.STREAM_CODEC.decode(buf) : FluidStack.EMPTY;
                     long fluidOutputAmount = hasFluidOutput ? buf.readLong() : 0L;
@@ -208,7 +270,8 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                             recipeName,
                             itemInputs,
                             fluidInputs,
-                            itemOutput,
+                            itemOutput != null ? itemOutput.toStack() : ItemStack.EMPTY,
+                            itemOutput != null ? itemOutput.amount() : 0L,
                             fluidOutput,
                             fluidOutputAmount,
                             energy,
