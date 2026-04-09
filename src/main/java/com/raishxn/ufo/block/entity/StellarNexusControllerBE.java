@@ -6,6 +6,7 @@ import com.raishxn.ufo.api.multiblock.MultiblockPattern;
 import com.raishxn.ufo.block.entity.pattern.StellarNexusPatternFactory;
 import com.raishxn.ufo.block.StellarNexusControllerBlock;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.recipe.StellarSimulationRecipe;
 import net.pedroksl.ae2addonlib.recipes.IngredientStack;
 
@@ -104,7 +105,11 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private boolean exploding = false;
     private int explosionTick = 0;
     private int explosionRadius = 50;
-    private static final int EXPLOSION_DURATION_TICKS = 60; // Spread across 3 seconds
+    private int explosionShellRadius = 0;
+    private int explosionCursorX = 0;
+    private int explosionCursorY = 0;
+    private int explosionCursorZ = 0;
+    private static final int EXPLOSION_BLOCKS_PER_TICK = 4096;
 
     // Cached field tier
     private int fieldLevel = 0;
@@ -722,13 +727,14 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                         + "! CATASTROPHIC EXPLOSION!"),
                 false));
 
-        // Initial vanilla explosion at center
+        // Initial core detonation kicks off the larger wave processor.
         this.level.explode(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                30.0f, Level.ExplosionInteraction.BLOCK);
+                Math.max(12.0f, this.explosionRadius * 0.18f), Level.ExplosionInteraction.BLOCK);
 
-        // Start the multi-tick catastrophic explosion
         this.exploding = true;
         this.explosionTick = 0;
+        this.explosionShellRadius = 0;
+        resetExplosionCursor();
 
         this.running = false;
         this.progress = 0;
@@ -744,108 +750,149 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         onControllerBroken();
     }
 
-    /**
-     * Multi-tick catastrophic explosion processor.
-     * Spreads lava in the inner core and fire in the outer ring.
-     * Processes a shell of blocks each tick to avoid lag spikes.
-     */
     private void processExplosionTick() {
         if (this.level == null) {
             this.exploding = false;
             return;
         }
 
-        BlockPos center = this.worldPosition;
         this.explosionTick++;
-
-        // Calculate which radial shell to process this tick
-        int currentRadius = (int) ((float) this.explosionTick / EXPLOSION_DURATION_TICKS * this.explosionRadius);
-        int prevRadius = (int) ((float) (this.explosionTick - 1) / EXPLOSION_DURATION_TICKS * this.explosionRadius);
-
-        if (currentRadius > this.explosionRadius) {
-            this.exploding = false;
-            this.explosionTick = 0;
-
-            // Damage all nearby entities at the end
-            var entities = this.level.getEntitiesOfClass(
-                    net.minecraft.world.entity.LivingEntity.class,
-                    new net.minecraft.world.phys.AABB(
-                            center.getX() - this.explosionRadius, center.getY() - this.explosionRadius,
-                            center.getZ() - this.explosionRadius,
-                            center.getX() + this.explosionRadius, center.getY() + this.explosionRadius,
-                            center.getZ() + this.explosionRadius));
-            for (var entity : entities) {
-                double dist = entity.distanceToSqr(center.getX(), center.getY(), center.getZ());
-                if (dist < this.explosionRadius * this.explosionRadius) {
-                    float damage = (float) (200.0 * (1.0 - Math.sqrt(dist) / this.explosionRadius));
-                    entity.hurt(this.level.damageSources().explosion(null), damage);
-                    entity.setRemainingFireTicks(600); // 30 seconds of fire
-                }
+        int processed = 0;
+        while (processed < EXPLOSION_BLOCKS_PER_TICK && this.exploding) {
+            if (this.explosionShellRadius > this.explosionRadius) {
+                finishExplosionWave();
+                break;
             }
-            return;
-        }
 
-        // Process blocks in the current shell (between prevRadius and currentRadius)
-        int rMin = Math.max(prevRadius, 0);
-        int rMax = currentRadius;
-
-        // Inner zone (r < innerLavaRadius): replace with lava
-        // Outer zone (innerLavaRadius <= r < explosionRadius): place fire, destroy blocks
-        int innerLavaRadius = (int)(this.explosionRadius * 0.4);
-
-        for (int rr = rMin; rr <= rMax; rr++) {
-            // Sample points on the shell surface
-            int pointsOnShell = Math.max(1, (int) (4 * Math.PI * rr * rr / 16)); // ~1 point per 4 blocks
-            var random = this.level.getRandom();
-
-            for (int p = 0; p < pointsOnShell && p < 2000; p++) {
-                // Random point on sphere of radius rr
-                double theta = random.nextDouble() * 2 * Math.PI;
-                double phi = Math.acos(2 * random.nextDouble() - 1);
-                int dx = (int) (rr * Math.sin(phi) * Math.cos(theta));
-                int dy = (int) (rr * Math.cos(phi));
-                int dz = (int) (rr * Math.sin(phi) * Math.sin(theta));
-
-                BlockPos target = center.offset(dx, dy, dz);
-                if (!this.level.isLoaded(target))
-                    continue;
-
-                BlockState targetState = this.level.getBlockState(target);
-                if (targetState.isAir())
-                    continue;
-
-                // Don't destroy bedrock
-                if (targetState.getDestroySpeed(this.level, target) < 0)
-                    continue;
-
-                if (rr < innerLavaRadius) {
-                    // Inner zone: replace with lava
-                    this.level.setBlock(target, net.minecraft.world.level.block.Blocks.LAVA.defaultBlockState(),
-                            Block.UPDATE_CLIENTS);
-                } else {
-                    // Outer zone: destroy block and place fire on top
-                    this.level.setBlock(target, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),
-                            Block.UPDATE_CLIENTS);
-                    BlockPos above = target.above();
-                    BlockState aboveState = this.level.getBlockState(above);
-                    if (aboveState.isAir()) {
-                        this.level.setBlock(above, net.minecraft.world.level.block.Blocks.FIRE.defaultBlockState(),
-                                Block.UPDATE_CLIENTS);
-                    }
-                }
+            int radius = this.explosionShellRadius;
+            int stepResult = processExplosionCursor(radius);
+            if (stepResult > 0) {
+                processed++;
+            } else if (stepResult == 0) {
+                damageEntitiesForShell(radius);
+                spawnExplosionPulse(radius);
+                this.explosionShellRadius++;
+                resetExplosionCursor();
             }
-        }
-
-        // Periodic sub-explosions for visual/audio effect
-        if (this.explosionTick % 5 == 0) {
-            var random = this.level.getRandom();
-            double ox = center.getX() + (random.nextDouble() - 0.5) * currentRadius;
-            double oy = center.getY() + (random.nextDouble() - 0.5) * currentRadius * 0.5;
-            double oz = center.getZ() + (random.nextDouble() - 0.5) * currentRadius;
-            this.level.explode(null, ox, oy, oz, 8.0f, Level.ExplosionInteraction.BLOCK);
         }
 
         this.setChanged();
+    }
+
+    private int processExplosionCursor(int radius) {
+        if (radius == 0) {
+            processExplosionBlock(this.worldPosition, 0);
+            return 0;
+        }
+
+        if (this.explosionCursorY > radius) {
+            return 0;
+        }
+
+        int dx = this.explosionCursorX;
+        int dy = this.explosionCursorY;
+        int dz = this.explosionCursorZ;
+
+        advanceExplosionCursor(radius);
+
+        int distSq = dx * dx + dy * dy + dz * dz;
+        int outerSq = radius * radius;
+        int innerSq = (radius - 1) * (radius - 1);
+        if (distSq > outerSq || distSq <= innerSq) {
+            return -1;
+        }
+
+        processExplosionBlock(this.worldPosition.offset(dx, dy, dz), radius);
+        return 1;
+    }
+
+    private void advanceExplosionCursor(int radius) {
+        this.explosionCursorX++;
+        if (this.explosionCursorX > radius) {
+            this.explosionCursorX = -radius;
+            this.explosionCursorZ++;
+            if (this.explosionCursorZ > radius) {
+                this.explosionCursorZ = -radius;
+                this.explosionCursorY++;
+            }
+        }
+    }
+
+    private void resetExplosionCursor() {
+        this.explosionCursorX = -this.explosionShellRadius;
+        this.explosionCursorY = -this.explosionShellRadius;
+        this.explosionCursorZ = -this.explosionShellRadius;
+    }
+
+    private void processExplosionBlock(BlockPos target, int radius) {
+        if (this.level == null || !this.level.isLoaded(target) || !this.level.isInWorldBounds(target)) {
+            return;
+        }
+
+        BlockState targetState = this.level.getBlockState(target);
+        if (targetState.isAir() || targetState.getDestroySpeed(this.level, target) < 0) {
+            return;
+        }
+
+        int lavaRadius = Math.max(3, (int) (this.explosionRadius * 0.28));
+        if (radius <= lavaRadius) {
+            this.level.setBlock(target, net.minecraft.world.level.block.Blocks.LAVA.defaultBlockState(), Block.UPDATE_ALL);
+            return;
+        }
+
+        this.level.setBlock(target, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+
+        BlockPos above = target.above();
+        if (this.level.isLoaded(above) && this.level.getBlockState(above).isAir()) {
+            this.level.setBlock(above, net.minecraft.world.level.block.Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    private void damageEntitiesForShell(int radius) {
+        if (this.level == null || radius <= 0) {
+            return;
+        }
+
+        double shell = Math.min(radius + 2.0, this.explosionRadius);
+        var entities = this.level.getEntitiesOfClass(
+                net.minecraft.world.entity.LivingEntity.class,
+                new net.minecraft.world.phys.AABB(
+                        this.worldPosition.getX() - shell, this.worldPosition.getY() - shell, this.worldPosition.getZ() - shell,
+                        this.worldPosition.getX() + shell, this.worldPosition.getY() + shell, this.worldPosition.getZ() + shell));
+
+        for (var entity : entities) {
+            double dist = Math.sqrt(entity.distanceToSqr(this.worldPosition.getCenter()));
+            if (dist > shell) {
+                continue;
+            }
+
+            float damage = (float) Math.max(6.0, (this.explosionRadius - dist) * 1.8);
+            entity.hurt(this.level.damageSources().explosion(null), damage);
+            entity.setRemainingFireTicks(Math.max(entity.getRemainingFireTicks(), 200));
+        }
+    }
+
+    private void spawnExplosionPulse(int radius) {
+        if (this.level == null || radius <= 0) {
+            return;
+        }
+
+        if (radius == 1 || radius == this.explosionRadius || radius % 4 == 0) {
+            var random = this.level.getRandom();
+            double offsetScale = Math.max(2.0, radius * 0.35);
+            double ox = this.worldPosition.getX() + 0.5 + (random.nextDouble() - 0.5) * offsetScale;
+            double oy = this.worldPosition.getY() + 0.5 + (random.nextDouble() - 0.5) * offsetScale;
+            double oz = this.worldPosition.getZ() + 0.5 + (random.nextDouble() - 0.5) * offsetScale;
+            float power = Math.min(18.0f, 4.0f + radius * 0.12f);
+            this.level.explode(null, ox, oy, oz, power, Level.ExplosionInteraction.BLOCK);
+        }
+    }
+
+    private void finishExplosionWave() {
+        this.exploding = false;
+        this.explosionTick = 0;
+        this.explosionShellRadius = 0;
+        resetExplosionCursor();
     }
 
     private AENetworkedBlockEntity getConnectedNetworkNode() {
@@ -872,15 +919,13 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
      * Tries to extract the recipe's specific coolant fluid from the ME network.
      * Returns the cooling power applied this tick (heat units to subtract).
      * <p>
-     * If the recipe specifies a coolant fluid, only that fluid is used.
-     * Otherwise, tries water as a generic coolant.
+     * Prioritizes the intended coolant ladder without falling back to water.
      * <p>
      * Coolant effectiveness per tier:
      * <ul>
      * <li>Gelid Cryotheum (T1): 1 cooling/mB</li>
      * <li>Stable Coolant (T2): 4 cooling/mB</li>
      * <li>Temporal Fluid (T3): 8 cooling/mB</li>
-     * <li>Water (fallback): 1 cooling/mB</li>
      * </ul>
      */
     private int consumeCoolant(StellarSimulationRecipe recipe, IGrid grid) {
@@ -895,17 +940,15 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         AEFluidKey t3 = AEFluidKey.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("ufo:source_temporal_fluid")));
         AEFluidKey t2 = AEFluidKey.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("ufo:source_stable_coolant")));
         AEFluidKey t1 = AEFluidKey.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("ufo:source_gelid_cryotheum")));
-        AEFluidKey fallback = AEFluidKey.of(net.minecraft.world.level.material.Fluids.WATER);
-
         AEFluidKey[] toTry;
         if (this.fieldLevel == 3) {
-            toTry = new AEFluidKey[]{t3, t2, t1, fallback};
+            toTry = new AEFluidKey[]{t3, t2, t1};
         } else if (this.fieldLevel == 2) {
-            toTry = new AEFluidKey[]{t2, t3, t1, fallback};
+            toTry = new AEFluidKey[]{t2, t3, t1};
         } else if (this.fieldLevel == 1) {
-            toTry = new AEFluidKey[]{t1, t2, t3, fallback};
+            toTry = new AEFluidKey[]{t1, t2, t3};
         } else {
-            toTry = new AEFluidKey[]{fallback};
+            toTry = new AEFluidKey[0];
         }
 
         // Safe mode consumes 2.5x more coolant per tick
@@ -917,11 +960,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             if (coolantKey == null || coolantKey.getFluid() == net.minecraft.world.level.material.Fluids.EMPTY) continue;
             long extracted = storage.extract(coolantKey, effectiveCoolantPerTick, Actionable.MODULATE, src);
             if (extracted > 0) {
-                int efficiency = 1;
-                String path = BuiltInRegistries.FLUID.getKey(coolantKey.getFluid()).getPath();
-                if (path.contains("temporal")) efficiency = 8;
-                else if (path.contains("stable")) efficiency = 4;
-                else if (path.contains("gelid_cryotheum")) efficiency = 1;
+                int efficiency = getCoolantEfficiency(coolantKey.getFluid());
 
                 return (int) (extracted * efficiency / effectiveCoolantPerTick) * (coolingTierBonus() + 1);
             }
@@ -935,6 +974,16 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
      */
     private int coolingTierBonus() {
         return this.fieldLevel;
+    }
+
+    private int getCoolantEfficiency(Fluid fluid) {
+        if (fluid == ModFluids.SOURCE_TEMPORAL_FLUID.get() || fluid == ModFluids.FLOWING_TEMPORAL_FLUID.get()) {
+            return 8;
+        }
+        if (fluid == ModFluids.SOURCE_STABLE_COOLANT.get() || fluid == ModFluids.FLOWING_STABLE_COOLANT.get()) {
+            return 4;
+        }
+        return 1;
     }
 
     public ResourceLocation getActiveRecipeId() {

@@ -27,8 +27,8 @@ public class ModFluidTagProvider extends FluidTagsProvider {
                 ModFluids.FLOWING_TEMPORAL_FLUID.get()
         );
         tag(ModTags.Fluids.COOLANT_EXTREME).add(
-                ModFluids.SOURCE_GELID_CRYOTHEUM.get(),
-                ModFluids.FLOWING_GELID_CRYOTHEUM.get()
+                ModFluids.SOURCE_TEMPORAL_FLUID.get(),
+                ModFluids.FLOWING_TEMPORAL_FLUID.get()
         );
         tag(ModTags.Fluids.SYNTHETIC_FLUID).add(
                 ModFluids.SOURCE_UU_AMPLIFIER_FLUID.get(),
