@@ -41,7 +41,7 @@
     { "#": 2500000, "#t": "ae2:i", "id": "ufo:neutron_star_matter" }
   ],
   "fluid_outputs": [
-    { "#": 250000, "#t": "ae2:f", "id": "ufo:liquid_starlight" }
+    { "#": 250000, "#t": "ae2:f", "id": "ufo:source_liquid_starlight_fluid" }
   ],
   "energy": 1000000000,
   "time": 48000,

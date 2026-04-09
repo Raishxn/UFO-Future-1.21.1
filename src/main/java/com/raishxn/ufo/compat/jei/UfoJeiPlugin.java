@@ -17,6 +17,8 @@ import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
 import com.raishxn.ufo.recipe.QMFRecipe;
+import com.raishxn.ufo.recipe.UniversalMultiblockMachineKind;
+import com.raishxn.ufo.recipe.UniversalMultiblockRecipe;
 
 import net.pedroksl.ae2addonlib.recipes.IngredientStack;
 
@@ -42,6 +44,21 @@ public class UfoJeiPlugin implements IModPlugin {
         var jeiHelpers = registry.getJeiHelpers();
         registry.addRecipeCategories(new DimensionalMatterAssemblerRecipeCategory(jeiHelpers));
         registry.addRecipeCategories(new QmfRecipeCategory(jeiHelpers));
+        registry.addRecipeCategories(new UniversalMultiblockRecipeCategory(
+                jeiHelpers,
+                UniversalMultiblockMachineKind.QMF,
+                MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().asItem().getDefaultInstance(),
+                MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().getName()));
+        registry.addRecipeCategories(new UniversalMultiblockRecipeCategory(
+                jeiHelpers,
+                UniversalMultiblockMachineKind.QUANTUM_SLICER,
+                MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get().asItem().getDefaultInstance(),
+                MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get().getName()));
+        registry.addRecipeCategories(new UniversalMultiblockRecipeCategory(
+                jeiHelpers,
+                UniversalMultiblockMachineKind.QUANTUM_PROCESSOR_ASSEMBLER,
+                MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem().getDefaultInstance(),
+                MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().getName()));
         registry.addRecipeCategories(new StellarSimulationRecipeCategory(jeiHelpers));
     }
 
@@ -58,6 +75,18 @@ public class UfoJeiPlugin implements IModPlugin {
                 List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.QMF_TYPE.get()).stream()
                         .map(RecipeHolder::value)
                         .toList()));
+        var universalRecipes = List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.UNIVERSAL_MULTIBLOCK_TYPE.get()).stream()
+                .map(RecipeHolder::value)
+                .toList());
+        registration.addRecipes(
+                UniversalMultiblockRecipeCategory.QMF_RECIPE_TYPE,
+                universalRecipes.stream().filter(recipe -> recipe.getMachine() == UniversalMultiblockMachineKind.QMF).toList());
+        registration.addRecipes(
+                UniversalMultiblockRecipeCategory.QUANTUM_SLICER_RECIPE_TYPE,
+                universalRecipes.stream().filter(recipe -> recipe.getMachine() == UniversalMultiblockMachineKind.QUANTUM_SLICER).toList());
+        registration.addRecipes(
+                UniversalMultiblockRecipeCategory.QUANTUM_PROCESSOR_ASSEMBLER_RECIPE_TYPE,
+                universalRecipes.stream().filter(recipe -> recipe.getMachine() == UniversalMultiblockMachineKind.QUANTUM_PROCESSOR_ASSEMBLER).toList());
         registration.addRecipes(
                 StellarSimulationRecipeCategory.RECIPE_TYPE,
                 List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.STELLAR_SIMULATION_TYPE.get()).stream()
@@ -75,6 +104,14 @@ public class UfoJeiPlugin implements IModPlugin {
 
         var qmfController = MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().asItem().getDefaultInstance();
         registration.addRecipeCatalyst(qmfController, QmfRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(qmfController, DimensionalMatterAssemblerRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(qmfController, UniversalMultiblockRecipeCategory.QMF_RECIPE_TYPE);
+
+        var quantumSlicerController = MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get().asItem().getDefaultInstance();
+        registration.addRecipeCatalyst(quantumSlicerController, UniversalMultiblockRecipeCategory.QUANTUM_SLICER_RECIPE_TYPE);
+
+        var quantumProcessorAssemblerController = MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem().getDefaultInstance();
+        registration.addRecipeCatalyst(quantumProcessorAssemblerController, UniversalMultiblockRecipeCategory.QUANTUM_PROCESSOR_ASSEMBLER_RECIPE_TYPE);
     }
 
     public static Ingredient stackOf(IngredientStack.Item stack) {

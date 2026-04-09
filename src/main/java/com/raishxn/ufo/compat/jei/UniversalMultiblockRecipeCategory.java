@@ -1,15 +1,15 @@
 package com.raishxn.ufo.compat.jei;
 
 import com.raishxn.ufo.UfoMod;
-import com.raishxn.ufo.block.MultiblockBlocks;
-import com.raishxn.ufo.recipe.QMFRecipe;
+import com.raishxn.ufo.recipe.UniversalMultiblockMachineKind;
+import com.raishxn.ufo.recipe.UniversalMultiblockRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
@@ -18,40 +18,61 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
-    public static final RecipeType<QMFRecipe> RECIPE_TYPE =
-            RecipeType.create(UfoMod.MOD_ID, "qmf_recipe", QMFRecipe.class);
+public class UniversalMultiblockRecipeCategory implements IRecipeCategory<UniversalMultiblockRecipe> {
+    public static final RecipeType<UniversalMultiblockRecipe> QMF_RECIPE_TYPE =
+            RecipeType.create(UfoMod.MOD_ID, "universal_multiblock_qmf", UniversalMultiblockRecipe.class);
+    public static final RecipeType<UniversalMultiblockRecipe> QUANTUM_SLICER_RECIPE_TYPE =
+            RecipeType.create(UfoMod.MOD_ID, "universal_multiblock_quantum_slicer", UniversalMultiblockRecipe.class);
+    public static final RecipeType<UniversalMultiblockRecipe> QUANTUM_PROCESSOR_ASSEMBLER_RECIPE_TYPE =
+            RecipeType.create(UfoMod.MOD_ID, "universal_multiblock_quantum_processor_assembler", UniversalMultiblockRecipe.class);
 
     private static final ResourceLocation BACKGROUND = UfoMod.id("textures/guis/dimensional_matter_assembler_jei_ui.png");
-
-    private final IDrawable icon;
-    private final IDrawable background;
-    private final IDrawableAnimated progress;
 
     private static final int ENERGY_BAR_X = 9;
     private static final int ENERGY_BAR_Y = 81;
     private static final int ENERGY_BAR_W = 91;
     private static final int ENERGY_BAR_H = 10;
 
-    public QmfRecipeCategory(IJeiHelpers helpers) {
+    private final UniversalMultiblockMachineKind machineKind;
+    private final Component title;
+    private final IDrawable icon;
+    private final IDrawable background;
+    private final IDrawableAnimated progress;
+
+    public UniversalMultiblockRecipeCategory(IJeiHelpers helpers,
+                                             UniversalMultiblockMachineKind machineKind,
+                                             ItemStack iconStack,
+                                             Component title) {
+        this.machineKind = machineKind;
+        this.title = title;
+
         IGuiHelper guiHelper = helpers.getGuiHelper();
         this.background = guiHelper.createDrawable(BACKGROUND, 0, 0, 175, 98);
-        this.icon = guiHelper.createDrawableItemStack(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().asItem().getDefaultInstance());
+        this.icon = guiHelper.createDrawableItemStack(iconStack);
         IDrawableStatic progressDrawable = guiHelper.createDrawable(BACKGROUND, 234, 0, 20, 11);
         this.progress = guiHelper.createAnimatedDrawable(progressDrawable, 60, IDrawableAnimated.StartDirection.LEFT, false);
     }
 
+    public static RecipeType<UniversalMultiblockRecipe> recipeTypeFor(UniversalMultiblockMachineKind machineKind) {
+        return switch (machineKind) {
+            case QMF -> QMF_RECIPE_TYPE;
+            case QUANTUM_SLICER -> QUANTUM_SLICER_RECIPE_TYPE;
+            case QUANTUM_PROCESSOR_ASSEMBLER -> QUANTUM_PROCESSOR_ASSEMBLER_RECIPE_TYPE;
+        };
+    }
+
     @Override
-    public RecipeType<QMFRecipe> getRecipeType() {
-        return RECIPE_TYPE;
+    public RecipeType<UniversalMultiblockRecipe> getRecipeType() {
+        return recipeTypeFor(this.machineKind);
     }
 
     @Override
     public Component getTitle() {
-        return MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().getName();
+        return this.title;
     }
 
     @Override
@@ -65,14 +86,14 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, QMFRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, UniversalMultiblockRecipe recipe, IFocusGroup focuses) {
         var itemInputs = recipe.getItemInputs();
         for (int i = 0; i < itemInputs.size(); i++) {
             var ingredient = itemInputs.get(i);
             int col = i % 3;
             int row = i / 3;
             builder.addInputSlot(47 + (col * 18), 21 + (row * 18))
-                    .addIngredients(UfoJeiPlugin.stackOfQmf(ingredient))
+                    .addIngredients(ingredient.ingredient())
                     .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Required: " + formatAmount(ingredient.amount()) + "x")));
         }
 
@@ -86,14 +107,24 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
                     .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Required: " + formatAmount(ingredient.amount()) + " mB")));
         }
 
-        ItemStack output = recipe.getResultItem();
-        builder.addOutputSlot(132, 21)
-                .addItemStack(output.copy())
-                .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Output: " + formatAmount(output.getCount()) + "x")));
+        if (!recipe.getItemOutput().isEmpty()) {
+            ItemStack itemOutput = recipe.getItemOutput().copy();
+            builder.addOutputSlot(132, 21)
+                    .addItemStack(itemOutput)
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Output: " + formatAmount(itemOutput.getCount()) + "x")));
+        }
+
+        if (!recipe.getFluidOutput().isEmpty() && recipe.getFluidOutputAmount() > 0) {
+            FluidStack fluidOutput = recipe.getFluidOutput().copyWithAmount((int) recipe.getFluidOutputAmount());
+            builder.addOutputSlot(148, 76)
+                    .setFluidRenderer(16000, false, 14, 17)
+                    .addIngredient(NeoForgeTypes.FLUID_STACK, fluidOutput)
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Output: " + formatAmount(recipe.getFluidOutputAmount()) + " mB")));
+        }
     }
 
     @Override
-    public void draw(QMFRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(UniversalMultiblockRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         this.background.draw(guiGraphics);
         this.progress.draw(guiGraphics, 105, 42);
 
@@ -116,7 +147,7 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
     }
 
     @Override
-    public List<Component> getTooltipStrings(QMFRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+    public List<Component> getTooltipStrings(UniversalMultiblockRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         if (mouseX >= ENERGY_BAR_X && mouseX <= ENERGY_BAR_X + ENERGY_BAR_W
                 && mouseY >= ENERGY_BAR_Y && mouseY <= ENERGY_BAR_Y + ENERGY_BAR_H) {
             return List.of(

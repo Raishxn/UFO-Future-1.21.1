@@ -183,7 +183,7 @@ public class ModRecipeProvider extends RecipeProvider {
         DMARecipeBuilder.create("dma/pulsar_dust").output(ModItems.PULSAR_FRAGMENT_DUST.get()).inputItem(ModItems.PULSAR_FRAGMENT_INGOT.get()).inputItem(AEBlocks.TINY_TNT).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 20).energy(20000).time(100).save(c);
         DMARecipeBuilder.create("dma/pulsar_fluid").outputFluid(ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID.get(), 1000, 1.0F).inputItem(ModItems.PULSAR_FRAGMENT_INGOT.get(), 4).inputItem(Items.LIGHTNING_ROD, 4).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 200).energy(80000).time(180).save(c);
         DMARecipeBuilder.create("dma/dust_blizz").output(ModItems.DUST_BLIZZ.get(), 4).inputItem(Items.SNOWBALL, 4).inputItem(Items.REDSTONE).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 50).energy(20000).time(80).save(c);
-        DMARecipeBuilder.create("dma/dust_cryotheum").output(ModItems.DUST_CRYOTHEUM.get(), 2).inputItem(ModItems.DUST_BLIZZ.get(), 2).inputItem(Items.REDSTONE, 2).inputItem(Items.SNOWBALL).inputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 100).energy(40000).time(100).save(c);
+        DMARecipeBuilder.create("dma/dust_cryotheum").output(ModItems.DUST_CRYOTHEUM.get(), 2).inputItem(ModItems.DUST_BLIZZ.get(), 2).inputItem(Items.REDSTONE, 2).inputItem(Items.SNOWBALL).inputFluid(Fluids.WATER, 100).energy(40000).time(100).save(c);
         
         this.buildRodRecipe(c, ModItems.WHITE_DWARF_FRAGMENT_ROD, ModItems.WHITE_DWARF_FRAGMENT_INGOT, 10000, 60);
         this.buildRodRecipe(c, ModItems.NEUTRON_STAR_FRAGMENT_ROD, ModItems.NEUTRON_STAR_FRAGMENT_INGOT, 20000, 80);
@@ -218,7 +218,7 @@ public class ModRecipeProvider extends RecipeProvider {
         this.createFluidRecipe(c, ModFluids.SOURCE_TEMPORAL_FLUID, ModItems.QUANTUM_ANOMALY, ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID, 2000000);
         this.createFluidRecipe(c, ModFluids.SOURCE_SPATIAL_FLUID, ModItems.NUCLEAR_STAR, ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID, 6000000);
         DMARecipeBuilder.create("dma/gelid_cryotheum").outputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 10000, 1.0F).inputItem(ModItems.DUST_CRYOTHEUM.get(), 4).inputFluid(Fluids.WATER, 2000).energy(500000).time(200).save(c);
-        DMARecipeBuilder.create("dma/stable_coolant").outputFluid(ModFluids.SOURCE_STABLE_COOLANT.get(), 10000, 1.0F).inputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 10000).inputItem(Items.BLUE_ICE, 16).inputItem(ModItems.OBSIDIAN_MATRIX.get()).energy(3000000).time(600).save(c);
+        DMARecipeBuilder.create("dma/stable_coolant").outputFluid(ModFluids.SOURCE_STABLE_COOLANT.get(), 10000, 1.0F).inputFluid(Fluids.WATER, 10000).inputItem(Items.BLUE_ICE, 16).inputItem(ModItems.OBSIDIAN_MATRIX.get()).energy(3000000).time(600).save(c);
         DMARecipeBuilder.create("dma/primordial_matter_liquid").outputFluid(ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID.get(), 5000, 1.0F).inputItem(ModItems.QUANTUM_ANOMALY.get()).inputFluid(ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID.get(), 8000).energy(3000000).time(700).save(c);
         DMARecipeBuilder.create("dma/liquid_starlight").outputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 10000, 1.0F).inputItem(ModItems.OBSIDIAN_MATRIX.get(), 4).inputItem(Items.NETHER_STAR, 16).inputFluid(ModFluids.SOURCE_UU_AMPLIFIER_FLUID.get(), 100).energy(4000000).time(1000).save(c);
         DMARecipeBuilder.create("dma/raw_star_matter_plasma").outputFluid(ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID.get(), 8000, 1.0F).inputItem(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get(), 4).inputItem(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get(), 2).inputItem(ModItems.PULSAR_FRAGMENT_DUST.get(), 2).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 1000).energy(2500000).time(600).save(c);
@@ -476,24 +476,13 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
     private void buildUniversalMultiblockRecipes(RecipeOutput c) {
-        UniversalMultiblockRecipeBuilder.create("universal/quantum_slicer/printed_dimensional_processor", UniversalMultiblockMachineKind.QUANTUM_SLICER)
-                .inputItem(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get(), 2)
-                .inputItem(ModItems.DIMENSIONAL_PROCESSOR_PRESS.get(), 1)
-                .inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 250)
-                .outputItem(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get(), 2)
-                .energy(180000)
-                .time(180)
-                .requiredTier(1)
-                .save(c);
-
         UniversalMultiblockRecipeBuilder.create("universal/quantum_processor_assembler/dimensional_processor", UniversalMultiblockMachineKind.QUANTUM_PROCESSOR_ASSEMBLER)
-                .inputItem(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get(), 2)
-                .inputItem(AEItems.SILICON_PRINT, 2)
-                .inputItem(AEItems.FLUIX_DUST, 2)
-                .inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 400)
-                .outputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 2)
-                .energy(260000)
-                .time(220)
+                .inputItem(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get(), 64)
+                .inputItem(AEItems.SILICON_PRINT, 64)
+                .inputItem(AEItems.FLUIX_DUST, 128)
+                .outputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 64)
+                .energy(12000000)
+                .time(1200)
                 .requiredTier(1)
                 .save(c);
 

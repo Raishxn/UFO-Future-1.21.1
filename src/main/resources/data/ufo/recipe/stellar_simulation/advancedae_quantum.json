@@ -2,7 +2,7 @@
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
-      "modid": "advancedae"
+      "modid": "advanced_ae"
     }
   ],
   "type": "ufo:stellar_simulation",
@@ -11,7 +11,7 @@
     {
       "amount": 16,
       "ingredient": {
-        "item": "advancedae:quantum_infused_dust"
+        "item": "advanced_ae:quantum_infused_dust"
       }
     }
   ],
@@ -20,7 +20,7 @@
     {
       "#": 4,
       "#t": "ae2:i",
-      "id": "advancedae:quantum_alloy"
+      "id": "advanced_ae:quantum_alloy"
     }
   ],
   "fluid_outputs": [],

@@ -5,7 +5,7 @@
     {
       "amount": 10000,
       "ingredient": {
-        "fluid": "ufo:source_gelid_cryotheum"
+        "fluid": "minecraft:water"
       }
     }
   ],

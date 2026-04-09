@@ -2,14 +2,20 @@ package com.raishxn.ufo.block.entity;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
+import appeng.api.crafting.IPatternDetails;
+import appeng.api.implementations.blockentities.ICraftingMachine;
+import appeng.api.implementations.blockentities.PatternContainerGroup;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStorageService;
+import appeng.api.stacks.AEKey;
 import appeng.api.storage.MEStorage;
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.GenericStack;
+import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
 import com.raishxn.ufo.api.multiblock.MultiblockTierScaling;
 import com.raishxn.ufo.block.entity.processing.MultiblockProcessingRecipe;
@@ -19,6 +25,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,9 +34,11 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public abstract class AbstractParallelMultiblockControllerBE extends AbstractSimpleMultiblockControllerBE {
+public abstract class AbstractParallelMultiblockControllerBE extends AbstractSimpleMultiblockControllerBE implements ICraftingMachine {
     protected static final int MAX_PARALLEL_THREADS = 8;
     protected final List<ParallelProcessState> processStates = new ArrayList<>();
 
@@ -52,7 +61,6 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         }
 
         List<MultiblockProcessingRecipe> availableRecipes = getAvailableRecipes();
-        bindProcessStates(availableRecipes);
 
         AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
         if (nodeBE == null || nodeBE.getActionableNode() == null) {
@@ -73,6 +81,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         IStorageService storageService = grid.getStorageService();
         MEStorage inventory = storageService.getInventory();
         IActionSource src = IActionSource.ofMachine(nodeBE);
+        refreshProcessStates(availableRecipes, inventory, src);
 
         boolean anyRunning = false;
         int hottestMaxProgress = 0;
@@ -124,18 +133,45 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.setChanged();
     }
 
-    private void bindProcessStates(List<MultiblockProcessingRecipe> availableRecipes) {
-        for (int i = 0; i < this.processStates.size(); i++) {
-            ParallelProcessState state = this.processStates.get(i);
-            if (i < availableRecipes.size()) {
-                ResourceLocation targetId = availableRecipes.get(i).id();
-                if (!targetId.equals(state.getRecipeId())) {
-                    state.clear();
-                    state.setRecipeId(targetId);
-                }
-            } else {
-                state.clear();
+    private void refreshProcessStates(List<MultiblockProcessingRecipe> availableRecipes, MEStorage inventory, IActionSource src) {
+        Set<ResourceLocation> alreadyAssigned = new HashSet<>();
+
+        for (ParallelProcessState state : this.processStates) {
+            if (!state.isActive()) {
+                continue;
             }
+
+            MultiblockProcessingRecipe recipe = findRecipe(availableRecipes, state.getRecipeId());
+            if (recipe == null) {
+                state.clear();
+                continue;
+            }
+
+            state.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size());
+            if (state.isPatternPushed() || state.hasBufferedWork()) {
+                alreadyAssigned.add(recipe.id());
+                continue;
+            }
+
+            state.clear();
+        }
+
+        for (MultiblockProcessingRecipe recipe : availableRecipes) {
+            if (alreadyAssigned.contains(recipe.id())
+                    || !MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())
+                    || !canAutoStartRecipe(recipe, inventory, src)) {
+                continue;
+            }
+
+            ParallelProcessState freeState = findInactiveState();
+            if (freeState == null) {
+                return;
+            }
+
+            freeState.setRecipeId(recipe.id());
+            freeState.setPatternPushed(false);
+            freeState.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size());
+            alreadyAssigned.add(recipe.id());
         }
     }
 
@@ -273,6 +309,201 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
         }
         return null;
+    }
+
+    @Override
+    public PatternContainerGroup getCraftingMachineInfo() {
+        return new PatternContainerGroup(
+                AEItemKey.of(this.getBlockState().getBlock().asItem()),
+                Component.translatable(getControllerTranslationKey()),
+                List.of(Component.literal("MK" + this.machineTier)));
+    }
+
+    @Override
+    public boolean pushPattern(IPatternDetails patternDetails, KeyCounter[] inputs, net.minecraft.core.Direction ejectionDirection) {
+        if (!this.assembled) {
+            return false;
+        }
+
+        MultiblockProcessingRecipe recipe = resolvePatternRecipe(patternDetails);
+        if (recipe == null || !MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())) {
+            return false;
+        }
+
+        ParallelProcessState state = findInactiveState();
+        if (state == null || !patternMatchesRecipe(patternDetails, inputs, recipe)) {
+            return false;
+        }
+
+        state.clear();
+        state.setRecipeId(recipe.id());
+        state.setPatternPushed(true);
+        state.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size());
+        for (int i = 0; i < recipe.itemInputs().size(); i++) {
+            state.getItemBuffers()[i] = recipe.itemInputs().get(i).amount();
+        }
+        for (int i = 0; i < recipe.fluidInputs().size(); i++) {
+            state.getFluidBuffers()[i] = recipe.fluidInputs().get(i).amount();
+        }
+        state.setEnergyBuffer(0L);
+        state.setProgress(0);
+
+        for (KeyCounter input : inputs) {
+            input.clear();
+        }
+
+        this.setChanged();
+        return true;
+    }
+
+    @Override
+    public boolean acceptsPlans() {
+        return this.assembled && findInactiveState() != null;
+    }
+
+    private boolean canAutoStartRecipe(MultiblockProcessingRecipe recipe, MEStorage inventory, IActionSource src) {
+        for (var requirement : recipe.itemInputs()) {
+            long remaining = requirement.amount();
+            for (ItemStack match : requirement.ingredient().getItems()) {
+                var key = AEItemKey.of(match);
+                if (key == null) {
+                    continue;
+                }
+                remaining -= inventory.extract(key, remaining, Actionable.SIMULATE, src);
+                if (remaining <= 0L) {
+                    break;
+                }
+            }
+            if (remaining > 0L) {
+                return false;
+            }
+        }
+
+        for (var requirement : recipe.fluidInputs()) {
+            long extracted = inventory.extract(AEFluidKey.of(requirement.fluid().getFluid()), requirement.amount(), Actionable.SIMULATE, src);
+            if (extracted < requirement.amount()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private ParallelProcessState findInactiveState() {
+        for (ParallelProcessState state : this.processStates) {
+            if (!state.isActive()) {
+                return state;
+            }
+        }
+        return null;
+    }
+
+    private MultiblockProcessingRecipe resolvePatternRecipe(IPatternDetails patternDetails) {
+        for (MultiblockProcessingRecipe recipe : getAvailableRecipes()) {
+            if (patternMatchesOutputs(patternDetails.getOutputs(), recipe.outputs())) {
+                return recipe;
+            }
+        }
+        return null;
+    }
+
+    private boolean patternMatchesRecipe(IPatternDetails patternDetails, KeyCounter[] inputs, MultiblockProcessingRecipe recipe) {
+        if (!patternMatchesOutputs(patternDetails.getOutputs(), recipe.outputs())) {
+            return false;
+        }
+
+        List<PatternStack> stacks = flattenInputs(inputs);
+        if (stacks.size() != recipe.itemInputs().size() + recipe.fluidInputs().size()) {
+            return false;
+        }
+
+        List<PatternStack> remaining = new ArrayList<>(stacks);
+        for (var requirement : recipe.itemInputs()) {
+            if (!removeMatchingItemRequirement(remaining, requirement)) {
+                return false;
+            }
+        }
+        for (var requirement : recipe.fluidInputs()) {
+            if (!removeMatchingFluidRequirement(remaining, requirement)) {
+                return false;
+            }
+        }
+        return remaining.isEmpty();
+    }
+
+    private boolean patternMatchesOutputs(List<GenericStack> outputs, List<MultiblockProcessingRecipe.OutputStack> recipeOutputs) {
+        if (outputs.size() != recipeOutputs.size()) {
+            return false;
+        }
+
+        List<PatternStack> remaining = new ArrayList<>();
+        for (GenericStack output : outputs) {
+            remaining.add(new PatternStack(output.what(), output.amount()));
+        }
+
+        for (var output : recipeOutputs) {
+            AEKey expectedKey = !output.item().isEmpty()
+                    ? AEItemKey.of(output.item())
+                    : AEFluidKey.of(output.fluid().getFluid());
+            if (expectedKey == null) {
+                return false;
+            }
+
+            boolean matched = false;
+            for (int i = 0; i < remaining.size(); i++) {
+                PatternStack candidate = remaining.get(i);
+                if (candidate.key.equals(expectedKey) && candidate.amount == output.amount()) {
+                    remaining.remove(i);
+                    matched = true;
+                    break;
+                }
+            }
+
+            if (!matched) {
+                return false;
+            }
+        }
+
+        return remaining.isEmpty();
+    }
+
+    private List<PatternStack> flattenInputs(KeyCounter[] inputs) {
+        List<PatternStack> stacks = new ArrayList<>();
+        for (KeyCounter counter : inputs) {
+            for (var entry : counter) {
+                stacks.add(new PatternStack(entry.getKey(), entry.getLongValue()));
+            }
+        }
+        return stacks;
+    }
+
+    private boolean removeMatchingItemRequirement(List<PatternStack> remaining, MultiblockProcessingRecipe.ItemRequirement requirement) {
+        for (int i = 0; i < remaining.size(); i++) {
+            PatternStack stack = remaining.get(i);
+            if (stack.key instanceof AEItemKey itemKey
+                    && stack.amount >= requirement.amount()
+                    && requirement.ingredient().test(itemKey.toStack((int) stack.amount))) {
+                remaining.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean removeMatchingFluidRequirement(List<PatternStack> remaining, MultiblockProcessingRecipe.FluidRequirement requirement) {
+        for (int i = 0; i < remaining.size(); i++) {
+            PatternStack stack = remaining.get(i);
+            if (stack.key instanceof AEFluidKey fluidKey
+                    && stack.amount == requirement.amount()
+                    && fluidKey.getFluid() == requirement.fluid().getFluid()) {
+                remaining.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private record PatternStack(AEKey key, long amount) {
     }
 
     @Override

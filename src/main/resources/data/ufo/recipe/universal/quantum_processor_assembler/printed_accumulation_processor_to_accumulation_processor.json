@@ -1,0 +1,38 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "megacells"
+    }
+  ],
+  "type": "ufo:universal_multiblock",
+  "machine": "quantum_processor_assembler",
+  "recipe_name": "universal/quantum_processor_assembler/printed_accumulation_processor_to_accumulation_processor",
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "megacells:printed_accumulation_processor"
+      },
+      "amount": 64
+    },
+    {
+      "ingredient": {
+        "item": "ae2:printed_silicon"
+      },
+      "amount": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:redstone"
+      },
+      "amount": 64
+    }
+  ],
+  "item_output": {
+    "id": "megacells:accumulation_processor",
+    "count": 64
+  },
+  "energy": 6000000,
+  "time": 800,
+  "required_tier": 1
+}

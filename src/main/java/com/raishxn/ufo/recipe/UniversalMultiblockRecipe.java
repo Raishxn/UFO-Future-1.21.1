@@ -175,7 +175,11 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                     buf.writeUtf(recipe.recipeName);
                     ItemRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.itemInputs);
                     FluidRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.fluidInputs);
-                    ItemStack.STREAM_CODEC.encode(buf, recipe.itemOutput);
+                    boolean hasItemOutput = !recipe.itemOutput.isEmpty();
+                    buf.writeBoolean(hasItemOutput);
+                    if (hasItemOutput) {
+                        ItemStack.STREAM_CODEC.encode(buf, recipe.itemOutput);
+                    }
                     boolean hasFluidOutput = !recipe.fluidOutput.isEmpty() && recipe.fluidOutputAmount > 0;
                     buf.writeBoolean(hasFluidOutput);
                     if (hasFluidOutput) {
@@ -191,7 +195,8 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                     var recipeName = buf.readUtf();
                     var itemInputs = ItemRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
                     var fluidInputs = FluidRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
-                    var itemOutput = ItemStack.STREAM_CODEC.decode(buf);
+                    boolean hasItemOutput = buf.readBoolean();
+                    var itemOutput = hasItemOutput ? ItemStack.STREAM_CODEC.decode(buf) : ItemStack.EMPTY;
                     boolean hasFluidOutput = buf.readBoolean();
                     var fluidOutput = hasFluidOutput ? FluidStack.STREAM_CODEC.decode(buf) : FluidStack.EMPTY;
                     long fluidOutputAmount = hasFluidOutput ? buf.readLong() : 0L;

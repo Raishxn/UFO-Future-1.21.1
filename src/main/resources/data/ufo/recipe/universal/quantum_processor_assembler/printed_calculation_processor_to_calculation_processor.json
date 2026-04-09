@@ -1,0 +1,32 @@
+{
+  "type": "ufo:universal_multiblock",
+  "machine": "quantum_processor_assembler",
+  "recipe_name": "universal/quantum_processor_assembler/printed_calculation_processor_to_calculation_processor",
+  "item_inputs": [
+    {
+      "ingredient": {
+        "item": "ae2:printed_calculation_processor"
+      },
+      "amount": 64
+    },
+    {
+      "ingredient": {
+        "item": "ae2:printed_silicon"
+      },
+      "amount": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:redstone"
+      },
+      "amount": 64
+    }
+  ],
+  "item_output": {
+    "id": "ae2:calculation_processor",
+    "count": 64
+  },
+  "energy": 6000000,
+  "time": 800,
+  "required_tier": 1
+}

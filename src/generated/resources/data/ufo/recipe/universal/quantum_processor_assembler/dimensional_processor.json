@@ -1,40 +1,31 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 260000,
-  "fluid_inputs": [
-    {
-      "amount": 400,
-      "fluid": {
-        "amount": 1,
-        "id": "ufo:source_liquid_starlight_fluid"
-      }
-    }
-  ],
+  "energy": 12000000,
   "item_inputs": [
     {
-      "amount": 2,
+      "amount": 64,
       "ingredient": {
         "item": "ufo:printed_dimensional_processor"
       }
     },
     {
-      "amount": 2,
+      "amount": 64,
       "ingredient": {
         "item": "ae2:printed_silicon"
       }
     },
     {
-      "amount": 2,
+      "amount": 128,
       "ingredient": {
         "item": "ae2:fluix_dust"
       }
     }
   ],
   "item_output": {
-    "count": 2,
+    "count": 64,
     "id": "ufo:dimensional_processor"
   },
   "machine": "quantum_processor_assembler",
   "recipe_name": "universal/quantum_processor_assembler/dimensional_processor",
-  "time": 220
+  "time": 1200
 }

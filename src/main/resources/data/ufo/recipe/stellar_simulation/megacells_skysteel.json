@@ -34,7 +34,7 @@
   "time": 800,
   "cooling_level": 2,
   "field_tier": 1,
-  "fuel_fluid": "ufo:liquid_starlight",
+  "fuel_fluid": "ufo:source_liquid_starlight_fluid",
   "fuel_amount": 5000,
   "coolant_fluid": "minecraft:water",
   "coolant_amount": 10000

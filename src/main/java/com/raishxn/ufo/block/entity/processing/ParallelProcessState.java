@@ -10,6 +10,7 @@ public class ParallelProcessState {
     private long[] itemBuffers = new long[0];
     private long[] fluidBuffers = new long[0];
     private int progress;
+    private boolean patternPushed;
 
     public ResourceLocation getRecipeId() {
         return recipeId;
@@ -29,6 +30,7 @@ public class ParallelProcessState {
         this.itemBuffers = new long[0];
         this.fluidBuffers = new long[0];
         this.progress = 0;
+        this.patternPushed = false;
     }
 
     public void resizeBuffers(int itemSize, int fluidSize) {
@@ -69,6 +71,34 @@ public class ParallelProcessState {
         this.progress = progress;
     }
 
+    public boolean isPatternPushed() {
+        return patternPushed;
+    }
+
+    public void setPatternPushed(boolean patternPushed) {
+        this.patternPushed = patternPushed;
+    }
+
+    public boolean hasBufferedWork() {
+        if (this.energyBuffer > 0L || this.progress > 0) {
+            return true;
+        }
+
+        for (long amount : this.itemBuffers) {
+            if (amount > 0L) {
+                return true;
+            }
+        }
+
+        for (long amount : this.fluidBuffers) {
+            if (amount > 0L) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public CompoundTag save(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
         if (this.recipeId != null) {
@@ -78,6 +108,7 @@ public class ParallelProcessState {
         tag.putLongArray("itemBuffers", this.itemBuffers);
         tag.putLongArray("fluidBuffers", this.fluidBuffers);
         tag.putInt("progress", this.progress);
+        tag.putBoolean("patternPushed", this.patternPushed);
         return tag;
     }
 
@@ -87,5 +118,6 @@ public class ParallelProcessState {
         this.itemBuffers = tag.getLongArray("itemBuffers");
         this.fluidBuffers = tag.getLongArray("fluidBuffers");
         this.progress = tag.getInt("progress");
+        this.patternPushed = tag.getBoolean("patternPushed");
     }
 }

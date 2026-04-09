@@ -19,7 +19,7 @@
     {
       "amount": 1000,
       "ingredient": {
-        "fluid": "ufo:transcending_matter_fluid"
+        "fluid": "ufo:transcending_matter"
       }
     }
   ],
