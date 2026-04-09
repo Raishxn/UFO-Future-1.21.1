@@ -4,9 +4,13 @@ import appeng.api.stacks.AEItemKey;
 import appeng.blockentity.crafting.PatternProviderBlockEntity;
 import appeng.block.crafting.PatternProviderBlock;
 import appeng.helpers.patternprovider.PatternProviderLogic;
+import appeng.menu.ISubMenu;
+import appeng.menu.MenuOpener;
+import appeng.menu.locator.MenuHostLocator;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.init.ModBlockEntities;
+import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.screen.QuantumPatternHatchMenu;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
@@ -72,6 +76,16 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     @Override
     public @NotNull net.minecraft.network.chat.Component getDisplayName() {
         return net.minecraft.network.chat.Component.translatable("block.ufo.quantum_pattern_hatch");
+    }
+
+    @Override
+    public void openMenu(Player player, MenuHostLocator locator) {
+        MenuOpener.open(ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), player, locator);
+    }
+
+    @Override
+    public void returnToMainMenu(Player player, ISubMenu subMenu) {
+        MenuOpener.returnTo(ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), player, subMenu.getLocator());
     }
 
     @Nullable

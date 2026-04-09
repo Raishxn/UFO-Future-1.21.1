@@ -5,7 +5,7 @@
     "texture": "guis/quantum_pattern_hatch.png",
     "textureWidth": 512,
     "textureHeight": 512,
-    "srcRect": [0, 0, 176, 294]
+    "srcRect": [0, 0, 176, 312]
   },
   "slots": {
     "ENCODED_PATTERN": {
@@ -15,8 +15,8 @@
     },
     "STORAGE": {
       "left": 8,
-      "top": 176,
-      "grid": "BREAK_AFTER_9COLS"
+      "top": 194,
+      "grid": "HORIZONTAL"
     },
     "UPGRADE": {
       "right": 0,
@@ -40,7 +40,7 @@
       },
       "position": {
         "left": 8,
-        "top": 20
+        "top": 27
       }
     },
     "interface_stored_items": {
@@ -49,7 +49,7 @@
       },
       "position": {
         "left": 8,
-        "top": 165
+        "top": 183
       }
     }
   },
