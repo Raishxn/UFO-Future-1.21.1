@@ -30,7 +30,7 @@ public class QuantumSlicerPatternFactory {
                         "CCCCC"
                 })
                 .layer(new String[]{
-                        "CGHGC",
+                        "CPHGC",
                         "GFFFG",
                         "GFFFG",
                         "GFFFG",
@@ -51,6 +51,7 @@ public class QuantumSlicerPatternFactory {
                         "ACCCA"
                 })
                 .where('H', (state, level, pos) -> state.is(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get()))
+                .where('P', (state, level, pos) -> state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()), QuantumPatternPredicates.patternHatchName())
                 .where('C', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasingOrHatch(state), QuantumPatternPredicates.casingName())
                 .where('F', (state, level, pos) -> QuantumPatternPredicates.isAnyFieldGenerator(state), QuantumPatternPredicates.fieldName())
                 .where('G', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state), QuantumPatternPredicates.glassName())

@@ -83,6 +83,21 @@ public class ModBlockEntities {
                     com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get()
             ).build(null));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternHatchBE>> QUANTUM_PATTERN_HATCH_BE =
+            BLOCK_ENTITIES.register("quantum_pattern_hatch", () -> {
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.QuantumPatternHatchBE(pos, state),
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()
+                ).build(null);
+                ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()).setBlockEntity(
+                        (Class) appeng.blockentity.crafting.PatternProviderBlockEntity.class,
+                        (BlockEntityType) type,
+                        null,
+                        null
+                );
+                return type;
+            });
+
     // ═══════════════════════════════════════════════════════════
     //  STELLAR NEXUS — Block Entities
     // ═══════════════════════════════════════════════════════════

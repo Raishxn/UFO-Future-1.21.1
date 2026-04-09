@@ -199,6 +199,10 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get(), new Item.Properties(),
                      ChatFormatting.LIGHT_PURPLE, ChatFormatting.AQUA, ChatFormatting.BLUE, ChatFormatting.WHITE));
 
+     public static final DeferredItem<Item> QUANTUM_PATTERN_HATCH = ITEMS.register("quantum_pattern_hatch",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.DARK_AQUA, ChatFormatting.BLUE));
+
      // ═══════════════════════════════════════════════════════════
      //  STELLAR NEXUS — Block Items
      // ═══════════════════════════════════════════════════════════

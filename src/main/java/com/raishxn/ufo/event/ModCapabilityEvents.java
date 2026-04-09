@@ -31,6 +31,11 @@ public class ModCapabilityEvents {
                 (be, context) -> (appeng.api.networking.IInWorldGridNodeHost) be
         );
         event.registerBlockEntity(
+                appeng.api.AECapabilities.IN_WORLD_GRID_NODE_HOST,
+                ModBlockEntities.QUANTUM_PATTERN_HATCH_BE.get(),
+                (be, context) -> (appeng.api.networking.IInWorldGridNodeHost) be
+        );
+        event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 ModBlockEntities.DIMENSIONAL_MATTER_ASSEMBLER_BE.get(),
                 appeng.blockentity.AEBaseInvBlockEntity::getExposedItemHandler

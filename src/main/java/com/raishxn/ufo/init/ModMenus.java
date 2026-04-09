@@ -1,6 +1,7 @@
 package com.raishxn.ufo.init;
 
 import com.raishxn.ufo.UfoMod;
+import appeng.menu.implementations.MenuTypeBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.bus.api.IEventBus;
@@ -28,6 +29,13 @@ public class ModMenus {
     public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerMenu>> QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU =
             MENUS.register("quantum_processor_assembler_controller_menu",
                     () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerMenu::new));
+
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumPatternHatchMenu>> QUANTUM_PATTERN_HATCH_MENU =
+            MENUS.register("quantum_pattern_hatch_menu",
+                    () -> MenuTypeBuilder
+                            .create((id, inv, host) -> new com.raishxn.ufo.screen.QuantumPatternHatchMenu(id, inv, host),
+                                    appeng.helpers.patternprovider.PatternProviderLogicHost.class)
+                            .build(UfoMod.id("quantum_pattern_hatch_menu").toString()));
 
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);

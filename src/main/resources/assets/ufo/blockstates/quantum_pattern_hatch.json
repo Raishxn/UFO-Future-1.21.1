@@ -1,0 +1,33 @@
+{
+  "variants": {
+    "push_direction=all": {
+      "model": "ufo:block/quantum_pattern_hatch"
+    },
+    "push_direction=down": {
+      "model": "ufo:block/quantum_pattern_hatch_oriented",
+      "x": 180
+    },
+    "push_direction=east": {
+      "model": "ufo:block/quantum_pattern_hatch_oriented",
+      "x": 90,
+      "y": 90
+    },
+    "push_direction=north": {
+      "model": "ufo:block/quantum_pattern_hatch_oriented",
+      "x": 90
+    },
+    "push_direction=south": {
+      "model": "ufo:block/quantum_pattern_hatch_oriented",
+      "x": 90,
+      "y": 180
+    },
+    "push_direction=up": {
+      "model": "ufo:block/quantum_pattern_hatch_oriented"
+    },
+    "push_direction=west": {
+      "model": "ufo:block/quantum_pattern_hatch_oriented",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

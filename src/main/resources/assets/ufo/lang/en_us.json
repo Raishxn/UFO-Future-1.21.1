@@ -75,6 +75,7 @@
   "block.ufo.quantum_matter_fabricator_controller": "Quantum Matter Fabricator Controller",
   "block.ufo.quantum_slicer_controller": "Quantum Slicer Controller",
   "block.ufo.quantum_processor_assembler_controller": "Quantum Processor Assembler Controller",
+  "block.ufo.quantum_pattern_hatch": "Quantum Pattern Hatch",
   "block.ufo.entropy_containment_chamber_components": "Entropy Containment Chamber Components",
   "block.ufo.entropy_coolant_matrix_components": "Entropy Coolant Matrix Components",
   "block.ufo.entropy_computer_condensation_matrix": "Entropy Computer Condensation Matrix",

@@ -62,6 +62,9 @@ public class MultiblockBlocks {
                     .requiresCorrectToolForDrops()
                     .lightLevel(state -> state.getValue(AbstractSimpleMultiblockControllerBlock.ACTIVE) ? 14 : 0)));
 
+    public static final DeferredBlock<QuantumPatternHatchBlock> QUANTUM_PATTERN_HATCH = BLOCKS.register("quantum_pattern_hatch",
+            QuantumPatternHatchBlock::new);
+
     // ═══════════════════════════════════════════════════════════
     //  STELLAR NEXUS — Multiblock Components
     // ═══════════════════════════════════════════════════════════
