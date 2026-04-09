@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "down": "ufo:block/dma/dimensional_matter_assembler_top",
-    "up": "ufo:block/dma/dimensional_matter_assembler_top",
-    "north": "ufo:block/dma/dimensional_matter_assembler_front",
-    "south": "ufo:block/dma/dimensional_matter_assembler_side",
-    "east": "ufo:block/dma/dimensional_matter_assembler_side",
-    "west": "ufo:block/dma/dimensional_matter_assembler_side",
-    "particle": "ufo:block/dma/dimensional_matter_assembler_side"
+    "down": "ufo:block/dma/crystal_aggregator/off/bottom",
+    "east": "ufo:block/dma/crystal_aggregator/off/left",
+    "north": "ufo:block/dma/crystal_aggregator/off/front",
+    "particle": "ufo:block/dma/crystal_aggregator/off/front",
+    "south": "ufo:block/dma/crystal_aggregator/off/back",
+    "up": "ufo:block/dma/crystal_aggregator/off/top",
+    "west": "ufo:block/dma/crystal_aggregator/off/right"
   }
 }

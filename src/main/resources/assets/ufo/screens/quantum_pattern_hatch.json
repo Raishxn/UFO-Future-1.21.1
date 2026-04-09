@@ -1,20 +1,27 @@
 {
   "$schema": "schema.json",
-  "includes": ["common/common.json", "common/player_inventory.json"],
+  "includes": ["common/common.json", "common/player_inventory.json", "common/toolbox.json"],
   "background": {
     "texture": "guis/quantum_pattern_hatch.png",
-    "srcRect": [0, 0, 176, 245]
+    "textureWidth": 512,
+    "textureHeight": 512,
+    "srcRect": [0, 0, 176, 294]
   },
   "slots": {
     "ENCODED_PATTERN": {
       "left": 8,
-      "top": 24,
+      "top": 37,
       "grid": "BREAK_AFTER_9COLS"
     },
     "STORAGE": {
       "left": 8,
-      "top": 207,
-      "grid": "HORIZONTAL"
+      "top": 176,
+      "grid": "BREAK_AFTER_9COLS"
+    },
+    "UPGRADE": {
+      "right": 0,
+      "top": 0,
+      "grid": "VERTICAL"
     }
   },
   "text": {
@@ -33,7 +40,7 @@
       },
       "position": {
         "left": 8,
-        "top": 13
+        "top": 20
       }
     },
     "interface_stored_items": {
@@ -42,7 +49,7 @@
       },
       "position": {
         "left": 8,
-        "top": 196
+        "top": 165
       }
     }
   },

@@ -35,7 +35,7 @@ public class ModMenus {
                     () -> MenuTypeBuilder
                             .create((id, inv, host) -> new com.raishxn.ufo.screen.QuantumPatternHatchMenu(id, inv, host),
                                     appeng.helpers.patternprovider.PatternProviderLogicHost.class)
-                            .build(UfoMod.id("quantum_pattern_hatch_menu").toString()));
+                            .build("ufo_quantum_pattern_hatch_menu"));
 
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);

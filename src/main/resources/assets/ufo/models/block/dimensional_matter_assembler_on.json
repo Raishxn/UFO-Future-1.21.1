@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "ufo:block/dma/crystal_aggregator/on/bottom",
+    "east": "ufo:block/dma/crystal_aggregator/on/left",
+    "north": "ufo:block/dma/crystal_aggregator/on/front",
+    "particle": "ufo:block/dma/crystal_aggregator/on/front",
+    "south": "ufo:block/dma/crystal_aggregator/on/back",
+    "up": "ufo:block/dma/crystal_aggregator/on/top",
+    "west": "ufo:block/dma/crystal_aggregator/on/right"
+  }
+}

@@ -185,8 +185,11 @@ public class ModCreativeModeTabs {
                         output.accept(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get());
+                        output.accept(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
                         output.accept(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get());
                         output.accept(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get());
+                        output.accept(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get());
+                        output.accept(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get());
                         output.accept(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get());
                         output.accept(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get());
                         output.accept(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get());
