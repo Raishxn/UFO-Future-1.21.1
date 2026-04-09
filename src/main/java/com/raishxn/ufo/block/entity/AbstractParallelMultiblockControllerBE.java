@@ -18,8 +18,10 @@ import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
 import com.raishxn.ufo.api.multiblock.MultiblockTierScaling;
+import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.entity.processing.MultiblockProcessingRecipe;
 import com.raishxn.ufo.block.entity.processing.ParallelProcessState;
+import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -34,13 +36,12 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public abstract class AbstractParallelMultiblockControllerBE extends AbstractSimpleMultiblockControllerBE implements ICraftingMachine {
     protected static final int MAX_PARALLEL_THREADS = 8;
     protected final List<ParallelProcessState> processStates = new ArrayList<>();
+    private long lastClientSyncTick = Long.MIN_VALUE;
 
     protected AbstractParallelMultiblockControllerBE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -55,8 +56,11 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.running = false;
             this.progress = 0;
             this.maxProgress = 0;
+            this.storedEnergy = 0L;
+            this.maxStoredEnergy = 0L;
             this.displayedRecipes.clear();
             coolDown();
+            syncClientState(false);
             return;
         }
 
@@ -64,29 +68,47 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
         AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
         if (nodeBE == null || nodeBE.getActionableNode() == null) {
+            clearProcessStates();
+            refreshProcessStates(availableRecipes);
+            this.running = false;
+            this.progress = 0;
+            this.maxProgress = 0;
+            this.storedEnergy = 0L;
+            this.maxStoredEnergy = 0L;
             rebuildDisplayedRecipes(availableRecipes);
             coolDown();
+            syncClientState(false);
             return;
         }
 
         IGridNode node = nodeBE.getActionableNode();
         IGrid grid = node.getGrid();
         if (grid == null) {
+            clearProcessStates();
+            refreshProcessStates(availableRecipes);
+            this.running = false;
+            this.progress = 0;
+            this.maxProgress = 0;
+            this.storedEnergy = 0L;
+            this.maxStoredEnergy = 0L;
             rebuildDisplayedRecipes(availableRecipes);
             coolDown();
+            syncClientState(false);
             return;
         }
 
         IEnergyService energyService = grid.getEnergyService();
+        this.storedEnergy = Math.max(0L, (long) energyService.getStoredPower());
+        this.maxStoredEnergy = Math.max(0L, (long) energyService.getMaxStoredPower());
         IStorageService storageService = grid.getStorageService();
         MEStorage inventory = storageService.getInventory();
         IActionSource src = IActionSource.ofMachine(nodeBE);
-        refreshProcessStates(availableRecipes, inventory, src);
+        refreshProcessStates(availableRecipes);
 
         boolean anyRunning = false;
         int hottestMaxProgress = 0;
         int hottestProgress = 0;
-        int activeThreads = 0;
+        int runningThreads = 0;
 
         for (ParallelProcessState processState : this.processStates) {
             if (!processState.isActive()) {
@@ -99,7 +121,6 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
 
-            activeThreads++;
             int scaledMaxProgress = MultiblockTierScaling.adjustedTime(recipe.time(), this.machineTier, recipe.requiredTier());
             if (scaledMaxProgress > hottestMaxProgress) {
                 hottestMaxProgress = scaledMaxProgress;
@@ -118,6 +139,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
 
+            runningThreads++;
             anyRunning = true;
             processState.setProgress(processState.getProgress() + (this.overclocked ? 5 : 1));
             if (processState.getProgress() >= scaledMaxProgress) {
@@ -129,49 +151,33 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.maxProgress = hottestMaxProgress;
         this.progress = hottestProgress;
         rebuildDisplayedRecipes(availableRecipes);
-        updateTemperature(activeThreads);
+        updateTemperature(runningThreads);
         this.setChanged();
+        syncClientState(true);
     }
 
-    private void refreshProcessStates(List<MultiblockProcessingRecipe> availableRecipes, MEStorage inventory, IActionSource src) {
-        Set<ResourceLocation> alreadyAssigned = new HashSet<>();
-
+    private void refreshProcessStates(List<MultiblockProcessingRecipe> availableRecipes) {
         for (ParallelProcessState state : this.processStates) {
             if (!state.isActive()) {
                 continue;
             }
 
             MultiblockProcessingRecipe recipe = findRecipe(availableRecipes, state.getRecipeId());
-            if (recipe == null) {
+            if (recipe == null || !MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())) {
                 state.clear();
                 continue;
             }
 
             state.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size());
-            if (state.isPatternPushed() || state.hasBufferedWork()) {
-                alreadyAssigned.add(recipe.id());
-                continue;
+            if (!state.isPatternPushed() && !state.hasBufferedWork()) {
+                state.clear();
             }
-
-            state.clear();
         }
+    }
 
-        for (MultiblockProcessingRecipe recipe : availableRecipes) {
-            if (alreadyAssigned.contains(recipe.id())
-                    || !MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())
-                    || !canAutoStartRecipe(recipe, inventory, src)) {
-                continue;
-            }
-
-            ParallelProcessState freeState = findInactiveState();
-            if (freeState == null) {
-                return;
-            }
-
-            freeState.setRecipeId(recipe.id());
-            freeState.setPatternPushed(false);
-            freeState.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size());
-            alreadyAssigned.add(recipe.id());
+    private void clearProcessStates() {
+        for (ParallelProcessState state : this.processStates) {
+            state.clear();
         }
     }
 
@@ -234,9 +240,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
         }
 
-        state.setProgress(0);
-        state.setEnergyBuffer(0L);
-        state.clearBuffers();
+        state.clear();
     }
 
     private void rebuildDisplayedRecipes(List<MultiblockProcessingRecipe> availableRecipes) {
@@ -251,14 +255,16 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
             var primaryOutput = recipe.primaryOutput();
             int scaledMaxProgress = MultiblockTierScaling.adjustedTime(recipe.time(), this.machineTier, recipe.requiredTier());
-            String label = recipe.name();
+            Component label = primaryOutput.item().isEmpty()
+                    ? (primaryOutput.fluid().isEmpty() ? Component.literal(recipe.name()) : primaryOutput.fluid().getHoverName())
+                    : primaryOutput.item().getHoverName();
             if (!MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())) {
-                label += " [Locked: MK" + recipe.requiredTier() + "]";
+                label = label.copy().append(Component.literal(" [Locked: MK" + recipe.requiredTier() + "]"));
             }
             this.displayedRecipes.add(new UniversalDisplayedRecipe(
                     primaryOutput.item(),
                     primaryOutput.fluid(),
-                    net.minecraft.network.chat.Component.literal(label),
+                    label,
                     primaryOutput.amount(),
                     processState.getProgress(),
                     scaledMaxProgress));
@@ -325,13 +331,13 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             return false;
         }
 
-        MultiblockProcessingRecipe recipe = resolvePatternRecipe(patternDetails);
+        MultiblockProcessingRecipe recipe = resolvePatternRecipe(patternDetails, inputs);
         if (recipe == null || !MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())) {
             return false;
         }
 
         ParallelProcessState state = findInactiveState();
-        if (state == null || !patternMatchesRecipe(patternDetails, inputs, recipe)) {
+        if (state == null) {
             return false;
         }
 
@@ -352,41 +358,14 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             input.clear();
         }
 
-        this.setChanged();
+        rebuildDisplayedRecipes(getAvailableRecipes());
+        saveChanges();
         return true;
     }
 
     @Override
     public boolean acceptsPlans() {
         return this.assembled && findInactiveState() != null;
-    }
-
-    private boolean canAutoStartRecipe(MultiblockProcessingRecipe recipe, MEStorage inventory, IActionSource src) {
-        for (var requirement : recipe.itemInputs()) {
-            long remaining = requirement.amount();
-            for (ItemStack match : requirement.ingredient().getItems()) {
-                var key = AEItemKey.of(match);
-                if (key == null) {
-                    continue;
-                }
-                remaining -= inventory.extract(key, remaining, Actionable.SIMULATE, src);
-                if (remaining <= 0L) {
-                    break;
-                }
-            }
-            if (remaining > 0L) {
-                return false;
-            }
-        }
-
-        for (var requirement : recipe.fluidInputs()) {
-            long extracted = inventory.extract(AEFluidKey.of(requirement.fluid().getFluid()), requirement.amount(), Actionable.SIMULATE, src);
-            if (extracted < requirement.amount()) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private ParallelProcessState findInactiveState() {
@@ -398,26 +377,38 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         return null;
     }
 
-    private MultiblockProcessingRecipe resolvePatternRecipe(IPatternDetails patternDetails) {
+    private MultiblockProcessingRecipe resolvePatternRecipe(IPatternDetails patternDetails, KeyCounter[] inputs) {
+        List<MultiblockProcessingRecipe> outputMatches = new ArrayList<>();
         for (MultiblockProcessingRecipe recipe : getAvailableRecipes()) {
             if (patternMatchesOutputs(patternDetails.getOutputs(), recipe.outputs())) {
+                outputMatches.add(recipe);
+            }
+        }
+
+        if (outputMatches.isEmpty()) {
+            return null;
+        }
+
+        if (outputMatches.size() == 1) {
+            return outputMatches.getFirst();
+        }
+
+        for (MultiblockProcessingRecipe recipe : outputMatches) {
+            if (patternMatchesInputs(inputs, recipe)) {
                 return recipe;
             }
         }
+
         return null;
     }
 
-    private boolean patternMatchesRecipe(IPatternDetails patternDetails, KeyCounter[] inputs, MultiblockProcessingRecipe recipe) {
-        if (!patternMatchesOutputs(patternDetails.getOutputs(), recipe.outputs())) {
+    private boolean patternMatchesInputs(KeyCounter[] inputs, MultiblockProcessingRecipe recipe) {
+        List<PatternStack> availableStacks = flattenInputs(inputs);
+        if (availableStacks.isEmpty() && (!recipe.itemInputs().isEmpty() || !recipe.fluidInputs().isEmpty())) {
             return false;
         }
 
-        List<PatternStack> stacks = flattenInputs(inputs);
-        if (stacks.size() != recipe.itemInputs().size() + recipe.fluidInputs().size()) {
-            return false;
-        }
-
-        List<PatternStack> remaining = new ArrayList<>(stacks);
+        List<PatternStack> remaining = new ArrayList<>(availableStacks);
         for (var requirement : recipe.itemInputs()) {
             if (!removeMatchingItemRequirement(remaining, requirement)) {
                 return false;
@@ -428,7 +419,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 return false;
             }
         }
-        return remaining.isEmpty();
+        return true;
     }
 
     private boolean patternMatchesOutputs(List<GenericStack> outputs, List<MultiblockProcessingRecipe.OutputStack> recipeOutputs) {
@@ -483,7 +474,12 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             if (stack.key instanceof AEItemKey itemKey
                     && stack.amount >= requirement.amount()
                     && requirement.ingredient().test(itemKey.toStack((int) stack.amount))) {
-                remaining.remove(i);
+                long leftover = stack.amount - requirement.amount();
+                if (leftover > 0L) {
+                    remaining.set(i, new PatternStack(stack.key, leftover));
+                } else {
+                    remaining.remove(i);
+                }
                 return true;
             }
         }
@@ -494,9 +490,14 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         for (int i = 0; i < remaining.size(); i++) {
             PatternStack stack = remaining.get(i);
             if (stack.key instanceof AEFluidKey fluidKey
-                    && stack.amount == requirement.amount()
+                    && stack.amount >= requirement.amount()
                     && fluidKey.getFluid() == requirement.fluid().getFluid()) {
-                remaining.remove(i);
+                long leftover = stack.amount - requirement.amount();
+                if (leftover > 0L) {
+                    remaining.set(i, new PatternStack(stack.key, leftover));
+                } else {
+                    remaining.remove(i);
+                }
                 return true;
             }
         }
@@ -533,5 +534,51 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         for (ParallelProcessState processState : this.processStates) {
             processState.clear();
         }
+        this.storedEnergy = 0L;
+        this.maxStoredEnergy = 0L;
+    }
+
+    @Override
+    protected int resolveMachineTier(com.raishxn.ufo.api.multiblock.MultiblockPattern.MatchResult result) {
+        if (this.level == null) {
+            return com.raishxn.ufo.api.multiblock.MultiblockMachineTier.MK1.level();
+        }
+
+        Direction facing = Direction.NORTH;
+        BlockState controllerState = this.level.getBlockState(this.worldPosition);
+        if (controllerState.hasProperty(net.minecraft.world.level.block.DirectionalBlock.FACING)) {
+            facing = controllerState.getValue(net.minecraft.world.level.block.DirectionalBlock.FACING);
+        }
+
+        int resolvedTier = com.raishxn.ufo.api.multiblock.MultiblockMachineTier.MK3.level();
+        boolean foundField = false;
+        for (BlockPos fieldPos : getControllerPattern().getExpectedPositions(this.worldPosition, facing, 'F')) {
+            BlockState fieldState = this.level.getBlockState(fieldPos);
+            if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())) {
+                resolvedTier = Math.min(resolvedTier, 1);
+                foundField = true;
+            } else if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())) {
+                resolvedTier = Math.min(resolvedTier, 2);
+                foundField = true;
+            } else if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get())) {
+                foundField = true;
+            }
+        }
+
+        return foundField ? resolvedTier : com.raishxn.ufo.api.multiblock.MultiblockMachineTier.MK1.level();
+    }
+
+    private void syncClientState(boolean throttle) {
+        if (this.level == null || this.level.isClientSide()) {
+            return;
+        }
+
+        long gameTime = this.level.getGameTime();
+        if (throttle && this.lastClientSyncTick != Long.MIN_VALUE && gameTime - this.lastClientSyncTick < 5L) {
+            return;
+        }
+
+        this.lastClientSyncTick = gameTime;
+        this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), net.minecraft.world.level.block.Block.UPDATE_ALL);
     }
 }

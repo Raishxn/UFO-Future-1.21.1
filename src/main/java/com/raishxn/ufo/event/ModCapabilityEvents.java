@@ -36,6 +36,21 @@ public class ModCapabilityEvents {
                 (be, context) -> (appeng.api.networking.IInWorldGridNodeHost) be
         );
         event.registerBlockEntity(
+                appeng.api.AECapabilities.CRAFTING_MACHINE,
+                ModBlockEntities.QMF_CONTROLLER.get(),
+                (be, context) -> be
+        );
+        event.registerBlockEntity(
+                appeng.api.AECapabilities.CRAFTING_MACHINE,
+                ModBlockEntities.QUANTUM_SLICER_CONTROLLER_BE.get(),
+                (be, context) -> be
+        );
+        event.registerBlockEntity(
+                appeng.api.AECapabilities.CRAFTING_MACHINE,
+                ModBlockEntities.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_BE.get(),
+                (be, context) -> be
+        );
+        event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 ModBlockEntities.DIMENSIONAL_MATTER_ASSEMBLER_BE.get(),
                 appeng.blockentity.AEBaseInvBlockEntity::getExposedItemHandler

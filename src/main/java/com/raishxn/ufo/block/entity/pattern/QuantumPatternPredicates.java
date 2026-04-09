@@ -31,13 +31,8 @@ public final class QuantumPatternPredicates {
         return map;
     }
 
-    public static boolean isQuantumCasingOrHatch(BlockState state) {
-        return state.is(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
-                || state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
-                || state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())
-                || state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
-                || state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
-                || state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
+    public static boolean isQuantumCasing(BlockState state) {
+        return state.is(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get());
     }
 
     public static boolean isAnyFieldGenerator(BlockState state) {
@@ -52,7 +47,7 @@ public final class QuantumPatternPredicates {
     }
 
     public static Component casingName() {
-        return Component.literal("Quantum Hyper Mechanical Casing or valid hatch");
+        return Component.literal("Quantum Hyper Mechanical Casing");
     }
 
     public static Component patternHatchName() {

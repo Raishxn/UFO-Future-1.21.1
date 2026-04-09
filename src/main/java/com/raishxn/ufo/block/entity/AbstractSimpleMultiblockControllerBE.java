@@ -10,12 +10,14 @@ import appeng.api.upgrades.UpgradeInventories;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.inventory.ContainerData;
@@ -46,6 +48,8 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
     protected int temperature = 0;
     protected int maxTemperature = 1000;
     protected int machineTier = MultiblockMachineTier.MK1.level();
+    protected long storedEnergy = 0L;
+    protected long maxStoredEnergy = 0L;
     protected boolean safeMode = true;
     protected boolean overclocked = false;
     protected final List<UniversalDisplayedRecipe> displayedRecipes = new ArrayList<>();
@@ -264,6 +268,8 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         tag.putInt("temperature", this.temperature);
         tag.putInt("maxTemperature", this.maxTemperature);
         tag.putInt("machineTier", this.machineTier);
+        tag.putLong("storedEnergy", this.storedEnergy);
+        tag.putLong("maxStoredEnergy", this.maxStoredEnergy);
         tag.putBoolean("safeMode", this.safeMode);
         tag.putBoolean("overclocked", this.overclocked);
         this.upgrades.writeToNBT(tag, "upgrades", registries);
@@ -273,6 +279,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
             partsList.add(NbtUtils.writeBlockPos(pos));
         }
         tag.put("parts", partsList);
+        tag.put("displayedRecipes", saveDisplayedRecipes());
     }
 
     @Override
@@ -289,6 +296,8 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         if (tag.contains("machineTier")) {
             this.machineTier = Math.max(MultiblockMachineTier.MK1.level(), tag.getInt("machineTier"));
         }
+        this.storedEnergy = tag.getLong("storedEnergy");
+        this.maxStoredEnergy = tag.getLong("maxStoredEnergy");
         this.safeMode = !tag.contains("safeMode") || tag.getBoolean("safeMode");
         this.overclocked = tag.getBoolean("overclocked");
 
@@ -300,6 +309,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
             }
         }
         this.upgrades.readFromNBT(tag, "upgrades", registries);
+        loadDisplayedRecipes(tag);
 
         this.structureDirty = true;
         this.scanCooldown = 0;
@@ -366,6 +376,16 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
     }
 
     @Override
+    public long getGuiStoredEnergy() {
+        return this.storedEnergy;
+    }
+
+    @Override
+    public long getGuiMaxEnergy() {
+        return this.maxStoredEnergy;
+    }
+
+    @Override
     public boolean isGuiSafeMode() {
         return this.safeMode;
     }
@@ -412,6 +432,67 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
                     1,
                     this.progress,
                     this.maxProgress));
+        }
+    }
+
+    private ListTag saveDisplayedRecipes() {
+        ListTag recipeList = new ListTag();
+        for (UniversalDisplayedRecipe recipe : this.displayedRecipes) {
+            CompoundTag recipeTag = new CompoundTag();
+            if (!recipe.itemIcon().isEmpty()) {
+                ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(recipe.itemIcon().getItem());
+                if (itemId != null) {
+                    recipeTag.putString("itemIcon", itemId.toString());
+                }
+            }
+            if (!recipe.fluidIcon().isEmpty()) {
+                ResourceLocation fluidId = BuiltInRegistries.FLUID.getKey(recipe.fluidIcon().getFluid());
+                if (fluidId != null) {
+                    recipeTag.putString("fluidIcon", fluidId.toString());
+                }
+            }
+            recipeTag.putString("label", recipe.label().getString());
+            recipeTag.putLong("outputAmount", recipe.outputAmount());
+            recipeTag.putInt("progress", recipe.progress());
+            recipeTag.putInt("maxProgress", recipe.maxProgress());
+            recipeList.add(recipeTag);
+        }
+        return recipeList;
+    }
+
+    private void loadDisplayedRecipes(CompoundTag tag) {
+        this.displayedRecipes.clear();
+        if (!tag.contains("displayedRecipes", Tag.TAG_LIST)) {
+            return;
+        }
+
+        ListTag recipeList = tag.getList("displayedRecipes", Tag.TAG_COMPOUND);
+        for (int i = 0; i < recipeList.size(); i++) {
+            CompoundTag recipeTag = recipeList.getCompound(i);
+            ItemStack itemIcon = ItemStack.EMPTY;
+            net.neoforged.neoforge.fluids.FluidStack fluidIcon = net.neoforged.neoforge.fluids.FluidStack.EMPTY;
+
+            if (recipeTag.contains("itemIcon", Tag.TAG_STRING)) {
+                ResourceLocation itemId = ResourceLocation.tryParse(recipeTag.getString("itemIcon"));
+                if (itemId != null && BuiltInRegistries.ITEM.containsKey(itemId)) {
+                    itemIcon = new ItemStack(BuiltInRegistries.ITEM.get(itemId));
+                }
+            }
+
+            if (recipeTag.contains("fluidIcon", Tag.TAG_STRING)) {
+                ResourceLocation fluidId = ResourceLocation.tryParse(recipeTag.getString("fluidIcon"));
+                if (fluidId != null && BuiltInRegistries.FLUID.containsKey(fluidId)) {
+                    fluidIcon = new net.neoforged.neoforge.fluids.FluidStack(BuiltInRegistries.FLUID.get(fluidId), 1);
+                }
+            }
+
+            this.displayedRecipes.add(new UniversalDisplayedRecipe(
+                    itemIcon,
+                    fluidIcon,
+                    Component.literal(recipeTag.getString("label")),
+                    recipeTag.getLong("outputAmount"),
+                    recipeTag.getInt("progress"),
+                    recipeTag.getInt("maxProgress")));
         }
     }
 }

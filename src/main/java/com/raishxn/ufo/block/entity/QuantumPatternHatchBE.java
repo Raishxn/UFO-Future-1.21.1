@@ -2,11 +2,13 @@ package com.raishxn.ufo.block.entity;
 
 import appeng.api.stacks.AEItemKey;
 import appeng.blockentity.crafting.PatternProviderBlockEntity;
+import appeng.block.crafting.PatternProviderBlock;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.screen.QuantumPatternHatchMenu;
+import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -21,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements IMultiblockPart, MenuProvider {
-    public static final int PATTERN_CAPACITY = 64;
+    public static final int PATTERN_CAPACITY = 72;
 
     @Nullable
     private BlockPos controllerPos;
@@ -32,7 +34,7 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
 
     @Override
     protected PatternProviderLogic createLogic() {
-        return new PatternProviderLogic(this.getMainNode(), this, PATTERN_CAPACITY);
+        return new QuantumPatternProviderLogic(this, PATTERN_CAPACITY);
     }
 
     @Override
@@ -60,6 +62,11 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     @Override
     public @Nullable BlockPos getControllerPos() {
         return this.controllerPos;
+    }
+
+    public Direction getPushDirectionForController() {
+        var pushDirection = getBlockState().getValue(PatternProviderBlock.PUSH_DIRECTION).getDirection();
+        return pushDirection != null ? pushDirection : Direction.NORTH;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.raishxn.ufo.init;
 import com.raishxn.ufo.UfoMod;
 import appeng.menu.implementations.MenuTypeBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -35,7 +36,7 @@ public class ModMenus {
                     () -> MenuTypeBuilder
                             .create((id, inv, host) -> new com.raishxn.ufo.screen.QuantumPatternHatchMenu(id, inv, host),
                                     appeng.helpers.patternprovider.PatternProviderLogicHost.class)
-                            .build("ufo_quantum_pattern_hatch_menu"));
+                            .build(ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "quantum_pattern_hatch_menu")));
 
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);

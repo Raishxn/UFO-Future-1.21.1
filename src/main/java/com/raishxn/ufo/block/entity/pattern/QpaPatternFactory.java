@@ -52,7 +52,7 @@ public class QpaPatternFactory {
                 })
                 .where('H', (state, level, pos) -> state.is(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get()))
                 .where('P', (state, level, pos) -> state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()), QuantumPatternPredicates.patternHatchName())
-                .where('C', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasingOrHatch(state), QuantumPatternPredicates.casingName())
+                .where('C', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasing(state), QuantumPatternPredicates.casingName())
                 .where('F', (state, level, pos) -> QuantumPatternPredicates.isAnyFieldGenerator(state), QuantumPatternPredicates.fieldName())
                 .where('G', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state), QuantumPatternPredicates.glassName())
                 .where('A', (state, level, pos) -> state.isAir())

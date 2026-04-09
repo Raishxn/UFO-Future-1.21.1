@@ -93,7 +93,7 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
             int col = i % 3;
             int row = i / 3;
             builder.addInputSlot(47 + (col * 18), 21 + (row * 18))
-                    .addIngredients(ingredient.ingredient())
+                    .addIngredients(UfoJeiPlugin.stackOfUniversal(ingredient))
                     .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Required: " + formatAmount(ingredient.amount()) + "x")));
         }
 

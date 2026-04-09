@@ -77,6 +77,11 @@ public class ModPackets {
                 PacketToggleUniversalOverclock.STREAM_CODEC,
                 PacketToggleUniversalOverclock::handle
         );
+        registrar.playToServer(
+                PacketScanUniversalStructure.TYPE,
+                PacketScanUniversalStructure.STREAM_CODEC,
+                PacketScanUniversalStructure::handle
+        );
     }
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {

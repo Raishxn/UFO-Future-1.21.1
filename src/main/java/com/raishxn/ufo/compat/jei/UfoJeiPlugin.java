@@ -136,4 +136,12 @@ public class UfoJeiPlugin implements IModPlugin {
         }
         return Ingredient.of(ItemStack.EMPTY);
     }
+
+    public static Ingredient stackOfUniversal(UniversalMultiblockRecipe.ItemRequirement stack) {
+        if (stack != null && !stack.ingredient().isEmpty() && stack.amount() > 0) {
+            return Ingredient.of(Arrays.stream(stack.ingredient().getItems())
+                    .map(oldStack -> oldStack.copyWithCount((int) Math.min(Integer.MAX_VALUE, stack.amount()))));
+        }
+        return Ingredient.of(ItemStack.EMPTY);
+    }
 }

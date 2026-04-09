@@ -17,6 +17,10 @@ public interface IUniversalMultiblockController {
 
     int getGuiMachineTier();
 
+    long getGuiStoredEnergy();
+
+    long getGuiMaxEnergy();
+
     boolean isGuiSafeMode();
 
     boolean isGuiOverclocked();

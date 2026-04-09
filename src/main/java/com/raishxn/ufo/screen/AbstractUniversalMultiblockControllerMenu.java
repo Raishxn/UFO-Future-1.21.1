@@ -33,6 +33,22 @@ public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockE
     protected int overclocked = 0;
     @GuiSync(28)
     protected int machineTier = 1;
+    @GuiSync(29)
+    protected int storedEnergyLow = 0;
+    @GuiSync(30)
+    protected int storedEnergyMidLow = 0;
+    @GuiSync(31)
+    protected int storedEnergyMidHigh = 0;
+    @GuiSync(32)
+    protected int storedEnergyHigh = 0;
+    @GuiSync(33)
+    protected int maxEnergyLow = 0;
+    @GuiSync(34)
+    protected int maxEnergyMidLow = 0;
+    @GuiSync(35)
+    protected int maxEnergyMidHigh = 0;
+    @GuiSync(36)
+    protected int maxEnergyHigh = 0;
 
     protected AbstractUniversalMultiblockControllerMenu(net.minecraft.world.inventory.MenuType<?> menuType, int id, Inventory playerInventory,
                                                         T blockEntity, ContainerLevelAccess levelAccess) {
@@ -56,6 +72,16 @@ public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockE
             this.safeMode = this.getHost().isGuiSafeMode() ? 1 : 0;
             this.overclocked = this.getHost().isGuiOverclocked() ? 1 : 0;
             this.machineTier = this.getHost().getGuiMachineTier();
+            long storedEnergy = this.getHost().getGuiStoredEnergy();
+            long maxEnergy = this.getHost().getGuiMaxEnergy();
+            this.storedEnergyLow = splitLong(storedEnergy, 0);
+            this.storedEnergyMidLow = splitLong(storedEnergy, 16);
+            this.storedEnergyMidHigh = splitLong(storedEnergy, 32);
+            this.storedEnergyHigh = splitLong(storedEnergy, 48);
+            this.maxEnergyLow = splitLong(maxEnergy, 0);
+            this.maxEnergyMidLow = splitLong(maxEnergy, 16);
+            this.maxEnergyMidHigh = splitLong(maxEnergy, 32);
+            this.maxEnergyHigh = splitLong(maxEnergy, 48);
         }
         super.standardDetectAndSendChanges();
     }
@@ -96,8 +122,27 @@ public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockE
         return Math.max(1, this.machineTier);
     }
 
+    public long getStoredEnergy() {
+        return assembleLong(this.storedEnergyLow, this.storedEnergyMidLow, this.storedEnergyMidHigh, this.storedEnergyHigh);
+    }
+
+    public long getMaxEnergy() {
+        return assembleLong(this.maxEnergyLow, this.maxEnergyMidLow, this.maxEnergyMidHigh, this.maxEnergyHigh);
+    }
+
     public List<UniversalDisplayedRecipe> getDisplayedRecipes() {
         return this.getHost().getDisplayedRecipes();
+    }
+
+    private static int splitLong(long value, int shift) {
+        return (int) ((value >> shift) & 0xFFFFL);
+    }
+
+    private static long assembleLong(int low, int midLow, int midHigh, int high) {
+        return ((long) low & 0xFFFFL)
+                | (((long) midLow & 0xFFFFL) << 16)
+                | (((long) midHigh & 0xFFFFL) << 32)
+                | (((long) high & 0xFFFFL) << 48);
     }
 
     protected abstract Block getValidBlock();
