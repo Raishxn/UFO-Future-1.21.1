@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "ufo:quantum_anomaly"
+    },
+    "C": {
+      "item": "ufo:entropy_computer_condensation_matrix"
+    },
+    "F": {
+      "item": "ufo:stellar_field_generator_t3"
+    },
+    "H": {
+      "item": "ufo:me_massive_output_hatch"
+    },
+    "T": {
+      "item": "ufo:ae_energy_input_hatch"
+    }
+  },
+  "pattern": [
+    "CFC",
+    "ATA",
+    "CHC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:stellar_nexus_controller"
+  }
+}

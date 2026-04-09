@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 5000000,
+  "energy": 20000000,
   "fluid_inputs": [
     {
-      "amount": 1000,
+      "amount": 4000,
       "ingredient": {
         "fluid": "ufo:uu_matter"
       }
@@ -12,6 +12,7 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
+      "amount": 2,
       "ingredient": {
         "item": "ufo:proto_matter"
       }
@@ -20,6 +21,18 @@
       "amount": 64,
       "ingredient": {
         "item": "minecraft:iron_block"
+      }
+    },
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "ufo:obsidian_matrix"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
       }
     }
   ],
@@ -35,5 +48,5 @@
       "id": "ufo:scar"
     }
   ],
-  "time": 1200
+  "time": 3600
 }

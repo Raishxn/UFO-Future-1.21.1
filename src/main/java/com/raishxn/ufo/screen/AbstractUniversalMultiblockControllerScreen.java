@@ -28,6 +28,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+import java.util.Locale;
+
 public abstract class AbstractUniversalMultiblockControllerScreen<M extends AbstractUniversalMultiblockControllerMenu<?>>
         extends UpgradeableScreen<M> {
 
@@ -132,10 +134,15 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
             textX += 10;
         }
 
-        String amount = fluidRecipe ? formatAmount(recipe.outputAmount()) + " mB" : formatAmount(recipe.outputAmount()) + "x";
-        String time = recipe.maxProgress() > 0 ? recipe.progress() + "/" + recipe.maxProgress() : "-/-";
-        String line = amount + " " + recipe.label().getString() + " " + time;
-        guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(line, 146), textX, y, 0xE6EBF5, false);
+        String amount = fluidRecipe ? formatAmount(recipe.outputAmount()) + "mB" : formatAmount(recipe.outputAmount()) + "x";
+        String time = recipe.maxProgress() > 0
+                ? formatSeconds(recipe.progress()) + "/" + formatSeconds(recipe.maxProgress()) + "s"
+                : "-/-";
+        int timeWidth = this.font.width(time);
+        int availableWidth = Math.max(20, 156 - (textX - x) - timeWidth - 4);
+        String leftText = amount + " " + recipe.label().getString();
+        guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(leftText, availableWidth), textX, y, 0xE6EBF5, false);
+        guiGraphics.drawString(this.font, time, this.leftPos + 162 - timeWidth, y, 0xB9D8FF, false);
     }
 
     private String buildStatusLine() {
@@ -153,7 +160,7 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
     }
 
     private String buildEnergyLine() {
-        return "Energy: " + formatAmount(this.menu.getStoredEnergy()) + " AE / " + formatAmount(this.menu.getMaxEnergy()) + " AE";
+        return "Energy: " + formatAmount(this.menu.getStoredEnergy()) + " AE";
     }
 
     private Component getScreenTitle() {
@@ -166,15 +173,22 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
 
     private static String formatAmount(long amount) {
         if (amount >= 1_000_000_000L) {
-            return String.format("%.1fB", amount / 1_000_000_000.0);
+            return String.format(Locale.ROOT, "%.1fB", amount / 1_000_000_000.0);
         }
         if (amount >= 1_000_000L) {
-            return String.format("%.1fM", amount / 1_000_000.0);
+            return String.format(Locale.ROOT, "%.1fM", amount / 1_000_000.0);
         }
         if (amount >= 1_000L) {
-            return String.format("%.1fK", amount / 1_000.0);
+            return String.format(Locale.ROOT, "%.1fK", amount / 1_000.0);
         }
         return Long.toString(amount);
+    }
+
+    private static String formatSeconds(int ticks) {
+        double seconds = ticks / 20.0;
+        return seconds >= 100
+                ? String.format(Locale.ROOT, "%.0f", seconds)
+                : String.format(Locale.ROOT, "%.1f", seconds);
     }
 
     @Override
@@ -184,11 +198,13 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
             boolean safe = this.menu.isSafeMode();
             this.safeModeButton.setMessage(Component.literal(safe ? "S" : "!"));
             this.safeModeButton.setTooltip(Tooltip.create(Component.literal(safe ? "Safe Mode enabled" : "Safe Mode disabled")));
+            this.safeModeButton.active = !this.menu.isRunning() && this.menu.getDisplayedRecipes().isEmpty();
         }
         if (this.overclockButton != null) {
             boolean oc = this.menu.isOverclocked();
             this.overclockButton.setMessage(Component.literal(oc ? "OC" : ">"));
             this.overclockButton.setTooltip(Tooltip.create(Component.literal(oc ? "Overclock enabled" : "Overclock disabled")));
+            this.overclockButton.active = !this.menu.isRunning() && this.menu.getDisplayedRecipes().isEmpty();
         }
     }
 

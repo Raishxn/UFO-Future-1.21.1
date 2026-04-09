@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ufo:white_dwarf_matter"
+    },
+    "F": {
+      "item": "ufo:stellar_field_generator_t1"
+    },
+    "G": {
+      "item": "ufo:me_massive_input_hatch"
+    },
+    "H": {
+      "item": "ufo:hyper_dense_component_matrix"
+    },
+    "I": {
+      "item": "ufo:enriched_neutronium_sphere"
+    },
+    "T": {
+      "item": "ufo:tesseract_component_matrix"
+    }
+  },
+  "pattern": [
+    "HTH",
+    "FGF",
+    "ICI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:stellar_field_generator_t2"
+  }
+}

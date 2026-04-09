@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "ufo:me_massive_fluid_hatch"
+    },
+    "C": {
+      "item": "ufo:cosmic_string_component_matrix"
+    },
+    "D": {
+      "item": "ufo:dark_matter"
+    },
+    "E": {
+      "item": "ufo:event_horizon_component_matrix"
+    },
+    "F": {
+      "item": "ufo:stellar_field_generator_t2"
+    },
+    "G": {
+      "item": "ufo:me_massive_output_hatch"
+    }
+  },
+  "pattern": [
+    "ECE",
+    "FGF",
+    "DAD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:stellar_field_generator_t3"
+  }
+}

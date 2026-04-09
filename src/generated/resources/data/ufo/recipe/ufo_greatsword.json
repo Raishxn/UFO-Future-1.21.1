@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "item": "ufo:dimensional_processor"
+    },
+    "M": {
+      "item": "ufo:cosmic_string_component_matrix"
+    },
+    "P": {
+      "item": "ufo:pulsar_matter"
+    },
+    "S": {
+      "item": "ufo:ufo_staff"
+    }
+  },
+  "pattern": [
+    " M ",
+    "SPS",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:ufo_greatsword"
+  }
+}

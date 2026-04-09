@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 100000,
+  "energy": 500000,
   "fluid_inputs": [
     {
-      "amount": 500,
+      "amount": 1000,
       "ingredient": {
         "fluid": "ufo:source_liquid_starlight_fluid"
       }
@@ -12,14 +12,21 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
-      "amount": 2,
+      "amount": 4,
       "ingredient": {
         "item": "minecraft:iron_block"
       }
     },
     {
+      "amount": 2,
       "ingredient": {
         "item": "ufo:obsidian_matrix"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ae2:engineering_processor"
       }
     }
   ],
@@ -30,5 +37,5 @@
       "id": "ufo:dimensional_processor_press"
     }
   ],
-  "time": 200
+  "time": 600
 }

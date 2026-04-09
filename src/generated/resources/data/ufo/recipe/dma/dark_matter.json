@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 200000000,
+  "energy": 450000000,
   "fluid_inputs": [
     {
-      "amount": 10000,
+      "amount": 20000,
       "ingredient": {
         "fluid": "ufo:transcending_matter"
       }
@@ -28,6 +28,24 @@
       "ingredient": {
         "item": "ufo:pulsar_matter"
       }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:event_horizon_component_matrix"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:charged_enriched_neutronium_sphere"
+      }
+    },
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
+      }
     }
   ],
   "item_outputs": [
@@ -37,5 +55,5 @@
       "id": "ufo:dark_matter"
     }
   ],
-  "time": 20000
+  "time": 36000
 }

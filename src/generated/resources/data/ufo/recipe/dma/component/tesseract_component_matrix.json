@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 8000000,
+  "energy": 12000000,
   "fluid_inputs": [
     {
-      "amount": 2000,
+      "amount": 4000,
       "ingredient": {
         "fluid": "ufo:source_spatial_fluid"
       }
@@ -12,7 +12,7 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
-      "amount": 8,
+      "amount": 16,
       "ingredient": {
         "item": "ufo:hyper_dense_component_matrix"
       }
@@ -24,6 +24,7 @@
       }
     },
     {
+      "amount": 8,
       "ingredient": {
         "item": "ufo:dimensional_processor"
       }
@@ -36,5 +37,5 @@
       "id": "ufo:tesseract_component_matrix"
     }
   ],
-  "time": 1600
+  "time": 2400
 }

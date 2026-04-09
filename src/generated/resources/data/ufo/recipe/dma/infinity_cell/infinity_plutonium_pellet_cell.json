@@ -1,0 +1,46 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "ufo:dimensional_assembly",
+  "energy": 950000000,
+  "fluid_inputs": [
+    {
+      "amount": 12000,
+      "ingredient": {
+        "fluid": "ufo:transcending_matter"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "amount": 3,
+      "ingredient": {
+        "item": "ufo:cosmic_string_component_matrix"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    },
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "mekanism:pellet_plutonium"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:infinity_plutonium_pellet_cell"
+    }
+  ],
+  "time": 28000
+}

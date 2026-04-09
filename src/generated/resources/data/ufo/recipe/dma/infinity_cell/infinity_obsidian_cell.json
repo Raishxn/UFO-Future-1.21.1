@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 250000000,
+  "energy": 450000000,
   "fluid_inputs": [
     {
-      "amount": 2500,
+      "amount": 5000,
       "ingredient": {
         "fluid": "ufo:transcending_matter"
       }
@@ -12,6 +12,7 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
+      "amount": 2,
       "ingredient": {
         "item": "ufo:cosmic_string_component_matrix"
       }
@@ -35,5 +36,5 @@
       "id": "ufo:infinity_obsidian_cell"
     }
   ],
-  "time": 10000
+  "time": 16000
 }

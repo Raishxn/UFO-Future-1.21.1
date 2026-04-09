@@ -21,6 +21,8 @@ import com.raishxn.ufo.api.multiblock.MultiblockTierScaling;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.entity.processing.MultiblockProcessingRecipe;
 import com.raishxn.ufo.block.entity.processing.ParallelProcessState;
+import com.raishxn.ufo.fluid.ModFluids;
+import com.raishxn.ufo.init.ModSounds;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -30,21 +32,31 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractParallelMultiblockControllerBE extends AbstractSimpleMultiblockControllerBE implements ICraftingMachine {
     protected static final int MAX_PARALLEL_THREADS = 8;
+    private static final int THERMAL_MAX = 10000;
+    private static final int OVERLOAD_TICKS = 100;
+    private static final float THERMAL_EXPLOSION_POWER = 30.0F;
     protected final List<ParallelProcessState> processStates = new ArrayList<>();
     private long lastClientSyncTick = Long.MIN_VALUE;
+    private int thermalTicker = 0;
+    private int overloadTimer = -1;
 
     protected AbstractParallelMultiblockControllerBE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+        this.maxTemperature = THERMAL_MAX;
         for (int i = 0; i < MAX_PARALLEL_THREADS; i++) {
             this.processStates.add(new ParallelProcessState());
         }
@@ -59,7 +71,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
             this.displayedRecipes.clear();
-            coolDown();
+            updateTemperature(0, null, null);
             syncClientState(false);
             return;
         }
@@ -76,7 +88,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
             rebuildDisplayedRecipes(availableRecipes);
-            coolDown();
+            updateTemperature(0, null, null);
             syncClientState(false);
             return;
         }
@@ -92,14 +104,12 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
             rebuildDisplayedRecipes(availableRecipes);
-            coolDown();
+            updateTemperature(0, null, null);
             syncClientState(false);
             return;
         }
 
         IEnergyService energyService = grid.getEnergyService();
-        this.storedEnergy = Math.max(0L, (long) energyService.getStoredPower());
-        this.maxStoredEnergy = Math.max(0L, (long) energyService.getMaxStoredPower());
         IStorageService storageService = grid.getStorageService();
         MEStorage inventory = storageService.getInventory();
         IActionSource src = IActionSource.ofMachine(nodeBE);
@@ -109,6 +119,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         int hottestMaxProgress = 0;
         int hottestProgress = 0;
         int runningThreads = 0;
+        boolean thermalLocked = this.safeMode && this.temperature >= this.maxTemperature;
 
         for (ParallelProcessState processState : this.processStates) {
             if (!processState.isActive()) {
@@ -127,7 +138,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 hottestProgress = processState.getProgress();
             }
 
-            if (!MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())) {
+            if (!MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier()) || thermalLocked) {
                 continue;
             }
 
@@ -150,8 +161,9 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.running = anyRunning;
         this.maxProgress = hottestMaxProgress;
         this.progress = hottestProgress;
+        updateDisplayedEnergy(availableRecipes);
         rebuildDisplayedRecipes(availableRecipes);
-        updateTemperature(runningThreads);
+        updateTemperature(runningThreads, inventory, src);
         this.setChanged();
         syncClientState(true);
     }
@@ -271,25 +283,165 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         }
     }
 
-    private void updateTemperature(int activeThreads) {
-        if (this.running && activeThreads > 0) {
-            int heatPerTick = this.overclocked ? 5 * activeThreads : activeThreads;
-            this.temperature = Math.min(this.maxTemperature, this.temperature + heatPerTick);
-            if (this.safeMode && this.temperature >= this.maxTemperature) {
-                this.running = false;
-                for (ParallelProcessState processState : this.processStates) {
-                    processState.setProgress(0);
-                }
+    private void updateDisplayedEnergy(List<MultiblockProcessingRecipe> availableRecipes) {
+        long bufferedEnergy = 0L;
+        long targetEnergy = 0L;
+        for (ParallelProcessState processState : this.processStates) {
+            if (!processState.isActive()) {
+                continue;
+            }
+
+            bufferedEnergy += Math.max(0L, processState.getEnergyBuffer());
+            MultiblockProcessingRecipe recipe = findRecipe(availableRecipes, processState.getRecipeId());
+            if (recipe != null) {
+                targetEnergy += Math.max(0L, MultiblockTierScaling.adjustedEnergy(recipe.energy(), this.machineTier, recipe.requiredTier()));
+            }
+        }
+
+        this.storedEnergy = bufferedEnergy;
+        this.maxStoredEnergy = targetEnergy;
+    }
+
+    private void updateTemperature(int activeThreads, @Nullable MEStorage inventory, @Nullable IActionSource src) {
+        this.thermalTicker++;
+
+        if (activeThreads > 0) {
+            if (this.thermalTicker % 2 == 0) {
+                int heatToAdd = Math.max(1, activeThreads) * (this.overclocked ? 5 : 1);
+                this.temperature = Math.min(this.maxTemperature, this.temperature + heatToAdd);
+            }
+        } else if (this.temperature > 0 && this.thermalTicker % 40 == 0) {
+            this.temperature -= 1;
+        }
+
+        if (this.temperature > 0 && inventory != null && src != null) {
+            this.temperature -= consumeCoolant(inventory, src);
+        }
+
+        if (this.temperature < 0) {
+            this.temperature = 0;
+        }
+
+        if (this.safeMode) {
+            this.overloadTimer = -1;
+            return;
+        }
+
+        if (this.temperature >= this.maxTemperature) {
+            if (this.overloadTimer == -1) {
+                this.overloadTimer = OVERLOAD_TICKS;
             }
         } else {
-            coolDown();
+            this.overloadTimer = -1;
+        }
+
+        if (this.overloadTimer > 0) {
+            if (this.level != null && this.overloadTimer % 20 == 0) {
+                this.level.playSound(null, this.worldPosition, ModSounds.DMA_ALARM.get(),
+                        net.minecraft.sounds.SoundSource.BLOCKS, 0.6f, 0.8f);
+            }
+
+            this.overloadTimer--;
+            if (this.overloadTimer == 0) {
+                triggerThermalExplosion();
+            }
         }
     }
 
-    private void coolDown() {
-        if (this.temperature > 0) {
-            this.temperature = Math.max(0, this.temperature - 2);
+    private int consumeCoolant(MEStorage inventory, IActionSource src) {
+        for (AEFluidKey coolantKey : getCoolantPriority()) {
+            if (coolantKey == null || coolantKey.getFluid() == Fluids.EMPTY) {
+                continue;
+            }
+
+            CoolantProfile profile = getCoolantProfile(coolantKey.getFluid());
+            long simulatedAvailable = inventory.extract(coolantKey, profile.maxConsumePerTick(), Actionable.SIMULATE, src);
+            if (simulatedAvailable <= 0L) {
+                continue;
+            }
+
+            long amountToConsume;
+            long heatCooled;
+            if (profile.millibucketsPerHeat() > 0) {
+                amountToConsume = Math.min(simulatedAvailable, profile.maxConsumePerTick());
+                long possibleHeat = amountToConsume / profile.millibucketsPerHeat();
+                heatCooled = Math.min(this.temperature, possibleHeat);
+                amountToConsume = heatCooled * profile.millibucketsPerHeat();
+            } else {
+                amountToConsume = Math.min(simulatedAvailable, profile.maxConsumePerTick());
+                long possibleHeat = amountToConsume * profile.heatPerMillibucket();
+                if (this.temperature < possibleHeat) {
+                    amountToConsume = Math.max(1L,
+                            (long) Math.ceil(this.temperature / (double) profile.heatPerMillibucket()));
+                }
+                heatCooled = Math.min(this.temperature, amountToConsume * profile.heatPerMillibucket());
+            }
+
+            if (amountToConsume <= 0L || heatCooled <= 0L) {
+                continue;
+            }
+
+            long extracted = inventory.extract(coolantKey, amountToConsume, Actionable.MODULATE, src);
+            if (extracted <= 0L) {
+                continue;
+            }
+
+            if (profile.millibucketsPerHeat() > 0) {
+                return (int) Math.min(this.temperature, extracted / profile.millibucketsPerHeat());
+            }
+
+            return (int) Math.min(this.temperature, extracted * profile.heatPerMillibucket());
         }
+
+        return 0;
+    }
+
+    private AEFluidKey[] getCoolantPriority() {
+        AEFluidKey tier1 = AEFluidKey.of(ModFluids.SOURCE_GELID_CRYOTHEUM.get());
+        AEFluidKey tier2 = AEFluidKey.of(ModFluids.SOURCE_STABLE_COOLANT.get());
+        AEFluidKey tier3 = AEFluidKey.of(ModFluids.SOURCE_TEMPORAL_FLUID.get());
+        return switch (this.machineTier) {
+            case 3 -> new AEFluidKey[]{tier3, tier2, tier1};
+            case 2 -> new AEFluidKey[]{tier2, tier3, tier1};
+            default -> new AEFluidKey[]{tier1, tier2, tier3};
+        };
+    }
+
+    private CoolantProfile getCoolantProfile(Fluid fluid) {
+        if (fluid == ModFluids.SOURCE_TEMPORAL_FLUID.get() || fluid == ModFluids.FLOWING_TEMPORAL_FLUID.get()) {
+            return new CoolantProfile(100, 0, 10);
+        }
+        if (fluid == ModFluids.SOURCE_STABLE_COOLANT.get() || fluid == ModFluids.FLOWING_STABLE_COOLANT.get()) {
+            return new CoolantProfile(50, 0, 10);
+        }
+        if (fluid == ModFluids.SOURCE_GELID_CRYOTHEUM.get() || fluid == ModFluids.FLOWING_GELID_CRYOTHEUM.get()) {
+            return new CoolantProfile(0, 120, 1000);
+        }
+        return new CoolantProfile(15, 0, 10);
+    }
+
+    private void triggerThermalExplosion() {
+        if (this.level == null || this.level.isClientSide()) {
+            return;
+        }
+
+        Level level = this.level;
+        level.explode(null,
+                this.worldPosition.getX() + 0.5,
+                this.worldPosition.getY() + 0.5,
+                this.worldPosition.getZ() + 0.5,
+                THERMAL_EXPLOSION_POWER,
+                Level.ExplosionInteraction.BLOCK);
+        onControllerBroken();
+        this.temperature = 0;
+        this.overloadTimer = -1;
+        this.running = false;
+        this.progress = 0;
+        this.maxProgress = 0;
+        clearProcessStates();
+        updateDisplayedEnergy(List.of());
+        this.displayedRecipes.clear();
+        saveChanges();
     }
 
     private AENetworkedBlockEntity getConnectedNetworkNode() {
@@ -507,6 +659,9 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     private record PatternStack(AEKey key, long amount) {
     }
 
+    private record CoolantProfile(int heatPerMillibucket, int millibucketsPerHeat, long maxConsumePerTick) {
+    }
+
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(tag, registries);
@@ -515,6 +670,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             processTags.add(state.save(registries));
         }
         tag.put("processStates", processTags);
+        tag.putInt("thermalTicker", this.thermalTicker);
+        tag.putInt("overloadTimer", this.overloadTimer);
     }
 
     @Override
@@ -526,6 +683,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 this.processStates.get(i).load(processTags.getCompound(i), registries);
             }
         }
+        this.thermalTicker = tag.getInt("thermalTicker");
+        this.overloadTimer = tag.contains("overloadTimer") ? tag.getInt("overloadTimer") : -1;
     }
 
     @Override
@@ -536,6 +695,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         }
         this.storedEnergy = 0L;
         this.maxStoredEnergy = 0L;
+        this.overloadTimer = -1;
     }
 
     @Override
@@ -566,6 +726,16 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         }
 
         return foundField ? resolvedTier : com.raishxn.ufo.api.multiblock.MultiblockMachineTier.MK1.level();
+    }
+
+    @Override
+    protected boolean hasOngoingWork() {
+        for (ParallelProcessState state : this.processStates) {
+            if (state.isActive()) {
+                return true;
+            }
+        }
+        return super.hasOngoingWork();
     }
 
     private void syncClientState(boolean throttle) {

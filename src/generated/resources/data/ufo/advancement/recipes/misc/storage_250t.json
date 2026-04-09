@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_component": {
+    "has_prev": {
       "conditions": {
         "items": [
           {
-            "items": "ufo:event_horizon_component_matrix"
+            "items": "ufo:1t_mega_crafting_storage"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_component"
+      "has_prev"
     ]
   ],
   "rewards": {

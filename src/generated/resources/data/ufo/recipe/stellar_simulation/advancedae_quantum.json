@@ -1,0 +1,100 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "advanced_ae"
+    }
+  ],
+  "type": "ufo:stellar_simulation",
+  "coolant_amount": 250000,
+  "cooling_level": 3,
+  "energy": 150000000,
+  "field_tier": 3,
+  "fluid_inputs": [
+    {
+      "amount": 250000,
+      "ingredient": {
+        "fluid": "ufo:raw_star_matter_plasma"
+      }
+    },
+    {
+      "amount": 100000,
+      "ingredient": {
+        "fluid": "ufo:transcending_matter"
+      }
+    }
+  ],
+  "fluid_outputs": [
+    {
+      "#": 75000,
+      "#t": "ae2:f",
+      "id": "ufo:source_liquid_starlight_fluid"
+    },
+    {
+      "#": 50000,
+      "#t": "ae2:f",
+      "id": "ufo:uu_matter"
+    },
+    {
+      "#": 25000,
+      "#t": "ae2:f",
+      "id": "ufo:source_spatial_fluid"
+    },
+    {
+      "#": 25000,
+      "#t": "ae2:f",
+      "id": "ufo:source_temporal_fluid"
+    }
+  ],
+  "fuel_amount": 150000,
+  "fuel_fluid": "ufo:raw_star_matter_plasma",
+  "item_inputs": [
+    {
+      "amount": 256,
+      "ingredient": {
+        "item": "advanced_ae:quantum_infused_dust"
+      }
+    },
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
+      }
+    },
+    {
+      "amount": 32,
+      "ingredient": {
+        "item": "ufo:obsidian_matrix"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 192,
+      "#t": "ae2:i",
+      "id": "advanced_ae:quantum_alloy"
+    },
+    {
+      "#": 96,
+      "#t": "ae2:i",
+      "id": "advanced_ae:printed_quantum_processor"
+    },
+    {
+      "#": 48,
+      "#t": "ae2:i",
+      "id": "advanced_ae:quantum_processor"
+    },
+    {
+      "#": 16,
+      "#t": "ae2:i",
+      "id": "ae2:singularity"
+    },
+    {
+      "#": 32,
+      "#t": "ae2:i",
+      "id": "ufo:dimensional_processor"
+    }
+  ],
+  "simulation_name": "Quantum Alloy Infusion",
+  "time": 12000
+}

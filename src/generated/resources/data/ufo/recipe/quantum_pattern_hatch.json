@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ufo:cosmic_string_component_matrix"
+    },
+    "H": {
+      "item": "ufo:quantum_processor_assembler_controller"
+    },
+    "P": {
+      "item": "ufo:dimensional_processor"
+    },
+    "Q": {
+      "item": "ufo:quantum_hyper_mechanical_casing"
+    },
+    "S": {
+      "item": "ufo:quantum_slicer_controller"
+    }
+  },
+  "pattern": [
+    "QCQ",
+    "PHP",
+    "QSQ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:quantum_pattern_hatch"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "ufo:graviton_plated_casing"
+    },
+    "N": {
+      "item": "ufo:neutron_star_fragment_ingot"
+    },
+    "O": {
+      "item": "ufo:obsidian_matrix"
+    },
+    "W": {
+      "item": "ufo:white_dwarf_fragment_ingot"
+    }
+  },
+  "pattern": [
+    "WOW",
+    "NGN",
+    "WOW"
+  ],
+  "result": {
+    "count": 4,
+    "id": "ufo:entropy_singularity_casing"
+  }
+}

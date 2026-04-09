@@ -50,7 +50,7 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
     protected final List<GenericStack> fluidOutputs;
 
     protected final String simulationName;      // Display name for the simulation
-    protected final int energy;                  // Total AE power cost
+    protected final long energy;                 // Total AE power cost
     protected final int time;                    // Total ticks for the simulation
     protected final int coolingLevel;            // 0 = none, 1 = basic, 2 = advanced, 3 = extreme
     protected final int fieldTier;               // 1 = Mk.I, 2 = Mk.II, 3 = Mk.III
@@ -64,7 +64,7 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
             List<GenericStack> itemOutputs,
             List<GenericStack> fluidOutputs,
             String simulationName,
-            int energy,
+            long energy,
             int time,
             int coolingLevel,
             int fieldTier,
@@ -194,14 +194,14 @@ public class StellarSimulationRecipe implements Recipe<RecipeInput> {
     }
 
     /** Total AE power cost for the entire simulation. */
-    public int getEnergyCost() {
+    public long getEnergyCost() {
         return energy;
     }
 
     /** @deprecated Use {@link #getEnergyCost()} instead. Kept for backward compat. */
     @Deprecated
     public int getFuelCost() {
-        return energy;
+        return (int) Math.min(energy, Integer.MAX_VALUE);
     }
 
     /** Total ticks for the simulation cycle. */

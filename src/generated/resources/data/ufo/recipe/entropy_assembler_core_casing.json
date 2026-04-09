@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "ufo:dimensional_processor"
+    },
+    "E": {
+      "item": "ufo:entropy_singularity_casing"
+    },
+    "L": {
+      "item": "ufo:quantum_lattice_frame"
+    },
+    "P": {
+      "item": "ufo:phase_shift_component_matrix"
+    }
+  },
+  "pattern": [
+    "EPE",
+    "DLD",
+    "EPE"
+  ],
+  "result": {
+    "count": 2,
+    "id": "ufo:entropy_assembler_core_casing"
+  }
+}

@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 50000000,
+  "energy": 120000000,
   "fluid_inputs": [
     {
-      "amount": 2000,
+      "amount": 8000,
       "ingredient": {
         "fluid": "ufo:transcending_matter"
       }
@@ -17,14 +17,26 @@
       }
     },
     {
-      "amount": 2,
+      "amount": 8,
       "ingredient": {
         "item": "ufo:enriched_neutronium_sphere"
       }
     },
     {
+      "amount": 4,
       "ingredient": {
         "item": "ufo:quantum_anomaly"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:event_horizon_component_matrix"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
       }
     }
   ],
@@ -35,5 +47,5 @@
       "id": "ufo:ufo_helmet"
     }
   ],
-  "time": 2000
+  "time": 6000
 }

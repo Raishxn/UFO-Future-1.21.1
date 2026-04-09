@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "ufo:quantum_anomaly"
+    },
+    "H": {
+      "item": "ufo:hyper_dense_component_matrix"
+    },
+    "Q": {
+      "item": "ufo:entropy_assembler_core_casing"
+    },
+    "T": {
+      "item": "ufo:tesseract_component_matrix"
+    }
+  },
+  "pattern": [
+    "HTH",
+    "AQA",
+    "HTH"
+  ],
+  "result": {
+    "count": 2,
+    "id": "ufo:entropy_computer_condensation_matrix"
+  }
+}

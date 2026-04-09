@@ -1,6 +1,6 @@
-// 1.21.1	2026-04-08T06:22:20.0001243	Tags for minecraft:fluid mod id ufo
+// 1.21.1	2026-04-09T05:46:51.157403	Tags for minecraft:fluid mod id ufo
 d338f718547bdd5de030a32e51666640dd4fa11e data/ufo/tags/fluid/coolants.json
-5e4aa3f5bb6137be05300a6695b2a25a36c3c246 data/ufo/tags/fluid/coolant_extreme.json
+3aa00f3f4080b90eb078131ec323484ee92a30b4 data/ufo/tags/fluid/coolant_extreme.json
 40b51cf0877e9b8eeca5632ce917e0312c2095b7 data/ufo/tags/fluid/energy_fluid.json
 290dd2ed8838916538a408a39d8e9b5cb74eb84b data/ufo/tags/fluid/hazardous.json
 9cd1b5f3fd65194cbd1e2faf9dd96f50c57b1b11 data/ufo/tags/fluid/matter_fluid.json

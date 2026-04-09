@@ -8,13 +8,16 @@
     "F": {
       "item": "ufo:quantum_lattice_frame"
     },
+    "M": {
+      "item": "ufo:phase_shift_component_matrix"
+    },
     "P": {
       "item": "ufo:dimensional_processor"
     }
   },
   "pattern": [
     "PEP",
-    "EFE",
+    "FMF",
     "PEP"
   ],
   "result": {

@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 3000000,
+  "energy": 15000000,
   "fluid_inputs": [
     {
-      "amount": 4000,
+      "amount": 10000,
       "ingredient": {
         "fluid": "ufo:transcending_matter"
       }
@@ -12,12 +12,13 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
+      "amount": 4,
       "ingredient": {
         "item": "ufo:chrono_catalyst_t2"
       }
     },
     {
-      "amount": 2,
+      "amount": 4,
       "ingredient": {
         "item": "ufo:pulsar_matter"
       }
@@ -26,6 +27,12 @@
       "amount": 2,
       "ingredient": {
         "item": "ae2:quartz_vibrant_glass"
+      }
+    },
+    {
+      "amount": 12,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
       }
     }
   ],
@@ -36,5 +43,5 @@
       "id": "ufo:chrono_catalyst_t3"
     }
   ],
-  "time": 1000
+  "time": 3600
 }

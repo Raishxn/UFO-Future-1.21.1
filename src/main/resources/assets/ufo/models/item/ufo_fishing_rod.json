@@ -1,0 +1,11 @@
+{
+  "parent": "ufo:item/ufoset/fishing_rod",
+  "overrides": [
+    {
+      "predicate": {
+        "cast": 1
+      },
+      "model": "ufo:item/ufo_fishing_rod_cast"
+    }
+  ]
+}

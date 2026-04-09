@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 2500000,
+  "energy": 12000000,
   "fluid_inputs": [
     {
-      "amount": 1000,
+      "amount": 4000,
       "ingredient": {
         "fluid": "ufo:source_liquid_starlight_fluid"
       }
@@ -18,24 +18,36 @@
   ],
   "item_inputs": [
     {
-      "amount": 4,
+      "amount": 8,
       "ingredient": {
         "item": "ufo:white_dwarf_fragment_ingot"
       }
     },
     {
-      "amount": 2,
+      "amount": 4,
       "ingredient": {
         "item": "ufo:neutron_star_fragment_ingot"
       }
     },
     {
-      "amount": 2,
+      "amount": 8,
       "ingredient": {
         "item": "ufo:pulsar_fragment_dust"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:corporeal_matter"
+      }
+    },
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
       }
     }
   ],
   "item_outputs": [],
-  "time": 600
+  "time": 1800
 }

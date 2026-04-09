@@ -3,7 +3,7 @@
   "energy": 7000000,
   "fluid_inputs": [
     {
-      "amount": 1000,
+      "amount": 2000,
       "ingredient": {
         "fluid": "ufo:source_white_dwarf_fragment_fluid"
       }
@@ -19,6 +19,12 @@
     {
       "ingredient": {
         "item": "ufo:uu_matter_crystal"
+      }
+    },
+    {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
       }
     },
     {

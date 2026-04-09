@@ -1,4 +1,4 @@
-// 1.21.1	2025-11-19T15:24:16.172598	Item Models: ufo
+// 1.21.1	2026-04-09T07:46:14.5328113	Item Models: ufo
 65bffe38993ea67d3302816b93f2d718431de59b assets/ufo/models/item/aether_containment_capsule.json
 c41f2c84703caa2f3a67fc73bfdb9ac21eea6eec assets/ufo/models/item/charged_enriched_neutronium_sphere.json
 86d9de77936ae4a0cbcaec6708dc4b7a7192352d assets/ufo/models/item/chrono_catalyst_t1.json
@@ -104,19 +104,18 @@ c0e172f4ac0f3c8d47abeaa49634e3cebbd99995 assets/ufo/models/item/storage_cell_sid
 5559f6843b53edaff7b0efff13f4cd8da80ed8e5 assets/ufo/models/item/thermal_resistor_pants.json
 6e8ae9be7632fe9d776ee9d6169616950b0c8ff0 assets/ufo/models/item/thermal_resistor_plating.json
 f78bada06e511643006f4834cff38cf35f58dfc7 assets/ufo/models/item/transcending_matter_bucket.json
-059b061461bb2f2e35b1e59a956829b9f58a040c assets/ufo/models/item/ufo_axe.json
+46afa4a987a943cb6fe40bb3f9a7cb8ba83c9a06 assets/ufo/models/item/ufo_axe.json
 55ba6b14f4484470e976d9a5dc7c79cad484994f assets/ufo/models/item/ufo_boots.json
-3b1260b5a9a27b24c6613849b596ecb78fa81d5a assets/ufo/models/item/ufo_chestplate.json
-aae3c7f45a78a976749809de019e9ccff874d11b assets/ufo/models/item/ufo_fishing_rod.json
-10938abe13ddfe048681cc29973acac5b94ce7cd assets/ufo/models/item/ufo_greatsword.json
-da58a40043a418b6f5baa8d6553fcde657aa3f87 assets/ufo/models/item/ufo_hammer.json
-0b44ffeb9863a6d2738ce18b1f0d0cc38c88f7f1 assets/ufo/models/item/ufo_helmet.json
-0309d14c418afce25178971b6c86e5820ad95795 assets/ufo/models/item/ufo_hoe.json
+641c3a37e4014731af2135c5cd0b65679b075826 assets/ufo/models/item/ufo_chestplate.json
+efcbe332ffdf76698cca2a3deab7cc43534e2599 assets/ufo/models/item/ufo_greatsword.json
+4607c09655628411c92c199e3e4d6c94097dbacc assets/ufo/models/item/ufo_hammer.json
+3a97dfab42aa7ca978dc66bfc8268f850e96f2ff assets/ufo/models/item/ufo_helmet.json
+f79e03b1781b51f42528ad63a6964ffb46c2169c assets/ufo/models/item/ufo_hoe.json
 9075a0ebabedab83f6eb3c8cffbc326cbf384598 assets/ufo/models/item/ufo_leggings.json
-bfa0d28f8568f61d157504f3ee49393fc0ecd8f9 assets/ufo/models/item/ufo_pickaxe.json
-b81da0bbc3a68341ac2a7f70aed0b340205282a5 assets/ufo/models/item/ufo_shovel.json
-d98b0caae37e299b256cfec627dd243320d60582 assets/ufo/models/item/ufo_staff.json
-e4d8ffdec1dcc94e7c38d9479cc2e03936571a94 assets/ufo/models/item/ufo_sword.json
+8313ac51c162e08cfa7ef6d242b9ee3e26d6596d assets/ufo/models/item/ufo_pickaxe.json
+ba1f8c5a90183b2e7090479799aedef851052f13 assets/ufo/models/item/ufo_shovel.json
+28a4f41965a0c6785e8d221425c02c3b360b8de6 assets/ufo/models/item/ufo_staff.json
+3758a0d934caef82fd417f705766a814dc3cdc1d assets/ufo/models/item/ufo_sword.json
 5fced6ea53bf3b6737793af756220fd2cc0e9f50 assets/ufo/models/item/unstable_white_hole_matter.json
 18cc4565fb2d0cb67a559ecd8fb5a71b507bb821 assets/ufo/models/item/uu_amplifier_bucket.json
 22b40fd1110ad101991f352342b3a4d52a0a6aac assets/ufo/models/item/uu_matter_bucket.json

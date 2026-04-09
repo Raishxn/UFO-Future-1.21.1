@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 100000000,
+  "energy": 180000000,
   "fluid_inputs": [
     {
-      "amount": 8000,
+      "amount": 16000,
       "ingredient": {
         "fluid": "ufo:transcending_matter"
       }
@@ -12,18 +12,19 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
-      "amount": 8,
+      "amount": 24,
       "ingredient": {
         "item": "ufo:event_horizon_component_matrix"
       }
     },
     {
-      "amount": 8,
+      "amount": 16,
       "ingredient": {
         "item": "ufo:dark_matter"
       }
     },
     {
+      "amount": 32,
       "ingredient": {
         "item": "ufo:dimensional_processor"
       }
@@ -36,5 +37,5 @@
       "id": "ufo:cosmic_string_component_matrix"
     }
   ],
-  "time": 6000
+  "time": 9600
 }

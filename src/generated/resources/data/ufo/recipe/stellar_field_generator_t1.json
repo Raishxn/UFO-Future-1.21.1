@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "ufo:ae_energy_input_hatch"
+    },
+    "C": {
+      "item": "ufo:entropy_assembler_core_casing"
+    },
+    "E": {
+      "item": "ufo:entropy_singularity_casing"
+    },
+    "P": {
+      "item": "ufo:phase_shift_component_matrix"
+    },
+    "Q": {
+      "item": "ufo:neutronium_sphere"
+    }
+  },
+  "pattern": [
+    "PAP",
+    "ECE",
+    "PQP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:stellar_field_generator_t1"
+  }
+}

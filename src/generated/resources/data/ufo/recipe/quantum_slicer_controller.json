@@ -6,16 +6,16 @@
       "item": "ufo:dimensional_processor"
     },
     "E": {
-      "item": "ae2:engineering_processor"
+      "item": "ufo:dimensional_matter_assembler"
     },
     "F": {
       "item": "ufo:quantum_lattice_frame"
     },
     "G": {
-      "item": "ae2:quartz_vibrant_glass"
+      "item": "ufo:50m_mega_co_processor"
     },
     "P": {
-      "item": "ufo:phase_shift_component_matrix"
+      "item": "ufo:hyper_dense_component_matrix"
     },
     "Q": {
       "item": "ufo:quantum_hyper_mechanical_casing"

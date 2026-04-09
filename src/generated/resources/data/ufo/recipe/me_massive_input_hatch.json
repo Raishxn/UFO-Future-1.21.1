@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ufo:white_dwarf_item_cell_housing"
+    },
+    "D": {
+      "item": "ufo:white_dwarf_matter"
+    },
+    "E": {
+      "item": "ufo:event_horizon_component_matrix"
+    },
+    "L": {
+      "item": "ufo:dimensional_processor"
+    },
+    "S": {
+      "item": "ufo:entropy_singularity_casing"
+    }
+  },
+  "pattern": [
+    "SES",
+    "LCL",
+    "SDS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:me_massive_input_hatch"
+  }
+}

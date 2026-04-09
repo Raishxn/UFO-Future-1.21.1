@@ -23,7 +23,7 @@ public class StellarSimulationRecipeBuilder {
     private final List<IngredientStack.Fluid> fluidInputs = new ArrayList<>();
     private final List<GenericStack> itemOutputs = new ArrayList<>();
     private final List<GenericStack> fluidOutputs = new ArrayList<>();
-    private int energy = 0;
+    private long energy = 0;
     private int time = 0;
     private int coolingLevel = 3;
     private int fieldTier = 3;
@@ -56,6 +56,11 @@ public class StellarSimulationRecipeBuilder {
 
     public StellarSimulationRecipeBuilder output(ItemLike item, long amount) {
         this.itemOutputs.add(new GenericStack(AEItemKey.of(item), amount));
+        return this;
+    }
+
+    public StellarSimulationRecipeBuilder outputFluid(Fluid fluid, long amount) {
+        this.fluidOutputs.add(new GenericStack(AEFluidKey.of(fluid), amount));
         return this;
     }
 
@@ -93,15 +98,8 @@ public class StellarSimulationRecipeBuilder {
         return this;
     }
 
-    public StellarSimulationRecipeBuilder energy(int energy) {
-        this.energy = energy;
-        return this;
-    }
-
     public StellarSimulationRecipeBuilder energy(long energy) {
-        // Downcast or cap if it doesn't fit in int, but current recipe model expects int for energy.
-        // If it's too big, cap at Integer.MAX_VALUE. Some logic may expect it.
-        this.energy = energy > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) energy;
+        this.energy = energy;
         return this;
     }
 

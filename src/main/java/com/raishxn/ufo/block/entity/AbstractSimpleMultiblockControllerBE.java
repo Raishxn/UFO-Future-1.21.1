@@ -46,7 +46,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
     protected int progress = 0;
     protected int maxProgress = 0;
     protected int temperature = 0;
-    protected int maxTemperature = 1000;
+    protected int maxTemperature = 10000;
     protected int machineTier = MultiblockMachineTier.MK1.level();
     protected long storedEnergy = 0L;
     protected long maxStoredEnergy = 0L;
@@ -207,6 +207,10 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
 
     protected int resolveMachineTier(MultiblockPattern.MatchResult result) {
         return MultiblockMachineTier.MK1.level();
+    }
+
+    protected boolean hasOngoingWork() {
+        return this.running || this.progress > 0 || this.maxProgress > 0;
     }
 
     public void onControllerBroken() {
@@ -397,6 +401,9 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
 
     @Override
     public void toggleSafeMode() {
+        if (hasOngoingWork()) {
+            return;
+        }
         this.safeMode = !this.safeMode;
         this.setChanged();
         if (this.level != null) {
@@ -406,6 +413,9 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
 
     @Override
     public void toggleOverclock() {
+        if (hasOngoingWork()) {
+            return;
+        }
         this.overclocked = !this.overclocked;
         this.setChanged();
         if (this.level != null) {

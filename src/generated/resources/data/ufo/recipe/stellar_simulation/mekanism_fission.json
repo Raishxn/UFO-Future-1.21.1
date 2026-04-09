@@ -1,0 +1,88 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "ufo:stellar_simulation",
+  "coolant_amount": 250000,
+  "cooling_level": 3,
+  "energy": 150000000,
+  "field_tier": 3,
+  "fluid_inputs": [
+    {
+      "amount": 20000,
+      "ingredient": {
+        "fluid": "mekanism:sulfuric_acid"
+      }
+    }
+  ],
+  "fluid_outputs": [
+    {
+      "#": 50000,
+      "#t": "ae2:f",
+      "id": "ufo:source_temporal_fluid"
+    },
+    {
+      "#": 40000,
+      "#t": "ae2:f",
+      "id": "ufo:source_stable_coolant"
+    },
+    {
+      "#": 30000,
+      "#t": "ae2:f",
+      "id": "ufo:source_spatial_fluid"
+    },
+    {
+      "#": 25000,
+      "#t": "ae2:f",
+      "id": "ufo:uu_matter"
+    }
+  ],
+  "fuel_amount": 80000,
+  "fuel_fluid": "mekanism:sulfuric_acid",
+  "item_inputs": [
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "mekanism:pellet_plutonium"
+      }
+    },
+    {
+      "amount": 32,
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 64,
+      "#t": "ae2:i",
+      "id": "mekanism:pellet_antimatter"
+    },
+    {
+      "#": 192,
+      "#t": "ae2:i",
+      "id": "mekanism:pellet_polonium"
+    },
+    {
+      "#": 128,
+      "#t": "ae2:i",
+      "id": "mekanism:pellet_plutonium"
+    },
+    {
+      "#": 64,
+      "#t": "ae2:i",
+      "id": "mekanism:hdpe_sheet"
+    },
+    {
+      "#": 128,
+      "#t": "ae2:i",
+      "id": "mekanism:substrate"
+    }
+  ],
+  "simulation_name": "Fission Reactor Process",
+  "time": 24000
+}

@@ -12,6 +12,7 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
+      "amount": 2,
       "ingredient": {
         "item": "ufo:chrono_catalyst_t1"
       }
@@ -26,6 +27,12 @@
       "amount": 2,
       "ingredient": {
         "item": "ae2:quartz_vibrant_glass"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
       }
     }
   ],

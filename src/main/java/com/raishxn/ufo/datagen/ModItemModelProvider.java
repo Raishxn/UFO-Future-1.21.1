@@ -99,17 +99,17 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModCells.INFINITY_RED_DYE_CELL.get());
         basicItem(ModCells.INFINITY_BLACK_DYE_CELL.get());
 
-        handheldItem(ModTools.UFO_AXE);
-        handheldItem(ModTools.UFO_HOE);
+        customParentItem(ModTools.UFO_AXE, "item/ufoset/axe");
+        customParentItem(ModTools.UFO_HOE, "item/ufoset/hoe");
        // handheldItem(ModTools.UFO_BOW);
-        handheldItem(ModTools.UFO_GREATSWORD);
-        handheldItem(ModTools.UFO_HAMMER);
-        handheldItem(ModTools.UFO_SHOVEL);
-        handheldItem(ModTools.UFO_SWORD);
-        handheldItem(ModTools.UFO_PICKAXE);
-        handheldItem(ModTools.UFO_FISHING_ROD);
-        handheldItem(ModTools.UFO_STAFF);
-        basicItem(ModArmor.UFO_HELMET.get());
+        customParentItem(ModTools.UFO_GREATSWORD, "item/ufoset/greatsword");
+        customParentItem(ModTools.UFO_HAMMER, "item/ufoset/hammer");
+        customParentItem(ModTools.UFO_SHOVEL, "item/ufoset/shovel");
+        customParentItem(ModTools.UFO_SWORD, "item/ufoset/sword");
+        customParentItem(ModTools.UFO_PICKAXE, "item/ufoset/pickaxe");
+        // Custom fishing rod models with overrides are authored in src/main/resources.
+        customParentItem(ModTools.UFO_STAFF, "item/ufoset/staff");
+        customParentItem(ModArmor.UFO_HELMET, "item/ufoset/helmet");
         basicItem(ModArmor.UFO_CHESTPLATE.get());
         basicItem(ModArmor.UFO_LEGGINGS.get());
         basicItem(ModArmor.UFO_BOOTS.get());
@@ -207,6 +207,12 @@ public class ModItemModelProvider extends ItemModelProvider {
                 ResourceLocation.parse("item/handheld")).texture("layer0",
                 ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID,"item/" + item.getId().getPath()));
     }
+
+    private ItemModelBuilder customParentItem(DeferredItem<?> item, String parent) {
+        return withExistingParent(item.getId().getPath(),
+                ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, parent));
+    }
+
     private ItemModelBuilder basicItem(DeferredHolder<Item, ? extends Item> item) {
         return withExistingParent(item.getId().getPath(),
                 ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated")).texture("layer0",

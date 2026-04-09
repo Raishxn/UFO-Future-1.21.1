@@ -1,0 +1,46 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "ufo:dimensional_assembly",
+  "energy": 650000000,
+  "fluid_inputs": [
+    {
+      "amount": 8000,
+      "ingredient": {
+        "fluid": "ufo:transcending_matter"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:cosmic_string_component_matrix"
+      }
+    },
+    {
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    },
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "mekanism:hdpe_pellet"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:infinity_hdpe_pellet_cell"
+    }
+  ],
+  "time": 22000
+}

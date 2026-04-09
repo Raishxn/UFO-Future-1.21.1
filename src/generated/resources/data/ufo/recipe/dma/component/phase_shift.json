@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 500000,
+  "energy": 1200000,
   "fluid_inputs": [
     {
       "amount": 1000,
@@ -43,5 +43,5 @@
       "id": "ufo:phase_shift_component_matrix"
     }
   ],
-  "time": 400
+  "time": 600
 }

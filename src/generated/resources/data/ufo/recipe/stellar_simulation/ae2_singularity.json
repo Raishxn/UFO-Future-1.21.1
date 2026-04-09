@@ -1,0 +1,94 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "type": "ufo:stellar_simulation",
+  "coolant_amount": 100000,
+  "cooling_level": 2,
+  "energy": 50000000,
+  "field_tier": 2,
+  "fluid_inputs": [
+    {
+      "amount": 100000,
+      "ingredient": {
+        "fluid": "ufo:source_liquid_starlight_fluid"
+      }
+    },
+    {
+      "amount": 50000,
+      "ingredient": {
+        "fluid": "ufo:uu_matter"
+      }
+    }
+  ],
+  "fluid_outputs": [
+    {
+      "#": 50000,
+      "#t": "ae2:f",
+      "id": "ufo:source_liquid_starlight_fluid"
+    },
+    {
+      "#": 75000,
+      "#t": "ae2:f",
+      "id": "ufo:source_uu_amplifier_fluid"
+    },
+    {
+      "#": 20000,
+      "#t": "ae2:f",
+      "id": "ufo:source_spatial_fluid"
+    },
+    {
+      "#": 25000,
+      "#t": "ae2:f",
+      "id": "ufo:source_stable_coolant"
+    }
+  ],
+  "fuel_amount": 50000,
+  "fuel_fluid": "ufo:source_liquid_starlight_fluid",
+  "item_inputs": [
+    {
+      "amount": 4096,
+      "ingredient": {
+        "item": "ae2:matter_ball"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 128,
+      "#t": "ae2:i",
+      "id": "ae2:singularity"
+    },
+    {
+      "#": 2048,
+      "#t": "ae2:i",
+      "id": "ae2:matter_ball"
+    },
+    {
+      "#": 4096,
+      "#t": "ae2:i",
+      "id": "ae2:sky_dust"
+    },
+    {
+      "#": 4096,
+      "#t": "ae2:i",
+      "id": "ae2:certus_quartz_crystal"
+    },
+    {
+      "#": 2048,
+      "#t": "ae2:i",
+      "id": "ae2:fluix_crystal"
+    }
+  ],
+  "simulation_name": "Quantum Singularity Collapse",
+  "time": 12000
+}

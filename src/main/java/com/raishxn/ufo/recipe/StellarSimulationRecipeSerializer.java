@@ -62,7 +62,7 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
             Codec.STRING.optionalFieldOf("simulation_name", "")
                     .forGetter(StellarSimulationRecipe::getSimulationName),
             // Support both "energy" and legacy "fuel" field
-            Codec.INT.optionalFieldOf("energy", 0)
+            Codec.LONG.optionalFieldOf("energy", 0L)
                     .forGetter(StellarSimulationRecipe::getEnergyCost),
             Codec.INT.fieldOf("time")
                     .forGetter(StellarSimulationRecipe::getTime),
@@ -103,7 +103,7 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
                 .encode(buf, recipe.getFluidOutputs());
         // Scalars
         buf.writeUtf(recipe.getSimulationName());
-        buf.writeInt(recipe.getEnergyCost());
+        buf.writeLong(recipe.getEnergyCost());
         buf.writeInt(recipe.getTime());
         buf.writeInt(recipe.getCoolingLevel());
         buf.writeInt(recipe.getFieldTier());
@@ -122,7 +122,7 @@ public class StellarSimulationRecipeSerializer implements RecipeSerializer<Stell
         var fluidOutputs = GenericStack.STREAM_CODEC
                 .apply(net.minecraft.network.codec.ByteBufCodecs.list()).decode(buf);
         String simulationName = buf.readUtf();
-        int energy = buf.readInt();
+        long energy = buf.readLong();
         int time = buf.readInt();
         int coolingLevel = buf.readInt();
         int fieldTier = buf.readInt();
