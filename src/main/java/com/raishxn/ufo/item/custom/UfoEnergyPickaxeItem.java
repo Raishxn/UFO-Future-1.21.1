@@ -95,7 +95,7 @@ public class UfoEnergyPickaxeItem extends PickaxeItem implements IEnergyTool, IH
         int fortune = pStack.getOrDefault(ModDataComponents.PROGRESSIVE_FORTUNE.get(), 0);
 
         pTooltipComponents.add(Component.literal("Auto-Smelt: " + (smite ? "ON" : "OFF")).withStyle(smite ? ChatFormatting.GOLD : ChatFormatting.GRAY));
-        pTooltipComponents.add(Component.literal("Prog. Fortune: " + fortune + "/100").withStyle(ChatFormatting.AQUA));
+        pTooltipComponents.add(Component.literal("Prog. Fortune: " + fortune + "/300").withStyle(ChatFormatting.AQUA));
     }
 
     @Override

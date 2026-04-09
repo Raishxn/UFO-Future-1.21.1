@@ -700,15 +700,25 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
                 int recipeTime = this.cachedTask != null ? this.cachedTask.getTime() : 200;
 
-                final int speedFactor = Math.min(10,
-                        Math.max(1, (int) (baseSpeedFactor * this.currentSpeedMultiplier)));
+                final int speedFactor = this.hasCreativeCatalyst
+                        ? Math.max(1, recipeTime)
+                        : Math.min(10, Math.max(1, (int) (baseSpeedFactor * this.currentSpeedMultiplier)));
                 final int progressReq = recipeTime - this.getProcessingTime();
                 final float powerRatio = progressReq < speedFactor ? (float) progressReq / speedFactor : 1;
                 final int requiredTicks = Mth.ceil((float) recipeTime / speedFactor);
 
                 int basePowerConsumption = Mth.floor(((float) getTask().getEnergy() / requiredTicks) * powerRatio);
-                final int powerConsumption = Math.max(1, (int) (basePowerConsumption * this.currentPowerMultiplier));
+                final int powerConsumption = this.hasCreativeCatalyst
+                        ? 0
+                        : Math.max(1, (int) (basePowerConsumption * this.currentPowerMultiplier));
                 final double powerThreshold = powerConsumption - 0.01;
+
+                if (this.hasCreativeCatalyst) {
+                    this.setProcessingTime(this.getProcessingTime() + speedFactor);
+                    setShowWarning(false);
+                    didWork[0] = true;
+                    return;
+                }
 
                 // Try to recharge from AppFlux FE cells in the AE2 network
                 try {
@@ -771,7 +781,6 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                         if (out.getItemOutputs().get(i) != null
                                 && out.getItemOutputs().get(i).what() instanceof AEItemKey itemKey) {
                             int outAmount = (int) out.getItemOutputs().get(i).amount();
-                            if (this.hasCreativeCatalyst) outAmount *= 2; // 100% Bonus Drop
                             var toIns = itemKey.toStack(outAmount);
                             this.outputInv.insertItem(i, toIns, false);
                         }
@@ -782,40 +791,37 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                         if (out.getFluidOutputs().get(i) != null
                                 && out.getFluidOutputs().get(i).what() instanceof AEFluidKey fluidKey) {
                             int outAmount = (int) out.getFluidOutputs().get(i).amount();
-                            if (this.hasCreativeCatalyst) outAmount *= 2; // 100% Bonus Drop
                             this.fluidInv.add(i, fluidKey, outAmount);
                         }
                     }
 
-                    if (!this.hasCreativeCatalyst) {
-                        // Consume inputs shapelessly
-                        for (var req : out.getItemInputs()) {
-                            if (req != null && !req.isEmpty()) {
-                                int amountNeeded = (int) req.getAmount();
-                                for (int i = 0; i < this.inputInv.size() && amountNeeded > 0; i++) {
-                                    var currentStack = this.inputInv.getStackInSlot(i);
-                                    if (req.getIngredient().test(currentStack)) {
-                                        int toTake = Math.min(currentStack.getCount(), amountNeeded);
-                                        currentStack.shrink(toTake);
-                                        this.inputInv.setItemDirect(i, currentStack);
-                                        amountNeeded -= toTake;
-                                    }
+                    // Consume inputs shapelessly
+                    for (var req : out.getItemInputs()) {
+                        if (req != null && !req.isEmpty()) {
+                            int amountNeeded = (int) req.getAmount();
+                            for (int i = 0; i < this.inputInv.size() && amountNeeded > 0; i++) {
+                                var currentStack = this.inputInv.getStackInSlot(i);
+                                if (req.getIngredient().test(currentStack)) {
+                                    int toTake = Math.min(currentStack.getCount(), amountNeeded);
+                                    currentStack.shrink(toTake);
+                                    this.inputInv.setItemDirect(i, currentStack);
+                                    amountNeeded -= toTake;
                                 }
                             }
                         }
+                    }
 
-                        // Consume fluids (always from slot 3 = base fluid input)
-                        for (int i = 0; i < out.getFluidInputs().size(); i++) {
-                            if (out.getFluidInputs().get(i) != null && !out.getFluidInputs().get(i).isEmpty()) {
-                                var currentStack = this.fluidInv.getStack(3); // Always slot 3 (base fluid)
-                                if (currentStack != null) {
-                                    var key = currentStack.what();
-                                    long remaining = currentStack.amount() - out.getFluidInputs().get(i).getAmount();
-                                    if (remaining > 0) {
-                                        this.fluidInv.setStack(3, new GenericStack(key, remaining));
-                                    } else {
-                                        this.fluidInv.setStack(3, null);
-                                    }
+                    // Consume fluids (always from slot 3 = base fluid input)
+                    for (int i = 0; i < out.getFluidInputs().size(); i++) {
+                        if (out.getFluidInputs().get(i) != null && !out.getFluidInputs().get(i).isEmpty()) {
+                            var currentStack = this.fluidInv.getStack(3); // Always slot 3 (base fluid)
+                            if (currentStack != null) {
+                                var key = currentStack.what();
+                                long remaining = currentStack.amount() - out.getFluidInputs().get(i).getAmount();
+                                if (remaining > 0) {
+                                    this.fluidInv.setStack(3, new GenericStack(key, remaining));
+                                } else {
+                                    this.fluidInv.setStack(3, null);
                                 }
                             }
                         }

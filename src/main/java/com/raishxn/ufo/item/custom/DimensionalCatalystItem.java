@@ -30,13 +30,11 @@ public class DimensionalCatalystItem extends UpgradeCardItem {
             components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("Instant Crafting").withStyle(ChatFormatting.GREEN)));
             components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("No Energy/Resource Cost").withStyle(ChatFormatting.GREEN)));
+                    .append(Component.literal("No Energy Cost").withStyle(ChatFormatting.GREEN)));
             components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("100% Bonus Drop").withStyle(ChatFormatting.GREEN)));
+                    .append(Component.literal("No Heat Generation").withStyle(ChatFormatting.GREEN)));
             components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("Never Fails").withStyle(ChatFormatting.GREEN)));
-            components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("Resets Machine Temperature").withStyle(ChatFormatting.AQUA))); //
+                    .append(Component.literal("Still Consumes Recipe Inputs").withStyle(ChatFormatting.AQUA)));
 
         } else {
             components.add(Component.literal("Hold <").withStyle(ChatFormatting.DARK_GRAY)

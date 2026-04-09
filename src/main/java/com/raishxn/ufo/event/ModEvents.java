@@ -54,7 +54,7 @@ public class ModEvents {
                 int currentFortune = stack.getOrDefault(ModDataComponents.PROGRESSIVE_FORTUNE.get(), 0);
 
                 // Limite de nível 100 (ou ajuste conforme necessário)
-                if (currentFortune < 100) {
+                if (currentFortune < 300) {
                     int newFortune = currentFortune + 1;
 
                     // 1. Atualiza o componente customizado (para o seu controle interno e HUD)
