@@ -25,39 +25,54 @@ plugins:
           nav_translations:
             Home: Início
             Wiki: Wiki
+            Stellar Nexus: Stellar Nexus
             Dimensional Matter Assembler: Montador de Matéria Dimensional
+            Quantum Matter Fabricator: Quantum Matter Fabricator
+            Quantum Slicer: Quantum Slicer
+            Quantum Processor Assembler: Quantum Processor Assembler
+            Multiblock Tiers: Tiers de Multibloco
             Catalysts: Catalisadores
             KubeJS Recipes: Receitas KubeJS
-            Tools & Weapons: Ferramentas & Armas
+            Tools & Weapons: Ferramentas e Armas
             Armor Sets: Conjuntos de Armadura
             Storage Cells: Células de Armazenamento
-            Materials & Fluids: Materiais & Fluidos
-            Crafting Progression: Progressão de Crafting
+            Materials & Fluids: Materiais e Fluidos
+            Crafting Progression: Progressão
         - locale: es
           name: Español
           build: true
           nav_translations:
             Home: Inicio
             Wiki: Wiki
+            Stellar Nexus: Stellar Nexus
             Dimensional Matter Assembler: Ensamblador de Materia Dimensional
+            Quantum Matter Fabricator: Quantum Matter Fabricator
+            Quantum Slicer: Quantum Slicer
+            Quantum Processor Assembler: Quantum Processor Assembler
+            Multiblock Tiers: Niveles de Multibloque
             Catalysts: Catalizadores
             KubeJS Recipes: Recetas KubeJS
             Tools & Weapons: Herramientas y Armas
             Armor Sets: Conjuntos de Armadura
             Storage Cells: Celdas de Almacenamiento
             Materials & Fluids: Materiales y Fluidos
-            Crafting Progression: Progresión de Fabricación
+            Crafting Progression: Progresión
         - locale: zh
           name: 中文
           build: true
           nav_translations:
             Home: 首页
-            Wiki: 维基
+            Wiki: Wiki
+            Stellar Nexus: Stellar Nexus
             Dimensional Matter Assembler: 维度物质装配器
+            Quantum Matter Fabricator: Quantum Matter Fabricator
+            Quantum Slicer: Quantum Slicer
+            Quantum Processor Assembler: Quantum Processor Assembler
+            Multiblock Tiers: Multiblock Tiers
             Catalysts: 催化剂
             KubeJS Recipes: KubeJS 配方
             Tools & Weapons: 工具与武器
-            Armor Sets: 装甲套装
+            Armor Sets: 护甲套装
             Storage Cells: 存储单元
             Materials & Fluids: 材料与流体
             Crafting Progression: 合成进阶
@@ -65,7 +80,12 @@ plugins:
 nav:
   - Home: index.md
   - Wiki:
+    - Stellar Nexus: stellar-nexus.md
     - Dimensional Matter Assembler: dma.md
+    - Quantum Matter Fabricator: quantum-matter-fabricator.md
+    - Quantum Slicer: quantum-slicer.md
+    - Quantum Processor Assembler: quantum-processor-assembler.md
+    - Multiblock Tiers: multiblock-tiers.md
     - Catalysts: catalysts.md
     - KubeJS Recipes: kubejs-recipes.md
     - Tools & Weapons: tools.md

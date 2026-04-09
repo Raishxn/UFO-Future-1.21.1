@@ -1,35 +1,22 @@
-# UFO Future Mod — Wiki
+# Wiki do UFO Future
 
-Bem-vindo à documentação oficial do **UFO Future**, um addon avançado para AE2 no Minecraft 1.21.1 (NeoForge).
+Bem-vindo a documentacao do **UFO Future**, um mod de tecnologia endgame focado em AE2 para Minecraft 1.21.1.
 
-UFO Future introduz materiais estelares endgame, uma poderosa máquina customizada, ferramentas de energia transformáveis, conjuntos de armadura em tiers, células de armazenamento BigInteger, células infinitas e um sistema profundo de progressão de materiais — tudo integrado com o Applied Energistics 2.
+## Linha Principal de Maquinas
 
----
+- [Montador de Materia Dimensional](dma.md): a primeira maquina avancada
+- [Quantum Matter Fabricator](quantum-matter-fabricator.md): evolucao do DMA para processamento em massa
+- [Quantum Slicer](quantum-slicer.md): geracao de pecas impressas em alto throughput
+- [Quantum Processor Assembler](quantum-processor-assembler.md): finalizacao de processadores em alto throughput
+- [Stellar Nexus](stellar-nexus.md): multibloco de simulacao em escala extrema
+- [Tiers de Multibloco](multiblock-tiers.md): regras de gate e scaling de MK1/MK2/MK3
 
-## 📖 Páginas
+## Outros Topicos
 
-| Página | Descrição |
-|--------|-----------|
-| [Montador de Matéria Dimensional](dma.md) | A máquina principal — crafting, GUI e sistema térmico |
-| [Receitas KubeJS](kubejs-recipes.md) | Como criar/modificar receitas do DMA via KubeJS |
-| [Catalisadores](catalysts.md) | Todos os 13 upgrades de catalisador — famílias, tiers, stats, calor |
-| [Ferramentas & Armas](tools.md) | Sistema de multi-ferramenta energética transformável |
-| [Conjuntos de Armadura](armor.md) | Exotraje Resistor Térmico & Armadura UFO |
-| [Células de Armazenamento](storage-cells.md) | Células Anã Branca, Estrela de Nêutrons (BigInteger) & Infinitas |
-| [Materiais & Fluidos](materials.md) | Fragmentos estelares, estágios de matéria e fluidos customizados |
-| [Progressão de Crafting](progression.md) | Guia completo de progressão — de Matriz de Obsidiana a Matéria Escura |
-
----
-
-## Referência Rápida
-
-- **ID do Mod**: `ufo`
-- **Tipo de Receita**: `ufo:dimensional_assembly`
-- **Namespace**: `com.raishxn.ufo`
-- **Minecraft**: 1.21.1
-- **Loader**: NeoForge
-- **Dependências**: AE2, AE2 Addon Lib, Mekanism (opcional)
-
----
-
-*Navegue usando as páginas acima ou o menu lateral.*
+- [Catalisadores](catalysts.md)
+- [Receitas KubeJS](kubejs-recipes.md)
+- [Ferramentas e Armas](tools.md)
+- [Armaduras](armor.md)
+- [Celulas de Armazenamento](storage-cells.md)
+- [Materiais e Fluidos](materials.md)
+- [Progressao](progression.md)

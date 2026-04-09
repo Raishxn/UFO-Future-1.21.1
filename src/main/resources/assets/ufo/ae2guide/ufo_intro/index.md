@@ -6,19 +6,24 @@ categories:
   - ufo_intro
 ---
 
-# Welcome to UFO Future!
+# Welcome to UFO Future
 
-**UFO Future** expands your technological experience by adding advanced resources based on astrophysics, quantum fluids, and infinite-tier storage.
+**UFO Future** expands AE2 endgame with thermal machines, stellar matter, massive storage and multiblock automation.
 
 ![Logo](../pic/logo.png)
 
-## Main Content
+## Main Lines
+- **DMA**: the flexible starter advanced machine.
+- **Quantum Multiblocks**: bulk automation, pattern-driven crafting and parallel threads.
+- **Stellar Nexus**: the final simulation platform for extreme-scale production.
+
+## New Multiblock Stack
+- **Quantum Matter Fabricator**: DMA evolution for AE2 automation and heavy bulk jobs.
+- **Quantum Slicer**: bulk printed-circuit preparation.
+- **Quantum Processor Assembler**: bulk processor finishing.
+- **Quantum Pattern Hatch**: 64-pattern AE2 provider built for the multiblock line.
+
+## Tier Philosophy
+Multiblocks use **MK1 / MK2 / MK3** gating. Higher tiers unlock better recipes and accelerate older ones automatically.
 
 <CategoryIndex category="ufo_intro"></CategoryIndex>
-
-### What you will find here:
-* **[White Dwarf Fragment Ingot](fragments.md)**: Advanced materials synthesized in the DMA.
-* **Quantum Processing**: New machines to manipulate the fabric of reality.
-* **Infinite Storage**: Solutions to store all your items forever.
-
-To begin, you will need to construct the **Dimensional Matter Assembler (DMA)** to synthesize your first advanced ingots.

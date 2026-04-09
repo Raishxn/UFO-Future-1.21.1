@@ -7,61 +7,49 @@ item_ids:
   - ufo:dimensional_matter_assembler
 ---
 
-# Dimensional Matter Assembler (DMA) — Player Guide
+# Dimensional Matter Assembler
 
 <BlockImage id="ufo:dimensional_matter_assembler" scale="4"></BlockImage>
 
-**Overview**
-The Dimensional Matter Assembler (DMA) is the primary advanced crafting machine in UFO Future. It processes item and fluid inputs, uses catalysts to modify outcomes, and relies on a coolant/thermal system. 
+The **DMA** is the first advanced machine in UFO Future. It handles shapeless item recipes, optional base fluids, catalysts and heat management.
 
----
+## Core Loop
+1. Insert items into the 9-slot grid.
+2. Fill the **base fluid tank** only when the recipe asks for a fluid input.
+3. Fill the **coolant tank** with a valid coolant.
+4. Add catalysts if you want speed, efficiency or yield changes.
+5. Supply AE power and let the DMA process.
 
-## Quickstart
-1. Provide **power** (DMA consumes very large amounts of energy).
-2. Place item inputs into the 9-slot input grid. **Order does not matter (Shapeless)!**
-3. Add **coolant** into the coolant tank (left side fluid inputs).
-4. Insert **catalysts** into the upgrade slots.
-5. Provide specific base fluids (like Liquid Starlight) into the base fluid tank if the recipe demands it.
+## Tanks
+- **Coolant tank**: not part of the recipe cost. It only removes heat from the DMA.
+- **Base fluid tank**: consumed by recipes that explicitly ask for fluid inputs.
 
----
+DMA recipes should not ask for coolant in their normal fluid inputs. Coolants belong in the coolant tank only.
 
-## Catalysts & Multipliers
+## Coolant Progression
+- **Gelid Cryotheum**: low-efficiency starter coolant.
+- **Stable Coolant**: mid-tier sustained coolant.
+- **Temporal Fluid**: extreme endgame coolant.
 
-Catalysts modify the DMA performance. They belong to families:
-- **Matterflow** — Decreases energy cost limits (e.g. 0.5x Power Cost).
-- **Chrono** — Increases speed drastically (e.g. 2x Speed).
-- **Overflux** / **Quantum** — Specialized modifiers.
+The intended path is **Gelid -> Stable -> Temporal**. If you push Chrono-heavy catalyst setups too early, Gelid Cryotheum will not keep up for long.
 
-### Heat Multiplier Penalty
-- Catalysts now act as Heat Production Multipliers! Example: A Chrono T3 Catalyst applies a **x4 Heat Production** debuff!
-- These effects stack. Stacking 4 of the same catalyst grants a massive Synergy bonus, but increases heat production significantly.
-- **Exploit protection**: The DMA strictly limits any recipe to take at minimum 1 second (20 ticks). You cannot stack Chrono infinitely to bypass heat processing. Over-stacking Chrono will keep the time capped at 1s but the Heat Multiplier will be monstrous!
+## Heat and Meltdown
+- Below 50% heat: stable operation.
+- Above 50% heat: hazard zone, visual warning effects and nearby damage.
+- At 100% heat: meltdown countdown, then a destructive explosion if the machine is not cooled in time.
 
----
+## Catalysts
+- **Matterflow**: improves efficiency.
+- **Chrono**: increases speed, but spikes heat.
+- **Overflux**: increases thermal stability.
+- **Quantum**: focuses on advanced output behavior.
+- **Dimensional Catalyst**: creative-tier override.
 
-## Thermal System (Thermo)
+## Where It Fits Now
+The DMA is the entry point and flexible single-machine crafter. Once your recipes become extremely expensive or need automated pattern-based throughput, progression moves into the multiblock line:
 
-Generate heat == Need Coolants!
+- **Quantum Matter Fabricator**
+- **Quantum Slicer**
+- **Quantum Processor Assembler**
 
-### Zones
-- **SAFE**: below **50% Heat Capacity**
-- **HAZARD**: **≥50% Capacity** — Triggers the rotating 3D Flame rings. Burns players nearby! (Negated by Thermal Suit)
-- **MELTDOWN**: **100% Heat** — Triggers an alarm and 5-second countdown. If it reaches 0, the machine **explodes**, destroying blocks around it!
-
-### Coolants Effectiveness
-The DMA uses the coolant tank independently from recipes. The intended progression is:
-
-- **Gelid Cryotheum** — Low efficiency entry coolant. Needs **120 mB** to cool **1 HU**.
-- **Stable Coolant** — Mid-tier progression coolant. **1 mB** cools **50 HU**.
-- **Temporal Fluid** — Extreme endgame coolant. **1 mB** cools **100 HU**.
-
-Other fluids can still cool the DMA, but they are fallback options rather than the main progression path.
-
-### Practical Guidance
-- Early DMA setups can survive on **Gelid Cryotheum**, but long Chrono-heavy runs will drain it quickly.
-- **Stable Coolant** is the intended step before Temporal Fluid and is much more efficient for sustained production.
-- **Temporal Fluid** is the premium choice for high-heat automation and large parallel crafting chains.
-
----
-
-*End of DMA guide.*
+*See also: [Catalysts System](catalysts.md) · [Quantum Matter Fabricator](qmf.md) · [Multiblock Tiers](multiblock_tiers.md)*
