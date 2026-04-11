@@ -1,0 +1,58 @@
+{
+  "type": "ufo:universal_multiblock",
+  "energy": 4000000000,
+  "fluid_inputs": [
+    {
+      "amount": 128000,
+      "fluid": {
+        "amount": 1,
+        "id": "ufo:transcending_matter"
+      }
+    }
+  ],
+  "item_inputs": [
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "ufo:matterflow_catalyst_t3"
+      }
+    },
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "ufo:chrono_catalyst_t3"
+      }
+    },
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "ufo:overflux_catalyst_t3"
+      }
+    },
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "ufo:quantum_catalyst_t3"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "item": "ufo:cosmic_string_component_matrix"
+      }
+    },
+    {
+      "amount": 8,
+      "ingredient": {
+        "item": "ufo:dark_matter"
+      }
+    }
+  ],
+  "item_output": {
+    "id": "ufo:dimensional_catalyst"
+  },
+  "machine": "qmf",
+  "recipe_name": "universal/qmf/dimensional_catalyst",
+  "required_tier": 3,
+  "time": 48000
+}

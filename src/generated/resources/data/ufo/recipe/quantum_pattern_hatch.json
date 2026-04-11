@@ -3,25 +3,25 @@
   "category": "misc",
   "key": {
     "C": {
-      "item": "ufo:cosmic_string_component_matrix"
+      "item": "ufo:hyper_dense_component_matrix"
+    },
+    "F": {
+      "item": "ufo:quantum_lattice_frame"
     },
     "H": {
-      "item": "ufo:quantum_processor_assembler_controller"
+      "item": "ae2:pattern_provider"
     },
     "P": {
       "item": "ufo:dimensional_processor"
     },
     "Q": {
       "item": "ufo:quantum_hyper_mechanical_casing"
-    },
-    "S": {
-      "item": "ufo:quantum_slicer_controller"
     }
   },
   "pattern": [
     "QCQ",
     "PHP",
-    "QSQ"
+    "QFQ"
   ],
   "result": {
     "count": 1,

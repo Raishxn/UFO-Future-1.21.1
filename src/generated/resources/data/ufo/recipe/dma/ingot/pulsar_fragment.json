@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 1000000,
+  "energy": 200000,
   "fluid_inputs": [
     {
-      "amount": 1000,
+      "amount": 1200,
       "ingredient": {
         "fluid": "ufo:source_liquid_starlight_fluid"
       }
@@ -32,10 +32,10 @@
   ],
   "item_outputs": [
     {
-      "#": 1,
+      "#": 2,
       "#t": "ae2:i",
       "id": "ufo:pulsar_fragment_ingot"
     }
   ],
-  "time": 600
+  "time": 640
 }

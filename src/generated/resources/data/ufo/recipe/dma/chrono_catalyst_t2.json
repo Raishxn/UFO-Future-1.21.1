@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 600000,
+  "energy": 300000,
   "fluid_inputs": [
     {
       "amount": 2000,
@@ -43,5 +43,5 @@
       "id": "ufo:chrono_catalyst_t2"
     }
   ],
-  "time": 500
+  "time": 400
 }

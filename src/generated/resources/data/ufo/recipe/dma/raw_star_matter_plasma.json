@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 12000000,
+  "energy": 2000000,
   "fluid_inputs": [
     {
       "amount": 4000,
@@ -11,7 +11,7 @@
   ],
   "fluid_outputs": [
     {
-      "#": 8000,
+      "#": 10000,
       "#t": "ae2:f",
       "id": "ufo:raw_star_matter_plasma"
     }
@@ -49,5 +49,5 @@
     }
   ],
   "item_outputs": [],
-  "time": 1800
+  "time": 1200
 }

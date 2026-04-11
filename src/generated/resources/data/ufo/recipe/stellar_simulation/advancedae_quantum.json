@@ -6,19 +6,19 @@
     }
   ],
   "type": "ufo:stellar_simulation",
-  "coolant_amount": 250000,
+  "coolant_amount": 600000,
   "cooling_level": 3,
-  "energy": 150000000,
+  "energy": 2400000000,
   "field_tier": 3,
   "fluid_inputs": [
     {
-      "amount": 250000,
+      "amount": 4500000,
       "ingredient": {
         "fluid": "ufo:raw_star_matter_plasma"
       }
     },
     {
-      "amount": 100000,
+      "amount": 2500000,
       "ingredient": {
         "fluid": "ufo:transcending_matter"
       }
@@ -26,43 +26,43 @@
   ],
   "fluid_outputs": [
     {
-      "#": 75000,
+      "#": 2500000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     },
     {
-      "#": 50000,
+      "#": 1500000,
       "#t": "ae2:f",
       "id": "ufo:uu_matter"
     },
     {
-      "#": 25000,
+      "#": 750000,
       "#t": "ae2:f",
       "id": "ufo:source_spatial_fluid"
     },
     {
-      "#": 25000,
+      "#": 750000,
       "#t": "ae2:f",
       "id": "ufo:source_temporal_fluid"
     }
   ],
-  "fuel_amount": 150000,
+  "fuel_amount": 450000,
   "fuel_fluid": "ufo:raw_star_matter_plasma",
   "item_inputs": [
     {
-      "amount": 256,
+      "amount": 4096,
       "ingredient": {
         "item": "advanced_ae:quantum_infused_dust"
       }
     },
     {
-      "amount": 64,
+      "amount": 1024,
       "ingredient": {
         "item": "ufo:dimensional_processor"
       }
     },
     {
-      "amount": 32,
+      "amount": 512,
       "ingredient": {
         "item": "ufo:obsidian_matrix"
       }
@@ -70,31 +70,31 @@
   ],
   "item_outputs": [
     {
-      "#": 192,
+      "#": 18000000,
       "#t": "ae2:i",
       "id": "advanced_ae:quantum_alloy"
     },
     {
-      "#": 96,
+      "#": 12000000,
       "#t": "ae2:i",
       "id": "advanced_ae:printed_quantum_processor"
     },
     {
-      "#": 48,
+      "#": 6000000,
       "#t": "ae2:i",
       "id": "advanced_ae:quantum_processor"
     },
     {
-      "#": 16,
+      "#": 1500000,
       "#t": "ae2:i",
       "id": "ae2:singularity"
     },
     {
-      "#": 32,
+      "#": 3000000,
       "#t": "ae2:i",
       "id": "ufo:dimensional_processor"
     }
   ],
   "simulation_name": "Quantum Alloy Infusion",
-  "time": 12000
+  "time": 96000
 }

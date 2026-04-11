@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractParallelMultiblockControllerBE extends AbstractSimpleMultiblockControllerBE implements ICraftingMachine {
-    protected static final int MAX_PARALLEL_THREADS = 8;
+    protected static final int MAX_PARALLEL_THREADS = 27;
     private static final int THERMAL_MAX = 10000;
     private static final int OVERLOAD_TICKS = 100;
     private static final float THERMAL_EXPLOSION_POWER = 30.0F;

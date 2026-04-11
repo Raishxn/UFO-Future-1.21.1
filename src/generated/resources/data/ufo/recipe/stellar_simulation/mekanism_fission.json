@@ -6,13 +6,13 @@
     }
   ],
   "type": "ufo:stellar_simulation",
-  "coolant_amount": 250000,
+  "coolant_amount": 3000000,
   "cooling_level": 3,
-  "energy": 150000000,
+  "energy": 3400000000,
   "field_tier": 3,
   "fluid_inputs": [
     {
-      "amount": 20000,
+      "amount": 1200000,
       "ingredient": {
         "fluid": "mekanism:sulfuric_acid"
       }
@@ -20,37 +20,37 @@
   ],
   "fluid_outputs": [
     {
-      "#": 50000,
+      "#": 1800000,
       "#t": "ae2:f",
       "id": "ufo:source_temporal_fluid"
     },
     {
-      "#": 40000,
+      "#": 1500000,
       "#t": "ae2:f",
       "id": "ufo:source_stable_coolant"
     },
     {
-      "#": 30000,
+      "#": 1200000,
       "#t": "ae2:f",
       "id": "ufo:source_spatial_fluid"
     },
     {
-      "#": 25000,
+      "#": 1000000,
       "#t": "ae2:f",
       "id": "ufo:uu_matter"
     }
   ],
-  "fuel_amount": 80000,
+  "fuel_amount": 2400000,
   "fuel_fluid": "mekanism:sulfuric_acid",
   "item_inputs": [
     {
-      "amount": 64,
+      "amount": 2048,
       "ingredient": {
         "item": "mekanism:pellet_plutonium"
       }
     },
     {
-      "amount": 32,
+      "amount": 512,
       "ingredient": {
         "item": "ufo:quantum_anomaly"
       }
@@ -58,31 +58,31 @@
   ],
   "item_outputs": [
     {
-      "#": 64,
+      "#": 2500000,
       "#t": "ae2:i",
       "id": "mekanism:pellet_antimatter"
     },
     {
-      "#": 192,
+      "#": 18000000,
       "#t": "ae2:i",
       "id": "mekanism:pellet_polonium"
     },
     {
-      "#": 128,
+      "#": 15000000,
       "#t": "ae2:i",
       "id": "mekanism:pellet_plutonium"
     },
     {
-      "#": 64,
+      "#": 6000000,
       "#t": "ae2:i",
       "id": "mekanism:hdpe_sheet"
     },
     {
-      "#": 128,
+      "#": 8000000,
       "#t": "ae2:i",
       "id": "mekanism:substrate"
     }
   ],
   "simulation_name": "Fission Reactor Process",
-  "time": 24000
+  "time": 120000
 }

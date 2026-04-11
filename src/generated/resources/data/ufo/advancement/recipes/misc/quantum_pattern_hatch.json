@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_quantum_processor_assembler": {
+    "has_pattern_provider": {
       "conditions": {
         "items": [
           {
-            "items": "ufo:quantum_processor_assembler_controller"
+            "items": "ae2:pattern_provider"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_quantum_processor_assembler"
+      "has_pattern_provider"
     ]
   ],
   "rewards": {

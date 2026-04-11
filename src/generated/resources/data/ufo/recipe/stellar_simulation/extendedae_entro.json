@@ -6,19 +6,19 @@
     }
   ],
   "type": "ufo:stellar_simulation",
-  "coolant_amount": 300000,
+  "coolant_amount": 850000,
   "cooling_level": 3,
-  "energy": 220000000,
+  "energy": 3200000000,
   "field_tier": 3,
   "fluid_inputs": [
     {
-      "amount": 150000,
+      "amount": 3200000,
       "ingredient": {
         "fluid": "ufo:transcending_matter"
       }
     },
     {
-      "amount": 250000,
+      "amount": 5000000,
       "ingredient": {
         "fluid": "ufo:raw_star_matter_plasma"
       }
@@ -26,43 +26,43 @@
   ],
   "fluid_outputs": [
     {
-      "#": 100000,
+      "#": 3000000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     },
     {
-      "#": 75000,
+      "#": 2000000,
       "#t": "ae2:f",
       "id": "ufo:uu_matter"
     },
     {
-      "#": 50000,
+      "#": 1200000,
       "#t": "ae2:f",
       "id": "ufo:source_spatial_fluid"
     },
     {
-      "#": 50000,
+      "#": 1200000,
       "#t": "ae2:f",
       "id": "ufo:source_temporal_fluid"
     }
   ],
-  "fuel_amount": 250000,
+  "fuel_amount": 650000,
   "fuel_fluid": "ufo:raw_star_matter_plasma",
   "item_inputs": [
     {
-      "amount": 128,
+      "amount": 4096,
       "ingredient": {
         "item": "extendedae:entro_dust"
       }
     },
     {
-      "amount": 32,
+      "amount": 512,
       "ingredient": {
         "item": "ufo:quantum_anomaly"
       }
     },
     {
-      "amount": 64,
+      "amount": 1024,
       "ingredient": {
         "item": "ufo:dimensional_processor"
       }
@@ -70,31 +70,31 @@
   ],
   "item_outputs": [
     {
-      "#": 96,
+      "#": 18000000,
       "#t": "ae2:i",
       "id": "extendedae:entro_crystal"
     },
     {
-      "#": 128,
+      "#": 15000000,
       "#t": "ae2:i",
       "id": "extendedae:concurrent_processor_print"
     },
     {
-      "#": 64,
+      "#": 7500000,
       "#t": "ae2:i",
       "id": "extendedae:concurrent_processor"
     },
     {
-      "#": 24,
+      "#": 1500000,
       "#t": "ae2:i",
       "id": "ae2:singularity"
     },
     {
-      "#": 16,
+      "#": 750000,
       "#t": "ae2:i",
       "id": "ufo:quantum_anomaly"
     }
   ],
   "simulation_name": "Entro Crystal Synthesis",
-  "time": 18000
+  "time": 108000
 }

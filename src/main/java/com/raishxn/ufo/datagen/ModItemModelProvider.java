@@ -29,6 +29,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     private static final ResourceLocation GENERATED_PARENT = ResourceLocation.withDefaultNamespace("item/generated");
     @Override
         protected void registerModels() {
+        basicItem(ModItems.BISMUTH.get());
         basicItem(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
         basicItem(ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
         basicItem(ModItems.TESSERACT_COMPONENT_MATRIX.get());
@@ -197,6 +198,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         dynamicBucketItem(ModItems.UU_MATTER_BUCKET, ModFluids.SOURCE_UU_MATTER_FLUID);
         dynamicBucketItem(ModItems.UU_AMPLIFIER_BUCKET, ModFluids.SOURCE_UU_AMPLIFIER_FLUID);
         dynamicBucketItem(ModItems.GELID_CRYOTHEUM_BUCKET, ModFluids.SOURCE_GELID_CRYOTHEUM);
+        dynamicBucketItem(ModItems.STABLE_COOLANT_BUCKET, ModFluids.SOURCE_STABLE_COOLANT);
         dynamicBucketItem(ModItems.TEMPORAL_FLUID_BUCKET, ModFluids.SOURCE_TEMPORAL_FLUID);
         dynamicBucketItem(ModItems.SPATIAL_FLUID_BUCKET, ModFluids.SOURCE_SPATIAL_FLUID);
 

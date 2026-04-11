@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 7000000,
+  "energy": 5000000,
   "fluid_inputs": [
     {
       "amount": 2000,
@@ -45,5 +45,5 @@
       "id": "ufo:scar"
     }
   ],
-  "time": 1500
+  "time": 600
 }

@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 4000000,
+  "energy": 500000,
   "fluid_inputs": [
     {
       "amount": 100,
@@ -31,5 +31,5 @@
     }
   ],
   "item_outputs": [],
-  "time": 1000
+  "time": 400
 }

@@ -3,16 +3,16 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "ufo:quantum_anomaly"
+      "item": "ufo:phase_shift_component_matrix"
     },
     "C": {
-      "item": "ufo:cosmic_string_component_matrix"
+      "item": "ufo:hyper_dense_component_matrix"
     },
     "D": {
-      "item": "ufo:250t_mega_crafting_storage"
+      "item": "ufo:1b_mega_crafting_storage"
     },
     "E": {
-      "item": "ufo:750m_mega_co_processor"
+      "item": "ufo:150m_mega_co_processor"
     },
     "Q": {
       "item": "ufo:quantum_hyper_mechanical_casing"

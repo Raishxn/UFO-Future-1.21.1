@@ -1,9 +1,9 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 24000000,
+  "energy": 6000000,
   "fluid_inputs": [
     {
-      "amount": 24000,
+      "amount": 16000,
       "ingredient": {
         "fluid": "ufo:source_primordial_matter_fluid"
       }

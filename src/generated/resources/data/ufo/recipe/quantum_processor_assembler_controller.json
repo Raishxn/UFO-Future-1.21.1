@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "C": {
-      "item": "ufo:cosmic_string_component_matrix"
+      "item": "ufo:tesseract_component_matrix"
     },
     "E": {
-      "item": "ufo:50b_mega_crafting_storage"
+      "item": "ufo:1b_mega_crafting_storage"
     },
     "H": {
       "item": "ufo:150m_mega_co_processor"
@@ -18,7 +18,7 @@
       "item": "ae2:singularity"
     },
     "T": {
-      "item": "ufo:tesseract_component_matrix"
+      "item": "ufo:hyper_dense_component_matrix"
     }
   },
   "pattern": [

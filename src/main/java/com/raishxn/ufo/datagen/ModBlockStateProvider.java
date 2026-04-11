@@ -36,6 +36,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         multiblockCube(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING);
         multiblockCube(MultiblockBlocks.ENTROPY_SINGULARITY_CASING);
         multiblockCube(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX);
+        multiblockCubeWithTexture(MultiblockBlocks.QUANTUM_ENTROPY_CASING, "quantum_hyper_mechanical_casing");
         multiblockCube(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING);
         qmfControllerBlock(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER);
         controllerWithBase(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER, "quantum_hyper_mechanical_casing");
@@ -99,6 +100,13 @@ public class ModBlockStateProvider extends BlockStateProvider {
     private void multiblockCube(DeferredBlock<? extends Block> block) {
         String name = block.getId().getPath();
         ResourceLocation texture = modLoc("block/multiblock/" + name);
+        simpleBlock(block.get(), models().cubeAll(name, texture));
+        simpleBlockItem(block.get(), models().getExistingFile(modLoc("block/" + name)));
+    }
+
+    private void multiblockCubeWithTexture(DeferredBlock<? extends Block> block, String textureName) {
+        String name = block.getId().getPath();
+        ResourceLocation texture = modLoc("block/multiblock/" + textureName);
         simpleBlock(block.get(), models().cubeAll(name, texture));
         simpleBlockItem(block.get(), models().getExistingFile(modLoc("block/" + name)));
     }

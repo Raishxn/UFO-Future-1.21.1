@@ -6,19 +6,19 @@
     }
   ],
   "type": "ufo:stellar_simulation",
-  "coolant_amount": 100000,
+  "coolant_amount": 500000,
   "cooling_level": 2,
-  "energy": 50000000,
-  "field_tier": 2,
+  "energy": 2100000000,
+  "field_tier": 3,
   "fluid_inputs": [
     {
-      "amount": 100000,
+      "amount": 4000000,
       "ingredient": {
         "fluid": "ufo:source_liquid_starlight_fluid"
       }
     },
     {
-      "amount": 50000,
+      "amount": 2000000,
       "ingredient": {
         "fluid": "ufo:uu_matter"
       }
@@ -26,37 +26,37 @@
   ],
   "fluid_outputs": [
     {
-      "#": 50000,
+      "#": 2500000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     },
     {
-      "#": 75000,
+      "#": 3000000,
       "#t": "ae2:f",
       "id": "ufo:source_uu_amplifier_fluid"
     },
     {
-      "#": 20000,
+      "#": 1000000,
       "#t": "ae2:f",
       "id": "ufo:source_spatial_fluid"
     },
     {
-      "#": 25000,
+      "#": 1000000,
       "#t": "ae2:f",
       "id": "ufo:source_stable_coolant"
     }
   ],
-  "fuel_amount": 50000,
+  "fuel_amount": 350000,
   "fuel_fluid": "ufo:source_liquid_starlight_fluid",
   "item_inputs": [
     {
-      "amount": 4096,
+      "amount": 65536,
       "ingredient": {
         "item": "ae2:matter_ball"
       }
     },
     {
-      "amount": 8,
+      "amount": 256,
       "ingredient": {
         "item": "ufo:quantum_anomaly"
       }
@@ -64,31 +64,31 @@
   ],
   "item_outputs": [
     {
-      "#": 128,
+      "#": 15000000,
       "#t": "ae2:i",
       "id": "ae2:singularity"
     },
     {
-      "#": 2048,
+      "#": 24000000,
       "#t": "ae2:i",
       "id": "ae2:matter_ball"
     },
     {
-      "#": 4096,
+      "#": 32000000,
       "#t": "ae2:i",
       "id": "ae2:sky_dust"
     },
     {
-      "#": 4096,
+      "#": 24000000,
       "#t": "ae2:i",
       "id": "ae2:certus_quartz_crystal"
     },
     {
-      "#": 2048,
+      "#": 18000000,
       "#t": "ae2:i",
       "id": "ae2:fluix_crystal"
     }
   ],
   "simulation_name": "Quantum Singularity Collapse",
-  "time": 12000
+  "time": 84000
 }

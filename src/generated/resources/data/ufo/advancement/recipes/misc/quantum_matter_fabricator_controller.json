@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_quantum_anomaly": {
+    "has_hyper_dense_component": {
       "conditions": {
         "items": [
           {
-            "items": "ufo:quantum_anomaly"
+            "items": "ufo:hyper_dense_component_matrix"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_quantum_anomaly"
+      "has_hyper_dense_component"
     ]
   ],
   "rewards": {

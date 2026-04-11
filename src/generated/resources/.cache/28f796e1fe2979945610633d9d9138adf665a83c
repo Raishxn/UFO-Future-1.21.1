@@ -1,5 +1,6 @@
-// 1.21.1	2026-04-09T07:46:14.5328113	Item Models: ufo
+// 1.21.1	2026-04-09T11:17:29.5229453	Item Models: ufo
 65bffe38993ea67d3302816b93f2d718431de59b assets/ufo/models/item/aether_containment_capsule.json
+5b7661e3ed5dba7c93228705294756443e065fb3 assets/ufo/models/item/bismuth.json
 c41f2c84703caa2f3a67fc73bfdb9ac21eea6eec assets/ufo/models/item/charged_enriched_neutronium_sphere.json
 86d9de77936ae4a0cbcaec6708dc4b7a7192352d assets/ufo/models/item/chrono_catalyst_t1.json
 a58b7eb61d1ee2da3b6cddfba8b58e278bc4d1de assets/ufo/models/item/chrono_catalyst_t2.json
@@ -91,6 +92,7 @@ ac93959686ae188c75875bce71dd9d15f1b37c9a assets/ufo/models/item/scar.json
 c9ea14e02d723c65119774aec129382b90a8ce0b assets/ufo/models/item/scrap.json
 d263db9415f23d37f692abbc2b2b44e7004b0dcc assets/ufo/models/item/scrap_box.json
 2c75931adaa7c2721683cb9c172bb3c45cb6fa3b assets/ufo/models/item/spatial_fluid_bucket.json
+9a9a432b7e6d2d3fae17971fa0977e7d009a1844 assets/ufo/models/item/stable_coolant_bucket.json
 1438676a0cdabc26a3d9d4479216c607e350a01e assets/ufo/models/item/storage_cell_side_100m.json
 757ac34221f25eb954f592b761c6bef1c9b17a1b assets/ufo/models/item/storage_cell_side_250m.json
 2fd714a00948d085f4d35f710ab2714be1d99721 assets/ufo/models/item/storage_cell_side_40m.json
@@ -106,7 +108,7 @@ c0e172f4ac0f3c8d47abeaa49634e3cebbd99995 assets/ufo/models/item/storage_cell_sid
 f78bada06e511643006f4834cff38cf35f58dfc7 assets/ufo/models/item/transcending_matter_bucket.json
 46afa4a987a943cb6fe40bb3f9a7cb8ba83c9a06 assets/ufo/models/item/ufo_axe.json
 55ba6b14f4484470e976d9a5dc7c79cad484994f assets/ufo/models/item/ufo_boots.json
-641c3a37e4014731af2135c5cd0b65679b075826 assets/ufo/models/item/ufo_chestplate.json
+3b1260b5a9a27b24c6613849b596ecb78fa81d5a assets/ufo/models/item/ufo_chestplate.json
 efcbe332ffdf76698cca2a3deab7cc43534e2599 assets/ufo/models/item/ufo_greatsword.json
 4607c09655628411c92c199e3e4d6c94097dbacc assets/ufo/models/item/ufo_hammer.json
 3a97dfab42aa7ca978dc66bfc8268f850e96f2ff assets/ufo/models/item/ufo_helmet.json

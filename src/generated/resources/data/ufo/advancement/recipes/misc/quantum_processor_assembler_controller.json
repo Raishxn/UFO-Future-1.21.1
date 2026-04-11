@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_tesseract_component": {
+    "has_hyper_dense_component": {
       "conditions": {
         "items": [
           {
-            "items": "ufo:tesseract_component_matrix"
+            "items": "ufo:hyper_dense_component_matrix"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_tesseract_component"
+      "has_hyper_dense_component"
     ]
   ],
   "rewards": {

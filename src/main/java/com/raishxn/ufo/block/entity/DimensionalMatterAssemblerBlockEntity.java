@@ -175,7 +175,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
      * Executes the thermal simulation loop, regulating machine heat based on production.
      * <p><b>Thermal Engine Lifecycle:</b></p>
      * <ul>
-     *      <li><b>Generation</b>: While working, block adds heat dynamically based on its upgrades (+1 HU/2ticks).</li>
+     *      <li><b>Generation</b>: While working, block adds heat dynamically based on its upgrades (+1 HU/4ticks).</li>
      *      <li><b>Passive Cooling</b>: While idle, ambient block surfaces slowly radiate heat back to the environment (-1 HU/40ticks).</li>
      *      <li><b>Active Synergies</b>: Fluids injected into the Cooling Tank are instantly consumed to suppress excess heat.
      *          Each fluid class (e.g., Starlight vs Gelid Cryotheum) is balanced with specific HU/mB ratios.</li>
@@ -193,10 +193,10 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             return;
         }
 
-        // 1. Heat Generation: smooth +1 HU every 2 ticks while working (= +10 HU/s)
+        // 1. Heat Generation: smooth +1 HU every 4 ticks while working (= +5 HU/s)
         // scaled by upgrades
         if (this.isWorking()) {
-            if (this.thermalTicker % 2 == 0) {
+            if (this.thermalTicker % 4 == 0) {
                 int generationAmount = (int) Math.max(1, Math.round(1 * this.currentHeatMultiplier));
                 this.temperature += generationAmount;
             }

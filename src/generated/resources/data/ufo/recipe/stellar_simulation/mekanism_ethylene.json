@@ -6,12 +6,13 @@
     }
   ],
   "type": "ufo:stellar_simulation",
-  "coolant_amount": 50000,
-  "cooling_level": 1,
-  "energy": 6000000,
+  "coolant_amount": 2000000,
+  "cooling_level": 2,
+  "energy": 900000000,
+  "field_tier": 2,
   "fluid_inputs": [
     {
-      "amount": 10000,
+      "amount": 800000,
       "ingredient": {
         "fluid": "ufo:source_liquid_starlight_fluid"
       }
@@ -19,37 +20,37 @@
   ],
   "fluid_outputs": [
     {
-      "#": 20000,
+      "#": 1200000,
       "#t": "ae2:f",
       "id": "ufo:source_gelid_cryotheum"
     },
     {
-      "#": 12000,
+      "#": 1000000,
       "#t": "ae2:f",
       "id": "ufo:source_stable_coolant"
     },
     {
-      "#": 12000,
+      "#": 900000,
       "#t": "ae2:f",
       "id": "ufo:source_uu_amplifier_fluid"
     },
     {
-      "#": 8000,
+      "#": 750000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     }
   ],
-  "fuel_amount": 40000,
+  "fuel_amount": 1500000,
   "fuel_fluid": "mekanism:ethene",
   "item_inputs": [
     {
-      "amount": 256,
+      "amount": 4096,
       "ingredient": {
         "item": "mekanism:substrate"
       }
     },
     {
-      "amount": 16,
+      "amount": 256,
       "ingredient": {
         "item": "ufo:obsidian_matrix"
       }
@@ -57,31 +58,31 @@
   ],
   "item_outputs": [
     {
-      "#": 512,
+      "#": 15000000,
       "#t": "ae2:i",
       "id": "mekanism:hdpe_sheet"
     },
     {
-      "#": 2048,
+      "#": 45000000,
       "#t": "ae2:i",
       "id": "mekanism:hdpe_pellet"
     },
     {
-      "#": 1024,
+      "#": 30000000,
       "#t": "ae2:i",
       "id": "mekanism:substrate"
     },
     {
-      "#": 128,
+      "#": 6000000,
       "#t": "ae2:i",
       "id": "ufo:dust_blizz"
     },
     {
-      "#": 64,
+      "#": 3000000,
       "#t": "ae2:i",
       "id": "ufo:dust_cryotheum"
     }
   ],
   "simulation_name": "Ethylene Enrichment",
-  "time": 8000
+  "time": 72000
 }

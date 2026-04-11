@@ -5,6 +5,7 @@ import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -38,7 +39,10 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
         tag(ModTags.Blocks.NEEDS_UFO_TOOL)
                 .addTag(BlockTags.NEEDS_IRON_TOOL)
-                .addTag(BlockTags.NEEDS_DIAMOND_TOOL);
+                .addTag(BlockTags.NEEDS_DIAMOND_TOOL)
+                .addOptionalTag(ResourceLocation.parse("allthemodium:needs_allthemodium_tool"))
+                .addOptionalTag(ResourceLocation.parse("allthemodium:needs_vibranium_tool"))
+                .addOptionalTag(ResourceLocation.parse("allthemodium:needs_unobtainium_tool"));
 
         tag(ModTags.Blocks.INCORRECT_FOR_UFO_TOOL)
                 .addTag(BlockTags.INCORRECT_FOR_IRON_TOOL)
