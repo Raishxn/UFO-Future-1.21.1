@@ -103,12 +103,12 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         int listY = this.topPos + 30;
         int lineHeight = 10;
         int maxTextWidth = 156;
+        List<GroupedRecipe> recipes = buildGroupedRecipes();
 
         guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(getScreenTitle().getString(), maxTextWidth), listX, listY, 0xF0F0F0, false);
         guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(buildStatusLine(), maxTextWidth), listX, listY + 10, 0xD0D7E6, false);
-        renderEnergyAndParallelLine(guiGraphics, listX, listY + 20, maxTextWidth);
+        renderSummaryLine(guiGraphics, listX, listY + 20, maxTextWidth, recipes);
 
-        List<GroupedRecipe> recipes = buildGroupedRecipes();
         for (int i = 0; i < 8; i++) {
             int rowY = listY + 32 + i * lineHeight;
             if (i < recipes.size()) {
@@ -159,33 +159,27 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         if (!this.menu.isAssembled()) {
             return "Status: Incomplete";
         }
-        StringBuilder builder = new StringBuilder(this.menu.isRunning() ? "Status: Running" : "Status: Idle");
-        builder.append(" | ");
-        builder.append("MK").append(this.menu.getMachineTier());
-        builder.append(" | ");
-        builder.append(this.menu.isSafeMode() ? "Safe ON" : "Safe OFF");
-        builder.append(" | ");
-        builder.append(this.menu.isOverclocked() ? "OC ON" : "OC OFF");
+        StringBuilder builder = new StringBuilder(this.menu.isRunning() ? "RUN" : "IDLE");
+        builder.append(" | MK").append(this.menu.getMachineTier());
+        builder.append(" | ").append(this.menu.isSafeMode() ? "SAFE" : "RISK");
+        builder.append(" | ").append(this.menu.isOverclocked() ? "OC" : "STD");
         return builder.toString();
     }
 
-    private void renderEnergyAndParallelLine(GuiGraphics guiGraphics, int x, int y, int maxTextWidth) {
-        String energyText = buildEnergyText();
-        String parallelText = buildParallelText();
-        int fullWidth = this.font.width(energyText + " | " + parallelText);
-
-        if (fullWidth <= maxTextWidth) {
-            guiGraphics.drawString(this.font, energyText, x, y, 0xB9D8FF, false);
-            guiGraphics.drawString(this.font, " | ", x + this.font.width(energyText), y, 0x8A91A6, false);
-            guiGraphics.drawString(this.font, parallelText, x + this.font.width(energyText + " | "), y, 0xB9D8FF, false);
-            return;
-        }
-
-        guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(energyText, maxTextWidth), x, y, 0xB9D8FF, false);
+    private void renderSummaryLine(GuiGraphics guiGraphics, int x, int y, int maxTextWidth, List<GroupedRecipe> recipes) {
+        String summaryText = buildSummaryText(recipes);
+        guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(summaryText, maxTextWidth), x, y, 0xB9D8FF, false);
     }
 
-    private String buildEnergyText() {
-        return "Energy: " + formatAmount(this.menu.getStoredEnergy()) + " AE";
+    private String buildSummaryText(List<GroupedRecipe> recipes) {
+        return "AE " + formatAmount(this.menu.getStoredEnergy())
+                + " | A" + this.menu.getActiveParallels()
+                + " U" + recipes.size()
+                + " " + buildParallelSummaryText();
+    }
+
+    private String buildParallelSummaryText() {
+        return "P" + this.menu.getActiveParallels() + "/" + this.menu.getMaxParallels();
     }
 
     private String buildParallelText() {
@@ -249,6 +243,10 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
             guiGraphics.renderTooltip(this.font, buildParallelTooltip().stream().map(Component::getVisualOrderText).toList(), mouseX, mouseY);
             return;
         }
+        if (isHoveringSummaryLine(mouseX, mouseY)) {
+            guiGraphics.renderTooltip(this.font, buildSummaryTooltip().stream().map(Component::getVisualOrderText).toList(), mouseX, mouseY);
+            return;
+        }
         GroupedRecipe hoveredRecipe = getHoveredGroupedRecipe(mouseX, mouseY);
         if (hoveredRecipe != null) {
             guiGraphics.renderTooltip(this.font, buildGroupedRecipeTooltip(hoveredRecipe).stream().map(Component::getVisualOrderText).toList(), mouseX, mouseY);
@@ -260,9 +258,10 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
     private boolean isHoveringParallelText(int mouseX, int mouseY) {
         int listX = this.leftPos + 7;
         int lineY = this.topPos + 50;
-        String energyText = buildEnergyText();
-        String parallelText = buildParallelText();
-        String fullText = energyText + " | " + parallelText;
+        String energyText = "AE " + formatAmount(this.menu.getStoredEnergy()) + " | A" + this.menu.getActiveParallels()
+                + " U" + buildGroupedRecipes().size() + " | ";
+        String parallelText = buildParallelSummaryText();
+        String fullText = energyText + parallelText;
         int maxTextWidth = 156;
         int fullWidth = this.font.width(fullText);
 
@@ -270,12 +269,42 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
             return false;
         }
 
-        int parallelX = listX + this.font.width(energyText + " | ");
+        int parallelX = listX + this.font.width(energyText);
         int parallelWidth = this.font.width(parallelText);
         return mouseX >= parallelX
                 && mouseX < parallelX + parallelWidth
                 && mouseY >= lineY
                 && mouseY < lineY + this.font.lineHeight;
+    }
+
+    private boolean isHoveringSummaryLine(int mouseX, int mouseY) {
+        int listX = this.leftPos + 7;
+        int lineY = this.topPos + 50;
+        return mouseX >= listX
+                && mouseX < listX + 156
+                && mouseY >= lineY
+                && mouseY < lineY + this.font.lineHeight;
+    }
+
+    private List<Component> buildSummaryTooltip() {
+        List<GroupedRecipe> groupedRecipes = buildGroupedRecipes();
+        long totalOutput = 0L;
+        double totalPerSecond = 0.0D;
+        for (GroupedRecipe recipe : groupedRecipes) {
+            totalOutput += recipe.totalOutputAmount();
+            if (recipe.displayMaxProgress() > 0) {
+                totalPerSecond += recipe.totalOutputAmount() * 20.0D / recipe.displayMaxProgress();
+            }
+        }
+
+        List<Component> lines = new ArrayList<>();
+        lines.add(Component.literal("AE Energy: " + formatAmount(this.menu.getStoredEnergy()) + " AE"));
+        lines.add(Component.literal("Active recipe copies: " + this.menu.getActiveParallels()));
+        lines.add(Component.literal("Unique recipe groups: " + groupedRecipes.size()));
+        lines.add(Component.literal("Parallel usage: " + this.menu.getActiveParallels() + " / " + this.menu.getMaxParallels()));
+        lines.add(Component.literal("Grouped output on screen: " + formatAmount(totalOutput)));
+        lines.add(Component.literal("Estimated output rate: " + formatAmount((long) totalPerSecond) + "/s"));
+        return lines;
     }
 
     private java.util.List<Component> buildParallelTooltip() {
