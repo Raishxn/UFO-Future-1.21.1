@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class QuantumPatternPredicates {
@@ -56,6 +57,14 @@ public final class QuantumPatternPredicates {
 
     public static Component fieldName() {
         return Component.literal("Any Stellar Field Generator (T1/T2/T3)");
+    }
+
+    public static List<BlockState> fieldCandidates() {
+        return List.of(
+                MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().defaultBlockState(),
+                MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get().defaultBlockState(),
+                MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get().defaultBlockState()
+        );
     }
 
     public static Component glassName() {

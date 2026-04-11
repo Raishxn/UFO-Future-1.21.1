@@ -9,41 +9,70 @@ import com.raishxn.ufo.block.entity.pattern.QmfPatternFactory;
 import com.raishxn.ufo.block.entity.pattern.QpaPatternFactory;
 import com.raishxn.ufo.block.entity.pattern.QuantumSlicerPatternFactory;
 import com.raishxn.ufo.block.entity.pattern.StellarNexusPatternFactory;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.List;
 import java.util.Optional;
 
 public final class MultiblockControllerDefinitions {
 
+    public record PreviewEntry(ResourceLocation id, ItemStack iconStack, MultiblockControllerDefinition definition) {
+    }
+
+    private static final List<PreviewEntry> PREVIEW_ENTRIES = List.of(
+            new PreviewEntry(
+                    ResourceLocation.fromNamespaceAndPath("ufo", "stellar_nexus"),
+                    MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get().asItem().getDefaultInstance(),
+                    new MultiblockControllerDefinition(
+                            Component.translatable("block.ufo.stellar_nexus_controller"),
+                            StellarNexusPatternFactory.getPattern(),
+                            StellarNexusPatternFactory.getDefaultCreativeStates())),
+            new PreviewEntry(
+                    ResourceLocation.fromNamespaceAndPath("ufo", "quantum_matter_fabricator"),
+                    MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().asItem().getDefaultInstance(),
+                    new MultiblockControllerDefinition(
+                            Component.translatable("block.ufo.quantum_matter_fabricator_controller"),
+                            QmfPatternFactory.getPattern(),
+                            QmfPatternFactory.getDefaultCreativeStates())),
+            new PreviewEntry(
+                    ResourceLocation.fromNamespaceAndPath("ufo", "quantum_slicer"),
+                    MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get().asItem().getDefaultInstance(),
+                    new MultiblockControllerDefinition(
+                            Component.translatable("block.ufo.quantum_slicer_controller"),
+                            QuantumSlicerPatternFactory.getPattern(),
+                            QuantumSlicerPatternFactory.getDefaultCreativeStates())),
+            new PreviewEntry(
+                    ResourceLocation.fromNamespaceAndPath("ufo", "quantum_processor_assembler"),
+                    MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem().getDefaultInstance(),
+                    new MultiblockControllerDefinition(
+                            Component.translatable("block.ufo.quantum_processor_assembler_controller"),
+                            QpaPatternFactory.getPattern(),
+                            QpaPatternFactory.getDefaultCreativeStates()))
+    );
+
     private MultiblockControllerDefinitions() {
+    }
+
+    public static List<PreviewEntry> getPreviewEntries() {
+        return PREVIEW_ENTRIES;
     }
 
     public static Optional<MultiblockControllerDefinition> getDefinition(BlockEntity be) {
         if (be instanceof StellarNexusControllerBE) {
-            return Optional.of(new MultiblockControllerDefinition(
-                    Component.translatable("block.ufo.stellar_nexus_controller"),
-                    StellarNexusPatternFactory.getPattern(),
-                    StellarNexusPatternFactory.getDefaultCreativeStates()));
+            return Optional.of(getPreviewEntries().get(0).definition());
         }
         if (be instanceof QmfControllerBE) {
-            return Optional.of(new MultiblockControllerDefinition(
-                    Component.translatable("block.ufo.quantum_matter_fabricator_controller"),
-                    QmfPatternFactory.getPattern(),
-                    QmfPatternFactory.getDefaultCreativeStates()));
+            return Optional.of(getPreviewEntries().get(1).definition());
         }
         if (be instanceof QuantumSlicerControllerBE) {
-            return Optional.of(new MultiblockControllerDefinition(
-                    Component.translatable("block.ufo.quantum_slicer_controller"),
-                    QuantumSlicerPatternFactory.getPattern(),
-                    QuantumSlicerPatternFactory.getDefaultCreativeStates()));
+            return Optional.of(getPreviewEntries().get(2).definition());
         }
         if (be instanceof QuantumProcessorAssemblerControllerBE) {
-            return Optional.of(new MultiblockControllerDefinition(
-                    Component.translatable("block.ufo.quantum_processor_assembler_controller"),
-                    QpaPatternFactory.getPattern(),
-                    QpaPatternFactory.getDefaultCreativeStates()));
+            return Optional.of(getPreviewEntries().get(3).definition());
         }
         return Optional.empty();
     }

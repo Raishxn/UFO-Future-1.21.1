@@ -1337,6 +1337,7 @@ public class StellarNexusPatternFactory {
                    state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get()) ||
                    state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get()),
                    Component.literal("Stellar Field Generator"))
+               .candidates('E', QuantumPatternPredicates.fieldCandidates())
                .where('F', MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get())
                .where('G', (state, level, pos) -> 
                    state.is(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()) ||

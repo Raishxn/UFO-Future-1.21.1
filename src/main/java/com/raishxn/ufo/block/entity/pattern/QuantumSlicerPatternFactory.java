@@ -54,6 +54,7 @@ public class QuantumSlicerPatternFactory {
                 .where('P', (state, level, pos) -> state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()), QuantumPatternPredicates.patternHatchName())
                 .where('C', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasing(state), QuantumPatternPredicates.casingName())
                 .where('F', (state, level, pos) -> QuantumPatternPredicates.isAnyFieldGenerator(state), QuantumPatternPredicates.fieldName())
+                .candidates('F', QuantumPatternPredicates.fieldCandidates())
                 .where('G', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state), QuantumPatternPredicates.glassName())
                 .where('A', (state, level, pos) -> state.isAir())
                 .build();

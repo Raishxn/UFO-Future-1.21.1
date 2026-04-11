@@ -49,6 +49,7 @@ public class MultiblockPattern {
     private final char[][][] pattern;      // [layer][row][col]
     private final Map<Character, BlockPredicate> legend;
     private final Map<Character, Component> legendNames;
+    private final Map<Character, List<BlockState>> displayCandidates;
     private final Character controllerChar;
     private final int controllerLayer;
     private final int controllerRow;
@@ -60,10 +61,12 @@ public class MultiblockPattern {
     public int getControllerRow() { return controllerRow; }
     public int getControllerCol() { return controllerCol; }
 
-    private MultiblockPattern(char[][][] pattern, Map<Character, BlockPredicate> legend, Map<Character, Component> legendNames, char controllerChar) {
+    private MultiblockPattern(char[][][] pattern, Map<Character, BlockPredicate> legend, Map<Character, Component> legendNames,
+                              Map<Character, List<BlockState>> displayCandidates, char controllerChar) {
         this.pattern = pattern;
         this.legend = legend;
         this.legendNames = legendNames;
+        this.displayCandidates = displayCandidates;
         this.controllerChar = controllerChar;
 
         // Locate controller position in the pattern
@@ -100,6 +103,7 @@ public class MultiblockPattern {
         PatternError firstError = null;
         List<PatternError> allErrors = new ArrayList<>();
         boolean valid = true;
+        boolean hasUnloadedPositions = false;
 
         for (int y = 0; y < pattern.length; y++) {
             for (int z = 0; z < pattern[y].length; z++) {
@@ -126,6 +130,7 @@ public class MultiblockPattern {
 
                     if (!level.isLoaded(worldPos)) {
                         valid = false;
+                        hasUnloadedPositions = true;
                         PatternError err = new PatternError(worldPos, Component.literal("Chunk not loaded"));
                         allErrors.add(err);
                         if (firstError == null) firstError = err;
@@ -146,7 +151,12 @@ public class MultiblockPattern {
             }
         }
 
-        return new MatchResult(valid, valid ? Collections.unmodifiableList(partPositions) : Collections.emptyList(), Optional.ofNullable(firstError), Collections.unmodifiableList(allErrors));
+        return new MatchResult(
+                valid,
+                valid ? Collections.unmodifiableList(partPositions) : Collections.emptyList(),
+                Optional.ofNullable(firstError),
+                Collections.unmodifiableList(allErrors),
+                hasUnloadedPositions);
     }
 
     /**
@@ -224,6 +234,27 @@ public class MultiblockPattern {
         return list;
     }
 
+    public List<BlockState> getDisplayCandidates(char symbol) {
+        return displayCandidates.getOrDefault(symbol, List.of());
+    }
+
+    public Optional<Character> getSymbolAt(BlockPos controllerPos, net.minecraft.core.Direction facing, BlockPos worldPos) {
+        for (int y = 0; y < pattern.length; y++) {
+            for (int z = 0; z < pattern[y].length; z++) {
+                for (int x = 0; x < pattern[y][z].length; x++) {
+                    int offsetX = x - controllerCol;
+                    int offsetY = y - controllerLayer;
+                    int offsetZ = z - controllerRow;
+                    BlockPos expectedPos = getRotatedPos(controllerPos, offsetX, offsetY, offsetZ, facing);
+                    if (expectedPos.equals(worldPos)) {
+                        return Optional.of(pattern[y][z][x]);
+                    }
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
     /**
      * Represents a specific error in pattern matching.
      */
@@ -232,7 +263,12 @@ public class MultiblockPattern {
     /**
      * Result of a pattern match attempt.
      */
-    public record MatchResult(boolean isValid, List<BlockPos> partPositions, Optional<PatternError> error, List<PatternError> allErrors) {}
+    public record MatchResult(
+            boolean isValid,
+            List<BlockPos> partPositions,
+            Optional<PatternError> error,
+            List<PatternError> allErrors,
+            boolean hasUnloadedPositions) {}
 
     // ──────────────────────── Builder ────────────────────────
 
@@ -240,6 +276,7 @@ public class MultiblockPattern {
         private final List<String[]> layers = new ArrayList<>();
         private final Map<Character, BlockPredicate> legend = new HashMap<>();
         private final Map<Character, Component> legendNames = new HashMap<>();
+        private final Map<Character, List<BlockState>> displayCandidates = new HashMap<>();
         private char controllerChar = 'C';
 
         /**
@@ -271,6 +308,20 @@ public class MultiblockPattern {
             return where(c, (state, level, pos) -> state.is(block), block.getName());
         }
 
+        public Builder candidates(char c, BlockState... states) {
+            return candidates(c, Arrays.asList(states));
+        }
+
+        public Builder candidates(char c, List<BlockState> states) {
+            List<BlockState> cleaned = states.stream()
+                    .filter(Objects::nonNull)
+                    .toList();
+            if (!cleaned.isEmpty()) {
+                this.displayCandidates.put(c, cleaned);
+            }
+            return this;
+        }
+
         /**
          * Sets the character that represents the controller in the pattern.
          * Defaults to {@code 'C'}.
@@ -290,7 +341,7 @@ public class MultiblockPattern {
                     patternArray[y][z] = rows[z].toCharArray();
                 }
             }
-            return new MultiblockPattern(patternArray, legend, legendNames, controllerChar);
+            return new MultiblockPattern(patternArray, legend, legendNames, new HashMap<>(displayCandidates), controllerChar);
         }
     }
 }
