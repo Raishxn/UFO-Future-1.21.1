@@ -21,6 +21,10 @@ public interface IUniversalMultiblockController {
 
     long getGuiMaxEnergy();
 
+    int getGuiActiveParallels();
+
+    int getGuiMaxParallels();
+
     boolean isGuiSafeMode();
 
     boolean isGuiOverclocked();

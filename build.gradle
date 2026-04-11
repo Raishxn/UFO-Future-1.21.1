@@ -110,6 +110,7 @@ dependencies {
     implementation "org.appliedenergistics:appliedenergistics2:${ae2_version}"
     implementation "io.github.pedroksl:ae2addonlib:${ae2addonlib_version}-${minecraft_version}"
     implementation "org.appliedenergistics:guideme:${guideme_version}"
+    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     // GeckoLib was removed since it's not being used.
 
     // ===========================================

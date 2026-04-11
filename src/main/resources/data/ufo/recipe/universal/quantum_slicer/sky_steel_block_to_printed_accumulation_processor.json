@@ -13,14 +13,14 @@
       "ingredient": {
         "item": "megacells:sky_steel_block"
       },
-      "amount": 64
+      "amount": 8192
     }
   ],
   "item_output": {
     "id": "megacells:printed_accumulation_processor",
-    "count": 576
+    "count": 73728
   },
   "energy": 12000000,
-  "time": 1200,
+  "time": 200,
   "required_tier": 1
 }

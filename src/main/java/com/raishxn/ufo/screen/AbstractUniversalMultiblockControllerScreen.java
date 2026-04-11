@@ -19,8 +19,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,7 +30,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public abstract class AbstractUniversalMultiblockControllerScreen<M extends AbstractUniversalMultiblockControllerMenu<?>>
         extends UpgradeableScreen<M> {
@@ -100,9 +106,9 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
 
         guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(getScreenTitle().getString(), maxTextWidth), listX, listY, 0xF0F0F0, false);
         guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(buildStatusLine(), maxTextWidth), listX, listY + 10, 0xD0D7E6, false);
-        guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(buildEnergyLine(), maxTextWidth), listX, listY + 20, 0xB9D8FF, false);
+        renderEnergyAndParallelLine(guiGraphics, listX, listY + 20, maxTextWidth);
 
-        List<UniversalDisplayedRecipe> recipes = this.menu.getDisplayedRecipes();
+        List<GroupedRecipe> recipes = buildGroupedRecipes();
         for (int i = 0; i < 8; i++) {
             int rowY = listY + 32 + i * lineHeight;
             if (i < recipes.size()) {
@@ -113,7 +119,8 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         }
     }
 
-    private void renderRecipeRow(GuiGraphics guiGraphics, UniversalDisplayedRecipe recipe, int x, int y) {
+    private void renderRecipeRow(GuiGraphics guiGraphics, GroupedRecipe groupedRecipe, int x, int y) {
+        UniversalDisplayedRecipe recipe = groupedRecipe.recipe();
         ItemStack iconStack = recipe.itemIcon();
         boolean fluidRecipe = false;
         if (iconStack.isEmpty()) {
@@ -134,13 +141,16 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
             textX += 10;
         }
 
-        String amount = fluidRecipe ? formatAmount(recipe.outputAmount()) + "mB" : formatAmount(recipe.outputAmount()) + "x";
-        String time = recipe.maxProgress() > 0
-                ? formatSeconds(recipe.progress()) + "/" + formatSeconds(recipe.maxProgress()) + "s"
+        String amount = fluidRecipe ? formatAmount(groupedRecipe.totalOutputAmount()) + "mB" : formatAmount(groupedRecipe.totalOutputAmount()) + "x";
+        String time = groupedRecipe.displayMaxProgress() > 0
+                ? formatSeconds(groupedRecipe.displayProgress()) + "/" + formatSeconds(groupedRecipe.displayMaxProgress()) + "s"
                 : "-/-";
         int timeWidth = this.font.width(time);
         int availableWidth = Math.max(20, 156 - (textX - x) - timeWidth - 4);
         String leftText = amount + " " + recipe.label().getString();
+        if (groupedRecipe.copyCount() > 1) {
+            leftText += " [" + groupedRecipe.copyCount() + "]";
+        }
         guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(leftText, availableWidth), textX, y, 0xE6EBF5, false);
         guiGraphics.drawString(this.font, time, this.leftPos + 162 - timeWidth, y, 0xB9D8FF, false);
     }
@@ -159,8 +169,27 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         return builder.toString();
     }
 
-    private String buildEnergyLine() {
+    private void renderEnergyAndParallelLine(GuiGraphics guiGraphics, int x, int y, int maxTextWidth) {
+        String energyText = buildEnergyText();
+        String parallelText = buildParallelText();
+        int fullWidth = this.font.width(energyText + " | " + parallelText);
+
+        if (fullWidth <= maxTextWidth) {
+            guiGraphics.drawString(this.font, energyText, x, y, 0xB9D8FF, false);
+            guiGraphics.drawString(this.font, " | ", x + this.font.width(energyText), y, 0x8A91A6, false);
+            guiGraphics.drawString(this.font, parallelText, x + this.font.width(energyText + " | "), y, 0xB9D8FF, false);
+            return;
+        }
+
+        guiGraphics.drawString(this.font, this.font.plainSubstrByWidth(energyText, maxTextWidth), x, y, 0xB9D8FF, false);
+    }
+
+    private String buildEnergyText() {
         return "Energy: " + formatAmount(this.menu.getStoredEnergy()) + " AE";
+    }
+
+    private String buildParallelText() {
+        return "Parallel: " + this.menu.getActiveParallels() + "/" + this.menu.getMaxParallels();
     }
 
     private Component getScreenTitle() {
@@ -216,7 +245,162 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
                     mouseX, mouseY);
             return;
         }
+        if (isHoveringParallelText(mouseX, mouseY)) {
+            guiGraphics.renderTooltip(this.font, buildParallelTooltip().stream().map(Component::getVisualOrderText).toList(), mouseX, mouseY);
+            return;
+        }
+        GroupedRecipe hoveredRecipe = getHoveredGroupedRecipe(mouseX, mouseY);
+        if (hoveredRecipe != null) {
+            guiGraphics.renderTooltip(this.font, buildGroupedRecipeTooltip(hoveredRecipe).stream().map(Component::getVisualOrderText).toList(), mouseX, mouseY);
+            return;
+        }
         super.renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    private boolean isHoveringParallelText(int mouseX, int mouseY) {
+        int listX = this.leftPos + 7;
+        int lineY = this.topPos + 50;
+        String energyText = buildEnergyText();
+        String parallelText = buildParallelText();
+        String fullText = energyText + " | " + parallelText;
+        int maxTextWidth = 156;
+        int fullWidth = this.font.width(fullText);
+
+        if (fullWidth > maxTextWidth) {
+            return false;
+        }
+
+        int parallelX = listX + this.font.width(energyText + " | ");
+        int parallelWidth = this.font.width(parallelText);
+        return mouseX >= parallelX
+                && mouseX < parallelX + parallelWidth
+                && mouseY >= lineY
+                && mouseY < lineY + this.font.lineHeight;
+    }
+
+    private java.util.List<Component> buildParallelTooltip() {
+        var recipes = this.menu.getDisplayedRecipes();
+        Map<String, Integer> recipeCounts = new LinkedHashMap<>();
+        for (UniversalDisplayedRecipe recipe : recipes) {
+            recipeCounts.merge(recipe.label().getString(), 1, Integer::sum);
+        }
+
+        int active = this.menu.getActiveParallels();
+        int distinct = recipeCounts.size();
+        int repeated = Math.max(0, active - distinct);
+        java.util.List<Component> lines = new ArrayList<>();
+        lines.add(Component.literal("Parallel: " + active + " / " + this.menu.getMaxParallels()));
+        lines.add(Component.literal("Different recipes: " + distinct));
+        lines.add(Component.literal("Repeated instances: " + repeated));
+
+        recipeCounts.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder())
+                        .thenComparing(Map.Entry.comparingByKey()))
+                .limit(6)
+                .forEach(entry -> lines.add(Component.literal(entry.getValue() + "x " + entry.getKey())));
+
+        return lines;
+    }
+
+    private List<GroupedRecipe> buildGroupedRecipes() {
+        Map<RecipeGroupKey, GroupAccumulator> groups = new LinkedHashMap<>();
+        for (UniversalDisplayedRecipe recipe : this.menu.getDisplayedRecipes()) {
+            RecipeGroupKey key = RecipeGroupKey.of(recipe);
+            groups.computeIfAbsent(key, ignored -> new GroupAccumulator(recipe)).add(recipe);
+        }
+
+        List<GroupedRecipe> groupedRecipes = new ArrayList<>();
+        for (GroupAccumulator accumulator : groups.values()) {
+            groupedRecipes.add(accumulator.toGroupedRecipe());
+        }
+        return groupedRecipes;
+    }
+
+    private GroupedRecipe getHoveredGroupedRecipe(int mouseX, int mouseY) {
+        int listX = this.leftPos + 7;
+        int listY = this.topPos + 30;
+        int lineHeight = 10;
+        List<GroupedRecipe> recipes = buildGroupedRecipes();
+        for (int i = 0; i < Math.min(8, recipes.size()); i++) {
+            int rowY = listY + 32 + i * lineHeight;
+            if (mouseX >= listX && mouseX < listX + 156 && mouseY >= rowY && mouseY < rowY + lineHeight) {
+                return recipes.get(i);
+            }
+        }
+        return null;
+    }
+
+    private List<Component> buildGroupedRecipeTooltip(GroupedRecipe groupedRecipe) {
+        UniversalDisplayedRecipe recipe = groupedRecipe.recipe();
+        List<Component> lines = new ArrayList<>();
+        lines.add(recipe.label());
+        lines.add(Component.literal("Parallel copies: " + groupedRecipe.copyCount()));
+        lines.add(Component.literal("Total output: " + formatAmount(groupedRecipe.totalOutputAmount())
+                + (recipe.fluidIcon().isEmpty() ? "x" : "mB")));
+        lines.add(Component.literal("Displayed time: " + formatSeconds(groupedRecipe.displayProgress())
+                + "/" + formatSeconds(groupedRecipe.displayMaxProgress()) + "s"));
+        if (groupedRecipe.hasMixedProgress()) {
+            lines.add(Component.literal("Progress spread: " + formatSeconds(groupedRecipe.minProgress())
+                    + "s to " + formatSeconds(groupedRecipe.maxProgress()) + "s"));
+        }
+        return lines;
+    }
+
+    private record GroupedRecipe(
+            UniversalDisplayedRecipe recipe,
+            int copyCount,
+            long totalOutputAmount,
+            int displayProgress,
+            int displayMaxProgress,
+            int minProgress,
+            int maxProgress,
+            boolean hasMixedProgress) {
+    }
+
+    private record RecipeGroupKey(String itemId, String fluidId, String label, long outputAmount, int maxProgress) {
+        private static RecipeGroupKey of(UniversalDisplayedRecipe recipe) {
+            String itemId = recipe.itemIcon().isEmpty()
+                    ? ""
+                    : String.valueOf(BuiltInRegistries.ITEM.getKey(recipe.itemIcon().getItem()));
+            String fluidId = recipe.fluidIcon().isEmpty()
+                    ? ""
+                    : String.valueOf(BuiltInRegistries.FLUID.getKey(recipe.fluidIcon().getFluid()));
+            return new RecipeGroupKey(itemId, fluidId, recipe.label().getString(), recipe.outputAmount(), recipe.maxProgress());
+        }
+    }
+
+    private static final class GroupAccumulator {
+        private final UniversalDisplayedRecipe representative;
+        private int count;
+        private long totalOutput;
+        private int totalProgress;
+        private int minProgress = Integer.MAX_VALUE;
+        private int maxProgress;
+
+        private GroupAccumulator(UniversalDisplayedRecipe representative) {
+            this.representative = representative;
+        }
+
+        private void add(UniversalDisplayedRecipe recipe) {
+            this.count++;
+            this.totalOutput += recipe.outputAmount();
+            this.totalProgress += recipe.progress();
+            this.minProgress = Math.min(this.minProgress, recipe.progress());
+            this.maxProgress = Math.max(this.maxProgress, recipe.progress());
+        }
+
+        private GroupedRecipe toGroupedRecipe() {
+            int averageProgress = this.count == 0 ? 0 : this.totalProgress / this.count;
+            return new GroupedRecipe(
+                    this.representative,
+                    this.count,
+                    this.totalOutput,
+                    averageProgress,
+                    this.representative.maxProgress(),
+                    this.minProgress == Integer.MAX_VALUE ? 0 : this.minProgress,
+                    this.maxProgress,
+                    this.minProgress != this.maxProgress);
+        }
     }
 
     private void runLocalStructureScan(BlockPos pos) {

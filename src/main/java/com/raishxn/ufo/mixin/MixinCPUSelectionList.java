@@ -41,6 +41,28 @@ public class MixinCPUSelectionList {
         return ufo$formatStorage(cpu.storage());
     }
 
+    @Redirect(
+            method = "getTooltip",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lappeng/core/localization/Tooltips;ofNumber(J)Lnet/minecraft/network/chat/MutableComponent;"
+            )
+    )
+    private MutableComponent ufo$formatCoProcessorsTooltip(long value) {
+        return Component.literal(ufo$formatStorage(value)).withStyle(Tooltips.NUMBER_TEXT);
+    }
+
+    @Redirect(
+            method = "drawBackgroundLayer",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/lang/String;valueOf(I)Ljava/lang/String;"
+            )
+    )
+    private String ufo$formatCoProcessorsLabel(int value) {
+        return ufo$formatStorage(value);
+    }
+
     @Unique
     private String ufo$formatStorage(long bytes) {
         if (bytes < 1000) return ufo$DF.format(bytes);

@@ -390,6 +390,16 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
     }
 
     @Override
+    public int getGuiActiveParallels() {
+        return this.running ? 1 : 0;
+    }
+
+    @Override
+    public int getGuiMaxParallels() {
+        return 1;
+    }
+
+    @Override
     public boolean isGuiSafeMode() {
         return this.safeMode;
     }

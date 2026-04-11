@@ -46,6 +46,8 @@ import java.util.List;
 
 public abstract class AbstractParallelMultiblockControllerBE extends AbstractSimpleMultiblockControllerBE implements ICraftingMachine {
     protected static final int MAX_PARALLEL_THREADS = 27;
+    protected static final int SAFE_MODE_PARALLEL_THREADS = 9;
+    protected static final int OVERCLOCK_SPEED_MULTIPLIER = 5;
     private static final int THERMAL_MAX = 10000;
     private static final int OVERLOAD_TICKS = 100;
     private static final float THERMAL_EXPLOSION_POWER = 30.0F;
@@ -120,6 +122,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         int hottestProgress = 0;
         int runningThreads = 0;
         boolean thermalLocked = this.safeMode && this.temperature >= this.maxTemperature;
+        int parallelLimit = getParallelThreadLimit();
 
         for (ParallelProcessState processState : this.processStates) {
             if (!processState.isActive()) {
@@ -142,6 +145,10 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
 
+            if (runningThreads >= parallelLimit) {
+                continue;
+            }
+
             processState.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size());
             long scaledEnergy = MultiblockTierScaling.adjustedEnergy(recipe.energy(), this.machineTier, recipe.requiredTier());
             chargeEnergy(processState, energyService, scaledEnergy);
@@ -152,7 +159,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
             runningThreads++;
             anyRunning = true;
-            processState.setProgress(processState.getProgress() + (this.overclocked ? 5 : 1));
+            processState.setProgress(processState.getProgress() + getProgressPerTick());
             if (processState.getProgress() >= scaledMaxProgress) {
                 finishRecipe(processState, recipe, inventory, src);
             }
@@ -191,6 +198,24 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         for (ParallelProcessState state : this.processStates) {
             state.clear();
         }
+    }
+
+    protected int getParallelThreadLimit() {
+        return this.safeMode ? SAFE_MODE_PARALLEL_THREADS : MAX_PARALLEL_THREADS;
+    }
+
+    protected int getActiveProcessCount() {
+        int count = 0;
+        for (ParallelProcessState state : this.processStates) {
+            if (state.isActive()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    protected int getProgressPerTick() {
+        return this.overclocked ? OVERCLOCK_SPEED_MULTIPLIER : 1;
     }
 
     private void chargeEnergy(ParallelProcessState state, IEnergyService energyService, long targetEnergy) {
@@ -267,6 +292,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
             var primaryOutput = recipe.primaryOutput();
             int scaledMaxProgress = MultiblockTierScaling.adjustedTime(recipe.time(), this.machineTier, recipe.requiredTier());
+            int displayedMaxProgress = getDisplayedTicks(scaledMaxProgress);
+            int displayedProgress = Math.min(displayedMaxProgress, getDisplayedTicks(processState.getProgress()));
             Component label = primaryOutput.item().isEmpty()
                     ? (primaryOutput.fluid().isEmpty() ? Component.literal(recipe.name()) : primaryOutput.fluid().getHoverName())
                     : primaryOutput.item().getHoverName();
@@ -278,9 +305,14 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                     primaryOutput.fluid(),
                     label,
                     primaryOutput.amount(),
-                    processState.getProgress(),
-                    scaledMaxProgress));
+                    displayedProgress,
+                    displayedMaxProgress));
         }
+    }
+
+    protected int getDisplayedTicks(int rawTicks) {
+        int divisor = getProgressPerTick();
+        return Math.max(0, (rawTicks + divisor - 1) / divisor);
     }
 
     private void updateDisplayedEnergy(List<MultiblockProcessingRecipe> availableRecipes) {
@@ -483,6 +515,10 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             return false;
         }
 
+        if (getActiveProcessCount() >= getParallelThreadLimit()) {
+            return false;
+        }
+
         MultiblockProcessingRecipe recipe = resolvePatternRecipe(patternDetails, inputs);
         if (recipe == null || !MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())) {
             return false;
@@ -517,7 +553,9 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
     @Override
     public boolean acceptsPlans() {
-        return this.assembled && findInactiveState() != null;
+        return this.assembled
+                && getActiveProcessCount() < getParallelThreadLimit()
+                && findInactiveState() != null;
     }
 
     private ParallelProcessState findInactiveState() {
@@ -532,7 +570,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     private MultiblockProcessingRecipe resolvePatternRecipe(IPatternDetails patternDetails, KeyCounter[] inputs) {
         List<MultiblockProcessingRecipe> outputMatches = new ArrayList<>();
         for (MultiblockProcessingRecipe recipe : getAvailableRecipes()) {
-            if (patternMatchesOutputs(patternDetails.getOutputs(), recipe.outputs())) {
+            if (MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())
+                    && patternMatchesOutputs(patternDetails.getOutputs(), recipe.outputs())) {
                 outputMatches.add(recipe);
             }
         }
@@ -571,7 +610,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 return false;
             }
         }
-        return true;
+        return remaining.isEmpty();
     }
 
     private boolean patternMatchesOutputs(List<GenericStack> outputs, List<MultiblockProcessingRecipe.OutputStack> recipeOutputs) {
@@ -736,6 +775,16 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
         }
         return super.hasOngoingWork();
+    }
+
+    @Override
+    public int getGuiActiveParallels() {
+        return getActiveProcessCount();
+    }
+
+    @Override
+    public int getGuiMaxParallels() {
+        return getParallelThreadLimit();
     }
 
     private void syncClientState(boolean throttle) {

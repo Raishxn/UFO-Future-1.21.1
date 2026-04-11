@@ -7,26 +7,26 @@
       "ingredient": {
         "item": "ae2:printed_logic_processor"
       },
-      "amount": 64
+      "amount": 32768
     },
     {
       "ingredient": {
         "item": "ae2:printed_silicon"
       },
-      "amount": 64
+      "amount": 32768
     },
     {
       "ingredient": {
         "item": "minecraft:redstone"
       },
-      "amount": 64
+      "amount": 32768
     }
   ],
   "item_output": {
     "id": "ae2:logic_processor",
-    "count": 64
+    "count": 32768
   },
   "energy": 6000000,
-  "time": 800,
+  "time": 100,
   "required_tier": 1
 }

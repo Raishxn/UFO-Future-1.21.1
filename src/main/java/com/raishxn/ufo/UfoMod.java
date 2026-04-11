@@ -7,6 +7,7 @@ import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.init.ModBlockEntities;
+import com.raishxn.ufo.init.ModEntities;
 import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.init.ModRecipes;
 import com.raishxn.ufo.init.ModSounds;
@@ -54,6 +55,7 @@ public class UfoMod {
         ModItems.register(modEventBus);
         ModCellItems.register(modEventBus);
         ModBlockEntities.register(modEventBus);
+        ModEntities.register(modEventBus);
         ModRecipes.register(modEventBus);
         ModMenus.register(modEventBus);
         com.raishxn.ufo.menu.UFOMenus.INSTANCE.register(modEventBus);
@@ -62,6 +64,7 @@ public class UfoMod {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::loadComplete);
         modEventBus.addListener(this::registerPackets);
+        modEventBus.addListener(ModEntities::registerAttributes);
         ModBlocks.INSTANCE.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
     }

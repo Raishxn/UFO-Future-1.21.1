@@ -49,6 +49,10 @@ public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockE
     protected int maxEnergyMidHigh = 0;
     @GuiSync(36)
     protected int maxEnergyHigh = 0;
+    @GuiSync(37)
+    protected int activeParallels = 0;
+    @GuiSync(38)
+    protected int maxParallels = 1;
 
     protected AbstractUniversalMultiblockControllerMenu(net.minecraft.world.inventory.MenuType<?> menuType, int id, Inventory playerInventory,
                                                         T blockEntity, ContainerLevelAccess levelAccess) {
@@ -82,6 +86,8 @@ public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockE
             this.maxEnergyMidLow = splitLong(maxEnergy, 16);
             this.maxEnergyMidHigh = splitLong(maxEnergy, 32);
             this.maxEnergyHigh = splitLong(maxEnergy, 48);
+            this.activeParallels = this.getHost().getGuiActiveParallels();
+            this.maxParallels = this.getHost().getGuiMaxParallels();
         }
         super.standardDetectAndSendChanges();
     }
@@ -128,6 +134,14 @@ public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockE
 
     public long getMaxEnergy() {
         return assembleLong(this.maxEnergyLow, this.maxEnergyMidLow, this.maxEnergyMidHigh, this.maxEnergyHigh);
+    }
+
+    public int getActiveParallels() {
+        return Math.max(0, this.activeParallels);
+    }
+
+    public int getMaxParallels() {
+        return Math.max(1, this.maxParallels);
     }
 
     public List<UniversalDisplayedRecipe> getDisplayedRecipes() {

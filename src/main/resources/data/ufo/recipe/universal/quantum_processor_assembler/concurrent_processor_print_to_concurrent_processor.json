@@ -13,26 +13,26 @@
       "ingredient": {
         "item": "extendedae:concurrent_processor_print"
       },
-      "amount": 64
+      "amount": 32768
     },
     {
       "ingredient": {
         "item": "ae2:printed_silicon"
       },
-      "amount": 64
+      "amount": 32768
     },
     {
       "ingredient": {
         "item": "minecraft:redstone"
       },
-      "amount": 64
+      "amount": 32768
     }
   ],
   "item_output": {
     "id": "extendedae:concurrent_processor",
-    "count": 64
+    "count": 32768
   },
   "energy": 6000000,
-  "time": 800,
+  "time": 100,
   "required_tier": 1
 }

@@ -6,6 +6,7 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.fluid.ModFluids;
+import com.raishxn.ufo.init.ModEntities;
 import com.raishxn.ufo.item.custom.*;
 import com.raishxn.ufo.item.InfinityCell;
 import com.raishxn.ufo.item.custom.ThermalArmorItem;
@@ -310,6 +311,9 @@ public class ModItems {
     public static final DeferredItem<Item> STRUCTURE_SCANNER = ITEMS.register("structure_scanner",
             () -> new StructureScannerItem(new Item.Properties()
                     .rarity(Rarity.RARE)));
+
+    public static final DeferredItem<Item> APOCALYPSE_TYPE_A_SPAWN_EGG = ITEMS.register("apocalypse_type_a_spawn_egg",
+            () -> new SpawnEggItem(ModEntities.APOCALYPSE_TYPE_A.get(), 0x1a1025, 0x8be9ff, new Item.Properties()));
 
     // ---------- Esferas / componentes avançados ----------
     public static final DeferredItem<Item> NEUTRONIUM_SPHERE = ITEMS.register("neutronium_sphere",

@@ -7,14 +7,14 @@
       "ingredient": {
         "item": "ufo:white_dwarf_fragment_block"
       },
-      "amount": 64
+      "amount": 8192
     }
   ],
   "item_output": {
     "id": "ufo:printed_dimensional_processor",
-    "count": 576
+    "count": 73728
   },
   "energy": 16000000,
-  "time": 1400,
+  "time": 200,
   "required_tier": 1
 }

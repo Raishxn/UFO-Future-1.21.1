@@ -7,14 +7,14 @@
       "ingredient": {
         "item": "ae2:quartz_block"
       },
-      "amount": 64
+      "amount": 8192
     }
   ],
   "item_output": {
     "id": "ae2:printed_calculation_processor",
-    "count": 256
+    "count": 32768
   },
   "energy": 8000000,
-  "time": 900,
+  "time": 200,
   "required_tier": 1
 }
