@@ -1,24 +1,23 @@
 # Quantum Processor Assembler
 
-O **Quantum Processor Assembler** e o multibloco de finalizacao das linhas de processadores. Ele recebe os printed circuits e materiais auxiliares, depois monta os processadores finais em throughput de endgame.
+O **Quantum Processor Assembler** e o multibloco de acabamento da linha de processadores. Ele recebe circuitos impressos e materiais de suporte para montar processadores finais em escala endgame.
 
-## Funcionalidades
+## Recursos Principais
 
-- ate **8 jobs paralelos**
-- suporte ao sistema universal de recipes de multiblocos
-- autocrafting do AE2 pelo **Quantum Pattern Hatch**
-- puxando ingredientes da rede e devolvendo outputs direto para ela
+- Ate **27 jobs paralelos** no modo padrao
+- **9 jobs paralelos** em Safe Mode
+- Suporte a receitas universais de multibloco
+- Integracao de autocrafting AE2 pelo **Quantum Pattern Hatch**
+- Pull de ingredientes e push de outputs direto pela rede
 
-## Motivo de Existir
+## Pattern Hatch
 
-A ideia e parar de tratar producao de processadores como um gargalo de recipe pequena. No late game, essa linha deve se comportar como fabrica e nao como bancada.
+- O **Quantum Pattern Hatch** armazena **72 encoded patterns**
+- Expoe o controller para a AE2 como maquina de crafting
+- Cada pattern usa uma thread livre em vez de travar a maquina inteira
 
-## Par Com o Slicer
+## Cadeia Da Fabrica
 
-- o **Quantum Slicer** gera as pecas impressas
-- o **Quantum Processor Assembler** transforma isso em processadores finais
-
-## Veja Tambem
-
-- [Quantum Slicer](quantum-slicer.md)
-- [Tiers de Multibloco](multiblock-tiers.md)
+- **Quantum Slicer** cria as partes impressas
+- **Quantum Processor Assembler** fecha os processadores
+- **QMF** cobre conversoes pesadas no estilo DMA

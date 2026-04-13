@@ -4,23 +4,20 @@ The **Quantum Processor Assembler** is the finishing multiblock for processor li
 
 ## Main Features
 
-- Up to **8 parallel jobs**
+- Up to **27 parallel jobs** in standard mode
+- **9 parallel jobs** while Safe Mode is enabled
 - Universal multiblock recipe support
 - AE2 autocrafting integration through the **Quantum Pattern Hatch**
 - Direct network pull for ingredients and direct network push for outputs
 
-## Why It Exists
+## Pattern Hatch
 
-The goal is to stop processor production from bottlenecking on tiny single-machine recipes. Once your base reaches late game, processor lines should behave like a factory, not like a crafting bench.
+- The **Quantum Pattern Hatch** stores **72 encoded patterns**
+- It exposes the controller to AE2 as a crafting machine
+- Patterns reserve free threads instead of forcing single-job execution
 
-## Pairing With The Slicer
+## Factory Chain
 
 - **Quantum Slicer** makes the printed parts
-- **Quantum Processor Assembler** turns those into final processors
-
-Together they form the dedicated circuit-production line above the DMA.
-
-## See Also
-
-- [Quantum Slicer](quantum-slicer.md)
-- [Multiblock Tiers](multiblock-tiers.md)
+- **Quantum Processor Assembler** turns them into final processors
+- **QMF** covers large DMA-style matter recipes and other heavy conversions

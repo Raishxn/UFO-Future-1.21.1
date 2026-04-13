@@ -1,22 +1,25 @@
-# Wiki do UFO Future
+# Wiki UFO Future
 
-Bem-vindo a documentacao do **UFO Future**, um mod de tecnologia endgame focado em AE2 para Minecraft 1.21.1.
+Esta wiki acompanha o estado atual do repositorio 1.21.1 do **UFO Future**.
 
-## Linha Principal de Maquinas
+## Progressao Principal
 
-- [Montador de Materia Dimensional](dma.md): a primeira maquina avancada
-- [Quantum Matter Fabricator](quantum-matter-fabricator.md): evolucao do DMA para processamento em massa
-- [Quantum Slicer](quantum-slicer.md): geracao de pecas impressas em alto throughput
-- [Quantum Processor Assembler](quantum-processor-assembler.md): finalizacao de processadores em alto throughput
-- [Stellar Nexus](stellar-nexus.md): multibloco de simulacao em escala extrema
-- [Tiers de Multibloco](multiblock-tiers.md): regras de gate e scaling de MK1/MK2/MK3
+- [Dimensional Matter Assembler](dma.md): primeira maquina avancada, com calor, coolant e catalisadores.
+- [Quantum Matter Fabricator](quantum-matter-fabricator.md): sucessor multibloco do DMA com integracao AE2.
+- [Quantum Slicer](quantum-slicer.md): preparacao de partes impressas em alto volume.
+- [Quantum Processor Assembler](quantum-processor-assembler.md): montagem final de processadores em escala de fabrica.
+- [Stellar Nexus](stellar-nexus.md): plataforma final de simulacao estelar.
+- [Multiblock Tiers](multiblock-tiers.md): bloqueio MK1, MK2 e MK3 com bonus de tier.
 
-## Outros Topicos
+## Sistemas de Suporte
 
-- [Catalisadores](catalysts.md)
-- [Receitas KubeJS](kubejs-recipes.md)
-- [Ferramentas e Armas](tools.md)
-- [Armaduras](armor.md)
-- [Celulas de Armazenamento](storage-cells.md)
-- [Materiais e Fluidos](materials.md)
-- [Progressao](progression.md)
+- [Mega Storage](mega-storage.md): mega storages de crafting e mega co-processors.
+- [Containment](containment.md): SCM e ACC para materia volatil.
+- [Storage Cells](storage-cells.md): celulas White Dwarf, Neutron Star e Infinity.
+- [Materials & Fluids](materials.md): materia estelar, coolants e materiais de progressao.
+- [Catalysts](catalysts.md): familias e papeis dos catalisadores do DMA.
+- [Tools & Weapons](tools.md): ferramentas transformaveis e Structure Scanner.
+- [Armor Sets](armor.md): conjunto Thermal Resistor e armadura UFO.
+- [Crafting Progression](progression.md): ordem recomendada de progressao.
+- [KubeJS Recipes](kubejs-recipes.md): suporte a receitas customizadas.
+- [Recipe Balance Audit](recipe-balance-audit.md): notas de balanceamento do conjunto atual.

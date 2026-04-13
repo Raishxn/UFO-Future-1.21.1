@@ -1,31 +1,24 @@
 # Quantum Slicer
 
-O **Quantum Slicer** e o multibloco de preparo de componentes impressos. Ele cuida da etapa de corte em linhas grandes de circuitos e processadores.
+O **Quantum Slicer** prepara componentes impressos em grande volume para linhas de processadores e circuitos.
 
-## Papel da Maquina
+## Comportamento Base
 
-- converte materiais fonte em partes impressas em massa
-- usa o sistema universal de recipes de multibloco
-- suporta ate **8 jobs paralelos**
-- integra com AE2 pelo **Quantum Pattern Hatch**
+- Converte materiais de origem em partes impressas
+- Usa o sistema universal de receitas de multibloco
+- Suporta ate **27 jobs paralelos** no modo padrao
+- Cai para **9 jobs paralelos** em Safe Mode
+- Integra com AE2 via **Quantum Pattern Hatch**
+- Puxa e devolve ingredientes e outputs direto pela ME
 
-Ele foi feito para throughput, nao para recipes manuais pequenas.
+## Pattern Hatch
 
-## Posicao na Fabrica
+- O **Quantum Pattern Hatch** armazena **72 encoded patterns**
+- Ele se vincula ao controller apos a montagem
+- A AE2 pode empurrar jobs sem depender de inventario manual
 
-O fluxo normal e:
+## Posicao Na Fabrica
 
-1. blocos e materiais entram no **Quantum Slicer**
-2. os printed outputs vao para a rede ME
-3. o AE2 solicita os processadores finais ao **Quantum Processor Assembler**
-
-## Automacao
-
-- os encoded patterns ficam no hatch, nao no controller
-- o controller consome direto da rede ME
-- as threads paralelas deixam um unico slicer atender varias familias de circuitos ao mesmo tempo
-
-## Veja Tambem
-
-- [Quantum Processor Assembler](quantum-processor-assembler.md)
-- [Quantum Matter Fabricator](quantum-matter-fabricator.md)
+1. Materiais entram no **Quantum Slicer**
+2. Os impressos vao para a ME
+3. A AE2 pede os processadores finais ao **Quantum Processor Assembler**

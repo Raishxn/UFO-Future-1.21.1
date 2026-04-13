@@ -20,13 +20,15 @@ plugins:
           name: English
           build: true
         - locale: pt
-          name: Português
+          name: Portugues
           build: true
           nav_translations:
-            Home: Início
+            Home: Inicio
             Wiki: Wiki
+            Mega Storage: Mega Storage
+            Containment: Contencao
             Stellar Nexus: Stellar Nexus
-            Dimensional Matter Assembler: Montador de Matéria Dimensional
+            Dimensional Matter Assembler: Montador de Materia Dimensional
             Quantum Matter Fabricator: Quantum Matter Fabricator
             Quantum Slicer: Quantum Slicer
             Quantum Processor Assembler: Quantum Processor Assembler
@@ -35,15 +37,18 @@ plugins:
             KubeJS Recipes: Receitas KubeJS
             Tools & Weapons: Ferramentas e Armas
             Armor Sets: Conjuntos de Armadura
-            Storage Cells: Células de Armazenamento
+            Storage Cells: Celulas de Armazenamento
             Materials & Fluids: Materiais e Fluidos
-            Crafting Progression: Progressão
+            Crafting Progression: Progressao
+            Recipe Balance Audit: Auditoria de Balanceamento
         - locale: es
-          name: Español
+          name: Espanol
           build: true
           nav_translations:
             Home: Inicio
             Wiki: Wiki
+            Mega Storage: Mega Storage
+            Containment: Contencion
             Stellar Nexus: Stellar Nexus
             Dimensional Matter Assembler: Ensamblador de Materia Dimensional
             Quantum Matter Fabricator: Quantum Matter Fabricator
@@ -56,30 +61,36 @@ plugins:
             Armor Sets: Conjuntos de Armadura
             Storage Cells: Celdas de Almacenamiento
             Materials & Fluids: Materiales y Fluidos
-            Crafting Progression: Progresión
+            Crafting Progression: Progresion
+            Recipe Balance Audit: Auditoria de Balance
         - locale: zh
-          name: 中文
+          name: Zhongwen
           build: true
           nav_translations:
-            Home: 首页
+            Home: Shouye
             Wiki: Wiki
+            Mega Storage: Juxing Cunchu
+            Containment: Kongzhi
             Stellar Nexus: Stellar Nexus
-            Dimensional Matter Assembler: 维度物质装配器
+            Dimensional Matter Assembler: Weidu Wuzhi Zupeiqi
             Quantum Matter Fabricator: Quantum Matter Fabricator
             Quantum Slicer: Quantum Slicer
             Quantum Processor Assembler: Quantum Processor Assembler
             Multiblock Tiers: Multiblock Tiers
-            Catalysts: 催化剂
-            KubeJS Recipes: KubeJS 配方
-            Tools & Weapons: 工具与武器
-            Armor Sets: 护甲套装
-            Storage Cells: 存储单元
-            Materials & Fluids: 材料与流体
-            Crafting Progression: 合成进阶
+            Catalysts: Cuihuaji
+            KubeJS Recipes: KubeJS Peifang
+            Tools & Weapons: Gongju Yu Wuqi
+            Armor Sets: Hujia Taozhuang
+            Storage Cells: Cunchu Danyuan
+            Materials & Fluids: Cailiao Yu Yeti
+            Crafting Progression: Hecheng Jinjie
+            Recipe Balance Audit: Peifang Pingheng Shenji
 
 nav:
   - Home: index.md
   - Wiki:
+    - Mega Storage: mega-storage.md
+    - Containment: containment.md
     - Stellar Nexus: stellar-nexus.md
     - Dimensional Matter Assembler: dma.md
     - Quantum Matter Fabricator: quantum-matter-fabricator.md
@@ -93,3 +104,4 @@ nav:
     - Storage Cells: storage-cells.md
     - Materials & Fluids: materials.md
     - Crafting Progression: progression.md
+    - Recipe Balance Audit: recipe-balance-audit.md

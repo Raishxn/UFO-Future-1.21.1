@@ -8,22 +8,25 @@ categories:
 
 # Welcome to UFO Future
 
-**UFO Future** expands AE2 endgame with thermal machines, stellar matter, massive storage and multiblock automation.
+**UFO Future** expands AE2 endgame with thermal machines, stellar matter, mega storage and multiblock automation.
 
 ![Logo](../pic/logo.png)
 
 ## Main Lines
-- **DMA**: the flexible starter advanced machine.
-- **Quantum Multiblocks**: bulk automation, pattern-driven crafting and parallel threads.
-- **Stellar Nexus**: the final simulation platform for extreme-scale production.
+
+- **DMA**: the flexible starter advanced machine
+- **Quantum Multiblocks**: bulk automation, pattern-driven crafting and parallel threads
+- **Stellar Nexus**: the final simulation platform for extreme-scale production
 
 ## New Multiblock Stack
-- **Quantum Matter Fabricator**: DMA evolution for AE2 automation and heavy bulk jobs.
-- **Quantum Slicer**: bulk printed-circuit preparation.
-- **Quantum Processor Assembler**: bulk processor finishing.
-- **Quantum Pattern Hatch**: 64-pattern AE2 provider built for the multiblock line.
+
+- **Quantum Matter Fabricator**: DMA evolution for AE2 automation and heavy bulk jobs
+- **Quantum Slicer**: bulk printed-part preparation
+- **Quantum Processor Assembler**: bulk processor finishing
+- **Quantum Pattern Hatch**: **72-pattern** AE2 provider for the multiblock line
 
 ## Tier Philosophy
+
 Multiblocks use **MK1 / MK2 / MK3** gating. Higher tiers unlock better recipes and accelerate older ones automatically.
 
 <CategoryIndex category="ufo_intro"></CategoryIndex>

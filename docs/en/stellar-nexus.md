@@ -2,15 +2,14 @@
 
 The **Stellar Nexus** is the final simulation multiblock in UFO Future. It consumes immense AE power, rare fluids and high-tier materials to produce extreme-scale outputs over long cycle times.
 
-This page focuses on the machine logic and control model rather than fixed recipe lists.
-
 ## Machine Identity
 
 - Massive assembled multiblock
 - Reads items and fluids from the ME network
-- Charges a very large internal AE buffer while idle
+- Charges a **20B AE** internal buffer while idle
 - Consumes fuel on start and coolant during runtime
 - Uses heat, safe mode and overclock as core balancing mechanics
+- Requires exactly one item input hatch, one item output hatch, one fluid output hatch and one AE energy input hatch
 
 ## Field Generator Tiers
 
@@ -24,32 +23,22 @@ Mixed field tiers invalidate the structure. The field tier decides recipe access
 
 ## Coolant Ladder
 
-The Stellar Nexus now follows the intended coolant progression:
-
 - **Gelid Cryotheum** = low efficiency
 - **Stable Coolant** = medium efficiency
 - **Temporal Fluid** = extreme efficiency
 
-The machine no longer treats water as a meaningful normal progression coolant. The design is now built around moving up this ladder.
+The intended setup is to climb this ladder instead of brute-forcing the machine with weak coolant forever.
 
 ## Safe Mode
 
 Safe Mode is the reliable automation option.
 
-When enabled, the machine:
-
-- consumes more AE
-- consumes more fuel
-- consumes more coolant
-- shuts down instead of detonating at maximum heat
-
-This is expensive by design. Safety is not free.
+- **2.5x** AE cost
+- **2.5x** fuel use
+- **2.5x** coolant use
+- Automatic shutdown instead of detonation at maximum heat
 
 ## Overclock Mode
-
-The controller already supports **Overclock Mode**.
-
-Effects:
 
 - **5x faster** recipe completion
 - **10x** AE cost
@@ -57,30 +46,14 @@ Effects:
 - **5x** heat generation
 - **5x** coolant use
 
-This behavior applies to custom Stellar Nexus recipes too, including KubeJS recipes, because it is handled in machine logic instead of per-recipe special casing.
+This behavior also applies to custom Stellar Nexus recipes, because it is implemented in machine logic.
 
 ## Catastrophic Explosion
 
-If Safe Mode is disabled and the machine reaches full heat, the Stellar Nexus enters a real destruction sequence instead of a light cosmetic blast.
+If Safe Mode is disabled and the machine reaches full heat, the Stellar Nexus enters a real destruction sequence.
 
-The current implementation:
-
-- expands in shells instead of one instant lag spike
-- destroys actual blocks around the controller
-- converts the inner core area into lava
-- ignites the outer blast zone
-- damages nearby entities repeatedly as the wave propagates
-
-The goal is to feel closer to a reactor-class failure than to a normal vanilla explosion.
-
-## Recommended Position In Progression
-
-- **DMA** handles flexible advanced crafting
-- **Quantum multiblocks** handle bulk AE2 production chains
-- **Stellar Nexus** handles extreme-scale simulations and post-endgame generation
-
-## See Also
-
-- [Dimensional Matter Assembler](dma.md)
-- [Quantum Matter Fabricator](quantum-matter-fabricator.md)
-- [Multiblock Tiers](multiblock-tiers.md)
+- The blast expands in shells instead of a single lag spike
+- Real blocks are destroyed around the controller
+- The inner core turns into lava
+- The outer zone is ignited
+- Nearby entities keep taking damage as the wave expands

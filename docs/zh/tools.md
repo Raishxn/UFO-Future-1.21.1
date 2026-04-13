@@ -1,87 +1,28 @@
-# 工具与武器
+# Tools & Weapons
 
-UFO Future 引入了**可变形能量多功能工具系统**。所有工具共享一个 RF 供能的物品，可通过滚轮循环变形为不同工具类型。
+UFO Future includes transformable energy tools and utility items for multiblock debugging.
 
----
+## Tool Line
 
-## 多功能工具系统
+The main tools share these properties:
 
-- **RF 供能**：每次使用消耗 RF 能量而非耐久度
-- **彩虹名称**：工具名称显示动画彩虹色效果
-- **可变形**：按住工具并滚动 (Shift+滚轮) 循环切换所有工具类型
-- **能量持久**：变形时保留能量
-- **能量条**：物品上显示动态能量条
+- Energy powered instead of durability based
+- Can switch between several forms
+- Keep stored energy during transformation
+- Gain perks such as area mining, auto-smelt or combat scaling
 
----
+## Main Forms
 
-## 工具循环顺序
+- **Pickaxe**: mining and ore utility
+- **Hammer**: area mining
+- **Sword / Greatsword**: combat
+- **Axe, Shovel, Hoe, Fishing Rod, Bow, Staff**: specialized utility
 
-| # | 工具 | 类型 | 特殊功能 |
-|---|------|------|---------|
-| 1 | UFO 法杖 | 近战 | 基础工具 — 入口 |
-| 2 | UFO 剑 | 剑 | 标准战斗 |
-| 3 | UFO 镐 | 镐 | 自动熔炼切换 (Shift+右键) |
-| 4 | UFO 斧 | 斧 | 伐树 |
-| 5 | UFO 铲 | 铲 | 创建路径 |
-| 6 | UFO 锄 | 锄 | 自动补种 (3x3 区域) |
-| 7 | UFO 锤 | 镐+ | 区域挖掘 (1×1 / 3×3 / 5×5 / 7×7) |
-| 8 | UFO 巨剑 | 剑 | 重伤害，较慢 |
-| 9 | UFO 钓竿 | 钓竿 | 能量驱动钓鱼 |
-| 10 | UFO 弓 | 弓 | 快速拉弓模式切换 |
+## Structure Scanner
 
----
+The **Structure Scanner** is the main utility tool for the multiblock line.
 
-## 工具详情
-
-### UFO 法杖
-- **类型**: 近战武器 · **ID**: `ufo:ufo_staff`
-
-### UFO 剑
-- **攻击**: +5 攻击伤害, −2.4 攻速 · **ID**: `ufo:ufo_sword`
-
-### UFO 镐
-- **攻击**: +1 伤害, −2.8 攻速
-- **特殊**: **自动熔炼** — `Shift+右键` 切换
-- **能耗**: 50 RF/方块 · **ID**: `ufo:ufo_pickaxe`
-
-### UFO 斧
-- **攻击**: +6 伤害, −3.2 攻速 · **ID**: `ufo:ufo_axe`
-
-### UFO 铲
-- **攻击**: +1.5 伤害, −3.0 攻速 · **ID**: `ufo:ufo_shovel`
-
-### UFO 锄
-- **特殊**: 耕作 **3×3 区域**，自动补种
-- **ID**: `ufo:ufo_hoe`
-
-### UFO 锤 ⭐
-- **攻击**: +7 伤害, −3.4 攻速
-- **能耗**: 50 RF **每方块** · 模式：1×1, 3×3, 5×5, 7×7
-- **自动熔炼**: 支持 · **智能能量**: 能量不足时停止
-- **ID**: `ufo:ufo_hammer`
-
-### UFO 巨剑
-- **攻击**: +8 伤害, −3.0 攻速 · **ID**: `ufo:ufo_greatsword`
-
-### UFO 钓竿
-- **耐久**: 500 · **ID**: `ufo:ufo_fishing_rod`
-
-### UFO 弓
-- **耐久**: 5000 · **特殊**: **快速拉弓**模式 · **ID**: `ufo:ufo_bow`
-
----
-
-## 合成
-
-### UFO 法杖（主要配方 — DMA）
-- **输入**: 充能富集中子球 ×1, 量子异常 ×2, 原始物质 ×2, 下界合金锭 ×4, AE2 物质球 ×16
-- **流体**: 2,000 mB 液态星光
-- **能量**: 12,000,000 AE · **时间**: 2,400 tick (2 分钟)
-
-### UFO 法杖（备选配方 — DMA）
-- **输入**: 下界合金剑/镐/斧/锄 + 中子星碎片锭
-- **能量**: 500,000 AE · **时间**: 600 tick (30 秒)
-
----
-
-*另见: [装甲](armor.md) · [进阶](progression.md)*
+- Right-click a supported controller to validate the structure
+- Highlights missing or invalid blocks on the client
+- Prints exact positions and expected parts in chat
+- In Creative, **Shift + Right Click** auto-builds the shell from default preview states
