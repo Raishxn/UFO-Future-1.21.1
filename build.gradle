@@ -111,6 +111,8 @@ dependencies {
     implementation "io.github.pedroksl:ae2addonlib:${ae2addonlib_version}-${minecraft_version}"
     implementation "org.appliedenergistics:guideme:${guideme_version}"
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    compileOnly "org.appliedenergistics.yoga:yoga:${yoga_version}"
+    compileOnly "dev.vfyjxf:taffy:${taffy_version}"
     // GeckoLib was removed since it's not being used.
 
     // ===========================================
