@@ -10,6 +10,7 @@ import net.neoforged.neoforge.common.TagConventionLogWarning;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -123,6 +124,12 @@ public class ModItemTagProvider extends ItemTagsProvider {
         ModItems.QUANTUM_CATALYST_T3.get(),
         ModItems.DIMENSIONAL_CATALYST.get()
         );
+
+        tag(ItemTags.create(ResourceLocation.parse("ae2:p2p_attunements/fe_p2p_tunnel")))
+                .add(
+                        com.raishxn.ufo.block.ModBlocks.UFO_ENERGY_CELL.get().asItem(),
+                        com.raishxn.ufo.block.ModBlocks.QUANTUM_ENERGY_CELL.get().asItem()
+                );
     }
 }
 

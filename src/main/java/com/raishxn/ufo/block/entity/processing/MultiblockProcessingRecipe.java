@@ -20,6 +20,7 @@ public record MultiblockProcessingRecipe(
         String name,
         List<ItemRequirement> itemInputs,
         List<FluidRequirement> fluidInputs,
+        List<ChemicalRequirement> chemicalInputs,
         List<OutputStack> outputs,
         long energy,
         int time,
@@ -29,6 +30,9 @@ public record MultiblockProcessingRecipe(
     }
 
     public record FluidRequirement(FluidStack fluid, long amount) {
+    }
+
+    public record ChemicalRequirement(ResourceLocation chemicalId, long amount) {
     }
 
     public record OutputStack(ItemStack item, FluidStack fluid, long amount) {
@@ -53,8 +57,11 @@ public record MultiblockProcessingRecipe(
         List<FluidRequirement> fluidInputs = recipe.getFluidInputs().stream()
                 .map(input -> new FluidRequirement(input.fluid(), input.amount()))
                 .toList();
+        List<ChemicalRequirement> chemicalInputs = recipe.getChemicalInputs().stream()
+                .map(input -> new ChemicalRequirement(input.chemicalId(), input.amount()))
+                .toList();
         List<OutputStack> outputs = List.of(new OutputStack(normalizeItem(recipe.getResultItem()), FluidStack.EMPTY, recipe.getResultItem().getCount()));
-        return new MultiblockProcessingRecipe(id, recipe.getRecipeName(), itemInputs, fluidInputs, outputs, recipe.getEnergy(), recipe.getTime(), recipe.getRequiredTier());
+        return new MultiblockProcessingRecipe(id, recipe.getRecipeName(), itemInputs, fluidInputs, chemicalInputs, outputs, recipe.getEnergy(), recipe.getTime(), recipe.getRequiredTier());
     }
 
     public static MultiblockProcessingRecipe fromUniversal(ResourceLocation id, UniversalMultiblockRecipe recipe) {
@@ -63,6 +70,9 @@ public record MultiblockProcessingRecipe(
                 .toList();
         List<FluidRequirement> fluidInputs = recipe.getFluidInputs().stream()
                 .map(input -> new FluidRequirement(input.fluid(), input.amount()))
+                .toList();
+        List<ChemicalRequirement> chemicalInputs = recipe.getChemicalInputs().stream()
+                .map(input -> new ChemicalRequirement(input.chemicalId(), input.amount()))
                 .toList();
 
         List<OutputStack> outputs = new ArrayList<>();
@@ -73,7 +83,7 @@ public record MultiblockProcessingRecipe(
             outputs.add(new OutputStack(ItemStack.EMPTY, recipe.getFluidOutput(), recipe.getFluidOutputAmount()));
         }
 
-        return new MultiblockProcessingRecipe(id, recipe.getRecipeName(), itemInputs, fluidInputs, outputs, recipe.getEnergy(), recipe.getTime(), recipe.getRequiredTier());
+        return new MultiblockProcessingRecipe(id, recipe.getRecipeName(), itemInputs, fluidInputs, chemicalInputs, outputs, recipe.getEnergy(), recipe.getTime(), recipe.getRequiredTier());
     }
 
     public static MultiblockProcessingRecipe fromDma(ResourceLocation id, DimensionalMatterAssemblerRecipe recipe) {
@@ -96,7 +106,7 @@ public record MultiblockProcessingRecipe(
                 outputs.add(new OutputStack(ItemStack.EMPTY, new FluidStack(fluidKey.getFluid(), 1), output.amount()));
             }
         }
-        return new MultiblockProcessingRecipe(id, id.getPath(), itemInputs, fluidInputs, outputs, recipe.getEnergy(), recipe.getTime(), 1);
+        return new MultiblockProcessingRecipe(id, id.getPath(), itemInputs, fluidInputs, List.of(), outputs, recipe.getEnergy(), recipe.getTime(), 1);
     }
 
     private static ItemStack normalizeItem(ItemStack stack) {

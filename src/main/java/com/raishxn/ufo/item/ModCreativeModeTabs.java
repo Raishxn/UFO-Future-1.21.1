@@ -3,11 +3,14 @@ package com.raishxn.ufo.item;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -162,6 +165,13 @@ public class ModCreativeModeTabs {
                         output.accept(ModCellItems.FLUID_CELL_750M.get());
                         output.accept(ModCellItems.FLUID_CELL_SINGULARITY.get());
 
+                        // --- CHEMICAL CELLS: PULSAR CHAMBER (de ModCellItems) ---
+                        output.accept(ModCellItems.CHEMICAL_CELL_40M.get());
+                        output.accept(ModCellItems.CHEMICAL_CELL_100M.get());
+                        output.accept(ModCellItems.CHEMICAL_CELL_250M.get());
+                        output.accept(ModCellItems.CHEMICAL_CELL_750M.get());
+                        output.accept(ModCellItems.CHEMICAL_CELL_SINGULARITY.get());
+
 
 
                     }).build());
@@ -176,6 +186,9 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.NEUTRON_STAR_FRAGMENT_BLOCK.get());
                         output.accept(ModBlocks.PULSAR_FRAGMENT_BLOCK.get());
                         output.accept(ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER_BLOCK.get());
+                        output.accept(ModBlocks.UFO_ENERGY_CELL.get());
+                        output.accept(createQuantumEnergyCellVariant(false));
+                        output.accept(createQuantumEnergyCellVariant(true));
                         ModBlocks.CRAFTING_STORAGE_BLOCKS.values().forEach(block -> output.accept(block.get()));
                         ModBlocks.CO_PROCESSOR_BLOCKS.values().forEach(block -> output.accept(block.get()));
 
@@ -185,7 +198,9 @@ public class ModCreativeModeTabs {
                         output.accept(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get());
+                        output.accept(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
+                        output.accept(ModItems.QUANTUM_PATTERN_PROVIDER_PART.get());
                         output.accept(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get());
                         output.accept(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get());
                         output.accept(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get());
@@ -206,5 +221,16 @@ public class ModCreativeModeTabs {
 
     public static void register(IEventBus eventBus) {
         CREATIVE_MODE_TAB.register(eventBus);
+    }
+
+    private static ItemStack createQuantumEnergyCellVariant(boolean charged) {
+        ItemStack stack = new ItemStack(ModBlocks.QUANTUM_ENERGY_CELL.get());
+        stack.set(DataComponents.CUSTOM_NAME, Component.literal(charged
+                ? "Quantum Energy Cell (Charged)"
+                : "Quantum Energy Cell (Discharged)"));
+        CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        tag.putBoolean("ufoQuantumEnergyCellChargedPreview", charged);
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+        return stack;
     }
 }

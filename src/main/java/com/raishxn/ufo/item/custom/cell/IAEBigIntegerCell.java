@@ -1,5 +1,6 @@
 package com.raishxn.ufo.item.custom.cell;
 
+import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.cells.CellState;
@@ -31,6 +32,10 @@ public interface IAEBigIntegerCell extends IUpgradeableItem {
     long getMaxBytes(ItemStack stack);
     int getMaxTypes(ItemStack stack);
     int getBytesPerType(ItemStack stack);
+
+    default boolean isBlackListed(ItemStack stack, AEKey requestedAddition) {
+        return false;
+    }
 
     // === Métodos auxiliares a seguir: migrados de NBT para Componentes de Dados, o comportamento permanece o mesmo ===
     static BigInteger getUsedBytes(ItemStack stack) {

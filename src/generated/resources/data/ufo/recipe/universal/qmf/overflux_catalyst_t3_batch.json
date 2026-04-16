@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 700000000,
+  "energy": 280000000,
   "fluid_inputs": [
     {
       "amount": 48000,
@@ -31,11 +31,11 @@
     }
   ],
   "item_output": {
-    "count": 8,
+    "count": 64,
     "id": "ufo:overflux_catalyst_t3"
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/overflux_catalyst_t3_batch",
   "required_tier": 2,
-  "time": 12000
+  "time": 1800
 }

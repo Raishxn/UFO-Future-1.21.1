@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity;
 
+import appeng.api.config.Settings;
+import appeng.api.config.YesNo;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.implementations.blockentities.ICraftingMachine;
 import appeng.helpers.patternprovider.PatternProviderLogic;
@@ -20,6 +22,7 @@ public class QuantumPatternProviderLogic extends PatternProviderLogic {
     public QuantumPatternProviderLogic(QuantumPatternHatchBE hatch, int patternInventorySize) {
         super(hatch.getMainNode(), hatch, patternInventorySize);
         this.hatch = hatch;
+        this.getConfigManager().putSetting(Settings.PATTERN_ACCESS_TERMINAL, YesNo.NO);
     }
 
     @Override

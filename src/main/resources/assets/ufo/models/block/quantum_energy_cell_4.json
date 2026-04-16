@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "ufo:block/energycell/quantum_energy_cell_4"
+  }
+}

@@ -4,6 +4,8 @@ import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.util.ModTags;
+import com.raishxn.ufo.recipe.UniversalMultiblockMachineKind;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class DMARecipeBuilder {
+    private static final int BULK_QMF_FACTOR = 64;
     private final String name;
     private final List<IngredientStack.Item> itemInputs = new ArrayList<>();
     private final List<IngredientStack.Fluid> fluidInputs = new ArrayList<>();
@@ -104,5 +107,64 @@ public class DMARecipeBuilder {
                 this.time
         );
         output.accept(id, recipe, null);
+        saveBulkQmfMirror(output);
+    }
+
+    private void saveBulkQmfMirror(RecipeOutput output) {
+        if (!this.name.startsWith("dma/")) {
+            return;
+        }
+
+        if (this.itemOutputs.size() > 1 || this.fluidOutputs.size() > 1) {
+            return;
+        }
+
+        var builder = UniversalMultiblockRecipeBuilder.create(
+                "universal/qmf/bulk/" + this.name.substring("dma/".length()),
+                UniversalMultiblockMachineKind.QMF);
+
+        for (var input : this.itemInputs) {
+            builder.inputItem(resolveSingleItem(input.getIngredient()), (long) input.getAmount() * BULK_QMF_FACTOR);
+        }
+
+        for (var input : this.fluidInputs) {
+            var stacks = input.getIngredient().getStacks();
+            if (stacks.length == 0) {
+                return;
+            }
+            builder.inputFluid(stacks[0].getFluid(), (long) input.getAmount() * BULK_QMF_FACTOR);
+        }
+
+        if (!this.itemOutputs.isEmpty()) {
+            var itemOutput = this.itemOutputs.getFirst();
+            if (!(itemOutput.what() instanceof AEItemKey itemKey)) {
+                return;
+            }
+            if (itemKey.toStack(1).is(ModTags.Items.CATALYST)) {
+                return;
+            }
+            builder.outputItem(itemKey.toStack(1).getItem(), (int) (itemOutput.amount() * BULK_QMF_FACTOR));
+        }
+
+        if (!this.fluidOutputs.isEmpty()) {
+            var fluidOutput = this.fluidOutputs.getFirst();
+            if (!(fluidOutput.what() instanceof AEFluidKey fluidKey)) {
+                return;
+            }
+            builder.outputFluid(fluidKey.getFluid(), fluidOutput.amount() * BULK_QMF_FACTOR);
+        }
+
+        builder.energy((long) this.energy * BULK_QMF_FACTOR)
+                .time(this.time)
+                .requiredTier(1)
+                .save(output);
+    }
+
+    private static Item resolveSingleItem(Ingredient ingredient) {
+        var stacks = ingredient.getItems();
+        if (stacks.length == 0) {
+            throw new IllegalStateException("Cannot mirror DMA recipe with empty ingredient");
+        }
+        return stacks[0].getItem();
     }
 }

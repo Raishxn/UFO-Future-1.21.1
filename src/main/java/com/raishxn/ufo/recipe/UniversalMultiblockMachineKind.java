@@ -5,7 +5,8 @@ import com.mojang.serialization.Codec;
 public enum UniversalMultiblockMachineKind {
     QMF("qmf"),
     QUANTUM_SLICER("quantum_slicer"),
-    QUANTUM_PROCESSOR_ASSEMBLER("quantum_processor_assembler");
+    QUANTUM_PROCESSOR_ASSEMBLER("quantum_processor_assembler"),
+    QUANTUM_CRYOFORGE("quantum_cryoforge");
 
     public static final Codec<UniversalMultiblockMachineKind> CODEC =
             Codec.STRING.xmap(UniversalMultiblockMachineKind::fromSerializedName, UniversalMultiblockMachineKind::serializedName);

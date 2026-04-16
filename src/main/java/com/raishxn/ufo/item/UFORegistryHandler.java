@@ -101,5 +101,12 @@ public class UFORegistryHandler {
         StorageCellModels.registerModel(ModCellItems.FLUID_CELL_250M.get(), UfoMod.id("drive/cells/neutron_star_cell"));
         StorageCellModels.registerModel(ModCellItems.FLUID_CELL_750M.get(), UfoMod.id("drive/cells/neutron_star_cell"));
         StorageCellModels.registerModel(ModCellItems.FLUID_CELL_SINGULARITY.get(), UfoMod.id("drive/cells/neutron_star_cell"));
+
+        // --- Pulsar Chemical Cells → 3D drive model (violet) ---
+        StorageCellModels.registerModel(ModCellItems.CHEMICAL_CELL_40M.get(), UfoMod.id("drive/cells/pulsar_cell"));
+        StorageCellModels.registerModel(ModCellItems.CHEMICAL_CELL_100M.get(), UfoMod.id("drive/cells/pulsar_cell"));
+        StorageCellModels.registerModel(ModCellItems.CHEMICAL_CELL_250M.get(), UfoMod.id("drive/cells/pulsar_cell"));
+        StorageCellModels.registerModel(ModCellItems.CHEMICAL_CELL_750M.get(), UfoMod.id("drive/cells/pulsar_cell"));
+        StorageCellModels.registerModel(ModCellItems.CHEMICAL_CELL_SINGULARITY.get(), UfoMod.id("drive/cells/pulsar_cell"));
     }
 }

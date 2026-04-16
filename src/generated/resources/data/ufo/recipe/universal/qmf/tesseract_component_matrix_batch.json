@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 400000000,
+  "energy": 240000000,
   "fluid_inputs": [
     {
       "amount": 32000,
@@ -31,7 +31,7 @@
     }
   ],
   "item_output": {
-    "count": 8,
+    "count": 64,
     "id": "ufo:tesseract_component_matrix"
   },
   "machine": "qmf",

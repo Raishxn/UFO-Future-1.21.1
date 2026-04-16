@@ -60,6 +60,11 @@ public class UfoJeiPlugin implements IModPlugin {
                 UniversalMultiblockMachineKind.QUANTUM_PROCESSOR_ASSEMBLER,
                 MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem().getDefaultInstance(),
                 MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().getName()));
+        registry.addRecipeCategories(new UniversalMultiblockRecipeCategory(
+                jeiHelpers,
+                UniversalMultiblockMachineKind.QUANTUM_CRYOFORGE,
+                MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get().asItem().getDefaultInstance(),
+                MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get().getName()));
         registry.addRecipeCategories(new StellarSimulationRecipeCategory(jeiHelpers));
     }
 
@@ -90,6 +95,9 @@ public class UfoJeiPlugin implements IModPlugin {
                 UniversalMultiblockRecipeCategory.QUANTUM_PROCESSOR_ASSEMBLER_RECIPE_TYPE,
                 universalRecipes.stream().filter(recipe -> recipe.getMachine() == UniversalMultiblockMachineKind.QUANTUM_PROCESSOR_ASSEMBLER).toList());
         registration.addRecipes(
+                UniversalMultiblockRecipeCategory.QUANTUM_CRYOFORGE_RECIPE_TYPE,
+                universalRecipes.stream().filter(recipe -> recipe.getMachine() == UniversalMultiblockMachineKind.QUANTUM_CRYOFORGE).toList());
+        registration.addRecipes(
                 StellarSimulationRecipeCategory.RECIPE_TYPE,
                 List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.STELLAR_SIMULATION_TYPE.get()).stream()
                         .map(RecipeHolder::value)
@@ -118,6 +126,10 @@ public class UfoJeiPlugin implements IModPlugin {
         var quantumProcessorAssemblerController = MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem().getDefaultInstance();
         registration.addRecipeCatalyst(quantumProcessorAssemblerController, UniversalMultiblockRecipeCategory.QUANTUM_PROCESSOR_ASSEMBLER_RECIPE_TYPE);
         registration.addRecipeCatalyst(quantumProcessorAssemblerController, MultiblockInfoCategory.RECIPE_TYPE);
+
+        var quantumCryoforgeController = MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get().asItem().getDefaultInstance();
+        registration.addRecipeCatalyst(quantumCryoforgeController, UniversalMultiblockRecipeCategory.QUANTUM_CRYOFORGE_RECIPE_TYPE);
+        registration.addRecipeCatalyst(quantumCryoforgeController, MultiblockInfoCategory.RECIPE_TYPE);
     }
 
     public static Ingredient stackOf(IngredientStack.Item stack) {

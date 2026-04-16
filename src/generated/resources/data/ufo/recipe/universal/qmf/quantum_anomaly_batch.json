@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 160000000,
+  "energy": 120000000,
   "fluid_inputs": [
     {
       "amount": 64000,
@@ -31,10 +31,10 @@
     }
   ],
   "item_output": {
-    "count": 16,
+    "count": 64,
     "id": "ufo:quantum_anomaly"
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/quantum_anomaly_batch",
-  "time": 7200
+  "time": 1200
 }

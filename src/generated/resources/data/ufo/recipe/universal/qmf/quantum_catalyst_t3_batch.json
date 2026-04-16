@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 1000000000,
+  "energy": 400000000,
   "fluid_inputs": [
     {
       "amount": 64000,
@@ -31,11 +31,11 @@
     }
   ],
   "item_output": {
-    "count": 8,
+    "count": 64,
     "id": "ufo:quantum_catalyst_t3"
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/quantum_catalyst_t3_batch",
   "required_tier": 2,
-  "time": 14400
+  "time": 2400
 }

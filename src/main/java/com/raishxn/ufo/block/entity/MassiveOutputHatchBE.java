@@ -2,6 +2,8 @@ package com.raishxn.ufo.block.entity;
 
 import com.raishxn.ufo.api.ae.IMassiveInjector;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
+import com.raishxn.ufo.block.MultiblockBlocks;
+import com.raishxn.ufo.compat.mekanism.MekanismChemicalStorage;
 
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridNode;
@@ -48,7 +50,8 @@ import java.util.Set;
  * </ol>
  */
 public class MassiveOutputHatchBE extends AENetworkedBlockEntity
-        implements IMassiveInjector, IMultiblockPart, IGridTickable {
+        implements IMassiveInjector, IMultiblockPart, IGridTickable, MekanismChemicalStorage {
+    private static final long CHEMICAL_CAPACITY = 16_000_000L;
 
     /** Controller position for multiblock link (null if standalone). */
     @Nullable
@@ -59,6 +62,9 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
 
     /** Statistics: last injection amount (for GUI/tooltip display). */
     private long lastInjectionAmount = 0;
+    @Nullable
+    private net.minecraft.resources.ResourceLocation storedChemicalId = null;
+    private long storedChemicalAmount = 0L;
 
     public MassiveOutputHatchBE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -191,6 +197,37 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
         this.setChanged();
     }
 
+    @Override
+    public boolean supportsChemicalIO() {
+        return this.getBlockState().is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get());
+    }
+
+    @Override
+    public long getChemicalCapacity() {
+        return CHEMICAL_CAPACITY;
+    }
+
+    @Override
+    public @Nullable net.minecraft.resources.ResourceLocation getStoredChemicalId() {
+        return this.storedChemicalId;
+    }
+
+    @Override
+    public long getStoredChemicalAmount() {
+        return this.storedChemicalAmount;
+    }
+
+    @Override
+    public void setStoredChemical(@Nullable net.minecraft.resources.ResourceLocation chemicalId, long amount) {
+        long clamped = Math.max(0L, Math.min(CHEMICAL_CAPACITY, amount));
+        this.storedChemicalId = clamped > 0L ? chemicalId : null;
+        this.storedChemicalAmount = clamped;
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        }
+    }
+
     // ═══════════════════════════════════════════════════════════
     //  NBT Persistence (AE2 pattern: saveAdditional + loadTag)
     // ═══════════════════════════════════════════════════════════
@@ -203,6 +240,10 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
         }
         tag.putLong("totalInjected", this.totalInjected);
         tag.putLong("lastInjection", this.lastInjectionAmount);
+        if (this.storedChemicalId != null && this.storedChemicalAmount > 0L) {
+            tag.putString("storedChemicalId", this.storedChemicalId.toString());
+            tag.putLong("storedChemicalAmount", this.storedChemicalAmount);
+        }
     }
 
     @Override
@@ -215,6 +256,7 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
         }
         this.totalInjected = tag.getLong("totalInjected");
         this.lastInjectionAmount = tag.getLong("lastInjection");
+        this.storedChemicalId = tag.contains("storedChemicalId") ? net.minecraft.resources.ResourceLocation.parse(tag.getString("storedChemicalId")) : null;
+        this.storedChemicalAmount = this.storedChemicalId == null ? 0L : tag.getLong("storedChemicalAmount");
     }
 }
-

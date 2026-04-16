@@ -22,6 +22,11 @@
       "ingredient": {
         "item": "ufo:neutron_star_fragment_ingot"
       }
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:blue_ice"
+      }
     }
   ],
   "item_outputs": [],

@@ -2,6 +2,8 @@ package com.raishxn.ufo.block;
 
 import appeng.block.AEBaseBlockItem;
 import appeng.block.crafting.CraftingUnitBlock;
+import appeng.block.networking.CreativeEnergyCellBlock;
+import appeng.block.networking.EnergyCellBlock;
 import appeng.core.definitions.BlockDefinition;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.custom.MegaCoProcessorBlockItem;
@@ -97,7 +99,13 @@ public class ModBlocks extends BlockRegistry {
             () -> new LiquidBlock((FlowingFluid)ModFluids.SOURCE_SPATIAL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final DeferredBlock<com.raishxn.ufo.block.DimensionalMatterAssemblerBlock> DIMENSIONAL_MATTER_ASSEMBLER_BLOCK =
-            registerBlockWithAnimatedItem("dimensional_matter_assembler", com.raishxn.ufo.block.DimensionalMatterAssemblerBlock::new);
+            registerBlockWithStaticItem("dimensional_matter_assembler", com.raishxn.ufo.block.DimensionalMatterAssemblerBlock::new);
+
+    public static final DeferredBlock<EnergyCellBlock> UFO_ENERGY_CELL = BLOCKS.register("ufo_energy_cell",
+            () -> new EnergyCellBlock(1_000_000_000D, 16_000, 1_000_000));
+
+    public static final DeferredBlock<CreativeEnergyCellBlock> QUANTUM_ENERGY_CELL = BLOCKS.register("quantum_energy_cell",
+            CreativeEnergyCellBlock::new);
 
     static {
         for (var tier : MegaCraftingStorageTier.values()) {
@@ -116,6 +124,11 @@ public class ModBlocks extends BlockRegistry {
                 ChatFormatting.BLACK,
                 ChatFormatting.DARK_GRAY,
                 ChatFormatting.GRAY));
+        return block;
+    }
+    private static <T extends Block> DeferredBlock<T> registerBlockWithStaticItem(String name, java.util.function.Supplier<T> blockSupplier) {
+        DeferredBlock<T> block = BLOCKS.register(name, blockSupplier);
+        ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
         return block;
     }
     private static <T extends Block> DeferredBlock<T> PulsarBlockWithAnimatedItem(String name, java.util.function.Supplier<T> blockSupplier) {

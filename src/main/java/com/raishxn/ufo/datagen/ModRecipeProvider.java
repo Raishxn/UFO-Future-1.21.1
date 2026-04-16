@@ -168,23 +168,22 @@ public class ModRecipeProvider extends RecipeProvider {
         DMARecipeBuilder.create("dma/component/phase_shift")
                 .output(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get())
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 8)
-                .inputItem(AEItems.CELL_COMPONENT_256K.get(),8)
+                .inputItem(AEItems.CELL_COMPONENT_256K.get(),256)
                 .inputItem(AEBlocks.QUARTZ_VIBRANT_GLASS, 8)
                 .inputItem(Items.NETHER_STAR,8)
                 .inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 1000)
                 .energy(1200000).time(600)
                 .save(c);
 
-        this.createTieredComponent(c, ModItems.HYPER_DENSE_COMPONENT_MATRIX.get(), ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get(), 12, ModItems.WHITE_DWARF_MATTER.get(), 8, 4, ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID, 2000, 4000000, 1200);
+        this.createTieredComponent(c, ModItems.HYPER_DENSE_COMPONENT_MATRIX.get(), ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get(), 24, ModItems.WHITE_DWARF_MATTER.get(), 8, 4, ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID, 2000, 4000000, 1200);
     }
 
     private void buildMaterialsAndFluidsDMA(RecipeOutput c) {
         DMARecipeBuilder.create("dma/white_dwarf_dust").output(ModItems.WHITE_DWARF_FRAGMENT_DUST.get()).inputItem(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get()).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 20).energy(10000).time(60).save(c);
-        DMARecipeBuilder.create("dma/white_dwarf_fluid").outputFluid(ModFluids.SOURCE_WHITE_DWARF_FRAGMENT_FLUID.get(), 1000, 1.0F).inputItem(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get(), 4).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 200).energy(40000).time(120).save(c);
+        DMARecipeBuilder.create("dma/white_dwarf_fluid").outputFluid(ModFluids.SOURCE_WHITE_DWARF_FRAGMENT_FLUID.get(), 1000, 1.0F).inputItem(ModItems.WHITE_DWARF_FRAGMENT_INGOT.get(), 4).inputItem(Items.BLUE_ICE).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 200).energy(40000).time(120).save(c);
         DMARecipeBuilder.create("dma/neutron_star_dust").output(ModItems.NEUTRON_STAR_FRAGMENT_DUST.get()).inputItem(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get()).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 20).energy(15000).time(80).save(c);
-        DMARecipeBuilder.create("dma/neutron_star_fluid").outputFluid(ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID.get(), 1000, 1.0F).inputItem(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get(), 4).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 200).energy(60000).time(150).save(c);
+        DMARecipeBuilder.create("dma/neutron_star_fluid").outputFluid(ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID.get(), 1000, 1.0F).inputItem(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get(), 4).inputItem(Items.BLUE_ICE).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 200).energy(60000).time(150).save(c);
         DMARecipeBuilder.create("dma/pulsar_dust").output(ModItems.PULSAR_FRAGMENT_DUST.get()).inputItem(ModItems.PULSAR_FRAGMENT_INGOT.get()).inputItem(AEBlocks.TINY_TNT).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 20).energy(20000).time(100).save(c);
-        DMARecipeBuilder.create("dma/pulsar_fluid").outputFluid(ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID.get(), 1000, 1.0F).inputItem(ModItems.PULSAR_FRAGMENT_INGOT.get(), 4).inputItem(Items.LIGHTNING_ROD, 4).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 200).energy(80000).time(180).save(c);
         DMARecipeBuilder.create("dma/dust_blizz").output(ModItems.DUST_BLIZZ.get(), 4).inputItem(Items.SNOWBALL, 4).inputItem(Items.REDSTONE).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 50).energy(20000).time(80).save(c);
         DMARecipeBuilder.create("dma/dust_cryotheum").output(ModItems.DUST_CRYOTHEUM.get(), 2).inputItem(ModItems.DUST_BLIZZ.get(), 2).inputItem(Items.REDSTONE, 2).inputItem(Items.SNOWBALL).inputFluid(Fluids.WATER, 100).energy(40000).time(100).save(c);
         
@@ -430,6 +429,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('I', ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get())
                 .unlockedBy("has_item", has(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get()))
                 .save(c);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModCellItems.PULSAR_CELL_HOUSING.get())
+                .pattern("GDG")
+                .pattern("D D")
+                .pattern("III")
+                .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                .define('D', ModItems.PULSAR_FRAGMENT_DUST.get())
+                .define('I', ModItems.PULSAR_FRAGMENT_INGOT.get())
+                .unlockedBy("has_item", has(ModItems.PULSAR_FRAGMENT_INGOT.get()))
+                .save(c);
 
         this.buildCellAssembly(c, ModCellItems.ITEM_CELL_40M.get(), ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get(), ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
         this.buildCellAssembly(c, ModCellItems.ITEM_CELL_100M.get(), ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get(), ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
@@ -442,6 +450,12 @@ public class ModRecipeProvider extends RecipeProvider {
         this.buildCellAssembly(c, ModCellItems.FLUID_CELL_250M.get(), ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get(), ModItems.TESSERACT_COMPONENT_MATRIX.get());
         this.buildCellAssembly(c, ModCellItems.FLUID_CELL_750M.get(), ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get(), ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
         this.buildCellAssembly(c, ModCellItems.FLUID_CELL_SINGULARITY.get(), ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get(), ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
+
+        this.buildCellAssembly(c.withConditions(new ModLoadedCondition("mekanism")), ModCellItems.CHEMICAL_CELL_40M.get(), ModCellItems.PULSAR_CELL_HOUSING.get(), ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
+        this.buildCellAssembly(c.withConditions(new ModLoadedCondition("mekanism")), ModCellItems.CHEMICAL_CELL_100M.get(), ModCellItems.PULSAR_CELL_HOUSING.get(), ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
+        this.buildCellAssembly(c.withConditions(new ModLoadedCondition("mekanism")), ModCellItems.CHEMICAL_CELL_250M.get(), ModCellItems.PULSAR_CELL_HOUSING.get(), ModItems.TESSERACT_COMPONENT_MATRIX.get());
+        this.buildCellAssembly(c.withConditions(new ModLoadedCondition("mekanism")), ModCellItems.CHEMICAL_CELL_750M.get(), ModCellItems.PULSAR_CELL_HOUSING.get(), ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
+        this.buildCellAssembly(c.withConditions(new ModLoadedCondition("mekanism")), ModCellItems.CHEMICAL_CELL_SINGULARITY.get(), ModCellItems.PULSAR_CELL_HOUSING.get(), ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
     }
 
     private void buildCellAssembly(RecipeOutput c, ItemLike cell, ItemLike housing, ItemLike component) {
@@ -484,6 +498,28 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('M', AEBlocks.CONTROLLER)
                 .define('E', Items.ENDER_EYE)
                 .unlockedBy("has_controller", has(AEBlocks.CONTROLLER))
+                .save(c);
+
+        DMARecipeBuilder.create("dma/event_horizon_energy_cell")
+                .output(ModBlocks.UFO_ENERGY_CELL.get())
+                .inputItem(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get(), 16)
+                .inputItem(AEBlocks.DENSE_ENERGY_CELL, 16)
+                .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 16)
+                .inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 4000)
+                .energy(250000000)
+                .time(3600)
+                .save(c);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.QUANTUM_ENERGY_CELL.get())
+                .pattern("UEU")
+                .pattern("CQC")
+                .pattern("UDU")
+                .define('U', ModBlocks.UFO_ENERGY_CELL.get())
+                .define('D', AEBlocks.DENSE_ENERGY_CELL)
+                .define('E', ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get())
+                .define('C', ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get())
+                .define('Q', ModItems.QUANTUM_ANOMALY.get())
+                .unlockedBy("has_ufo_energy_cell", has(ModBlocks.UFO_ENERGY_CELL.get()))
                 .save(c);
 
         this.buildStorageBlock(c, ModBlocks.CRAFTING_STORAGE_BLOCKS.get(MegaCraftingStorageTier.STORAGE_1B).get(),
@@ -597,9 +633,57 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.OBSIDIAN_MATRIX.get(), 64)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 64)
                 .inputFluid(ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID.get(), 64000)
-                .outputItem(ModItems.QUANTUM_ANOMALY.get(), 16)
-                .energy(160000000)
-                .time(7200)
+                .outputItem(ModItems.QUANTUM_ANOMALY.get(), 64)
+                .energy(120000000)
+                .time(1200)
+                .requiredTier(1)
+                .save(c);
+
+        UniversalMultiblockRecipeBuilder.create("universal/qmf/corporeal_matter_batch", UniversalMultiblockMachineKind.QMF)
+                .inputItem(ModItems.PROTO_MATTER.get(), 128)
+                .inputItem(Items.IRON_BLOCK, 4096)
+                .inputItem(ModItems.OBSIDIAN_MATRIX.get(), 1024)
+                .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 512)
+                .inputFluid(ModFluids.SOURCE_UU_MATTER_FLUID.get(), 256000)
+                .outputItem(ModItems.CORPOREAL_MATTER.get(), 64)
+                .energy(1280000000L)
+                .time(3600)
+                .requiredTier(1)
+                .save(c);
+
+        UniversalMultiblockRecipeBuilder.create("universal/qmf/white_dwarf_matter_batch", UniversalMultiblockMachineKind.QMF)
+                .inputItem(ModItems.CORPOREAL_MATTER.get(), 64)
+                .inputItem(ModItems.UU_MATTER_CRYSTAL.get(), 64)
+                .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 256)
+                .inputItem(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get(), 64)
+                .inputFluid(ModFluids.SOURCE_WHITE_DWARF_FRAGMENT_FLUID.get(), 128000)
+                .outputItem(ModItems.WHITE_DWARF_MATTER.get(), 64)
+                .energy(320000000L)
+                .time(600)
+                .requiredTier(1)
+                .save(c);
+
+        UniversalMultiblockRecipeBuilder.create("universal/qmf/neutron_star_matter_batch", UniversalMultiblockMachineKind.QMF)
+                .inputItem(ModItems.CORPOREAL_MATTER.get(), 64)
+                .inputItem(ModItems.UU_MATTER_CRYSTAL.get(), 64)
+                .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 512)
+                .inputItem(ModBlocks.NEUTRON_STAR_FRAGMENT_BLOCK.get(), 64)
+                .inputFluid(ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID.get(), 128000)
+                .outputItem(ModItems.NEUTRON_STAR_MATTER.get(), 64)
+                .energy(640000000L)
+                .time(1200)
+                .requiredTier(1)
+                .save(c);
+
+        UniversalMultiblockRecipeBuilder.create("universal/qmf/pulsar_matter_batch", UniversalMultiblockMachineKind.QMF)
+                .inputItem(ModItems.CORPOREAL_MATTER.get(), 64)
+                .inputItem(ModItems.UU_MATTER_CRYSTAL.get(), 64)
+                .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 1024)
+                .inputItem(ModBlocks.PULSAR_FRAGMENT_BLOCK.get(), 64)
+                .inputFluid(ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID.get(), 128000)
+                .outputItem(ModItems.PULSAR_MATTER.get(), 64)
+                .energy(960000000L)
+                .time(1800)
                 .requiredTier(1)
                 .save(c);
 
@@ -608,8 +692,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.NEUTRON_STAR_MATTER.get(), 32)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 128)
                 .inputFluid(ModFluids.SOURCE_SPATIAL_FLUID.get(), 32000)
-                .outputItem(ModItems.TESSERACT_COMPONENT_MATRIX.get(), 8)
-                .energy(400000000)
+                .outputItem(ModItems.TESSERACT_COMPONENT_MATRIX.get(), 64)
+                .energy(240000000)
                 .time(2400)
                 .requiredTier(1)
                 .save(c);
@@ -620,8 +704,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 256)
                 .inputItem(ModItems.QUANTUM_ANOMALY.get(), 32)
                 .inputFluid(ModFluids.SOURCE_SPATIAL_FLUID.get(), 64000)
-                .outputItem(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get(), 8)
-                .energy(900000000)
+                .outputItem(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get(), 64)
+                .energy(480000000)
                 .time(4800)
                 .requiredTier(2)
                 .save(c);
@@ -634,9 +718,9 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get(), 8)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 512)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 128000)
-                .outputItem(ModItems.DARK_MATTER.get(), 4)
-                .energy(1800000000)
-                .time(24000)
+                .outputItem(ModItems.DARK_MATTER.get(), 64)
+                .energy(960000000)
+                .time(2400)
                 .requiredTier(2)
                 .save(c);
 
@@ -646,8 +730,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get(), 16)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 512)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 128000)
-                .outputItem(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get(), 4)
-                .energy(2500000000L)
+                .outputItem(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get(), 64)
+                .energy(1200000000L)
                 .time(19200)
                 .requiredTier(3)
                 .save(c);
@@ -657,9 +741,9 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.NEUTRON_STAR_MATTER.get(), 32)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 128)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 32000)
-                .outputItem(ModItems.MATTERFLOW_CATALYST_T3.get(), 8)
-                .energy(450000000)
-                .time(9600)
+                .outputItem(ModItems.MATTERFLOW_CATALYST_T3.get(), 64)
+                .energy(180000000)
+                .time(1200)
                 .requiredTier(1)
                 .save(c);
 
@@ -668,9 +752,9 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.PULSAR_MATTER.get(), 32)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 128)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 40000)
-                .outputItem(ModItems.CHRONO_CATALYST_T3.get(), 8)
+                .outputItem(ModItems.CHRONO_CATALYST_T3.get(), 64)
                 .energy(12000000)
-                .time(2400)
+                .time(1200)
                 .requiredTier(1)
                 .save(c);
 
@@ -679,9 +763,9 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.WHITE_DWARF_MATTER.get(), 32)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 160)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 48000)
-                .outputItem(ModItems.OVERFLUX_CATALYST_T3.get(), 8)
-                .energy(700000000)
-                .time(12000)
+                .outputItem(ModItems.OVERFLUX_CATALYST_T3.get(), 64)
+                .energy(280000000)
+                .time(1800)
                 .requiredTier(2)
                 .save(c);
 
@@ -690,9 +774,9 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.DARK_MATTER.get(), 8)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 192)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 64000)
-                .outputItem(ModItems.QUANTUM_CATALYST_T3.get(), 8)
-                .energy(1000000000)
-                .time(14400)
+                .outputItem(ModItems.QUANTUM_CATALYST_T3.get(), 64)
+                .energy(400000000)
+                .time(2400)
                 .requiredTier(2)
                 .save(c);
 
@@ -705,8 +789,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.DARK_MATTER.get(), 8)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 128000)
                 .outputItem(ModItems.DIMENSIONAL_CATALYST.get(), 1)
-                .energy(4000000000L)
-                .time(48000)
+                .energy(1500000000L)
+                .time(9600)
                 .requiredTier(3)
                 .save(c);
 
@@ -802,6 +886,44 @@ public class ModRecipeProvider extends RecipeProvider {
                 .energy(200000)
                 .time(400)
                 .requiredTier(1)
+                .save(c);
+
+        UniversalMultiblockRecipeBuilder.create("universal/qmf/scrap_massive", UniversalMultiblockMachineKind.QMF)
+                .inputItem(ModItems.OBSIDIAN_MATRIX.get(), 1024)
+                .inputFluid(Fluids.WATER, 1_024_000)
+                .outputItem(ModItems.SCRAP.get(), 4096)
+                .energy(102_400_000L)
+                .time(200)
+                .requiredTier(1)
+                .save(c);
+
+        UniversalMultiblockRecipeBuilder.create("universal/qmf/scrap_box_massive", UniversalMultiblockMachineKind.QMF)
+                .inputItem(ModItems.SCRAP.get(), 57_344)
+                .inputFluid(Fluids.WATER, 1_024_000)
+                .outputItem(ModItems.SCRAP_BOX.get(), 1024)
+                .energy(10_240_000_000L)
+                .time(2000)
+                .requiredTier(1)
+                .save(c);
+
+        UniversalMultiblockRecipeBuilder.create("universal/quantum_cryoforge/gelid_cryotheum_massive", UniversalMultiblockMachineKind.QUANTUM_CRYOFORGE)
+                .inputItem(ModItems.DUST_CRYOTHEUM.get(), 64)
+                .inputFluid(Fluids.WATER, 50000)
+                .outputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 50000)
+                .energy(200000)
+                .time(400)
+                .requiredTier(1)
+                .save(c);
+
+        UniversalMultiblockRecipeBuilder.create("universal/quantum_cryoforge/stable_coolant_t3", UniversalMultiblockMachineKind.QUANTUM_CRYOFORGE)
+                .inputItem(Items.BLUE_ICE, 256)
+                .inputItem(ModItems.OBSIDIAN_MATRIX.get(), 64)
+                .inputItem(ModItems.QUANTUM_ANOMALY.get(), 16)
+                .inputFluid(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), 128000)
+                .outputFluid(ModFluids.SOURCE_STABLE_COOLANT.get(), 128000)
+                .energy(50000000)
+                .time(9600)
+                .requiredTier(3)
                 .save(c);
     }
 

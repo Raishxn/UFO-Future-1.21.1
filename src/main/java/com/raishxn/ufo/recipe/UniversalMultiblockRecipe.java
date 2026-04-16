@@ -28,6 +28,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
     private final String recipeName;
     private final List<ItemRequirement> itemInputs;
     private final List<FluidRequirement> fluidInputs;
+    private final List<ChemicalRequirement> chemicalInputs;
     private final ItemStack itemOutput;
     private final long itemOutputAmount;
     private final FluidStack fluidOutput;
@@ -41,6 +42,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
             String recipeName,
             List<ItemRequirement> itemInputs,
             List<FluidRequirement> fluidInputs,
+            List<ChemicalRequirement> chemicalInputs,
             ItemStack itemOutput,
             long itemOutputAmount,
             FluidStack fluidOutput,
@@ -52,6 +54,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
         this.recipeName = recipeName;
         this.itemInputs = itemInputs;
         this.fluidInputs = fluidInputs;
+        this.chemicalInputs = chemicalInputs;
         this.itemOutput = normalizeItemOutput(itemOutput);
         this.itemOutputAmount = this.itemOutput.isEmpty() ? 0L : Math.max(0L, itemOutputAmount);
         this.fluidOutput = fluidOutput == null ? FluidStack.EMPTY : fluidOutput;
@@ -75,6 +78,10 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
 
     public List<FluidRequirement> getFluidInputs() {
         return fluidInputs;
+    }
+
+    public List<ChemicalRequirement> getChemicalInputs() {
+        return chemicalInputs;
     }
 
     public ItemStack getItemOutput() {
@@ -173,6 +180,21 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
         );
     }
 
+    public record ChemicalRequirement(ResourceLocation chemicalId, long amount) {
+        public static final Codec<ChemicalRequirement> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ResourceLocation.CODEC.fieldOf("chemical").forGetter(ChemicalRequirement::chemicalId),
+                Codec.LONG.fieldOf("amount").forGetter(ChemicalRequirement::amount)
+        ).apply(instance, ChemicalRequirement::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, ChemicalRequirement> STREAM_CODEC = StreamCodec.of(
+                (buf, ingredient) -> {
+                    buf.writeResourceLocation(ingredient.chemicalId);
+                    buf.writeLong(ingredient.amount);
+                },
+                buf -> new ChemicalRequirement(buf.readResourceLocation(), buf.readLong())
+        );
+    }
+
     private static ItemStack normalizeItemOutput(ItemStack stack) {
         if (stack == null || stack.isEmpty()) {
             return ItemStack.EMPTY;
@@ -208,6 +230,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                 Codec.STRING.optionalFieldOf("recipe_name", "Universal Multiblock Recipe").forGetter(UniversalMultiblockRecipe::getRecipeName),
                 ItemRequirement.CODEC.listOf().fieldOf("item_inputs").forGetter(UniversalMultiblockRecipe::getItemInputs),
                 FluidRequirement.CODEC.listOf().optionalFieldOf("fluid_inputs", List.of()).forGetter(UniversalMultiblockRecipe::getFluidInputs),
+                ChemicalRequirement.CODEC.listOf().optionalFieldOf("chemical_inputs", List.of()).forGetter(UniversalMultiblockRecipe::getChemicalInputs),
                 ItemOutputDefinition.CODEC.codec().optionalFieldOf("item_output").forGetter((UniversalMultiblockRecipe recipe) -> recipe.itemOutput.isEmpty()
                         ? java.util.Optional.empty()
                         : java.util.Optional.of(new ItemOutputDefinition(recipe.itemOutput.getItem(), recipe.itemOutputAmount))),
@@ -216,12 +239,13 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                 Codec.LONG.fieldOf("energy").forGetter(UniversalMultiblockRecipe::getEnergy),
                 Codec.INT.fieldOf("time").forGetter(UniversalMultiblockRecipe::getTime),
                 Codec.INT.optionalFieldOf("required_tier", MultiblockMachineTier.MK1.level()).forGetter(UniversalMultiblockRecipe::getRequiredTier)
-        ).apply(instance, (machine, recipeName, itemInputs, fluidInputs, itemOutput, fluidOutput, fluidOutputAmount, energy, time, requiredTier) ->
+        ).apply(instance, (machine, recipeName, itemInputs, fluidInputs, chemicalInputs, itemOutput, fluidOutput, fluidOutputAmount, energy, time, requiredTier) ->
                 new UniversalMultiblockRecipe(
                         machine,
                         recipeName,
                         itemInputs,
                         fluidInputs,
+                        chemicalInputs,
                         itemOutput.map(ItemOutputDefinition::toStack).orElse(ItemStack.EMPTY),
                         itemOutput.map(ItemOutputDefinition::amount).orElse(0L),
                         fluidOutput,
@@ -237,6 +261,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                     buf.writeUtf(recipe.recipeName);
                     ItemRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.itemInputs);
                     FluidRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.fluidInputs);
+                    ChemicalRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, recipe.chemicalInputs);
                     boolean hasItemOutput = !recipe.itemOutput.isEmpty();
                     buf.writeBoolean(hasItemOutput);
                     if (hasItemOutput) {
@@ -257,6 +282,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                     var recipeName = buf.readUtf();
                     var itemInputs = ItemRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
                     var fluidInputs = FluidRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
+                    var chemicalInputs = ChemicalRequirement.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buf);
                     boolean hasItemOutput = buf.readBoolean();
                     var itemOutput = hasItemOutput ? ItemOutputDefinition.STREAM_CODEC.decode(buf) : null;
                     boolean hasFluidOutput = buf.readBoolean();
@@ -270,6 +296,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                             recipeName,
                             itemInputs,
                             fluidInputs,
+                            chemicalInputs,
                             itemOutput != null ? itemOutput.toStack() : ItemStack.EMPTY,
                             itemOutput != null ? itemOutput.amount() : 0L,
                             fluidOutput,

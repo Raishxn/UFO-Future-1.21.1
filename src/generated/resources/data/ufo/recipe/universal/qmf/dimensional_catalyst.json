@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 4000000000,
+  "energy": 1500000000,
   "fluid_inputs": [
     {
       "amount": 128000,
@@ -54,5 +54,5 @@
   "machine": "qmf",
   "recipe_name": "universal/qmf/dimensional_catalyst",
   "required_tier": 3,
-  "time": 48000
+  "time": 9600
 }

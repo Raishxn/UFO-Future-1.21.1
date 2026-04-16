@@ -134,8 +134,10 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
     public void setWorking(boolean working) {
         if (working != this.working) {
-            updateBlockState(working);
-            this.markForUpdate();
+            if (this.level != null && !this.level.isClientSide()) {
+                updateBlockState(working);
+                this.markForUpdate();
+            }
         }
         this.working = working;
     }
@@ -390,7 +392,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     @Override
     protected void loadVisualState(CompoundTag data) {
         super.loadVisualState(data);
-        setWorking(data.getBoolean("working"));
+        this.working = data.getBoolean("working");
         if (data.contains("temperature"))
             this.temperature = data.getInt("temperature");
         if (data.contains("maxTemperature"))
@@ -401,7 +403,11 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
     public void saveChanges() {
         recalculateUpgrades();
-        this.markForUpdate();
+        this.setChanged();
+    }
+
+    private void persistChangesQuietly() {
+        this.setChanged();
     }
 
     // New thermal and synergy stat fields
@@ -680,7 +686,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                     this.cachedTask = null;
                 }
             }
-            this.markForUpdate();
+            this.setChanged();
             this.dirty = false;
         }
 
@@ -827,7 +833,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                         }
                     }
                 }
-                this.saveChanges();
+                this.persistChangesQuietly();
                 this.cachedTask = null;
                 this.setWorking(false);
             }
@@ -983,8 +989,8 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         var oldWorking = isWorking();
         var newWorking = data.readBoolean();
 
-        if (oldWorking != newWorking && newWorking) {
-            setWorking(true);
+        if (oldWorking != newWorking) {
+            this.working = newWorking;
         }
 
         for (int i = 0; i < this.inv.size(); i++) {

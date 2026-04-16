@@ -4,11 +4,10 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.items.AEBaseItem;
 import appeng.items.storage.StorageCellTooltipComponent;
+import com.raishxn.ufo.util.ColorHelper;
 import com.raishxn.ufo.util.LazyInits;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util; // <-- Import necessário para a animação
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent; // <-- Import necessário
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -37,33 +36,14 @@ public class InfinityCell extends AEBaseItem {
         return this.record;
     }
 
-    // --- MUDANÇA PRINCIPAL APLICADA AQUI ---
     @Override
     public @NotNull Component getName(@NotNull ItemStack is) {
         if (getRecord() == null) {
             return Component.translatable("item.ufo.infinity_cell_invalid");
         }
 
-        // 1. Pega o nome base da célula (ex: "Infinity Water Cell")
-        MutableComponent baseName = Component.translatable("item.ufo.infinity_cell_name", getRecord().getDisplayName());
-        String text = baseName.getString();
-
-        // 2. Se não houver cores definidas, retorna o nome padrão
-        if (this.nameFormatting == null || this.nameFormatting.length == 0) {
-            return baseName;
-        }
-
-        // 3. Lógica de animação por letra (copiada da sua classe AnimatedNameItem)
-        MutableComponent coloredName = Component.empty();
-        long time = Util.getMillis();
-
-        for (int i = 0; i < text.length(); i++) {
-            // A fórmula cria o efeito de "onda" de cores
-            int colorIndex = (int) (i * 0.5 + time / 200.0) % this.nameFormatting.length;
-            coloredName.append(Component.literal(String.valueOf(text.charAt(i))).withStyle(this.nameFormatting[colorIndex]));
-        }
-
-        return coloredName;
+        String text = Component.translatable("item.ufo.infinity_cell_name", getRecord().getDisplayName()).getString();
+        return ColorHelper.getSolidColoredText(text, this.nameFormatting);
     }
 
     @Override

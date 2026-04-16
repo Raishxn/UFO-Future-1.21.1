@@ -35,6 +35,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public abstract class AbstractUniversalMultiblockControllerScreen<M extends AbstractUniversalMultiblockControllerMenu<?>>
         extends UpgradeableScreen<M> {
@@ -42,6 +43,9 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
     private Button safeModeButton;
     private Button overclockButton;
     private Button scanButton;
+    private List<UniversalDisplayedRecipe> cachedDisplayedRecipes = List.of();
+    private List<GroupedRecipe> cachedGroupedRecipes = List.of();
+    private int cachedRecipeSignature = 0;
 
     protected AbstractUniversalMultiblockControllerScreen(M menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
@@ -217,6 +221,7 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
     @Override
     public void containerTick() {
         super.containerTick();
+        refreshRecipeCache();
         if (this.safeModeButton != null) {
             boolean safe = this.menu.isSafeMode();
             this.safeModeButton.setMessage(Component.literal(safe ? "S" : "!"));
@@ -332,8 +337,22 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
     }
 
     private List<GroupedRecipe> buildGroupedRecipes() {
+        refreshRecipeCache();
+        return this.cachedGroupedRecipes;
+    }
+
+    private void refreshRecipeCache() {
+        List<UniversalDisplayedRecipe> displayedRecipes = this.menu.getDisplayedRecipes();
+        int signature = computeRecipeSignature(displayedRecipes);
+        if (signature == this.cachedRecipeSignature && displayedRecipes.size() == this.cachedDisplayedRecipes.size()) {
+            return;
+        }
+
+        this.cachedDisplayedRecipes = displayedRecipes;
+        this.cachedRecipeSignature = signature;
+
         Map<RecipeGroupKey, GroupAccumulator> groups = new LinkedHashMap<>();
-        for (UniversalDisplayedRecipe recipe : this.menu.getDisplayedRecipes()) {
+        for (UniversalDisplayedRecipe recipe : displayedRecipes) {
             RecipeGroupKey key = RecipeGroupKey.of(recipe);
             groups.computeIfAbsent(key, ignored -> new GroupAccumulator(recipe)).add(recipe);
         }
@@ -342,7 +361,20 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         for (GroupAccumulator accumulator : groups.values()) {
             groupedRecipes.add(accumulator.toGroupedRecipe());
         }
-        return groupedRecipes;
+        this.cachedGroupedRecipes = groupedRecipes;
+    }
+
+    private static int computeRecipeSignature(List<UniversalDisplayedRecipe> recipes) {
+        int signature = 1;
+        for (UniversalDisplayedRecipe recipe : recipes) {
+            signature = 31 * signature + recipe.progress();
+            signature = 31 * signature + recipe.maxProgress();
+            signature = 31 * signature + Long.hashCode(recipe.outputAmount());
+            signature = 31 * signature + recipe.label().getString().hashCode();
+            signature = 31 * signature + Objects.hashCode(BuiltInRegistries.ITEM.getKey(recipe.itemIcon().getItem()));
+            signature = 31 * signature + Objects.hashCode(BuiltInRegistries.FLUID.getKey(recipe.fluidIcon().getFluid()));
+        }
+        return signature;
     }
 
     private GroupedRecipe getHoveredGroupedRecipe(int mouseX, int mouseY) {

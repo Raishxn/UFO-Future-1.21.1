@@ -31,6 +31,10 @@ public class ModMenus {
             MENUS.register("quantum_processor_assembler_controller_menu",
                     () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerMenu::new));
 
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumCryoforgeControllerMenu>> QUANTUM_CRYOFORGE_CONTROLLER_MENU =
+            MENUS.register("quantum_cryoforge_controller_menu",
+                    () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.QuantumCryoforgeControllerMenu::new));
+
     public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumPatternHatchMenu>> QUANTUM_PATTERN_HATCH_MENU =
             MENUS.register("quantum_pattern_hatch_menu",
                     () -> MenuTypeBuilder

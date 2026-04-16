@@ -1,43 +1,41 @@
-# Receitas Customizadas KubeJS — DMA
+# Receitas KubeJS
 
-Esta página documenta como criar, modificar e remover receitas do **Montador de Matéria Dimensional (DMA)** usando [KubeJS](https://kubejs.com/) para Minecraft 1.21.1 (NeoForge).
+Esta pagina documenta como criar, modificar e remover receitas customizadas via [KubeJS](https://kubejs.com/) para os principais multiblocos do UFO Future em Minecraft 1.21.1 (NeoForge).
+
+## Tipos de Receita Cobertos
+
+- `ufo:dimensional_assembly`
+- `ufo:stellar_simulation`
+- `ufo:universal_multiblock`
+- `ufo:qmf_recipe` (legado, ainda suportado pelo QMF)
 
 ---
 
-## Tipo de Receita
+## DMA
 
-```
+### Tipo
+
+```txt
 ufo:dimensional_assembly
 ```
 
----
+### Estrutura Basica
 
-## Estrutura Básica da Receita
-
-Toda receita DMA consiste em:
-
-| Campo | Tipo | Obrigatório | Descrição |
+| Campo | Tipo | Obrigatorio | Descricao |
 |-------|------|-------------|-----------|
-| `item_inputs` | Array de `IngredientStack.Item` | ✅ | Ingredientes de itens com quantidades |
-| `fluid_inputs` | Array de `IngredientStack.Fluid` | ❌ | Ingredientes de fluidos com quantidades (mB) |
-| `item_outputs` | Array de `GenericStack` | ❌ | Saídas de itens com quantidades |
-| `fluid_outputs` | Array de `GenericStack` | ❌ | Saídas de fluidos com quantidades |
-| `energy` | Inteiro | ✅ | Total de energia AE consumida para esta receita |
-| `time` | Inteiro | ✅ | Tempo de processamento em ticks (20 ticks = 1 segundo) |
+| `item_inputs` | Array | Sim | Ingredientes de item com quantidade |
+| `fluid_inputs` | Array | Nao | Ingredientes de fluido com quantidade em mB |
+| `item_outputs` | Array | Nao | Saidas de item |
+| `fluid_outputs` | Array | Nao | Saidas de fluido |
+| `energy` | Inteiro | Sim | Energia AE total consumida |
+| `time` | Inteiro | Sim | Tempo em ticks |
 
-> Pelo menos uma saída (item ou fluido) deve ser especificada.
+> Pelo menos uma saida deve existir: `item_outputs` ou `fluid_outputs`.
 
----
-
-## Criando Receitas com KubeJS
-
-### Adicionando uma Receita Simples de Item
+### Exemplo
 
 ```js
-// kubejs/server_scripts/dma_recipes.js
-
 ServerEvents.recipes(event => {
-  // Criar uma receita DMA customizada
   event.custom({
     type: 'ufo:dimensional_assembly',
     item_inputs: [
@@ -69,7 +67,7 @@ ServerEvents.recipes(event => {
 })
 ```
 
-### Adicionando uma Receita com Saída de Fluido
+### Tags como Entrada
 
 ```js
 ServerEvents.recipes(event => {
@@ -77,266 +75,447 @@ ServerEvents.recipes(event => {
     type: 'ufo:dimensional_assembly',
     item_inputs: [
       {
-        ingredient: { item: 'ufo:white_dwarf_fragment_ingot' },
-        count: 8
-      }
-    ],
-    fluid_inputs: [
-      {
-        ingredient: { fluid: 'ufo:source_liquid_starlight_fluid' },
-        amount: 1000
-      }
-    ],
-    item_outputs: [],
-    fluid_outputs: [
-      {
-        id: 'ufo:source_white_dwarf_fragment_fluid',
-        amount: 2000
-      }
-    ],
-    energy: 80000,
-    time: 200
-  }).id('kubejs:custom_white_dwarf_fluid')
-})
-```
-
-### Saídas Mistas de Item + Fluido
-
-```js
-ServerEvents.recipes(event => {
-  event.custom({
-    type: 'ufo:dimensional_assembly',
-    item_inputs: [
-      {
-        ingredient: { item: 'ufo:obsidian_matrix' },
-        count: 4
-      },
-      {
-        ingredient: { item: 'minecraft:nether_star' },
+        ingredient: { tag: 'c:ingots/iron' },
         count: 16
       }
     ],
-    fluid_inputs: [
-      {
-        ingredient: { fluid: 'ufo:source_uu_amplifier_fluid' },
-        amount: 100
-      }
-    ],
+    fluid_inputs: [],
     item_outputs: [
       {
-        id: 'ufo:scrap',
-        amount: 8
-      }
-    ],
-    fluid_outputs: [
-      {
-        id: 'ufo:source_liquid_starlight_fluid',
-        amount: 10000
-      }
-    ],
-    energy: 4000000,
-    time: 1000
-  }).id('kubejs:starlight_and_scrap')
-})
-```
-
----
-
-## Usando Tags como Entradas
-
-Você pode usar tags de itens ao invés de itens específicos:
-
-```js
-event.custom({
-  type: 'ufo:dimensional_assembly',
-  item_inputs: [
-    {
-      ingredient: { tag: 'c:ingots/iron' },
-      count: 16
-    },
-    {
-      ingredient: { item: 'minecraft:ender_pearl' },
-      count: 4
-    }
-  ],
-  fluid_inputs: [],
-  item_outputs: [
-    {
-      id: 'ufo:obsidian_matrix',
-      amount: 2
-    }
-  ],
-  fluid_outputs: [],
-  energy: 50000,
-  time: 100
-}).id('kubejs:tagged_obsidian_matrix')
-```
-
----
-
-## Removendo Receitas Existentes
-
-```js
-ServerEvents.recipes(event => {
-  // Remover por ID da receita
-  event.remove({ id: 'ufo:dma/quantum_anomaly' })
-  
-  // Remover todas as receitas DMA que produzem um item específico
-  event.remove({ type: 'ufo:dimensional_assembly', output: 'ufo:quantum_anomaly' })
-  
-  // Remover todas as receitas DMA (use com cuidado!)
-  event.remove({ type: 'ufo:dimensional_assembly' })
-})
-```
-
----
-
-## Modificando Receitas Existentes
-
-KubeJS não suporta modificação direta de receitas para tipos customizados. A abordagem recomendada é:
-
-1. **Remover** a receita original
-2. **Re-adicionar** com valores modificados
-
-```js
-ServerEvents.recipes(event => {
-  // Remover receita original
-  event.remove({ id: 'ufo:dma/quantum_anomaly' })
-  
-  // Re-adicionar com energia e tempo modificados
-  event.custom({
-    type: 'ufo:dimensional_assembly',
-    item_inputs: [
-      {
-        ingredient: { item: 'ufo:pulsar_fragment_dust' },
-        count: 6  // reduzido de 12
-      },
-      {
-        ingredient: { item: 'ufo:obsidian_matrix' },
-        count: 1
-      }
-    ],
-    fluid_inputs: [
-      {
-        ingredient: { fluid: 'ufo:source_pulsar_fragment_fluid' },
-        amount: 4000  // reduzido de 8000
-      }
-    ],
-    item_outputs: [
-      {
-        id: 'ufo:quantum_anomaly',
-        amount: 1
+        id: 'ufo:obsidian_matrix',
+        amount: 2
       }
     ],
     fluid_outputs: [],
-    energy: 3000000,  // reduzido de 6000000
-    time: 600  // reduzido de 1200
-  }).id('ufo:dma/quantum_anomaly')
+    energy: 50000,
+    time: 100
+  }).id('kubejs:tagged_obsidian_matrix')
+})
+```
+
+### Remocao
+
+```js
+ServerEvents.recipes(event => {
+  event.remove({ id: 'ufo:dma/quantum_anomaly' })
+  event.remove({ type: 'ufo:dimensional_assembly', output: 'ufo:quantum_anomaly' })
+})
+```
+
+### Notas
+
+- O DMA e sem forma.
+- O DMA tem ate 9 entradas de item.
+- O refrigerante nao faz parte da definicao da receita.
+
+---
+
+## Stellar Nexus
+
+### Tipo
+
+```txt
+ufo:stellar_simulation
+```
+
+### Estrutura Basica
+
+| Campo | Tipo | Obrigatorio | Descricao |
+|-------|------|-------------|-----------|
+| `simulation_name` | String | Sim | Nome exibido no controller |
+| `item_inputs` | Array | Sim | Itens consumidos da ME |
+| `fluid_inputs` | Array | Nao | Fluidos consumidos da ME |
+| `item_outputs` | Array | Nao | Itens produzidos em formato AE2 GenericStack |
+| `fluid_outputs` | Array | Nao | Fluidos produzidos em formato AE2 GenericStack |
+| `energy` | Inteiro | Sim | Energia AE total |
+| `time` | Inteiro | Sim | Duracao em ticks |
+| `cooling_level` | Inteiro | Sim | Stress termico de 0 a 3 |
+| `field_tier` | Inteiro | Sim | Tier minimo do field generator |
+| `fuel_fluid` | String | Nao | Fluido de combustivel |
+| `fuel_amount` | Inteiro | Nao | Quantidade de combustivel em mB |
+| `coolant_fluid` | String | Nao | Fluido de coolant |
+| `coolant_amount` | Inteiro | Nao | Quantidade de coolant em mB |
+
+### GenericStack do AE2
+
+```json
+{ "#": 15000000, "#t": "ae2:i", "id": "minecraft:iron_ingot" }
+```
+
+- `#` = quantidade
+- `#t` = tipo: `ae2:i` para item, `ae2:f` para fluido
+- `id` = registry id completo
+
+### Exemplo
+
+```js
+ServerEvents.recipes(event => {
+  event.custom({
+    type: 'ufo:stellar_simulation',
+    simulation_name: 'Custom Void Harvest',
+    item_inputs: [
+      {
+        amount: 8,
+        ingredient: { item: 'ufo:enriched_neutronium_sphere' }
+      },
+      {
+        amount: 4,
+        ingredient: { item: 'minecraft:nether_star' }
+      }
+    ],
+    fluid_inputs: [
+      {
+        amount: 200000,
+        ingredient: { fluid: 'ufo:raw_star_matter_plasma' }
+      }
+    ],
+    item_outputs: [
+      { '#': 5000000, '#t': 'ae2:i', id: 'minecraft:ender_pearl' },
+      { '#': 2000000, '#t': 'ae2:i', id: 'minecraft:blaze_rod' }
+    ],
+    fluid_outputs: [
+      { '#': 100000, '#t': 'ae2:f', id: 'ufo:liquid_starlight' }
+    ],
+    energy: 300000000,
+    time: 30000,
+    cooling_level: 2,
+    field_tier: 2,
+    fuel_fluid: 'mekanism:hydrogen',
+    fuel_amount: 20000,
+    coolant_fluid: 'ufo:source_gelid_cryotheum',
+    coolant_amount: 25000
+  }).id('kubejs:custom_void_harvest')
+})
+```
+
+### Remocao
+
+```js
+ServerEvents.recipes(event => {
+  event.remove({ id: 'ufo:stellar_simulation/iron_core_fusion' })
+  event.remove({ type: 'ufo:stellar_simulation' })
 })
 ```
 
 ---
 
-## Referência de IDs de Itens & Fluidos
+## Universal Multiblock
 
-### IDs Comuns de Itens
+Esse e o formato recomendado para os outros multiblocos de automacao em massa.
 
-| Item | ID |
-|------|-----|
-| Matriz de Obsidiana | `ufo:obsidian_matrix` |
-| Processador Dimensional | `ufo:dimensional_processor` |
-| Processador Dimensional Impresso | `ufo:printed_dimensional_processor` |
-| Prensa do Processador Dimensional | `ufo:dimensional_processor_press` |
-| Lingote de Fragmento de Anã Branca | `ufo:white_dwarf_fragment_ingot` |
-| Lingote de Fragmento de Estrela de Nêutrons | `ufo:neutron_star_fragment_ingot` |
-| Lingote de Fragmento de Pulsar | `ufo:pulsar_fragment_ingot` |
-| Protomatéria | `ufo:proto_matter` |
-| Matéria Corpórea | `ufo:corporeal_matter` |
-| Matéria de Anã Branca | `ufo:white_dwarf_matter` |
-| Matéria de Estrela de Nêutrons | `ufo:neutron_star_matter` |
-| Matéria de Pulsar | `ufo:pulsar_matter` |
-| Matéria Escura | `ufo:dark_matter` |
-| Anomalia Quântica | `ufo:quantum_anomaly` |
-| Estrela Nuclear | `ufo:nuclear_star` |
-| Esfera de Neutrônio | `ufo:neutronium_sphere` |
-| Esfera de Neutrônio Enriquecida | `ufo:enriched_neutronium_sphere` |
-| Esfera de Neutrônio Enriquecida Carregada | `ufo:charged_enriched_neutronium_sphere` |
-| Cristal de Matéria UU | `ufo:uu_matter_crystal` |
-| Sucata | `ufo:scrap` |
-| Caixa de Sucata | `ufo:scrap_box` |
-| Matéria Instável de Buraco Branco | `ufo:unstable_white_hole_matter` |
-| Matéria de Contenção Segura | `ufo:safe_containment_matter` |
-| Cápsula de Contenção Aether | `ufo:aether_containment_capsule` |
+### Tipo
 
-### Matrizes de Componentes
-
-| Componente | ID |
-|-----------|-----|
-| Matriz de Componente Phase Shift | `ufo:phase_shift_component_matrix` |
-| Matriz de Componente Hyper Dense | `ufo:hyper_dense_component_matrix` |
-| Matriz de Componente Tesseract | `ufo:tesseract_component_matrix` |
-| Matriz de Componente Event Horizon | `ufo:event_horizon_component_matrix` |
-| Matriz de Componente Cosmic String | `ufo:cosmic_string_component_matrix` |
-
-### IDs de Catalisadores
-
-| Catalisador | ID |
-|-------------|-----|
-| Matterflow T1 | `ufo:matterflow_catalyst_t1` |
-| Matterflow T2 | `ufo:matterflow_catalyst_t2` |
-| Matterflow T3 | `ufo:matterflow_catalyst_t3` |
-| Chrono T1 | `ufo:chrono_catalyst_t1` |
-| Chrono T2 | `ufo:chrono_catalyst_t2` |
-| Chrono T3 | `ufo:chrono_catalyst_t3` |
-| Overflux T1 | `ufo:overflux_catalyst_t1` |
-| Overflux T2 | `ufo:overflux_catalyst_t2` |
-| Overflux T3 | `ufo:overflux_catalyst_t3` |
-| Quantum T1 | `ufo:quantum_catalyst_t1` |
-| Quantum T2 | `ufo:quantum_catalyst_t2` |
-| Quantum T3 | `ufo:quantum_catalyst_t3` |
-| Dimensional (Criativo) | `ufo:dimensional_catalyst` |
-
-### IDs de Fluidos
-
-| Fluido | ID |
-|--------|-----|
-| Luz Estelar Líquida | `ufo:source_liquid_starlight_fluid` |
-| Criotheum Gélido | `ufo:source_gelid_cryotheum` |
-| Fluido Temporal | `ufo:source_temporal_fluid` |
-| Fluido Espacial | `ufo:source_spatial_fluid` |
-| Matéria Primordial | `ufo:source_primordial_matter_fluid` |
-| Plasma de Matéria Estelar Bruta | `ufo:raw_star_matter_plasma` |
-| Matéria Transcendente | `ufo:transcending_matter` |
-| Matéria UU | `ufo:uu_matter` |
-| Amplificador UU | `ufo:source_uu_amplifier_fluid` |
-| Fluido de Fragmento de Anã Branca | `ufo:source_white_dwarf_fragment_fluid` |
-| Fluido de Fragmento de Estrela de Nêutrons | `ufo:source_neutron_star_fragment_fluid` |
-| Fluido de Fragmento de Pulsar | `ufo:source_pulsar_fragment_fluid` |
-
----
-
-## Dicas & Boas Práticas
-
-1. **Escala de energia**: Receitas básicas usam 50K–500K AE. Receitas mid-game usam 1M–10M. Receitas endgame podem usar 50M–500M AE.
-2. **Tempo vs Velocidade**: O tempo base é afetado por catalisadores Chrono. Uma receita `time: 200` leva 10 segundos base (200 ticks / 20).
-3. **Limite mínimo de tempo**: O DMA impõe um tempo mínimo de processamento de **1 segundo** (20 ticks) independente do empilhamento de catalisadores Chrono.
-4. **Entradas sem forma**: Todas as receitas DMA são sem forma — a ordem de colocação dos itens nos 9 slots não importa.
-5. **Máximo 9 entradas de item**: O DMA tem 9 slots de entrada, então receitas não podem exceder 9 tipos distintos de itens.
-6. **Fluidos de entrada vão para o Slot 3**: Fluidos requeridos pela receita são consumidos do tanque de fluido base (Slot 3), não do tanque de refrigerante (Slot 2).
-7. **Refrigerante NÃO faz parte das receitas**: O refrigerante é gerenciado pelo jogador para controle térmico e é completamente independente das definições de receita.
-
----
-
-## Alternativa via Datapack (JSON)
-
-Se você preferir datapacks ao invés de KubeJS, coloque os arquivos JSON de receita em:
-
+```txt
+ufo:universal_multiblock
 ```
+
+### Maquinas Suportadas
+
+- `machine: 'qmf'`
+- `machine: 'quantum_slicer'`
+- `machine: 'quantum_processor_assembler'`
+- `machine: 'quantum_cryoforge'`
+
+### Estrutura Basica
+
+| Campo | Tipo | Obrigatorio | Descricao |
+|-------|------|-------------|-----------|
+| `machine` | String | Sim | Multibloco alvo |
+| `recipe_name` | String | Nao | Nome interno/exibido |
+| `item_inputs` | Array | Sim | Itens de entrada com quantidade |
+| `fluid_inputs` | Array | Nao | Fluidos de entrada com quantidade em mB |
+| `item_output` | Objeto | Nao | Saida unica de item |
+| `fluid_output` | Objeto | Nao | Saida unica de fluido |
+| `fluid_output_amount` | Inteiro | Nao | Quantidade total do fluido de saida em mB |
+| `energy` | Inteiro/Long | Sim | Energia AE total |
+| `time` | Inteiro | Sim | Tempo em ticks |
+| `required_tier` | Inteiro | Nao | Tier minimo da maquina |
+
+> Pelo menos uma saida deve existir: `item_output` ou `fluid_output`.
+
+### Formatos
+
+Entrada de item:
+
+```json
+{
+  "ingredient": { "item": "minecraft:diamond" },
+  "amount": 64
+}
+```
+
+Entrada por tag:
+
+```json
+{
+  "ingredient": { "tag": "c:ingots/iron" },
+  "amount": 256
+}
+```
+
+Entrada de fluido:
+
+```json
+{
+  "fluid": {
+    "id": "ufo:uu_matter",
+    "amount": 1
+  },
+  "amount": 128000
+}
+```
+
+Saida de item:
+
+```json
+{
+  "id": "ufo:dimensional_processor",
+  "count": 64
+}
+```
+
+Saida de fluido:
+
+```json
+{
+  "id": "ufo:source_stable_coolant",
+  "amount": 1
+}
+```
+
+Combinado com:
+
+```json
+"fluid_output_amount": 128000
+```
+
+### Exemplo - QMF
+
+```js
+ServerEvents.recipes(event => {
+  event.custom({
+    type: 'ufo:universal_multiblock',
+    machine: 'qmf',
+    recipe_name: 'kubejs/qmf/corporeal_matter_batch',
+    item_inputs: [
+      {
+        ingredient: { item: 'ufo:proto_matter' },
+        amount: 128
+      },
+      {
+        ingredient: { item: 'minecraft:iron_block' },
+        amount: 4096
+      },
+      {
+        ingredient: { item: 'ufo:obsidian_matrix' },
+        amount: 1024
+      }
+    ],
+    fluid_inputs: [
+      {
+        fluid: {
+          id: 'ufo:uu_matter',
+          amount: 1
+        },
+        amount: 256000
+      }
+    ],
+    item_output: {
+      id: 'ufo:corporeal_matter',
+      count: 64
+    },
+    energy: 1280000000,
+    time: 3600,
+    required_tier: 1
+  }).id('kubejs:qmf_corporeal_matter_batch')
+})
+```
+
+### Exemplo - Quantum Processor Assembler
+
+```js
+ServerEvents.recipes(event => {
+  event.custom({
+    type: 'ufo:universal_multiblock',
+    machine: 'quantum_processor_assembler',
+    recipe_name: 'kubejs/quantum_processor_assembler/dimensional_processor',
+    item_inputs: [
+      {
+        ingredient: { item: 'ufo:printed_dimensional_processor' },
+        amount: 64
+      },
+      {
+        ingredient: { item: 'ae2:printed_silicon' },
+        amount: 64
+      },
+      {
+        ingredient: { item: 'ae2:fluix_dust' },
+        amount: 128
+      }
+    ],
+    item_output: {
+      id: 'ufo:dimensional_processor',
+      count: 64
+    },
+    energy: 12000000,
+    time: 1200
+  }).id('kubejs:quantum_processor_assembler_dimensional_processor')
+})
+```
+
+### Exemplo - Quantum Cryoforge
+
+```js
+ServerEvents.recipes(event => {
+  event.custom({
+    type: 'ufo:universal_multiblock',
+    machine: 'quantum_cryoforge',
+    recipe_name: 'kubejs/quantum_cryoforge/stable_coolant_t3',
+    item_inputs: [
+      {
+        ingredient: { item: 'minecraft:blue_ice' },
+        amount: 256
+      },
+      {
+        ingredient: { item: 'ufo:obsidian_matrix' },
+        amount: 64
+      },
+      {
+        ingredient: { item: 'ufo:quantum_anomaly' },
+        amount: 16
+      }
+    ],
+    fluid_inputs: [
+      {
+        fluid: {
+          id: 'ufo:source_gelid_cryotheum',
+          amount: 1
+        },
+        amount: 128000
+      }
+    ],
+    fluid_output: {
+      id: 'ufo:source_stable_coolant',
+      amount: 1
+    },
+    fluid_output_amount: 128000,
+    energy: 50000000,
+    time: 9600,
+    required_tier: 3
+  }).id('kubejs:quantum_cryoforge_stable_coolant_t3')
+})
+```
+
+### Exemplo - Quantum Slicer
+
+Atualmente nao ha exemplos gerados no datapack para o Quantum Slicer, mas o serializer ja aceita receitas customizadas do mesmo jeito:
+
+```js
+ServerEvents.recipes(event => {
+  event.custom({
+    type: 'ufo:universal_multiblock',
+    machine: 'quantum_slicer',
+    recipe_name: 'kubejs/quantum_slicer/printed_singularity_core',
+    item_inputs: [
+      {
+        ingredient: { item: 'ae2:singularity' },
+        amount: 1
+      },
+      {
+        ingredient: { item: 'ufo:obsidian_matrix' },
+        amount: 8
+      },
+      {
+        ingredient: { tag: 'c:dusts/fluix' },
+        amount: 64
+      }
+    ],
+    fluid_inputs: [
+      {
+        fluid: {
+          id: 'ufo:source_temporal_fluid',
+          amount: 1
+        },
+        amount: 16000
+      }
+    ],
+    item_output: {
+      id: 'ufo:printed_dimensional_processor',
+      count: 8
+    },
+    energy: 64000000,
+    time: 900,
+    required_tier: 2
+  }).id('kubejs:quantum_slicer_printed_singularity_core')
+})
+```
+
+### Remocao
+
+```js
+ServerEvents.recipes(event => {
+  event.remove({ id: 'ufo:universal/qmf/corporeal_matter_batch' })
+  event.remove({ type: 'ufo:universal_multiblock' })
+})
+```
+
+---
+
+## Compatibilidade Legada do QMF
+
+O QMF ainda aceita:
+
+```txt
+ufo:qmf_recipe
+```
+
+Esse formato continua valido para compatibilidade, mas para receitas novas prefira `ufo:universal_multiblock` com `machine: 'qmf'`.
+
+### Exemplo
+
+```js
+ServerEvents.recipes(event => {
+  event.custom({
+    type: 'ufo:qmf_recipe',
+    recipe_name: 'kubejs/qmf/legacy_proto_matter',
+    item_inputs: [
+      {
+        ingredient: { item: 'ufo:obsidian_matrix' },
+        amount: 32
+      }
+    ],
+    fluid_inputs: [
+      {
+        fluid: {
+          id: 'ufo:uu_matter',
+          amount: 1
+        },
+        amount: 32000
+      }
+    ],
+    output: {
+      id: 'ufo:proto_matter',
+      count: 4
+    },
+    energy: 40000000,
+    time: 600,
+    required_tier: 1
+  }).id('kubejs:qmf_legacy_proto_matter')
+})
+```
+
+---
+
+## Datapack
+
+Se voce preferir datapacks em vez de KubeJS, coloque os JSONs em:
+
+```txt
 data/<seu_namespace>/recipe/<nome_receita>.json
 ```
 
-Usando o mesmo formato JSON mostrado na [página do DMA](dma.md#formato-json-de-receita).
+Use exatamente o mesmo formato mostrado nos exemplos acima.
 
 ---
 
-*Veja também: [DMA](dma.md) · [Catalisadores](catalysts.md) · [Materiais & Fluidos](materials.md)*
+*Veja tambem: [DMA](dma.md) · [Quantum Matter Fabricator](quantum-matter-fabricator.md) · [Quantum Processor Assembler](quantum-processor-assembler.md) · [Stellar Nexus](stellar-nexus.md) · [Catalysts](catalysts.md) · [Materials](materials.md)*

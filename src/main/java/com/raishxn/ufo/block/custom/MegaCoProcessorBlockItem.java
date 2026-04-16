@@ -2,10 +2,9 @@ package com.raishxn.ufo.block.custom;
 
 import appeng.block.AEBaseBlockItem;
 import com.raishxn.ufo.core.MegaCoProcessorTier;
+import com.raishxn.ufo.util.ColorHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
@@ -24,11 +23,9 @@ public class MegaCoProcessorBlockItem extends AEBaseBlockItem {
 
     @Override
     public Component getName(ItemStack stack) {
-        MutableComponent name = Component.translatable(stack.getDescriptionId());
-        String text = name.getString();
-
+        String text = Component.translatable(stack.getDescriptionId()).getString();
         ChatFormatting[] colors;
-        // --- SWITCH ATUALIZADO ---
+
         switch (this.tier) {
             case COPROCESSOR_50M:
                 colors = new ChatFormatting[]{ChatFormatting.DARK_RED, ChatFormatting.RED, ChatFormatting.GOLD};
@@ -46,16 +43,9 @@ public class MegaCoProcessorBlockItem extends AEBaseBlockItem {
                 colors = new ChatFormatting[]{ChatFormatting.DARK_GREEN, ChatFormatting.GREEN};
                 break;
             default:
-                return name;
+                return Component.translatable(stack.getDescriptionId());
         }
 
-        MutableComponent coloredName = Component.empty();
-        long time = Util.getMillis();
-        for (int i = 0; i < text.length(); i++) {
-            int colorIndex = (int) (i * 0.5 + time / 200.0) % colors.length;
-            coloredName.append(Component.literal(String.valueOf(text.charAt(i))).withStyle(colors[colorIndex]));
-        }
-
-        return coloredName;
+        return ColorHelper.getSolidColoredText(text, colors);
     }
 }

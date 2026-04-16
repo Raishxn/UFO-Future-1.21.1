@@ -31,10 +31,10 @@
     }
   ],
   "item_output": {
-    "count": 8,
+    "count": 64,
     "id": "ufo:chrono_catalyst_t3"
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/chrono_catalyst_t3_batch",
-  "time": 2400
+  "time": 1200
 }

@@ -1,13 +1,16 @@
 package com.raishxn.ufo.event;
 
+import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.custom.MegaCoProcessorBlockItem;
 import com.raishxn.ufo.item.custom.MegaCraftingStorageBlockItem;
 import com.raishxn.ufo.util.NumberFormattingUtil; // <-- IMPORTAR A NOVA CLASSE
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.component.CustomData;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -44,6 +47,15 @@ public class ModTooltipEventHandler {
             MutableComponent threadsLine = Component.translatable("tooltip.ufo.accelerator_threads", formattedThreads);
             threadsLine.setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY));
             event.getToolTip().add(threadsLine);
+        }
+        else if (event.getItemStack().is(ModBlocks.QUANTUM_ENERGY_CELL.get().asItem())) {
+            CustomData customData = event.getItemStack().get(DataComponents.CUSTOM_DATA);
+            boolean chargedPreview = customData != null
+                    && customData.copyTag().getBoolean("ufoQuantumEnergyCellChargedPreview");
+            event.getToolTip().add(Component.literal(chargedPreview
+                    ? "Creative preview: Charged"
+                    : "Creative preview: Discharged").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(Component.translatable("tooltip.ufo.stored_energy_infinite").withStyle(ChatFormatting.GRAY));
         }
     }
 }

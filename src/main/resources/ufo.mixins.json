@@ -7,9 +7,12 @@
     "AccessorBuiltInModelHooks",
     "MixinCPUSelectionList",
     "MixinCraftingCPUCluster",
-    "MixinAppEngBase"
+    "MixinAppEngBase",
+    "MixinKeyTypeSelection"
   ],
   "client": [
+    "AccessorAbstractContainerScreen",
+    "MixinMEStorageScreen",
     "MixinModelBakery"
   ],
   "injectors": {

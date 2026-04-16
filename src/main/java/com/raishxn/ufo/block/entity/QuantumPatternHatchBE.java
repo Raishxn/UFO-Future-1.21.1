@@ -53,12 +53,18 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
 
     @Override
     public void linkToController(BlockPos controllerPos) {
+        if (controllerPos.equals(this.controllerPos)) {
+            return;
+        }
         this.controllerPos = controllerPos;
         setChanged();
     }
 
     @Override
     public void unlinkFromController() {
+        if (this.controllerPos == null) {
+            return;
+        }
         this.controllerPos = null;
         setChanged();
     }

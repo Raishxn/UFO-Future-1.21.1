@@ -1,6 +1,7 @@
 package com.raishxn.ufo.compat.jei;
 
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.recipe.UniversalMultiblockMachineKind;
 import com.raishxn.ufo.recipe.UniversalMultiblockRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -29,6 +30,8 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
             RecipeType.create(UfoMod.MOD_ID, "universal_multiblock_quantum_slicer", UniversalMultiblockRecipe.class);
     public static final RecipeType<UniversalMultiblockRecipe> QUANTUM_PROCESSOR_ASSEMBLER_RECIPE_TYPE =
             RecipeType.create(UfoMod.MOD_ID, "universal_multiblock_quantum_processor_assembler", UniversalMultiblockRecipe.class);
+    public static final RecipeType<UniversalMultiblockRecipe> QUANTUM_CRYOFORGE_RECIPE_TYPE =
+            RecipeType.create(UfoMod.MOD_ID, "universal_multiblock_quantum_cryoforge", UniversalMultiblockRecipe.class);
 
     private static final ResourceLocation BACKGROUND = UfoMod.id("textures/guis/dimensional_matter_assembler_jei_ui.png");
 
@@ -38,6 +41,8 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
     private static final int ENERGY_BAR_H = 10;
     private static final int ITEM_OUTPUT_X = 132;
     private static final int ITEM_OUTPUT_Y = 21;
+    private static final int CONTROLLER_X = 150;
+    private static final int CONTROLLER_Y = 2;
 
     private final UniversalMultiblockMachineKind machineKind;
     private final Component title;
@@ -64,6 +69,7 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
             case QMF -> QMF_RECIPE_TYPE;
             case QUANTUM_SLICER -> QUANTUM_SLICER_RECIPE_TYPE;
             case QUANTUM_PROCESSOR_ASSEMBLER -> QUANTUM_PROCESSOR_ASSEMBLER_RECIPE_TYPE;
+            case QUANTUM_CRYOFORGE -> QUANTUM_CRYOFORGE_RECIPE_TYPE;
         };
     }
 
@@ -129,6 +135,7 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
     public void draw(UniversalMultiblockRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         this.background.draw(guiGraphics);
         this.progress.draw(guiGraphics, 105, 42);
+        guiGraphics.renderItem(controllerStackFor(this.machineKind), CONTROLLER_X, CONTROLLER_Y);
 
         guiGraphics.fill(9, 81, 100, 91, 0xFF101010);
 
@@ -167,7 +174,24 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
             );
         }
 
+        if (mouseX >= CONTROLLER_X && mouseX <= CONTROLLER_X + 16
+                && mouseY >= CONTROLLER_Y && mouseY <= CONTROLLER_Y + 16) {
+            return List.of(
+                    Component.literal("Controller"),
+                    Component.literal("Click the controller to open Multiblock Info")
+            );
+        }
+
         return List.of();
+    }
+
+    private static ItemStack controllerStackFor(UniversalMultiblockMachineKind machineKind) {
+        return switch (machineKind) {
+            case QMF -> MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().asItem().getDefaultInstance();
+            case QUANTUM_SLICER -> MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get().asItem().getDefaultInstance();
+            case QUANTUM_PROCESSOR_ASSEMBLER -> MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem().getDefaultInstance();
+            case QUANTUM_CRYOFORGE -> MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get().asItem().getDefaultInstance();
+        };
     }
 
     private static String formatEnergy(long energy) {

@@ -41,6 +41,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         qmfControllerBlock(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER);
         controllerWithBase(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER, "quantum_hyper_mechanical_casing");
         controllerWithBase(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER, "quantum_hyper_mechanical_casing");
+        controllerWithBase(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER, "quantum_hyper_mechanical_casing");
 
         // ═══════════════════ STELLAR NEXUS ═══════════════════
         stellarNexusControllerBlock(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER);

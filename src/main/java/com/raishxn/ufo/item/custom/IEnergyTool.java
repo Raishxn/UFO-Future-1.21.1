@@ -1,23 +1,16 @@
 package com.raishxn.ufo.item.custom;
 
 import com.raishxn.ufo.datagen.ModDataComponents;
-import com.raishxn.ufo.item.ModItems;
 import com.raishxn.ufo.item.ModTools;
-import com.raishxn.ufo.util.UfoPersistentEnergyStorage;
+import com.raishxn.ufo.util.ColorHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -56,42 +49,27 @@ public interface IEnergyTool {
         }
     }
 
-    // No arquivo IEnergyTool.java
-
-    // --- CORREÇÃO 2: O método agora aceita um booleano 'forward' ---
-    // No arquivo IEnergyTool.java
-
-    // O método agora é 'void' porque a rede o chama, ele não precisa retornar um valor.
-// E ele aceita um booleano para a direção.
     default void transformTool(Level level, Player player, InteractionHand hand, boolean forward) {
         if (!level.isClientSide()) {
             ItemStack currentStack = player.getItemInHand(hand);
             int currentIndex = currentStack.getOrDefault(ModDataComponents.TOOL_MODE_INDEX.get(), 0);
 
-            // Lógica para ciclar para frente ou para trás
             int nextIndex;
             if (forward) {
-                nextIndex = (currentIndex + 1) % TOOL_CYCLE.size(); // Próximo
+                nextIndex = (currentIndex + 1) % TOOL_CYCLE.size();
             } else {
-                nextIndex = (currentIndex - 1 + TOOL_CYCLE.size()) % TOOL_CYCLE.size(); // Anterior
+                nextIndex = (currentIndex - 1 + TOOL_CYCLE.size()) % TOOL_CYCLE.size();
             }
 
             Item nextItem = TOOL_CYCLE.get(nextIndex).get();
-            // Use transmuteCopy to preserve all custom NeoForge DataComponents automatically
-            // e.g., enchantments, durability, auto_smelt toggle, fast mode, etc.
             ItemStack nextStack = currentStack.transmuteCopy(nextItem, 1);
-
-            // Need to still explicitly reset the mode index property to match the new item type
             nextStack.set(ModDataComponents.TOOL_MODE_INDEX.get(), nextIndex);
-            
-            // Note: because we use transmuteCopy, the energy capability/NBT is fully preserved exactly as is!
             player.setItemInHand(hand, nextStack);
         }
     }
 
     default Component getName(ItemStack stack) {
-        MutableComponent name = Component.translatable(stack.getDescriptionId());
-        String text = name.getString();
+        String text = Component.translatable(stack.getDescriptionId()).getString();
 
         ChatFormatting[] rainbowColors = new ChatFormatting[]{
                 ChatFormatting.RED, ChatFormatting.GOLD, ChatFormatting.YELLOW,
@@ -99,14 +77,6 @@ public interface IEnergyTool {
                 ChatFormatting.LIGHT_PURPLE
         };
 
-        MutableComponent rainbowName = Component.empty();
-        long time = Util.getMillis();
-
-        for (int i = 0; i < text.length(); i++) {
-            int colorIndex = (int) (i * 0.5 + time / 200.0) % rainbowColors.length;
-            rainbowName.append(Component.literal(String.valueOf(text.charAt(i))).withStyle(rainbowColors[colorIndex]));
-        }
-
-        return rainbowName;
+        return ColorHelper.getSolidColoredText(text, rainbowColors);
     }
 }

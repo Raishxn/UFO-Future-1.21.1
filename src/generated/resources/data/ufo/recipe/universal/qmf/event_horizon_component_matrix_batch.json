@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 900000000,
+  "energy": 480000000,
   "fluid_inputs": [
     {
       "amount": 64000,
@@ -37,7 +37,7 @@
     }
   ],
   "item_output": {
-    "count": 8,
+    "count": 64,
     "id": "ufo:event_horizon_component_matrix"
   },
   "machine": "qmf",

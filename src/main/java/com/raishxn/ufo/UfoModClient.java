@@ -12,20 +12,24 @@ import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.event.ModTooltipEventHandler;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import appeng.init.client.InitScreens;
 import com.raishxn.ufo.client.gui.DimensionalMatterAssemblerScreen;
 import com.raishxn.ufo.screen.QuantumPatternHatchScreen;
+import com.raishxn.ufo.screen.QuantumCryoforgeControllerScreen;
 import com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerScreen;
 import com.raishxn.ufo.screen.QuantumSlicerControllerScreen;
 import com.raishxn.ufo.screen.StellarNexusControllerScreen;
 import com.raishxn.ufo.menu.UFOMenus;
+import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.init.ModMenus;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import com.raishxn.ufo.client.renderer.StellarNexusRenderer;
 import com.raishxn.ufo.init.ModBlockEntities;
@@ -35,6 +39,7 @@ public class UfoModClient {
 
     public UfoModClient(IEventBus eventBus) {
         eventBus.addListener(this::onClientSetup);
+        com.raishxn.ufo.compat.mekanism.UfoMekanismStorageCompat.initializeClient(eventBus);
         NeoForge.EVENT_BUS.register(ModTooltipEventHandler.class);
         eventBus.addListener(this::onRegisterKeyMappings);
         eventBus.addListener(this::registerScreens); // <--- Adicione esta linha
@@ -56,6 +61,7 @@ public class UfoModClient {
         InitScreens.register(event, ModMenus.QMF_CONTROLLER_MENU.get(), com.raishxn.ufo.screen.QmfControllerScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.QUANTUM_SLICER_CONTROLLER_MENU.get(), QuantumSlicerControllerScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU.get(), QuantumProcessorAssemblerControllerScreen::new, "/screens/universal_multiblock_controller.json");
+        InitScreens.register(event, ModMenus.QUANTUM_CRYOFORGE_CONTROLLER_MENU.get(), QuantumCryoforgeControllerScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), QuantumPatternHatchScreen::new, "/screens/quantum_pattern_hatch.json");
     }
 
@@ -68,6 +74,7 @@ public class UfoModClient {
 
     private void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            registerEnergyCellFillProperty(ModBlocks.UFO_ENERGY_CELL.get().asItem());
 
             ItemBlockRenderTypes.setRenderLayer(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(), RenderType.cutout());
             // Loop para os Storages (já existente)
@@ -87,6 +94,17 @@ public class UfoModClient {
                         new CraftingCubeModel(new ModCoProcessorModelProvider(tier))
                 );
             }
+        });
+    }
+
+    private static void registerEnergyCellFillProperty(Item item) {
+        ItemProperties.register(item, ResourceLocation.fromNamespaceAndPath("ae2", "fill_level"), (stack, level, entity, seed) -> {
+            if (!(item instanceof appeng.block.networking.EnergyCellBlockItem energyCellItem)) {
+                return 0.0F;
+            }
+            double currentPower = energyCellItem.getAECurrentPower(stack);
+            double maxPower = energyCellItem.getAEMaxPower(stack);
+            return maxPower <= 0 ? 0.0F : (float) (currentPower / maxPower);
         });
     }
 }

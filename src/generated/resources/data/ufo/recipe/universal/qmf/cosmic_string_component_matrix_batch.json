@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 2500000000,
+  "energy": 1200000000,
   "fluid_inputs": [
     {
       "amount": 128000,
@@ -37,7 +37,7 @@
     }
   ],
   "item_output": {
-    "count": 4,
+    "count": 64,
     "id": "ufo:cosmic_string_component_matrix"
   },
   "machine": "qmf",

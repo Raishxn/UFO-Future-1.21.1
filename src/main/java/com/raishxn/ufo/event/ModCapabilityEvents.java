@@ -11,6 +11,7 @@ import com.raishxn.ufo.util.ConfigType;
 import com.raishxn.ufo.util.IOMode;
 import com.raishxn.ufo.util.UfoPersistentEnergyStorage;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -66,6 +67,10 @@ public class ModCapabilityEvents {
                 ModBlockEntities.DIMENSIONAL_MATTER_ASSEMBLER_BE.get(),
                 AEBasePoweredBlockEntity::getEnergyStorage
         );
+
+        if (ModList.get().isLoaded("mekanism")) {
+            com.raishxn.ufo.compat.mekanism.MekanismChemicalCompat.registerCapabilities(event, ModBlockEntities.ME_MASSIVE_OUTPUT_HATCH_BE.get());
+        }
     }
 
     private static void registerItemCapabilities(RegisterCapabilitiesEvent event) {

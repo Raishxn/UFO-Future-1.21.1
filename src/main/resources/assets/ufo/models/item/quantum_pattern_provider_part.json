@@ -1,0 +1,8 @@
+{
+  "parent": "ae2:item/cable_pattern_provider",
+  "textures": {
+    "sides": "ufo:block/quantum_pattern_hatch_base",
+    "back": "ufo:block/quantum_pattern_hatch_base",
+    "front": "ufo:block/quantum_pattern_hatch_base"
+  }
+}

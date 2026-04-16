@@ -92,6 +92,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private boolean safeMode = true; // Default ON: auto-shutdown at 100% heat
     private int cooldownTimer = 0; // Ticks remaining for 30-min cooldown after overheat
     private static final int COOLDOWN_DURATION = 36000; // 30 minutes = 36000 ticks
+    private static final int COOLDOWN_SAVE_INTERVAL = 20;
 
     // Safe mode penalty — consumes 2.5x more resources
     private static final double SAFE_MODE_MULTIPLIER = 2.5;
@@ -209,8 +210,35 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             facing = currentState.getValue(net.minecraft.world.level.block.DirectionalBlock.FACING);
         }
         MultiblockPattern.MatchResult result = pattern.match(level, this.worldPosition, facing);
+        List<BlockPos> expectedE = pattern.getExpectedPositions(this.worldPosition, facing, 'E');
+        boolean hasUnloadedFieldPositions = false;
+        int tier1 = 0, tier2 = 0, tier3 = 0;
+        for (BlockPos ePos : expectedE) {
+            if (!level.isLoaded(ePos)) {
+                hasUnloadedFieldPositions = true;
+                continue;
+            }
+
+            Block block = level.getBlockState(ePos).getBlock();
+            if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get()) {
+                tier1++;
+            } else if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get()) {
+                tier2++;
+            } else if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get()) {
+                tier3++;
+            }
+        }
+
+        boolean waitingForChunks = result.hasUnloadedPositions() || hasUnloadedFieldPositions;
+        if (waitingForChunks && player == null) {
+            this.scanCooldown = 0;
+            this.structureDirty = true;
+            return;
+        }
 
         boolean wasAssembled = this.assembled;
+        this.structureDirty = false;
+        this.scanCooldown = 0;
         this.assembled = result.isValid();
 
         // Global Hatch Validation — no longer requires Fuel Hatch
@@ -238,18 +266,6 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             }
         }
 
-        // Count Fields independently from structure being fully valid
-        int tier1 = 0, tier2 = 0, tier3 = 0;
-        List<BlockPos> expectedE = pattern.getExpectedPositions(this.worldPosition, facing, 'E');
-        for (BlockPos ePos : expectedE) {
-            if (level.isLoaded(ePos)) {
-                Block block = level.getBlockState(ePos).getBlock();
-                if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get()) tier1++;
-                else if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get()) tier2++;
-                else if (block == MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get()) tier3++;
-            }
-        }
-
         int totalFound = tier1 + tier2 + tier3;
         int targetFields = expectedE.size();
 
@@ -274,7 +290,9 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
 
         // --- Player Feedback Logic ---
-        if (player != null && !this.assembled) {
+        if (player != null && waitingForChunks) {
+            player.displayClientMessage(Component.literal("§e§l[STELLAR NEXUS] §7Ainda aguardando chunks da estrutura carregarem. Tente novamente em alguns segundos."), false);
+        } else if (player != null && !this.assembled) {
             if (targetFields > 0 && (totalFound < targetFields || (tier1 > 0 && tier2 > 0) || (tier2 > 0 && tier3 > 0) || (tier1 > 0 && tier3 > 0))) {
                 player.displayClientMessage(Component.literal("§c§l[STELLAR NEXUS] §eIncomplete or Mixed Field Generators detected:"), false);
                 
@@ -361,8 +379,6 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         if (this.structureDirty) {
             this.scanCooldown++;
             if (this.scanCooldown >= 20) {
-                this.scanCooldown = 0;
-                this.structureDirty = false;
                 scanStructure(this.level);
             }
         }
@@ -374,8 +390,10 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             this.cooldownTimer--;
             if (this.cooldownTimer == 0) {
                 this.heatLevel = 0;
+                this.setChanged();
+            } else if (this.cooldownTimer % COOLDOWN_SAVE_INTERVAL == 0) {
+                this.setChanged();
             }
-            this.setChanged();
             return;
         }
 

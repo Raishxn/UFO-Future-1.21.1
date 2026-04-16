@@ -19,6 +19,7 @@ public class UniversalMultiblockRecipeBuilder {
     private final UniversalMultiblockMachineKind machine;
     private final List<UniversalMultiblockRecipe.ItemRequirement> itemInputs = new ArrayList<>();
     private final List<UniversalMultiblockRecipe.FluidRequirement> fluidInputs = new ArrayList<>();
+    private final List<UniversalMultiblockRecipe.ChemicalRequirement> chemicalInputs = new ArrayList<>();
     private ItemStack itemOutput = ItemStack.EMPTY;
     private long itemOutputAmount = 0L;
     private FluidStack fluidOutput = FluidStack.EMPTY;
@@ -43,6 +44,11 @@ public class UniversalMultiblockRecipeBuilder {
 
     public UniversalMultiblockRecipeBuilder inputFluid(Fluid fluid, long amount) {
         this.fluidInputs.add(new UniversalMultiblockRecipe.FluidRequirement(new FluidStack(fluid, 1), amount));
+        return this;
+    }
+
+    public UniversalMultiblockRecipeBuilder inputChemical(ResourceLocation chemicalId, long amount) {
+        this.chemicalInputs.add(new UniversalMultiblockRecipe.ChemicalRequirement(chemicalId, amount));
         return this;
     }
 
@@ -83,6 +89,7 @@ public class UniversalMultiblockRecipeBuilder {
                 this.name,
                 this.itemInputs,
                 this.fluidInputs,
+                this.chemicalInputs,
                 this.itemOutput,
                 this.itemOutputAmount,
                 this.fluidOutput,

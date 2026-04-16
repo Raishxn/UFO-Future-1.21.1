@@ -60,6 +60,7 @@ public class MultiblockPattern {
     public int getControllerLayer() { return controllerLayer; }
     public int getControllerRow() { return controllerRow; }
     public int getControllerCol() { return controllerCol; }
+    public Component getLegendName(char symbol) { return legendNames.getOrDefault(symbol, Component.literal("Unknown Block")); }
 
     private MultiblockPattern(char[][][] pattern, Map<Character, BlockPredicate> legend, Map<Character, Component> legendNames,
                               Map<Character, List<BlockState>> displayCandidates, char controllerChar) {

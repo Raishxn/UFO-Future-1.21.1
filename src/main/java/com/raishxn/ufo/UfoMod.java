@@ -60,6 +60,7 @@ public class UfoMod {
         ModMenus.register(modEventBus);
         com.raishxn.ufo.menu.UFOMenus.INSTANCE.register(modEventBus);
         ModSounds.register(modEventBus);
+        com.raishxn.ufo.compat.mekanism.UfoMekanismStorageCompat.initialize(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::loadComplete);

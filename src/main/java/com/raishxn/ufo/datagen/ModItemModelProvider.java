@@ -187,6 +187,13 @@ public class ModItemModelProvider extends ItemModelProvider {
             cellModel(ModCellItems.FLUID_CELL_750M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, ModCellItems.CELL_COMPONENT_750M);
             cellModel(ModCellItems.FLUID_CELL_SINGULARITY, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, ModCellItems.CELL_COMPONENT_INFINITY);
 
+            // Chemical Cells
+            cellModel(ModCellItems.CHEMICAL_CELL_40M, ModCellItems.PULSAR_CELL_HOUSING, ModCellItems.CELL_COMPONENT_40M);
+            cellModel(ModCellItems.CHEMICAL_CELL_100M, ModCellItems.PULSAR_CELL_HOUSING, ModCellItems.CELL_COMPONENT_100M);
+            cellModel(ModCellItems.CHEMICAL_CELL_250M, ModCellItems.PULSAR_CELL_HOUSING, ModCellItems.CELL_COMPONENT_250M);
+            cellModel(ModCellItems.CHEMICAL_CELL_750M, ModCellItems.PULSAR_CELL_HOUSING, ModCellItems.CELL_COMPONENT_750M);
+            cellModel(ModCellItems.CHEMICAL_CELL_SINGULARITY, ModCellItems.PULSAR_CELL_HOUSING, ModCellItems.CELL_COMPONENT_INFINITY);
+
 
         dynamicBucketItem(ModItems.NEUTRON_STAR_FRAGMENT_BUCKET, ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID);
         dynamicBucketItem(ModItems.PULSAR_FRAGMENT_BUCKET, ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID);

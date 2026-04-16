@@ -22,6 +22,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -43,18 +44,19 @@ public class ApocalypseTypeAEntity extends Monster implements GeoEntity {
     private static final RawAnimation BEAM = RawAnimation.begin().thenPlay("beam");
     private static final RawAnimation TELEPORT = RawAnimation.begin().thenPlay("teleport");
 
-    private static final int BASIC_ATTACK_DURATION = 18;
-    private static final int BASIC_ATTACK_HIT_TICK = 8;
-    private static final int BASIC_ATTACK_2_DURATION = 24;
-    private static final int BASIC_ATTACK_2_HIT_TICK = 12;
+    private static final int BASIC_ATTACK_DURATION = 30;
+    private static final int BASIC_ATTACK_HIT_TICK = 19;
+    private static final int BASIC_ATTACK_2_DURATION = 36;
+    private static final int BASIC_ATTACK_2_HIT_TICK = 24;
     private static final int COMBO_DURATION = 63;
     private static final int[] COMBO_HIT_TICKS = {12, 25, 40, 54};
     private static final int BEAM_DURATION = 109;
     private static final int BEAM_WINDUP_TICK = 18;
     private static final int BEAM_END_TICK = 96;
-    private static final int TELEPORT_DURATION = 16;
-    private static final int TELEPORT_STEP_TICK = 8;
+    private static final int TELEPORT_DURATION = 27;
+    private static final int TELEPORT_STEP_TICK = 14;
     private static final double AGGRO_RANGE = 48.0D;
+    private static final double BEAM_RANGE = AGGRO_RANGE;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final ServerBossEvent bossEvent = new ServerBossEvent(
@@ -297,7 +299,9 @@ public class ApocalypseTypeAEntity extends Monster implements GeoEntity {
             return;
         }
 
-        if (this.distanceToSqr(target) > reach * reach) {
+        boolean inRange = this.distanceToSqr(target) <= reach * reach;
+        boolean inAttackArc = this.isTargetInsideAttackArc(target, reach, 1.5D, 1.0D);
+        if (!inRange && !inAttackArc) {
             return;
         }
 
@@ -305,7 +309,9 @@ public class ApocalypseTypeAEntity extends Monster implements GeoEntity {
     }
 
     private void tryComboHit(LivingEntity target) {
-        if (this.distanceToSqr(target) > 36.0D) {
+        boolean inRange = this.distanceToSqr(target) <= 36.0D;
+        boolean inAttackArc = this.isTargetInsideAttackArc(target, 6.0D, 2.0D, 1.2D);
+        if (!inRange && !inAttackArc) {
             return;
         }
 
@@ -321,7 +327,7 @@ public class ApocalypseTypeAEntity extends Monster implements GeoEntity {
         }
 
         double distance = this.distanceToSqr(target);
-        if (distance > 24 * 24) {
+        if (distance > BEAM_RANGE * BEAM_RANGE) {
             return;
         }
 
@@ -350,6 +356,18 @@ public class ApocalypseTypeAEntity extends Monster implements GeoEntity {
         }
 
         return damaged;
+    }
+
+    private boolean isTargetInsideAttackArc(LivingEntity target, double forwardReach, double sidePadding, double verticalPadding) {
+        if (target == null || !target.isAlive()) {
+            return false;
+        }
+
+        AABB attackBox = this.getBoundingBox()
+                .inflate(sidePadding, verticalPadding, sidePadding)
+                .expandTowards(this.getLookAngle().normalize().scale(forwardReach));
+
+        return attackBox.intersects(target.getBoundingBox());
     }
 
     private void teleportNearTarget(LivingEntity target) {

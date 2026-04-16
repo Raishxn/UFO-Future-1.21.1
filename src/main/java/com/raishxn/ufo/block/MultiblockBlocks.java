@@ -62,6 +62,12 @@ public class MultiblockBlocks {
                     .requiresCorrectToolForDrops()
                     .lightLevel(state -> state.getValue(AbstractSimpleMultiblockControllerBlock.ACTIVE) ? 14 : 0)));
 
+    public static final DeferredBlock<QuantumCryoforgeControllerBlock> QUANTUM_CRYOFORGE_CONTROLLER = BLOCKS.register("quantum_cryoforge_controller",
+            () -> new QuantumCryoforgeControllerBlock(BlockBehaviour.Properties.of()
+                    .strength(50.0f, 1200.0f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> state.getValue(AbstractSimpleMultiblockControllerBlock.ACTIVE) ? 14 : 0)));
+
     public static final DeferredBlock<QuantumPatternHatchBlock> QUANTUM_PATTERN_HATCH = BLOCKS.register("quantum_pattern_hatch",
             QuantumPatternHatchBlock::new);
 

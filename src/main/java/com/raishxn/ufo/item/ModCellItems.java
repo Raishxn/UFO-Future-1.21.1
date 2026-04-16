@@ -7,6 +7,7 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.item.custom.AnimatedNameItem;
 import com.raishxn.ufo.item.custom.cell.AEBigIntegerCellItem;
 import com.raishxn.ufo.item.custom.cell.AnimatedAEBigIntegerCellItem;
+import com.raishxn.ufo.item.custom.cell.ChemicalAEBigIntegerCellItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
@@ -60,6 +61,18 @@ public final class ModCellItems {
             () -> new AnimatedAEBigIntegerCellItem(new Item.Properties().stacksTo(1), TIER_750M.idleDrain(), AEKeyType.fluids(), TIER_750M, "item.ufo.neutron_star_fluid_cell", "ufo.cell_tier.core", new ChatFormatting[]{ChatFormatting.WHITE, ChatFormatting.BLUE, ChatFormatting.DARK_BLUE, ChatFormatting.AQUA}, ChatFormatting.BLUE, ChatFormatting.DARK_PURPLE));
     public static final DeferredHolder<Item, AEBigIntegerCellItem> FLUID_CELL_SINGULARITY = ITEMS.register("neutron_star_reservoir_singularity",
             () -> new AnimatedAEBigIntegerCellItem(new Item.Properties().stacksTo(1), 7.5D, AEKeyType.fluids(), TIER_INFINITY, "item.ufo.neutron_star_fluid_cell", "ufo.cell_tier.singularity", new ChatFormatting[]{ChatFormatting.WHITE, ChatFormatting.BLUE, ChatFormatting.DARK_BLUE, ChatFormatting.AQUA}, ChatFormatting.GREEN, ChatFormatting.DARK_GREEN));
+
+    // Chemical Cells: Pulsar Chamber (cores base roxo)
+    public static final DeferredHolder<Item, AEBigIntegerCellItem> CHEMICAL_CELL_40M = ITEMS.register("pulsar_chamber_echo",
+            () -> new ChemicalAEBigIntegerCellItem(new Item.Properties().stacksTo(1), TIER_40M.idleDrain(), TIER_40M, "item.ufo.pulsar_chemical_cell", "ufo.cell_tier.echo", new ChatFormatting[]{ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE}, ChatFormatting.RED, ChatFormatting.GOLD, ChatFormatting.RED));
+    public static final DeferredHolder<Item, AEBigIntegerCellItem> CHEMICAL_CELL_100M = ITEMS.register("pulsar_chamber_beaco",
+            () -> new ChemicalAEBigIntegerCellItem(new Item.Properties().stacksTo(1), TIER_100M.idleDrain(), TIER_100M, "item.ufo.pulsar_chemical_cell", "ufo.cell_tier.beacon", new ChatFormatting[]{ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE}, ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE));
+    public static final DeferredHolder<Item, AEBigIntegerCellItem> CHEMICAL_CELL_250M = ITEMS.register("pulsar_chamber_nexus",
+            () -> new ChemicalAEBigIntegerCellItem(new Item.Properties().stacksTo(1), TIER_250M.idleDrain(), TIER_250M, "item.ufo.pulsar_chemical_cell", "ufo.cell_tier.nexus", new ChatFormatting[]{ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE}, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA));
+    public static final DeferredHolder<Item, AEBigIntegerCellItem> CHEMICAL_CELL_750M = ITEMS.register("pulsar_chamber_core",
+            () -> new ChemicalAEBigIntegerCellItem(new Item.Properties().stacksTo(1), TIER_750M.idleDrain(), TIER_750M, "item.ufo.pulsar_chemical_cell", "ufo.cell_tier.core", new ChatFormatting[]{ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE}, ChatFormatting.BLUE, ChatFormatting.DARK_PURPLE));
+    public static final DeferredHolder<Item, AEBigIntegerCellItem> CHEMICAL_CELL_SINGULARITY = ITEMS.register("pulsar_chamber_singularity",
+            () -> new ChemicalAEBigIntegerCellItem(new Item.Properties().stacksTo(1), 7.5D, TIER_INFINITY, "item.ufo.pulsar_chemical_cell", "ufo.cell_tier.singularity", new ChatFormatting[]{ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE}, ChatFormatting.GREEN, ChatFormatting.DARK_GREEN));
 
 
     private static DeferredHolder<Item, Item> component(String idSuffix, int kibiBytes) {

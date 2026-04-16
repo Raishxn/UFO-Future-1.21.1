@@ -1,7 +1,13 @@
 package com.raishxn.ufo.item;
 
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartItem;
+import appeng.api.parts.PartModels;
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
+import appeng.block.networking.EnergyCellBlockItem;
+import appeng.items.parts.PartItem;
+import appeng.items.parts.PartModelsHelper;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.datagen.ModDataComponents;
@@ -10,6 +16,7 @@ import com.raishxn.ufo.init.ModEntities;
 import com.raishxn.ufo.item.custom.*;
 import com.raishxn.ufo.item.InfinityCell;
 import com.raishxn.ufo.item.custom.ThermalArmorItem;
+import com.raishxn.ufo.part.QuantumPatternProviderPart;
 import mekanism.common.registries.MekanismItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -200,9 +207,18 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get(), new Item.Properties(),
                      ChatFormatting.LIGHT_PURPLE, ChatFormatting.AQUA, ChatFormatting.BLUE, ChatFormatting.WHITE));
 
+     public static final DeferredItem<Item> QUANTUM_CRYOFORGE_CONTROLLER = ITEMS.register("quantum_cryoforge_controller",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.BLUE, ChatFormatting.DARK_AQUA));
+
      public static final DeferredItem<Item> QUANTUM_PATTERN_HATCH = ITEMS.register("quantum_pattern_hatch",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get(), new Item.Properties(),
                      ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.DARK_AQUA, ChatFormatting.BLUE));
+
+     public static final DeferredItem<Item> QUANTUM_PATTERN_PROVIDER_PART = registerPartItem(
+             "quantum_pattern_provider_part",
+             QuantumPatternProviderPart.class,
+             QuantumPatternProviderPart::new);
 
      // ═══════════════════════════════════════════════════════════
      //  STELLAR NEXUS — Block Items
@@ -227,6 +243,12 @@ public class ModItems {
      public static final DeferredItem<Item> AE_ENERGY_INPUT_HATCH = ITEMS.register("ae_energy_input_hatch",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get(), new Item.Properties(),
                      ChatFormatting.YELLOW, ChatFormatting.GOLD, ChatFormatting.WHITE));
+
+     public static final DeferredItem<Item> UFO_ENERGY_CELL = ITEMS.register("ufo_energy_cell",
+             () -> new EnergyCellBlockItem(com.raishxn.ufo.block.ModBlocks.UFO_ENERGY_CELL.get(), new Item.Properties()));
+
+      public static final DeferredItem<Item> QUANTUM_ENERGY_CELL = ITEMS.register("quantum_energy_cell",
+             () -> new BlockItem(com.raishxn.ufo.block.ModBlocks.QUANTUM_ENERGY_CELL.get(), new Item.Properties()));
 
 
 
@@ -449,5 +471,13 @@ public class ModItems {
         ModTools.register(eventBus);
         ModArmor.register(eventBus);
         // Add new grouped registries as we create them
+    }
+
+    private static <T extends IPart> DeferredItem<Item> registerPartItem(
+            String id,
+            Class<T> partClass,
+            java.util.function.Function<IPartItem<T>, T> factory) {
+        PartModels.registerModels(PartModelsHelper.createModels(partClass));
+        return ITEMS.register(id, () -> new PartItem<>(new Item.Properties(), partClass, factory));
     }
 }

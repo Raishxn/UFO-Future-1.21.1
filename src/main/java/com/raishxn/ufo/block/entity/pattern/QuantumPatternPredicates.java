@@ -36,6 +36,18 @@ public final class QuantumPatternPredicates {
         return state.is(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get());
     }
 
+    public static boolean isUniversalHatch(BlockState state) {
+        return state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())
+                || state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())
+                || state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
+                || state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
+                || state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get());
+    }
+
+    public static boolean isQuantumCasingOrUniversalHatch(BlockState state) {
+        return isQuantumCasing(state) || isUniversalHatch(state);
+    }
+
     public static boolean isAnyFieldGenerator(BlockState state) {
         return state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())
                 || state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())
@@ -49,6 +61,10 @@ public final class QuantumPatternPredicates {
 
     public static Component casingName() {
         return Component.literal("Quantum Hyper Mechanical Casing");
+    }
+
+    public static Component casingOrHatchName() {
+        return Component.literal("Quantum Hyper Mechanical Casing or Universal Hatch");
     }
 
     public static Component patternHatchName() {
@@ -69,5 +85,24 @@ public final class QuantumPatternPredicates {
 
     public static Component glassName() {
         return Component.literal("AE2 Quartz Vibrant Glass");
+    }
+
+    public static List<BlockState> glassCandidates() {
+        Block block = BuiltInRegistries.BLOCK.get(AE2_QUARTZ_VIBRANT_GLASS);
+        if (block == null || block == Blocks.AIR) {
+            return List.of();
+        }
+        return List.of(block.defaultBlockState());
+    }
+
+    public static List<BlockState> casingAndHatchCandidates() {
+        return List.of(
+                MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get().defaultBlockState(),
+                MultiblockBlocks.QUANTUM_PATTERN_HATCH.get().defaultBlockState(),
+                MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get().defaultBlockState(),
+                MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get().defaultBlockState(),
+                MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get().defaultBlockState(),
+                MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get().defaultBlockState()
+        );
     }
 }

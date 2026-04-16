@@ -9,6 +9,7 @@ public class ParallelProcessState {
     private long energyBuffer;
     private long[] itemBuffers = new long[0];
     private long[] fluidBuffers = new long[0];
+    private long[] chemicalBuffers = new long[0];
     private int progress;
     private boolean patternPushed;
 
@@ -29,22 +30,27 @@ public class ParallelProcessState {
         this.energyBuffer = 0L;
         this.itemBuffers = new long[0];
         this.fluidBuffers = new long[0];
+        this.chemicalBuffers = new long[0];
         this.progress = 0;
         this.patternPushed = false;
     }
 
-    public void resizeBuffers(int itemSize, int fluidSize) {
+    public void resizeBuffers(int itemSize, int fluidSize, int chemicalSize) {
         if (this.itemBuffers.length != itemSize) {
             this.itemBuffers = new long[itemSize];
         }
         if (this.fluidBuffers.length != fluidSize) {
             this.fluidBuffers = new long[fluidSize];
         }
+        if (this.chemicalBuffers.length != chemicalSize) {
+            this.chemicalBuffers = new long[chemicalSize];
+        }
     }
 
     public void clearBuffers() {
         java.util.Arrays.fill(this.itemBuffers, 0L);
         java.util.Arrays.fill(this.fluidBuffers, 0L);
+        java.util.Arrays.fill(this.chemicalBuffers, 0L);
     }
 
     public long getEnergyBuffer() {
@@ -61,6 +67,10 @@ public class ParallelProcessState {
 
     public long[] getFluidBuffers() {
         return fluidBuffers;
+    }
+
+    public long[] getChemicalBuffers() {
+        return chemicalBuffers;
     }
 
     public int getProgress() {
@@ -96,6 +106,12 @@ public class ParallelProcessState {
             }
         }
 
+        for (long amount : this.chemicalBuffers) {
+            if (amount > 0L) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -107,6 +123,7 @@ public class ParallelProcessState {
         tag.putLong("energyBuffer", this.energyBuffer);
         tag.putLongArray("itemBuffers", this.itemBuffers);
         tag.putLongArray("fluidBuffers", this.fluidBuffers);
+        tag.putLongArray("chemicalBuffers", this.chemicalBuffers);
         tag.putInt("progress", this.progress);
         tag.putBoolean("patternPushed", this.patternPushed);
         return tag;
@@ -117,6 +134,7 @@ public class ParallelProcessState {
         this.energyBuffer = tag.getLong("energyBuffer");
         this.itemBuffers = tag.getLongArray("itemBuffers");
         this.fluidBuffers = tag.getLongArray("fluidBuffers");
+        this.chemicalBuffers = tag.getLongArray("chemicalBuffers");
         this.progress = tag.getInt("progress");
         this.patternPushed = tag.getBoolean("patternPushed");
     }

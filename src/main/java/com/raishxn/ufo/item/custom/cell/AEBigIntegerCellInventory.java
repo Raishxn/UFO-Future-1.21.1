@@ -95,6 +95,7 @@ public class AEBigIntegerCellInventory implements StorageCell
     {
         if (amount <= 0) return 0;
         if (what.getType() != cellType.getKeyType()) return 0; // REJECT MISMATCHED KEY TYPES (e.g. Fluids in Item Cells)
+        if (cellType.isBlackListed(itemStack, what)) return 0;
         if (!matchesPartitionAndUpgrades(what)) return 0;
         if (!canNestStorageCells(what)) return 0;
 

@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 1800000000,
+  "energy": 960000000,
   "fluid_inputs": [
     {
       "amount": 128000,
@@ -49,11 +49,11 @@
     }
   ],
   "item_output": {
-    "count": 4,
+    "count": 64,
     "id": "ufo:dark_matter"
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/dark_matter_batch",
   "required_tier": 2,
-  "time": 24000
+  "time": 2400
 }

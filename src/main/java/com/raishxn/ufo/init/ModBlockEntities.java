@@ -1,7 +1,10 @@
 package com.raishxn.ufo.init;
 
 import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.crafting.CraftingBlockEntity;
+import appeng.blockentity.networking.CreativeEnergyCellBlockEntity;
+import appeng.blockentity.networking.EnergyCellBlockEntity;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.ModBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -58,6 +61,32 @@ public class ModBlockEntities {
                 return type;
             });
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyCellBlockEntity>> UFO_ENERGY_CELL_BE =
+            BLOCK_ENTITIES.register("ufo_energy_cell", () -> {
+                final AtomicReference<BlockEntityType<EnergyCellBlockEntity>> typeHolder = new AtomicReference<>();
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new EnergyCellBlockEntity(typeHolder.get(), pos, state),
+                        ModBlocks.UFO_ENERGY_CELL.get()
+                ).build(null);
+                typeHolder.set(type);
+                AEBaseBlockEntity.registerBlockEntityItem(type, ModBlocks.UFO_ENERGY_CELL.get().asItem());
+                ModBlocks.UFO_ENERGY_CELL.get().setBlockEntity(EnergyCellBlockEntity.class, type, null, null);
+                return type;
+            });
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CreativeEnergyCellBlockEntity>> QUANTUM_ENERGY_CELL_BE =
+            BLOCK_ENTITIES.register("quantum_energy_cell", () -> {
+                final AtomicReference<BlockEntityType<CreativeEnergyCellBlockEntity>> typeHolder = new AtomicReference<>();
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new CreativeEnergyCellBlockEntity(typeHolder.get(), pos, state),
+                        ModBlocks.QUANTUM_ENERGY_CELL.get()
+                ).build(null);
+                typeHolder.set(type);
+                AEBaseBlockEntity.registerBlockEntityItem(type, ModBlocks.QUANTUM_ENERGY_CELL.get().asItem());
+                ModBlocks.QUANTUM_ENERGY_CELL.get().setBlockEntity(CreativeEnergyCellBlockEntity.class, type, null, null);
+                return type;
+            });
+
     // ═══════════════════════════════════════════════════════════
     //  QUANTUM MATTER FABRICATOR — Block Entities
     // ═══════════════════════════════════════════════════════════
@@ -81,6 +110,12 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("quantum_processor_assembler_controller", () -> BlockEntityType.Builder.of(
                     (pos, state) -> new com.raishxn.ufo.block.entity.QuantumProcessorAssemblerControllerBE(pos, state),
                     com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get()
+            ).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumCryoforgeControllerBE>> QUANTUM_CRYOFORGE_CONTROLLER_BE =
+            BLOCK_ENTITIES.register("quantum_cryoforge_controller", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> new com.raishxn.ufo.block.entity.QuantumCryoforgeControllerBE(pos, state),
+                    com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get()
             ).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternHatchBE>> QUANTUM_PATTERN_HATCH_BE =
