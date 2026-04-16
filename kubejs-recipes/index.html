@@ -1,0 +1,2229 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://raishxn.github.io/UFO-Future-1.21.1/kubejs-recipes/">
+      
+      
+        <link rel="prev" href="../catalysts/">
+      
+      
+        <link rel="next" href="../tools/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../pt/kubejs-recipes/" hreflang="pt">
+        
+          <link rel="alternate" href="../es/kubejs-recipes/" hreflang="es">
+        
+          <link rel="alternate" href="../zh/kubejs-recipes/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>KubeJS Recipes - UFO Future Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kubejs-recipes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="UFO Future Documentation" class="md-header__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UFO Future Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              KubeJS Recipes
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../pt/kubejs-recipes/" hreflang="pt" class="md-select__link">
+              Portugues
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../es/kubejs-recipes/" hreflang="es" class="md-select__link">
+              Espanol
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../zh/kubejs-recipes/" hreflang="zh" class="md-select__link">
+              Zhongwen
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../mega-storage/" class="md-tabs__link">
+          
+  
+  
+  Wiki
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="UFO Future Documentation" class="md-nav__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UFO Future Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wiki
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Wiki
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mega-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mega Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../containment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stellar-nexus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stellar Nexus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dimensional Matter Assembler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-matter-fabricator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Matter Fabricator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-slicer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Slicer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-processor-assembler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Processor Assembler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multiblock-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multiblock Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../catalysts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalysts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KubeJS Recipes
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KubeJS Recipes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#covered-recipe-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Covered Recipe Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DMA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DMA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tag-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag Inputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stellar-nexus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stellar Nexus
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stellar Nexus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-structure_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ae2-genericstack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AE2 GenericStack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#universal-multiblock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Universal Multiblock
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Universal Multiblock">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Machines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-structure_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-qmf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example - QMF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-quantum-processor-assembler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example - Quantum Processor Assembler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-quantum-cryoforge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example - Quantum Cryoforge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-quantum-slicer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example - Quantum Slicer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#legacy-qmf-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legacy QMF Compatibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Legacy QMF Compatibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datapack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datapack
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools & Weapons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../armor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Armor Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage-cells/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Cells
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../materials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Materials & Fluids
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../progression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Crafting Progression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipe-balance-audit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recipe Balance Audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#covered-recipe-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Covered Recipe Types
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DMA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DMA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tag-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag Inputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stellar-nexus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stellar Nexus
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stellar Nexus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-structure_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ae2-genericstack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AE2 GenericStack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#universal-multiblock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Universal Multiblock
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Universal Multiblock">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-machines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Machines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-structure_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-qmf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example - QMF
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-quantum-processor-assembler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example - Quantum Processor Assembler
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-quantum-cryoforge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example - Quantum Cryoforge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-quantum-slicer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example - Quantum Slicer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removal_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#legacy-qmf-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legacy QMF Compatibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Legacy QMF Compatibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#datapack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Datapack
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="kubejs-recipes">KubeJS Recipes</h1>
+<p>This page documents how to create, modify, and remove custom recipes via <a href="https://kubejs.com/">KubeJS</a> for the main UFO Future multiblocks in Minecraft 1.21.1 (NeoForge).</p>
+<h2 id="covered-recipe-types">Covered Recipe Types</h2>
+<ul>
+<li><code>ufo:dimensional_assembly</code></li>
+<li><code>ufo:stellar_simulation</code></li>
+<li><code>ufo:universal_multiblock</code></li>
+<li><code>ufo:qmf_recipe</code> (legacy, still supported by QMF)</li>
+</ul>
+<hr />
+<h2 id="dma">DMA</h2>
+<h3 id="type">Type</h3>
+<pre><code class="language-txt">ufo:dimensional_assembly
+</code></pre>
+<h3 id="basic-structure">Basic Structure</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>item_inputs</code></td>
+<td>Array</td>
+<td>Yes</td>
+<td>Item ingredients with counts</td>
+</tr>
+<tr>
+<td><code>fluid_inputs</code></td>
+<td>Array</td>
+<td>No</td>
+<td>Fluid ingredients with amounts in mB</td>
+</tr>
+<tr>
+<td><code>item_outputs</code></td>
+<td>Array</td>
+<td>No</td>
+<td>Item outputs</td>
+</tr>
+<tr>
+<td><code>fluid_outputs</code></td>
+<td>Array</td>
+<td>No</td>
+<td>Fluid outputs</td>
+</tr>
+<tr>
+<td><code>energy</code></td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Total AE energy consumed</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Time in ticks</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>At least one output must exist: <code>item_outputs</code> or <code>fluid_outputs</code>.</p>
+</blockquote>
+<h3 id="example">Example</h3>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.custom({
+    type: 'ufo:dimensional_assembly',
+    item_inputs: [
+      {
+        ingredient: { item: 'minecraft:diamond' },
+        count: 4
+      },
+      {
+        ingredient: { item: 'minecraft:netherite_ingot' },
+        count: 1
+      }
+    ],
+    fluid_inputs: [
+      {
+        ingredient: { fluid: 'ufo:source_liquid_starlight_fluid' },
+        amount: 500
+      }
+    ],
+    item_outputs: [
+      {
+        id: 'ufo:quantum_anomaly',
+        amount: 1
+      }
+    ],
+    fluid_outputs: [],
+    energy: 1000000,
+    time: 400
+  }).id('kubejs:custom_quantum_anomaly')
+})
+</code></pre>
+<h3 id="tag-inputs">Tag Inputs</h3>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.custom({
+    type: 'ufo:dimensional_assembly',
+    item_inputs: [
+      {
+        ingredient: { tag: 'c:ingots/iron' },
+        count: 16
+      }
+    ],
+    fluid_inputs: [],
+    item_outputs: [
+      {
+        id: 'ufo:obsidian_matrix',
+        amount: 2
+      }
+    ],
+    fluid_outputs: [],
+    energy: 50000,
+    time: 100
+  }).id('kubejs:tagged_obsidian_matrix')
+})
+</code></pre>
+<h3 id="removal">Removal</h3>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.remove({ id: 'ufo:dma/quantum_anomaly' })
+  event.remove({ type: 'ufo:dimensional_assembly', output: 'ufo:quantum_anomaly' })
+})
+</code></pre>
+<h3 id="notes">Notes</h3>
+<ul>
+<li>DMA recipes are shapeless.</li>
+<li>DMA supports up to 9 item inputs.</li>
+<li>Coolant is not part of the recipe definition.</li>
+</ul>
+<hr />
+<h2 id="stellar-nexus">Stellar Nexus</h2>
+<h3 id="type_1">Type</h3>
+<pre><code class="language-txt">ufo:stellar_simulation
+</code></pre>
+<h3 id="basic-structure_1">Basic Structure</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>simulation_name</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>Name shown in the controller</td>
+</tr>
+<tr>
+<td><code>item_inputs</code></td>
+<td>Array</td>
+<td>Yes</td>
+<td>Items consumed from the ME network</td>
+</tr>
+<tr>
+<td><code>fluid_inputs</code></td>
+<td>Array</td>
+<td>No</td>
+<td>Fluids consumed from the ME network</td>
+</tr>
+<tr>
+<td><code>item_outputs</code></td>
+<td>Array</td>
+<td>No</td>
+<td>Produced items in AE2 GenericStack format</td>
+</tr>
+<tr>
+<td><code>fluid_outputs</code></td>
+<td>Array</td>
+<td>No</td>
+<td>Produced fluids in AE2 GenericStack format</td>
+</tr>
+<tr>
+<td><code>energy</code></td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Total AE energy</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Duration in ticks</td>
+</tr>
+<tr>
+<td><code>cooling_level</code></td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Thermal stress from 0 to 3</td>
+</tr>
+<tr>
+<td><code>field_tier</code></td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Minimum field generator tier</td>
+</tr>
+<tr>
+<td><code>fuel_fluid</code></td>
+<td>String</td>
+<td>No</td>
+<td>Fuel fluid id</td>
+</tr>
+<tr>
+<td><code>fuel_amount</code></td>
+<td>Integer</td>
+<td>No</td>
+<td>Fuel amount in mB</td>
+</tr>
+<tr>
+<td><code>coolant_fluid</code></td>
+<td>String</td>
+<td>No</td>
+<td>Coolant fluid id</td>
+</tr>
+<tr>
+<td><code>coolant_amount</code></td>
+<td>Integer</td>
+<td>No</td>
+<td>Coolant amount in mB</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ae2-genericstack">AE2 GenericStack</h3>
+<pre><code class="language-json">{ &quot;#&quot;: 15000000, &quot;#t&quot;: &quot;ae2:i&quot;, &quot;id&quot;: &quot;minecraft:iron_ingot&quot; }
+</code></pre>
+<ul>
+<li><code>#</code> = amount</li>
+<li><code>#t</code> = type: <code>ae2:i</code> for item, <code>ae2:f</code> for fluid</li>
+<li><code>id</code> = full registry id</li>
+</ul>
+<h3 id="example_1">Example</h3>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.custom({
+    type: 'ufo:stellar_simulation',
+    simulation_name: 'Custom Void Harvest',
+    item_inputs: [
+      {
+        amount: 8,
+        ingredient: { item: 'ufo:enriched_neutronium_sphere' }
+      },
+      {
+        amount: 4,
+        ingredient: { item: 'minecraft:nether_star' }
+      }
+    ],
+    fluid_inputs: [
+      {
+        amount: 200000,
+        ingredient: { fluid: 'ufo:raw_star_matter_plasma' }
+      }
+    ],
+    item_outputs: [
+      { '#': 5000000, '#t': 'ae2:i', id: 'minecraft:ender_pearl' },
+      { '#': 2000000, '#t': 'ae2:i', id: 'minecraft:blaze_rod' }
+    ],
+    fluid_outputs: [
+      { '#': 100000, '#t': 'ae2:f', id: 'ufo:liquid_starlight' }
+    ],
+    energy: 300000000,
+    time: 30000,
+    cooling_level: 2,
+    field_tier: 2,
+    fuel_fluid: 'mekanism:hydrogen',
+    fuel_amount: 20000,
+    coolant_fluid: 'ufo:source_gelid_cryotheum',
+    coolant_amount: 25000
+  }).id('kubejs:custom_void_harvest')
+})
+</code></pre>
+<h3 id="removal_1">Removal</h3>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.remove({ id: 'ufo:stellar_simulation/iron_core_fusion' })
+  event.remove({ type: 'ufo:stellar_simulation' })
+})
+</code></pre>
+<hr />
+<h2 id="universal-multiblock">Universal Multiblock</h2>
+<p>This is the recommended format for the other mass-automation multiblocks.</p>
+<h3 id="type_2">Type</h3>
+<pre><code class="language-txt">ufo:universal_multiblock
+</code></pre>
+<h3 id="supported-machines">Supported Machines</h3>
+<ul>
+<li><code>machine: 'qmf'</code></li>
+<li><code>machine: 'quantum_slicer'</code></li>
+<li><code>machine: 'quantum_processor_assembler'</code></li>
+<li><code>machine: 'quantum_cryoforge'</code></li>
+</ul>
+<h3 id="basic-structure_2">Basic Structure</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>machine</code></td>
+<td>String</td>
+<td>Yes</td>
+<td>Target multiblock</td>
+</tr>
+<tr>
+<td><code>recipe_name</code></td>
+<td>String</td>
+<td>No</td>
+<td>Internal/display name</td>
+</tr>
+<tr>
+<td><code>item_inputs</code></td>
+<td>Array</td>
+<td>Yes</td>
+<td>Item inputs with amounts</td>
+</tr>
+<tr>
+<td><code>fluid_inputs</code></td>
+<td>Array</td>
+<td>No</td>
+<td>Fluid inputs with amounts in mB</td>
+</tr>
+<tr>
+<td><code>item_output</code></td>
+<td>Object</td>
+<td>No</td>
+<td>Single item output</td>
+</tr>
+<tr>
+<td><code>fluid_output</code></td>
+<td>Object</td>
+<td>No</td>
+<td>Single fluid output</td>
+</tr>
+<tr>
+<td><code>fluid_output_amount</code></td>
+<td>Integer</td>
+<td>No</td>
+<td>Total produced fluid amount in mB</td>
+</tr>
+<tr>
+<td><code>energy</code></td>
+<td>Integer/Long</td>
+<td>Yes</td>
+<td>Total AE energy</td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>Integer</td>
+<td>Yes</td>
+<td>Time in ticks</td>
+</tr>
+<tr>
+<td><code>required_tier</code></td>
+<td>Integer</td>
+<td>No</td>
+<td>Minimum machine tier</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>At least one output must exist: <code>item_output</code> or <code>fluid_output</code>.</p>
+</blockquote>
+<h3 id="formats">Formats</h3>
+<p>Item input:</p>
+<pre><code class="language-json">{
+  &quot;ingredient&quot;: { &quot;item&quot;: &quot;minecraft:diamond&quot; },
+  &quot;amount&quot;: 64
+}
+</code></pre>
+<p>Tag input:</p>
+<pre><code class="language-json">{
+  &quot;ingredient&quot;: { &quot;tag&quot;: &quot;c:ingots/iron&quot; },
+  &quot;amount&quot;: 256
+}
+</code></pre>
+<p>Fluid input:</p>
+<pre><code class="language-json">{
+  &quot;fluid&quot;: {
+    &quot;id&quot;: &quot;ufo:uu_matter&quot;,
+    &quot;amount&quot;: 1
+  },
+  &quot;amount&quot;: 128000
+}
+</code></pre>
+<p>Item output:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;ufo:dimensional_processor&quot;,
+  &quot;count&quot;: 64
+}
+</code></pre>
+<p>Fluid output:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;ufo:source_stable_coolant&quot;,
+  &quot;amount&quot;: 1
+}
+</code></pre>
+<p>Combined with:</p>
+<pre><code class="language-json">&quot;fluid_output_amount&quot;: 128000
+</code></pre>
+<h3 id="example-qmf">Example - QMF</h3>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.custom({
+    type: 'ufo:universal_multiblock',
+    machine: 'qmf',
+    recipe_name: 'kubejs/qmf/corporeal_matter_batch',
+    item_inputs: [
+      {
+        ingredient: { item: 'ufo:proto_matter' },
+        amount: 128
+      },
+      {
+        ingredient: { item: 'minecraft:iron_block' },
+        amount: 4096
+      },
+      {
+        ingredient: { item: 'ufo:obsidian_matrix' },
+        amount: 1024
+      }
+    ],
+    fluid_inputs: [
+      {
+        fluid: {
+          id: 'ufo:uu_matter',
+          amount: 1
+        },
+        amount: 256000
+      }
+    ],
+    item_output: {
+      id: 'ufo:corporeal_matter',
+      count: 64
+    },
+    energy: 1280000000,
+    time: 3600,
+    required_tier: 1
+  }).id('kubejs:qmf_corporeal_matter_batch')
+})
+</code></pre>
+<h3 id="example-quantum-processor-assembler">Example - Quantum Processor Assembler</h3>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.custom({
+    type: 'ufo:universal_multiblock',
+    machine: 'quantum_processor_assembler',
+    recipe_name: 'kubejs/quantum_processor_assembler/dimensional_processor',
+    item_inputs: [
+      {
+        ingredient: { item: 'ufo:printed_dimensional_processor' },
+        amount: 64
+      },
+      {
+        ingredient: { item: 'ae2:printed_silicon' },
+        amount: 64
+      },
+      {
+        ingredient: { item: 'ae2:fluix_dust' },
+        amount: 128
+      }
+    ],
+    item_output: {
+      id: 'ufo:dimensional_processor',
+      count: 64
+    },
+    energy: 12000000,
+    time: 1200
+  }).id('kubejs:quantum_processor_assembler_dimensional_processor')
+})
+</code></pre>
+<h3 id="example-quantum-cryoforge">Example - Quantum Cryoforge</h3>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.custom({
+    type: 'ufo:universal_multiblock',
+    machine: 'quantum_cryoforge',
+    recipe_name: 'kubejs/quantum_cryoforge/stable_coolant_t3',
+    item_inputs: [
+      {
+        ingredient: { item: 'minecraft:blue_ice' },
+        amount: 256
+      },
+      {
+        ingredient: { item: 'ufo:obsidian_matrix' },
+        amount: 64
+      },
+      {
+        ingredient: { item: 'ufo:quantum_anomaly' },
+        amount: 16
+      }
+    ],
+    fluid_inputs: [
+      {
+        fluid: {
+          id: 'ufo:source_gelid_cryotheum',
+          amount: 1
+        },
+        amount: 128000
+      }
+    ],
+    fluid_output: {
+      id: 'ufo:source_stable_coolant',
+      amount: 1
+    },
+    fluid_output_amount: 128000,
+    energy: 50000000,
+    time: 9600,
+    required_tier: 3
+  }).id('kubejs:quantum_cryoforge_stable_coolant_t3')
+})
+</code></pre>
+<h3 id="example-quantum-slicer">Example - Quantum Slicer</h3>
+<p>There are currently no generated datapack examples for Quantum Slicer, but the serializer already accepts custom recipes in the same format:</p>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.custom({
+    type: 'ufo:universal_multiblock',
+    machine: 'quantum_slicer',
+    recipe_name: 'kubejs/quantum_slicer/printed_singularity_core',
+    item_inputs: [
+      {
+        ingredient: { item: 'ae2:singularity' },
+        amount: 1
+      },
+      {
+        ingredient: { item: 'ufo:obsidian_matrix' },
+        amount: 8
+      },
+      {
+        ingredient: { tag: 'c:dusts/fluix' },
+        amount: 64
+      }
+    ],
+    fluid_inputs: [
+      {
+        fluid: {
+          id: 'ufo:source_temporal_fluid',
+          amount: 1
+        },
+        amount: 16000
+      }
+    ],
+    item_output: {
+      id: 'ufo:printed_dimensional_processor',
+      count: 8
+    },
+    energy: 64000000,
+    time: 900,
+    required_tier: 2
+  }).id('kubejs:quantum_slicer_printed_singularity_core')
+})
+</code></pre>
+<h3 id="removal_2">Removal</h3>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.remove({ id: 'ufo:universal/qmf/corporeal_matter_batch' })
+  event.remove({ type: 'ufo:universal_multiblock' })
+})
+</code></pre>
+<hr />
+<h2 id="legacy-qmf-compatibility">Legacy QMF Compatibility</h2>
+<p>QMF still accepts:</p>
+<pre><code class="language-txt">ufo:qmf_recipe
+</code></pre>
+<p>This format remains valid for backwards compatibility, but for new recipes prefer <code>ufo:universal_multiblock</code> with <code>machine: 'qmf'</code>.</p>
+<h3 id="example_2">Example</h3>
+<pre><code class="language-js">ServerEvents.recipes(event =&gt; {
+  event.custom({
+    type: 'ufo:qmf_recipe',
+    recipe_name: 'kubejs/qmf/legacy_proto_matter',
+    item_inputs: [
+      {
+        ingredient: { item: 'ufo:obsidian_matrix' },
+        amount: 32
+      }
+    ],
+    fluid_inputs: [
+      {
+        fluid: {
+          id: 'ufo:uu_matter',
+          amount: 1
+        },
+        amount: 32000
+      }
+    ],
+    output: {
+      id: 'ufo:proto_matter',
+      count: 4
+    },
+    energy: 40000000,
+    time: 600,
+    required_tier: 1
+  }).id('kubejs:qmf_legacy_proto_matter')
+})
+</code></pre>
+<hr />
+<h2 id="datapack">Datapack</h2>
+<p>If you prefer datapacks instead of KubeJS, place the JSON files in:</p>
+<pre><code class="language-txt">data/&lt;your_namespace&gt;/recipe/&lt;recipe_name&gt;.json
+</code></pre>
+<p>Use exactly the same structure shown in the examples above.</p>
+<hr />
+<p><em>See also: <a href="../dma/">DMA</a> · <a href="../quantum-matter-fabricator/">Quantum Matter Fabricator</a> · <a href="../quantum-processor-assembler/">Quantum Processor Assembler</a> · <a href="../stellar-nexus/">Stellar Nexus</a> · <a href="../catalysts/">Catalysts</a> · <a href="../materials/">Materials</a></em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

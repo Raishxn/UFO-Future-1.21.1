@@ -1,0 +1,3283 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://raishxn.github.io/UFO-Future-1.21.1/pt/recipe-balance-audit/">
+      
+      
+        <link rel="prev" href="../progression/">
+      
+      
+      
+        
+          <link rel="alternate" href="../../recipe-balance-audit/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="pt">
+        
+          <link rel="alternate" href="../../es/recipe-balance-audit/" hreflang="es">
+        
+          <link rel="alternate" href="../../zh/recipe-balance-audit/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Auditoria de Balanceamento - UFO Future Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#auditoria-de-balanceamento-de-receitas" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../" title="UFO Future Documentation" class="md-header__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UFO Future Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Auditoria de Balanceamento
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Selecione o idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../recipe-balance-audit/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="pt" class="md-select__link">
+              Portugues
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../es/recipe-balance-audit/" hreflang="es" class="md-select__link">
+              Espanol
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../zh/recipe-balance-audit/" hreflang="zh" class="md-select__link">
+              Zhongwen
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../mega-storage/" class="md-tabs__link">
+          
+  
+  
+  Wiki
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="UFO Future Documentation" class="md-nav__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UFO Future Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wiki
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Wiki
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mega-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mega Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../containment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contencao
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stellar-nexus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stellar Nexus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Montador de Materia Dimensional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-matter-fabricator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Matter Fabricator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-slicer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Slicer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-processor-assembler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Processor Assembler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multiblock-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tiers de Multibloco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../catalysts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalisadores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubejs-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Receitas KubeJS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ferramentas e Armas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../armor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conjuntos de Armadura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage-cells/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Celulas de Armazenamento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../materials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Materiais e Fluidos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../progression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Progressao
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auditoria de Balanceamento
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auditoria de Balanceamento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#escopo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escopo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumo-executivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo Executivo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#descobertas-confirmadas-no-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Descobertas Confirmadas no Código
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auditoria-de-cobertura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auditoria de Cobertura
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Auditoria de Cobertura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#receitas-provavelmente-faltando-para-itens-voltados-ao-jogador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Receitas Provavelmente Faltando Para Itens Voltados ao Jogador
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ids-provavelmente-intencionais-sem-crafting-direto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDs Provavelmente Intencionais Sem Crafting Direto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lacuna-condicional-de-integracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lacuna Condicional de Integração
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auditoria-por-familia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auditoria por Família
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-receitas-de-crafting-padrao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Receitas de Crafting Padrão
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Receitas de Crafting Padrão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nerfar-por-refatoracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nerfar por Refatoração
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-receitas-bootstrap-do-dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Receitas Bootstrap do DMA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Receitas Bootstrap do DMA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-cadeia-dma-de-fragmentos-estelares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Cadeia DMA de Fragmentos Estelares
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Cadeia DMA de Fragmentos Estelares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manter_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-leve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff leve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-economia-de-fluidos-e-matter-do-dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Economia de Fluidos e Matter do DMA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Economia de Fluidos e Matter do DMA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buffar_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffar_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffar_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manter_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-familia-dma-de-catalisadores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Família DMA de Catalisadores
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Família DMA de Catalisadores">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buffar_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nerfar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nerfar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manter_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cadeia-de-component-matrices-do-dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Cadeia de Component Matrices do DMA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Cadeia de Component Matrices do DMA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buffar-por-refatoracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar por Refatoração
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-infinity-cells" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Infinity Cells
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Infinity Cells">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refatorar-forte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refatorar Forte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-receitas-de-multibloco-universal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Receitas de Multibloco Universal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Receitas de Multibloco Universal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manter_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-leve_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff leve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refatorar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refatorar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-receitas-de-simulacao-do-stellar-nexus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Receitas de Simulação do Stellar Nexus
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Receitas de Simulação do Stellar Nexus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manter_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffar_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refatorar_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refatorar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffar_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-receitas-de-desmontagem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Receitas de Desmontagem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Receitas de Desmontagem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ordem-de-prioridade-recomendada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordem de Prioridade Recomendada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#direcao-de-design-concreta-para-a-sua-visao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direção de Design Concreta Para a Sua Visão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#escopo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escopo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumo-executivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo Executivo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#descobertas-confirmadas-no-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Descobertas Confirmadas no Código
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auditoria-de-cobertura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auditoria de Cobertura
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Auditoria de Cobertura">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#receitas-provavelmente-faltando-para-itens-voltados-ao-jogador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Receitas Provavelmente Faltando Para Itens Voltados ao Jogador
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ids-provavelmente-intencionais-sem-crafting-direto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDs Provavelmente Intencionais Sem Crafting Direto
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lacuna-condicional-de-integracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lacuna Condicional de Integração
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#auditoria-por-familia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auditoria por Família
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-receitas-de-crafting-padrao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Receitas de Crafting Padrão
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Receitas de Crafting Padrão">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nerfar-por-refatoracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nerfar por Refatoração
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-receitas-bootstrap-do-dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Receitas Bootstrap do DMA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Receitas Bootstrap do DMA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-cadeia-dma-de-fragmentos-estelares" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Cadeia DMA de Fragmentos Estelares
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Cadeia DMA de Fragmentos Estelares">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manter_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-leve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff leve
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-economia-de-fluidos-e-matter-do-dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Economia de Fluidos e Matter do DMA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Economia de Fluidos e Matter do DMA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buffar_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffar_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffar_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manter_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-familia-dma-de-catalisadores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Família DMA de Catalisadores
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Família DMA de Catalisadores">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buffar_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nerfar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nerfar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manter_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cadeia-de-component-matrices-do-dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Cadeia de Component Matrices do DMA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Cadeia de Component Matrices do DMA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#buffar-por-refatoracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar por Refatoração
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-infinity-cells" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Infinity Cells
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Infinity Cells">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refatorar-forte" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refatorar Forte
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-receitas-de-multibloco-universal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Receitas de Multibloco Universal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Receitas de Multibloco Universal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manter_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-leve_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff leve
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refatorar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refatorar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-receitas-de-simulacao-do-stellar-nexus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Receitas de Simulação do Stellar Nexus
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Receitas de Simulação do Stellar Nexus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Buff / Nerf / Refatoração">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#manter_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffar_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refatorar_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refatorar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffar_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-receitas-de-desmontagem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Receitas de Desmontagem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Receitas de Desmontagem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#o-que-existe_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O que existe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#veredito_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Veredito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buff-nerf-refatoracao_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buff / Nerf / Refatoração
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ordem-de-prioridade-recomendada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordem de Prioridade Recomendada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#direcao-de-design-concreta-para-a-sua-visao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direção de Design Concreta Para a Sua Visão
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="auditoria-de-balanceamento-de-receitas">Auditoria de Balanceamento de Receitas</h1>
+<p>Este documento audita o conjunto atual de receitas do UFO Future e propõe buffs, nerfs e refatorações para uma progressão standalone mais difícil em <code>UFO Future + AE2</code>.</p>
+<p>A auditoria foi baseada no estado real do repositório, tratando receitas geradas e código como fonte de verdade.</p>
+<h2 id="escopo">Escopo</h2>
+<p>Arquivos de receita auditados:</p>
+<ul>
+<li><code>42</code> receitas de crafting geradas</li>
+<li><code>103</code> receitas DMA geradas</li>
+<li><code>11</code> simulações do Stellar Nexus</li>
+<li><code>14</code> receitas handcrafted de multibloco universal</li>
+<li><code>2</code> receitas universais geradas</li>
+<li><code>10</code> receitas de desmontagem</li>
+</ul>
+<p>Total auditado: <code>182</code> arquivos de receita</p>
+<p>Auditoria de cobertura:</p>
+<ul>
+<li><code>148</code> itens e block-items <code>ufo:</code> registrados verificados</li>
+<li><code>53</code> IDs registrados atualmente não possuem saída de recipe nos dados auditados</li>
+</ul>
+<h2 id="resumo-executivo">Resumo Executivo</h2>
+<p>O mod já tem uma base muito boa de late-game:</p>
+<ul>
+<li>a progressão do DMA é real e coerente</li>
+<li>a cadeia de fragmentos -&gt; matter -&gt; matrices é sólida</li>
+<li>os multiblocos universais já suportam throughput industrial de processadores</li>
+<li>o Stellar Nexus já opera em escala de bilhões de AE e milhões de itens</li>
+</ul>
+<p>Os maiores problemas não são "falta de endgame". Eles são:</p>
+<ol>
+<li>A cobertura de receitas está incompleta para vários blocos e ferramentas visíveis ao jogador.</li>
+<li>Algumas famílias de receita ainda estão planas demais para o poder que entregam.</li>
+<li>Certos itens endgame têm tema forte, mas ainda pouco peso de cascata.</li>
+<li>O custo das Infinity Cells é uniforme demais entre alvos triviais e absurdos.</li>
+<li>O próprio multibloco do Stellar Nexus precisa de gating estrutural mais pesado se ele for o verdadeiro endgame.</li>
+</ol>
+<h2 id="descobertas-confirmadas-no-codigo">Descobertas Confirmadas no Código</h2>
+<p>Fatos importantes confirmados durante a auditoria:</p>
+<ul>
+<li>o Safe Mode do Stellar Nexus multiplica energia, combustível e coolant por <code>2.5x</code></li>
+<li>o overclock do Stellar Nexus multiplica energia inicial por <code>10x</code>, combustível e coolant por <code>5x</code>, calor por <code>5x</code> e progresso por <code>5x</code></li>
+<li>a capacidade global de energia do Stellar Nexus é <code>20.000.000.000 AE</code></li>
+<li>o buffer interno base do DMA é <code>500.000 AE</code></li>
+<li>o empilhamento de catalisadores do DMA já tem tradeoffs térmicos fortes e sinergia de 4 slots</li>
+</ul>
+<p>As docs estão um pouco atrasadas em relação ao código em algumas áreas, principalmente na escala de custo do Stellar Nexus.</p>
+<h2 id="auditoria-de-cobertura">Auditoria de Cobertura</h2>
+<h3 id="receitas-provavelmente-faltando-para-itens-voltados-ao-jogador">Receitas Provavelmente Faltando Para Itens Voltados ao Jogador</h3>
+<p>Os IDs abaixo aparecem registrados, mas não aparecem como outputs nas receitas auditadas:</p>
+<ul>
+<li><code>ufo:ae_energy_input_hatch</code></li>
+<li><code>ufo:me_massive_fluid_hatch</code></li>
+<li><code>ufo:me_massive_input_hatch</code></li>
+<li><code>ufo:me_massive_output_hatch</code></li>
+<li><code>ufo:entropy_assembler_core_casing</code></li>
+<li><code>ufo:entropy_computer_condensation_matrix</code></li>
+<li><code>ufo:entropy_singularity_casing</code></li>
+<li><code>ufo:stellar_field_generator_t1</code></li>
+<li><code>ufo:stellar_field_generator_t2</code></li>
+<li><code>ufo:stellar_field_generator_t3</code></li>
+<li><code>ufo:stellar_nexus_controller</code></li>
+<li><code>ufo:quantum_entropy_casing</code></li>
+<li><code>ufo:structure_scanner</code></li>
+<li><code>ufo:ufo_sword</code></li>
+<li><code>ufo:ufo_pickaxe</code></li>
+<li><code>ufo:ufo_axe</code></li>
+<li><code>ufo:ufo_shovel</code></li>
+<li><code>ufo:ufo_hoe</code></li>
+<li><code>ufo:ufo_hammer</code></li>
+<li><code>ufo:ufo_greatsword</code></li>
+<li><code>ufo:ufo_bow</code></li>
+<li><code>ufo:ufo_fishing_rod</code></li>
+<li><code>ufo:bismuth</code></li>
+</ul>
+<p>Recomendação:</p>
+<ul>
+<li>adicionar receitas reais para todas as partes estruturais e hatches do Stellar Nexus</li>
+<li>ou adicionar receitas para as ferramentas de energia, ou convertê-las em transformações ou upgrades a partir da <code>ufo:ufo_staff</code></li>
+<li>ou implementar uma fonte de gameplay para <code>bismuth</code>, ou removê-lo da progressão do jogador</li>
+</ul>
+<h3 id="ids-provavelmente-intencionais-sem-crafting-direto">IDs Provavelmente Intencionais Sem Crafting Direto</h3>
+<p>Estes podem ficar sem receita direta se a expectativa for obtê-los via manipulação de fluido:</p>
+<ul>
+<li>fluid blocks</li>
+<li>buckets</li>
+</ul>
+<p>Exemplos:</p>
+<ul>
+<li><code>ufo:liquid_starlight_bucket</code></li>
+<li><code>ufo:temporal_fluid_bucket</code></li>
+<li><code>ufo:uu_matter_bucket</code></li>
+<li><code>ufo:raw_star_matter_plasma_fluid_block</code></li>
+</ul>
+<h3 id="lacuna-condicional-de-integracao">Lacuna Condicional de Integração</h3>
+<p>Estes itens estão registrados, mas não possuem receitas correspondentes auditadas:</p>
+<ul>
+<li><code>ufo:infinity_antimatter_pellet_cell</code></li>
+<li><code>ufo:infinity_hdpe_pellet_cell</code></li>
+<li><code>ufo:infinity_plutonium_pellet_cell</code></li>
+<li><code>ufo:infinity_polonium_pellet_cell</code></li>
+</ul>
+<p>Recomendação:</p>
+<ul>
+<li>gerar receitas condicionais quando Mekanism estiver disponível</li>
+<li>ou registrar esses itens de forma condicional em vez de sempre</li>
+</ul>
+<h2 id="auditoria-por-familia">Auditoria por Família</h2>
+<h2 id="1-receitas-de-crafting-padrao">1. Receitas de Crafting Padrão</h2>
+<h3 id="o-que-existe">O que existe</h3>
+<p>Esta camada contém outputs diretos de crafting do mod, como:</p>
+<ul>
+<li><code>obsidian_matrix</code></li>
+<li><code>graviton_plated_casing</code></li>
+<li><code>dimensional_matter_assembler</code></li>
+<li>blocos e nuggets de fragmento</li>
+<li>controladores de multiblocos quânticos</li>
+<li>crafting storages grandes</li>
+<li>mega co-processors</li>
+</ul>
+<h3 id="veredito">Veredito</h3>
+<ul>
+<li><code>obsidian_matrix</code> é uma âncora boa e deve continuar simples</li>
+<li><code>graviton_plated_casing</code> e <code>dimensional_matter_assembler</code> são bons gates iniciais</li>
+<li>mega storages e mega co-processors estão planos demais para o que representam</li>
+<li>os controladores quânticos têm tema forte, mas ainda pouco sink profundo de processadores</li>
+</ul>
+<h3 id="buff-nerf-refatoracao">Buff / Nerf / Refatoração</h3>
+<h4 id="manter">Manter</h4>
+<ul>
+<li><code>obsidian_matrix</code></li>
+<li><code>graviton_plated_casing</code></li>
+<li><code>dimensional_matter_assembler</code></li>
+</ul>
+<h4 id="nerfar-por-refatoracao">Nerfar por Refatoração</h4>
+<p>Os itens abaixo devem virar cadeias de upgrade mais profundas em vez de conversões quase de um salto:</p>
+<ul>
+<li>mega crafting storages</li>
+<li>mega co-processors</li>
+</ul>
+<p>Problema atual:</p>
+<ul>
+<li>muitos upgrades de storage e co-processor são basicamente "tier anterior + 1 item de prestígio"</li>
+<li>isso passa sensação de compressão, não de construção endgame</li>
+</ul>
+<p>Refatoração sugerida:</p>
+<ul>
+<li>exigir múltiplas cópias do tier anterior, não uma só</li>
+<li>adicionar <code>dimensional_processor</code> ou futuras famílias avançadas de processador como sinks recorrentes</li>
+<li>amarrar os storages de topo às famílias de matrix</li>
+<li>amarrar os co-processors de topo a cadeias pesadas de engineering e processors</li>
+</ul>
+<p>Direção desejada:</p>
+<ul>
+<li><code>mk2 ~= 4x a 8x</code> do item anterior com processadores de suporte</li>
+<li><code>mk3 ~= 8x a 16x</code> do item anterior com gates de matter ou matrix</li>
+</ul>
+<h4 id="buffar">Buffar</h4>
+<p>Os controladores de multibloco quântico deveriam definir mais a fábrica.</p>
+<p>Sugestão:</p>
+<ul>
+<li>manter os temas atuais de item</li>
+<li>adicionar contagens de famílias de processador e dependências de multibloco anterior</li>
+<li>deixar <code>quantum_processor_assembler_controller</code> e <code>quantum_matter_fabricator_controller</code> claramente mais caros que <code>quantum_slicer_controller</code></li>
+</ul>
+<h2 id="2-receitas-bootstrap-do-dma">2. Receitas Bootstrap do DMA</h2>
+<h3 id="o-que-existe_1">O que existe</h3>
+<p>A camada de bootstrap do DMA inclui:</p>
+<ul>
+<li><code>dust_blizz_bootstrap</code></li>
+<li><code>cryotheum_dust_bootstrap</code></li>
+<li><code>gelid_cryotheum_bootstrap</code></li>
+<li>a prensa do processador dimensional e a primeira linha do dimensional processor</li>
+</ul>
+<h3 id="veredito_1">Veredito</h3>
+<p>Esta seção está saudável. Ela suporta progressão AE2-only sem hard lock imediato em mods extras.</p>
+<h3 id="buff-nerf-refatoracao_1">Buff / Nerf / Refatoração</h3>
+<ul>
+<li>manter as receitas bootstrap</li>
+<li>manter o perfil de custo baixo</li>
+<li>preservar a sensação de "inputs simples, outputs úteis"</li>
+</ul>
+<p>Única sugestão menor:</p>
+<ul>
+<li>unificar naming e linguagem nas docs para o jogador entender quais receitas são starters de fallback e quais já são rotas industriais permanentes</li>
+</ul>
+<h2 id="3-cadeia-dma-de-fragmentos-estelares">3. Cadeia DMA de Fragmentos Estelares</h2>
+<h3 id="o-que-existe_2">O que existe</h3>
+<p>A progressão de lingotes atualmente segue:</p>
+<ul>
+<li><code>white_dwarf_fragment_ingot</code></li>
+<li><code>neutron_star_fragment_ingot</code></li>
+<li><code>pulsar_fragment_ingot</code></li>
+</ul>
+<p>Depois disso vêm os derivados:</p>
+<ul>
+<li>dust</li>
+<li>fluid</li>
+<li>rods</li>
+<li>blocks</li>
+</ul>
+<h3 id="veredito_2">Veredito</h3>
+<p>Esta é uma das famílias de receita mais fortes do mod. A identidade é clara e a escalada funciona bem.</p>
+<h3 id="buff-nerf-refatoracao_2">Buff / Nerf / Refatoração</h3>
+<h4 id="manter_1">Manter</h4>
+<ul>
+<li>a escalada linear atual</li>
+<li>liquid starlight como backbone comum de fluidos</li>
+</ul>
+<h4 id="buff-leve">Buff leve</h4>
+<p><code>pulsar_fragment</code> já é importante o suficiente para justificar um gate um pouco mais pesado.</p>
+<p>Mudança sugerida:</p>
+<ul>
+<li>pequeno aumento de AE</li>
+<li>adicionar mais um ingrediente avançado ou subir os counts atuais</li>
+</ul>
+<p>Motivo:</p>
+<ul>
+<li>derivados de pulsar alimentam anomaly, matter e progressão high-end</li>
+</ul>
+<h2 id="4-economia-de-fluidos-e-matter-do-dma">4. Economia de Fluidos e Matter do DMA</h2>
+<h3 id="o-que-existe_3">O que existe</h3>
+<p>Esta família inclui:</p>
+<ul>
+<li><code>uu_amplifier</code></li>
+<li><code>uu_matter</code></li>
+<li><code>gelid_cryotheum</code></li>
+<li><code>stable_coolant</code></li>
+<li><code>liquid_starlight</code></li>
+<li><code>raw_star_matter_plasma</code></li>
+<li><code>transcending_matter_fluid</code></li>
+<li><code>primordial_matter_liquid</code></li>
+<li>fluidos <code>spatial</code> e <code>temporal</code></li>
+<li><code>neutronium_sphere</code></li>
+<li><code>enriched_neutronium_sphere</code></li>
+<li><code>proto_matter</code></li>
+<li><code>corporeal_matter</code></li>
+<li>matters estelares</li>
+<li><code>dark_matter</code></li>
+</ul>
+<h3 id="veredito_3">Veredito</h3>
+<p>Este é o verdadeiro coração da progressão do UFO Future. Funciona, mas algumas receitas ainda estão baratas demais em relação ao quanto o restante do endgame depende delas.</p>
+<h3 id="buff-nerf-refatoracao_3">Buff / Nerf / Refatoração</h3>
+<h4 id="buffar_1">Buffar</h4>
+<p><code>raw_star_matter_plasma</code></p>
+<p>Motivo:</p>
+<ul>
+<li>é o fluido backbone do Stellar Nexus</li>
+<li>hoje ele parece mais um fluido de produção do que um precursor em escala civilizatória</li>
+</ul>
+<p>Mudança sugerida:</p>
+<ul>
+<li>aumentar energia e tempo</li>
+<li>adicionar um input high-tier extra, possivelmente <code>dimensional_processor</code> ou <code>corporeal_matter</code></li>
+</ul>
+<h4 id="buffar_2">Buffar</h4>
+<p><code>enriched_neutronium_sphere</code></p>
+<p>Motivo:</p>
+<ul>
+<li>ele gateia uma quantidade enorme de output endgame</li>
+<li>o custo atual é bom, mas ainda não é assustador o suficiente para as fábricas mk3 que você quer</li>
+</ul>
+<p>Mudança sugerida:</p>
+<ul>
+<li>aumentar volume de fluidos</li>
+<li>adicionar requisito de processador</li>
+</ul>
+<h4 id="buffar_3">Buffar</h4>
+<p><code>dark_matter</code></p>
+<p>Motivo:</p>
+<ul>
+<li>este é um material de prestígio e deveria ser memorável</li>
+<li>a receita atual é boa, mas ainda é majoritariamente compressão de contagem bruta</li>
+</ul>
+<p>Refatoração sugerida:</p>
+<ul>
+<li>manter os requisitos atuais de stellar matter</li>
+<li>adicionar pressão de component ou processor</li>
+<li>opcionalmente exigir um catalyst tardio ou uma matrix high-end</li>
+</ul>
+<h4 id="manter_2">Manter</h4>
+<ul>
+<li><code>proto_matter</code></li>
+<li><code>corporeal_matter</code></li>
+<li>as receitas tieradas de stellar matter</li>
+</ul>
+<p>Essas já comunicam progressão muito bem.</p>
+<h2 id="5-familia-dma-de-catalisadores">5. Família DMA de Catalisadores</h2>
+<h3 id="o-que-existe_4">O que existe</h3>
+<p>O mod já tem quatro famílias completas de catalisador:</p>
+<ul>
+<li>Matterflow</li>
+<li>Chrono</li>
+<li>Overflux</li>
+<li>Quantum</li>
+</ul>
+<p>Cada uma com T1, T2 e T3.</p>
+<h3 id="veredito_4">Veredito</h3>
+<p>A identidade das famílias é excelente. O que deve bater mais forte são as receitas, especialmente T3.</p>
+<h3 id="buff-nerf-refatoracao_4">Buff / Nerf / Refatoração</h3>
+<h4 id="buffar_4">Buffar</h4>
+<p>Todos os catalisadores T3</p>
+<p>Motivo:</p>
+<ul>
+<li>catalisadores T3 definem o endgame</li>
+<li>o impacto deles no gameplay já é forte no código</li>
+<li>o custo de recipe deveria acompanhar esse poder com mais agressividade</li>
+</ul>
+<p>Refatoração sugerida:</p>
+<ul>
+<li>exigir mais de um catalisador do tier anterior</li>
+<li>adicionar inputs de processor ou matrix</li>
+<li>diferenciar a identidade da família por matter e fluido</li>
+</ul>
+<h4 id="nerfar">Nerfar</h4>
+<p>A acessibilidade relativa do Overflux T3</p>
+<p>Motivo:</p>
+<ul>
+<li>calor negativo ou neutro é um dos utilitários mais fortes do sistema inteiro</li>
+<li>a receita não deveria cair perto demais das outras se ela estabiliza builds perigosas</li>
+</ul>
+<p>Mudança sugerida:</p>
+<ul>
+<li>subir levemente AE, tempo ou count de input de prestígio</li>
+</ul>
+<h4 id="manter_3">Manter</h4>
+<ul>
+<li>os temas atuais de família</li>
+<li>a separação de identidade por fluido</li>
+</ul>
+<h2 id="6-cadeia-de-component-matrices-do-dma">6. Cadeia de Component Matrices do DMA</h2>
+<h3 id="o-que-existe_5">O que existe</h3>
+<p>A cadeia atual de matrices é:</p>
+<ul>
+<li><code>phase_shift_component_matrix</code></li>
+<li><code>hyper_dense_component_matrix</code></li>
+<li><code>tesseract_component_matrix</code></li>
+<li><code>event_horizon_component_matrix</code></li>
+<li><code>cosmic_string_component_matrix</code></li>
+</ul>
+<h3 id="veredito_5">Veredito</h3>
+<p>Esta cadeia é excelente estruturalmente, mas a pressão de quantidade ainda está leve demais para um endgame estilo GTNH.</p>
+<h3 id="buff-nerf-refatoracao_5">Buff / Nerf / Refatoração</h3>
+<h4 id="buffar-por-refatoracao">Buffar por Refatoração</h4>
+<p>Faça cada matrix consumir mais da matrix anterior e mais processadores.</p>
+<p>Direção sugerida:</p>
+<ul>
+<li><code>phase_shift</code>: manter acessível</li>
+<li><code>hyper_dense</code>: aumentar demanda de dimensional processor e componentes AE</li>
+<li><code>tesseract</code>: exigir mais matrices anteriores</li>
+<li><code>event_horizon</code>: introduzir pressão séria de matter</li>
+<li><code>cosmic_string</code>: virar um bottleneck real, não só um craft de prestígio</li>
+</ul>
+<p>Sensação desejada:</p>
+<ul>
+<li>cosmic string deve ser o item em torno do qual o jogador monta fábricas</li>
+</ul>
+<h2 id="7-infinity-cells">7. Infinity Cells</h2>
+<h3 id="o-que-existe_6">O que existe</h3>
+<p>Existem <code>29</code> receitas geradas de Infinity Cell, todas com a mesma estrutura:</p>
+<ul>
+<li><code>cosmic_string_component_matrix</code></li>
+<li><code>quantum_anomaly</code></li>
+<li><code>64</code> do item alvo</li>
+<li><code>250.000.000 AE</code></li>
+<li><code>10.000 ticks</code></li>
+</ul>
+<h3 id="veredito_6">Veredito</h3>
+<p>Isso é elegante, mas uniforme demais. Uma infinity cell de cobblestone e uma de antimatter não deveriam custar a mesma coisa.</p>
+<h3 id="buff-nerf-refatoracao_6">Buff / Nerf / Refatoração</h3>
+<h4 id="refatorar-forte">Refatorar Forte</h4>
+<p>Separar as Infinity Cells em faixas de custo:</p>
+<ul>
+<li>materiais comuns de bulk</li>
+<li>cobblestone, sand, water, gravel, logs</li>
+<li>materiais avançados de utilidade</li>
+<li>obsidian, amethyst, end stone, lava, sky stone</li>
+<li>materiais exóticos ou modded</li>
+<li>pellets do Mekanism e alvos equivalentes</li>
+</ul>
+<p>Regra sugerida:</p>
+<ul>
+<li>manter o padrão base</li>
+<li>variar AE, tempo, volume de fluido e tier de matrix exigido</li>
+</ul>
+<p>Direção de exemplo:</p>
+<ul>
+<li>common cells: custo atual ou levemente menor</li>
+<li>advanced cells: baseline atual</li>
+<li>exotic cells: significativamente mais caras, talvez com <code>dark_matter</code> ou segunda matrix</li>
+</ul>
+<h2 id="8-receitas-de-multibloco-universal">8. Receitas de Multibloco Universal</h2>
+<h3 id="o-que-existe_7">O que existe</h3>
+<p>As camadas atuais de multibloco universal são:</p>
+<ul>
+<li>Quantum Slicer: massificação de processadores impressos</li>
+<li>Quantum Processor Assembler: massificação de processadores finalizados</li>
+<li>QMF: polish de stable coolant</li>
+<li>receita gerada do dimensional processor no QPA</li>
+</ul>
+<h3 id="veredito_7">Veredito</h3>
+<p>Esta é uma das melhores partes do mod. Ela resolve um problema real de escala e abre espaço para craftings absurdos depois.</p>
+<h3 id="buff-nerf-refatoracao_7">Buff / Nerf / Refatoração</h3>
+<h4 id="manter_4">Manter</h4>
+<ul>
+<li>a produção massiva de processadores AE2</li>
+<li>a ideia de um bloco de input virar um lote grande de processadores</li>
+</ul>
+<h4 id="buff-leve_1">Buff leve</h4>
+<p>Linhas avançadas deveriam destravar depois das linhas básicas de AE2.</p>
+<p>Mudança sugerida:</p>
+<ul>
+<li>manter printed logic, calculation e engineering em tier 1</li>
+<li>mover dimensional e processadores avançados cross-mod para tier maior do multibloco ou custo maior da máquina</li>
+</ul>
+<h4 id="refatorar">Refatorar</h4>
+<p>Usar essas máquinas como backbone dos futuros controladores mk2 e mk3.</p>
+<p>Ou seja:</p>
+<ul>
+<li>controladores endgame deveriam consumir outputs do Quantum Slicer e do Quantum Processor Assembler em quantidades absurdas</li>
+</ul>
+<h2 id="9-receitas-de-simulacao-do-stellar-nexus">9. Receitas de Simulação do Stellar Nexus</h2>
+<h3 id="o-que-existe_8">O que existe</h3>
+<p>O conjunto atual já cobre:</p>
+<ul>
+<li>simulações baratas de integração</li>
+<li>simulações de material avançado em custo intermediário</li>
+<li>sínteses massivas reais em escala de bilhões de AE</li>
+</ul>
+<p>Exemplos atuais de simulação mk3:</p>
+<ul>
+<li><code>Massive Iron Synthesis</code>: <code>2B AE</code>, <code>45 min</code>, <code>15M iron</code></li>
+<li><code>Massive Copper Synthesis</code>: <code>2B AE</code>, <code>45 min</code>, <code>15M copper</code></li>
+<li><code>Massive Gold Synthesis</code>: <code>2.5B AE</code>, <code>50 min</code>, <code>15M gold</code></li>
+<li><code>Massive Netherite Synthesis</code>: <code>5B AE</code>, <code>80 min</code>, <code>5M netherite</code></li>
+</ul>
+<h3 id="veredito_8">Veredito</h3>
+<p>A direção está correta. A máquina já faz o que uma máquina endgame deveria fazer. O ponto fraco é o gating estrutural, não a filosofia de recompensa.</p>
+<h3 id="buff-nerf-refatoracao_8">Buff / Nerf / Refatoração</h3>
+<h4 id="manter_5">Manter</h4>
+<ul>
+<li>outputs em escala de milhões</li>
+<li>custos iniciais em bilhões de AE</li>
+<li>runtimes longos</li>
+<li>alta demanda de fluidos precursores</li>
+</ul>
+<h4 id="buffar_5">Buffar</h4>
+<p>O custo de construção do multibloco em si</p>
+<p>Motivo:</p>
+<ul>
+<li>se este é o payoff industrial final, as partes da estrutura precisam parecer um megaprojeto</li>
+</ul>
+<p>Nova regra sugerida:</p>
+<ul>
+<li>máquina Mk1 = primeiro grande breakthrough industrial</li>
+<li>máquina Mk2 = cerca de <code>10x</code> o custo total da Mk1</li>
+<li>máquina Mk3 = cerca de <code>50x</code> o custo total da Mk2</li>
+</ul>
+<h4 id="refatorar_1">Refatorar</h4>
+<p>Separar a máquina em construção explicitamente tierada:</p>
+<ul>
+<li><code>field_generator_mk1</code></li>
+<li><code>field_generator_mk2</code></li>
+<li><code>field_generator_mk3</code></li>
+<li>upgrades de controller ou controller cores tierados</li>
+</ul>
+<p>Depois escalar:</p>
+<ul>
+<li>peças da máquina anterior</li>
+<li>counts de processador</li>
+<li>counts de matrix</li>
+<li>counts de matter</li>
+<li>contagem de casing</li>
+</ul>
+<h4 id="buffar_6">Buffar</h4>
+<p>As simulações de integração "soft", como alguns outputs modded de custo muito baixo</p>
+<p>Motivo:</p>
+<ul>
+<li>algumas parecem mais showcase recipes do que programas verdadeiros de Stellar Nexus</li>
+</ul>
+<p>Correção sugerida:</p>
+<ul>
+<li>ou reposicionar como simulações de entrada ou tutorial</li>
+<li>ou torná-las materialmente mais caras para pertencerem à mesma fantasia da máquina</li>
+</ul>
+<h2 id="10-receitas-de-desmontagem">10. Receitas de Desmontagem</h2>
+<h3 id="o-que-existe_9">O que existe</h3>
+<p>Existem <code>10</code> receitas de desmontagem de storage cells do AE2 para células white dwarf e neutron star.</p>
+<h3 id="veredito_9">Veredito</h3>
+<p>Isso é um bom QoL e deve permanecer.</p>
+<h3 id="buff-nerf-refatoracao_9">Buff / Nerf / Refatoração</h3>
+<ul>
+<li>manter como está</li>
+<li>não precisa de rebalance relevante agora</li>
+</ul>
+<p>Se você tornar storage cells dramaticamente mais caras no futuro, mantenha a desmontagem generosa o bastante para a experimentação não ficar punitiva.</p>
+<h2 id="ordem-de-prioridade-recomendada">Ordem de Prioridade Recomendada</h2>
+<p>Se você quiser o rebalance de maior impacto primeiro, faça nesta ordem:</p>
+<ol>
+<li>Adicionar as receitas faltantes das partes do Stellar Nexus, hatches, field generators, controller e scanner.</li>
+<li>Refatorar mega storages e mega co-processors em upgrades de cascata mais profundos.</li>
+<li>Refatorar o custo das Infinity Cells em faixas common, advanced e exotic.</li>
+<li>Buffar catalisadores T3 e recipes high-tier de matrix.</li>
+<li>Buffar <code>raw_star_matter_plasma</code>, <code>enriched_neutronium_sphere</code> e <code>dark_matter</code>.</li>
+<li>Transformar outputs do Quantum Slicer e do Quantum Processor Assembler em sinks enormes para futuros multiblocos mk2 e mk3.</li>
+<li>Introduzir custos reais de construção Mk1, Mk2 e Mk3 no Stellar Nexus usando sua regra de <code>10x</code> e depois <code>50x</code>.</li>
+</ol>
+<h2 id="direcao-de-design-concreta-para-a-sua-visao">Direção de Design Concreta Para a Sua Visão</h2>
+<p>Para a fantasia exata que você descreveu, o melhor caminho é:</p>
+<ul>
+<li>manter os outputs atuais do Stellar Nexus em escala de milhões</li>
+<li>subir muito mais o custo de construção da máquina do que o custo dos outputs</li>
+<li>empurrar a absurdidade para cascatas de processadores e peças tieradas de máquina</li>
+<li>transformar <code>cosmic_string</code>, <code>dark_matter</code>, <code>charged_enriched_neutronium_sphere</code> e linhas avançadas de processador nos bottlenecks de assinatura</li>
+</ul>
+<p>Isso entrega um late-game duro na subida, mas realmente recompensador quando o jogador conclui a infraestrutura.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

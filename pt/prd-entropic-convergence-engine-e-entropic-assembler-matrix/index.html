@@ -1,0 +1,2299 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://raishxn.github.io/UFO-Future-1.21.1/pt/prd-entropic-convergence-engine-e-entropic-assembler-matrix/">
+      
+      
+      
+      
+        
+          <link rel="alternate" href="/UFO-Future-1.21.1/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="pt">
+        
+          <link rel="alternate" href="/UFO-Future-1.21.1/es/" hreflang="es">
+        
+          <link rel="alternate" href="/UFO-Future-1.21.1/zh/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PRD: Entropic Convergence Engine e Entropic Assembler Matrix - UFO Future Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#prd-entropic-convergence-engine-e-entropic-assembler-matrix" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../" title="UFO Future Documentation" class="md-header__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UFO Future Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PRD: Entropic Convergence Engine e Entropic Assembler Matrix
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Selecione o idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="/UFO-Future-1.21.1/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="pt" class="md-select__link">
+              Portugues
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/UFO-Future-1.21.1/es/" hreflang="es" class="md-select__link">
+              Espanol
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="/UFO-Future-1.21.1/zh/" hreflang="zh" class="md-select__link">
+              Zhongwen
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../mega-storage/" class="md-tabs__link">
+          
+  
+  
+  Wiki
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="UFO Future Documentation" class="md-nav__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UFO Future Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wiki
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Wiki
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mega-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mega Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../containment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contencao
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stellar-nexus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stellar Nexus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Montador de Materia Dimensional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-matter-fabricator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Matter Fabricator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-slicer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Slicer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-processor-assembler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Processor Assembler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multiblock-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tiers de Multibloco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../catalysts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalisadores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubejs-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Receitas KubeJS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ferramentas e Armas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../armor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conjuntos de Armadura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage-cells/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Celulas de Armazenamento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../materials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Materiais e Fluidos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../progression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Progressao
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipe-balance-audit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auditoria de Balanceamento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-resumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Resumo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-objetivo-de-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Objetivo de Produto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-fantasia-do-jogador" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Fantasia do Jogador
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-nomes-finais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Nomes Finais
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Nomes Finais">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-sucessor-do-quantum-computer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Sucessor do Quantum Computer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-sucessor-do-assembler-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Sucessor do Assembler Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-papel-de-cada-multibloco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Papel de Cada Multibloco
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#51-entropic-convergence-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Entropic Convergence Engine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-entropic-assembler-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Entropic Assembler Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-estrutura-de-tiering-por-preenchimento-e-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Estrutura de Tiering por Preenchimento e Fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-regra-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Regra central
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#611-geometria-fechada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1.1 Geometria fechada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-regra-de-nivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Regra de nivel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-regra-universal-recomendada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Regra universal recomendada
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 Regra universal recomendada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nivel-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nivel 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nivel-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nivel 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nivel-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nivel 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-filosofia-dos-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Filosofia dos fields
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-interacao-sem-controller-visivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 Interacao sem controller visivel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-place-in-progression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Place in Progression
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-entropic-convergence-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Entropic Convergence Engine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#81-fantasia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Fantasia
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#82-core-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Core loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#83-beneficios-por-nivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Beneficios por nivel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.3 Beneficios por nivel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nivel-1_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nivel 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nivel-2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nivel 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nivel-3_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nivel 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#84-regras-funcionais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 Regras funcionais
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#85-exibicao-especial-no-terminal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.5 Exibicao especial no terminal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.5 Exibicao especial no terminal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regra-tecnica-recomendada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regra tecnica recomendada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#86-diferencial-frente-ao-advancedae" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.6 Diferencial frente ao AdvancedAE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-entropic-assembler-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Entropic Assembler Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#91-fantasia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Fantasia
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-core-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Core loop
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#93-beneficios-por-nivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 Beneficios por nivel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.3 Beneficios por nivel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nivel-1_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nivel 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nivel-2_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nivel 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nivel-3_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nivel 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#94-mecanicas-principais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.4 Mecânicas principais
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.4 Mecânicas principais">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#capacidade-modular-de-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capacidade modular de patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern compilation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-materialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch materialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#95-diferencial-frente-ao-extendedae" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.5 Diferencial frente ao ExtendedAE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-estrutura-recomendada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Estrutura Recomendada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#101-filosofia-estrutural" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Filosofia estrutural
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#102-regra-visual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Regra visual
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#103-componentes-estruturais-recomendados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 Componentes estruturais recomendados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-regras-de-balanceamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Regras de Balanceamento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#111-principio-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Princípio central
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#112-custo-por-nivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Custo por nivel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#113-materiais-assinatura-recomendados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 Materiais assinatura recomendados
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-ux-e-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. UX e Interface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#121-entropic-convergence-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.1 Entropic Convergence Engine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#122-entropic-assembler-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.2 Entropic Assembler Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#123-leitura-imediata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12.3 Leitura imediata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-localizacao-e-apresentacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Localizacao e Apresentacao
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-design-tecnico-de-alto-nivel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Design Tecnico de Alto Nivel
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#141-entropic-convergence-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.1 Entropic Convergence Engine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#142-entropic-assembler-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.2 Entropic Assembler Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#143-reuso-recomendado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14.3 Reuso recomendado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-ordem-recomendada-de-implementacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Ordem Recomendada de Implementacao
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#151-primeiro-entropic-convergence-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.1 Primeiro: Entropic Convergence Engine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#152-segundo-entropic-assembler-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15.2 Segundo: Entropic Assembler Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-open-questions-fechadas-por-este-prd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Open Questions Fechadas por Este PRD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16. Open Questions Fechadas por Este PRD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#devem-ter-3-niveis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Devem ter 3 niveis?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-nivel-deve-depender-do-preenchimento-do-multibloco" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O nivel deve depender do preenchimento do multibloco?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-nivel-deve-depender-diretamente-dos-nossos-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O nivel deve depender diretamente dos nossos fields?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-sucessor-do-quantum-computer-ainda-deve-se-chamar-quantum-computer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O sucessor do Quantum Computer ainda deve se chamar "Quantum Computer"?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-terminal-do-ae-deve-mostrar-infinito-em-vez-de-numeros-fixos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O terminal do AE deve mostrar infinito em vez de numeros fixos?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#o-objetivo-e-superar-explicitamente-os-mods-de-referencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        O objetivo e superar explicitamente os mods de referencia?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-decisao-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. Decisao Final
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="prd-entropic-convergence-engine-e-entropic-assembler-matrix">PRD: Entropic Convergence Engine e Entropic Assembler Matrix</h1>
+<h2 id="1-resumo">1. Resumo</h2>
+<p>Este PRD define dois novos multiblocos de capstone industrial para o <code>UFO Future</code>, ambos projetados para tornar obsoletos, dentro da progressao do mod, o <code>Quantum Computer</code> do <code>AdvancedAE</code> e o <code>Assembler Matrix</code> do <code>ExtendedAE</code>.</p>
+<p>Os dois multiblocos devem ser:</p>
+<ul>
+<li>absurdamente fortes</li>
+<li>visualmente e estruturalmente impressionantes</li>
+<li>faceis de operar depois de construidos</li>
+<li>diretamente integrados ao ecossistema atual de AE2 + UFO Future</li>
+<li>escalados em <strong>3 niveis reais</strong>, determinados pelo <strong>preenchimento do multibloco</strong> e pelos nossos <strong>fields</strong></li>
+</ul>
+<p>Eles nao devem parecer maquinas de outro mod copiadas. Eles devem parecer a evolucao natural da linha <code>quantum -&gt; entropy -&gt; stellar</code> do proprio UFO Future.</p>
+<hr />
+<h2 id="2-objetivo-de-produto">2. Objetivo de Produto</h2>
+<p>Adicionar dois multiblocos que:</p>
+<ul>
+<li>sirvam como payoff maximo da automacao AE do mod</li>
+<li>ajudem diretamente todos os outros multiblocos e linhas de crafting massivo</li>
+<li>consolidem a fantasia de infraestrutura transcendente do UFO Future</li>
+<li>deem ao jogador uma sensacao clara de "agora meu AE saiu da escala normal"</li>
+<li>entreguem um estado visual e funcional de <code>infinito</code> na interface quando totalmente evoluidos</li>
+</ul>
+<hr />
+<h2 id="3-fantasia-do-jogador">3. Fantasia do Jogador</h2>
+<p>O jogador deve sentir que:</p>
+<ul>
+<li>saiu da fase de "otimizar crafting CPU" e entrou na fase de "dobrar as regras do AE"</li>
+<li>construiu uma infraestrutura que colapsa os limites normais de <code>storage</code>, <code>co-processors</code> e <code>throughput</code></li>
+<li>consegue alimentar linhas industriais absurdas sem mais respeitar as restricoes dos addons anteriores</li>
+<li>montou algo complexo de construir, mas muito simples e satisfatorio de usar</li>
+</ul>
+<p>Momentos-chave:</p>
+<ol>
+<li>montar a estrutura base e ver o multibloco reconhecer o <code>Nivel 1</code></li>
+<li>preencher mais camadas e substituir os <code>fields</code> para liberar <code>Nivel 2</code></li>
+<li>completar o preenchimento total com <code>fields</code> maximos e ver o multibloco entrar em <code>Nivel 3</code></li>
+<li>no <code>Nivel 3</code>, ver o terminal/cpu do AE mostrar <code>infinito</code> em vez de numeros fixos</li>
+</ol>
+<hr />
+<h2 id="4-nomes-finais">4. Nomes Finais</h2>
+<h3 id="41-sucessor-do-quantum-computer">4.1 Sucessor do Quantum Computer</h3>
+<p><strong>Nome final recomendado:</strong> <code>Entropic Convergence Engine</code></p>
+<p>Motivo:</p>
+<ul>
+<li>soa maior do que "computer"</li>
+<li>combina com a linha <code>entropy</code> ja presente no mod</li>
+<li>passa a ideia de convergencia total de processamento, storage e execucao</li>
+</ul>
+<h3 id="42-sucessor-do-assembler-matrix">4.2 Sucessor do Assembler Matrix</h3>
+<p><strong>Nome final recomendado:</strong> <code>Entropic Assembler Matrix</code></p>
+<p>Motivo:</p>
+<ul>
+<li>preserva a leitura imediata de "matriz de montagem"</li>
+<li>deixa claro que esta acima do conceito do <code>ExtendedAE</code></li>
+<li>combina com o bloco anterior e com a familia visual do mod</li>
+</ul>
+<hr />
+<h2 id="5-papel-de-cada-multibloco">5. Papel de Cada Multibloco</h2>
+<h2 id="51-entropic-convergence-engine">5.1 Entropic Convergence Engine</h2>
+<p>Funciona como o <strong>cerebro transcendente do autocrafting</strong>.</p>
+<p>Ele resolve:</p>
+<ul>
+<li>crafting storage</li>
+<li>co-processors</li>
+<li>paralelismo</li>
+<li>compartilhamento global de execucao</li>
+<li>desempenho de crafting tree muito profunda</li>
+</ul>
+<p>Ele nao deve ser "só um crafting CPU maior". Ele deve ser um estado especial do AE.</p>
+<h2 id="52-entropic-assembler-matrix">5.2 Entropic Assembler Matrix</h2>
+<p>Funciona como a <strong>fabrica transcendente de patterns</strong>.</p>
+<p>Ele resolve:</p>
+<ul>
+<li>quantidade total de patterns ativos</li>
+<li>throughput de execucao</li>
+<li>batch crafting em escala absurda</li>
+<li>crafts repetitivos em massa</li>
+<li>fabricacao quase instantanea de linhas industriais</li>
+</ul>
+<p>Ele nao deve ser "so mais slots". Ele deve transformar patterns em producao industrial comprimida.</p>
+<hr />
+<h2 id="6-estrutura-de-tiering-por-preenchimento-e-fields">6. Estrutura de Tiering por Preenchimento e Fields</h2>
+<h2 id="61-regra-central">6.1 Regra central</h2>
+<p>Os dois multiblocos usam o mesmo principio:</p>
+<ul>
+<li>existe <strong>uma estrutura-base</strong></li>
+<li>o <strong>nivel real</strong> da maquina depende do quanto ela esta preenchida internamente</li>
+<li>o nivel tambem depende do tier dos nossos <strong>field blocks</strong></li>
+</ul>
+<p>O jogador nao troca "mk1 controller", "mk2 controller", "mk3 controller".</p>
+<p>O jogador:</p>
+<ol>
+<li>constroi a forma base</li>
+<li>adiciona mais componentes internos</li>
+<li>melhora os <code>fields</code></li>
+<li>o multibloco sobe automaticamente de nivel</li>
+</ol>
+<h2 id="611-geometria-fechada">6.1.1 Geometria fechada</h2>
+<p>Ambos os multiblocos usam a mesma geometria base:</p>
+<ul>
+<li>estrutura externa em cubo <code>7x7x7</code></li>
+<li>volume interno util em cubo <code>5x5x5</code></li>
+<li>o interior e preenchivel</li>
+</ul>
+<p>Regra visual e funcional:</p>
+<ul>
+<li>a casca externa define a estrutura</li>
+<li>o volume interno define o tier real</li>
+<li>o tier so muda quando o <code>5x5x5</code> interno estiver preenchido completamente por um unico tier de field</li>
+</ul>
+<p>Exemplos:</p>
+<ul>
+<li>interior totalmente preenchido com <code>Field T1</code> -&gt; <code>Nivel 1</code></li>
+<li>interior totalmente preenchido com <code>Field T2</code> -&gt; <code>Nivel 2</code></li>
+<li>interior totalmente preenchido com <code>Field T3</code> -&gt; <code>Nivel 3</code></li>
+</ul>
+<p>Se o interior estiver:</p>
+<ul>
+<li>incompleto</li>
+<li>misturado</li>
+<li>parcialmente vazio</li>
+</ul>
+<p>entao o multibloco <strong>nao sobe de tier</strong>.</p>
+<h2 id="62-regra-de-nivel">6.2 Regra de nivel</h2>
+<p>Cada multibloco possui:</p>
+<ul>
+<li><code>Nivel 1</code></li>
+<li><code>Nivel 2</code></li>
+<li><code>Nivel 3</code></li>
+</ul>
+<p>O nivel e validado por dois eixos:</p>
+<ul>
+<li><strong>Preenchimento estrutural</strong></li>
+<li><strong>Tier de fields</strong></li>
+</ul>
+<h2 id="63-regra-universal-recomendada">6.3 Regra universal recomendada</h2>
+<h3 id="nivel-1">Nivel 1</h3>
+<ul>
+<li>estrutura externa completa</li>
+<li>preenchimento interno minimo obrigatorio</li>
+<li>apenas <code>Field T1</code> em todos os pontos de field</li>
+<li>desbloqueia a versao base forte da maquina</li>
+</ul>
+<h3 id="nivel-2">Nivel 2</h3>
+<ul>
+<li>estrutura externa completa</li>
+<li>preenchimento interno intermediario</li>
+<li>todos os pontos de field exigem <code>Field T2</code></li>
+<li>exige novas matrizes/nucleos internos</li>
+<li>desbloqueia a primeira forma realmente absurda da maquina</li>
+</ul>
+<h3 id="nivel-3">Nivel 3</h3>
+<ul>
+<li>estrutura externa completa</li>
+<li>preenchimento interno maximo</li>
+<li>todos os pontos de field exigem <code>Field T3</code></li>
+<li>todos os nucleos internos preenchidos</li>
+<li>desbloqueia o estado transcendente da maquina</li>
+</ul>
+<h2 id="64-filosofia-dos-fields">6.4 Filosofia dos fields</h2>
+<p>Os <code>fields</code> nao existem apenas para "gastar bloco". Eles sao a justificativa diegetica do aumento de nivel.</p>
+<p>No lore funcional:</p>
+<ul>
+<li>os <code>Field T1</code> estabilizam a forma basica</li>
+<li>os <code>Field T2</code> comprimem e compartilham fluxos complexos</li>
+<li>os <code>Field T3</code> permitem colapso de limite e comportamento transcendente</li>
+</ul>
+<p>Em termos de design:</p>
+<ul>
+<li>os <code>fields</code> viram o principal marcador visual de tier</li>
+<li>o preenchimento interno vira o principal marcador de investimento</li>
+<li>isso conecta os dois novos multiblocos a uma linguagem que o jogador ja conhece no mod</li>
+</ul>
+<hr />
+<h2 id="65-interacao-sem-controller-visivel">6.5 Interacao sem controller visivel</h2>
+<p>Esses dois multiblocos nao devem usar a fantasia classica de "controller block na frente".</p>
+<p>Regra aprovada:</p>
+<ul>
+<li>nao existe controller visivel unico</li>
+<li>qualquer bloco pertencente ao multibloco pode ser clicado</li>
+<li>qualquer clique valido deve abrir a interface da maquina</li>
+<li>a interface so abre quando a estrutura estiver formada e conectada a uma rede AE</li>
+</ul>
+<p>Implicacoes de implementacao:</p>
+<ul>
+<li>a maquina precisa de um conceito interno de <code>anchor/master</code>, mas isso nao deve aparecer para o jogador como controller</li>
+<li>o <code>anchor/master</code> deve ser deterministico e invisivel do ponto de vista de UX</li>
+<li>a deteccao de estrutura nao pode depender da orientacao, porque o cubo e simetrico</li>
+</ul>
+<p>Regra tecnica recomendada:</p>
+<ul>
+<li>usar um <code>anchor</code> canonico derivado da propria estrutura formada</li>
+<li>permitir que qualquer bloco do cubo resolva esse <code>anchor</code></li>
+<li>impedir abertura de menu quando a estrutura nao estiver formada</li>
+<li>impedir abertura de menu quando nao houver conexao valida com a rede AE</li>
+</ul>
+<hr />
+<h2 id="7-place-in-progression">7. Place in Progression</h2>
+<p>Esses multiblocos ficam <strong>acima da atual familia quantum</strong> e abaixo apenas de utilidades explicitamente criativas ou de payoff absoluto do mod.</p>
+<p>Pre-requisitos recomendados:</p>
+<ul>
+<li>linha quantum atual estabelecida</li>
+<li><code>Quantum Matter Fabricator</code></li>
+<li><code>Quantum Processor Assembler</code></li>
+<li><code>Quantum Slicer</code></li>
+<li>producao confortavel de <code>dimensional_processor</code></li>
+<li>acesso estavel a <code>phase_shift</code>, <code>hyper_dense</code>, <code>tesseract</code>, <code>event_horizon</code>, <code>cosmic_string</code></li>
+<li>acesso confortavel a <code>white_dwarf_matter</code>, <code>neutron_star_matter</code>, <code>pulsar_matter</code>, <code>dark_matter</code></li>
+<li>AE backbone muito forte</li>
+</ul>
+<p>Eles devem representar:</p>
+<ul>
+<li>o fim do gargalo de CPU do AE</li>
+<li>o fim do gargalo de pattern throughput</li>
+<li>o inicio da automacao verdadeiramente ridicula do mod</li>
+</ul>
+<hr />
+<h2 id="8-entropic-convergence-engine">8. Entropic Convergence Engine</h2>
+<h2 id="81-fantasia">8.1 Fantasia</h2>
+<p>Uma infraestrutura de convergencia entrópica que unifica <code>crafting storage</code>, <code>co-processors</code> e paralelismo em um unico dominio de execucao.</p>
+<h2 id="82-core-loop">8.2 Core loop</h2>
+<ol>
+<li>o jogador monta o multibloco</li>
+<li>o multibloco detecta o nivel pelo preenchimento e pelos <code>fields</code></li>
+<li>o AE passa a enxergar essa unidade como uma CPU especial</li>
+<li>conforme o nivel sobe, a capacidade exibida deixa de ser apenas "muito alta" e vira <code>infinita</code></li>
+</ol>
+<h2 id="83-beneficios-por-nivel">8.3 Beneficios por nivel</h2>
+<h3 id="nivel-1_1">Nivel 1</h3>
+<ul>
+<li>crafting storage gigantesco</li>
+<li>co-processors gigantescos</li>
+<li>multiprocessamento compartilhado entre jobs</li>
+<li>suficiente para substituir qualquer CPU convencional ou quantum de outros mods</li>
+</ul>
+<h3 id="nivel-2_1">Nivel 2</h3>
+<ul>
+<li>storage extremamente acima da curva</li>
+<li>pool de co-processors em outro patamar</li>
+<li>multiplas tasks grandes simultaneas sem perda perceptivel</li>
+<li>forte aceleracao de crafting tree profunda</li>
+</ul>
+<h3 id="nivel-3_1">Nivel 3</h3>
+<ul>
+<li>interface do AE exibe <code>infinito</code> para storage</li>
+<li>interface do AE exibe <code>infinito</code> para co-processors</li>
+<li>paralelismo tratado como nao limitado no uso normal</li>
+<li>CPU passa a ter nome/status especial no terminal</li>
+</ul>
+<h2 id="84-regras-funcionais">8.4 Regras funcionais</h2>
+<ul>
+<li>todos os crafts usando essa CPU compartilham o mesmo dominio de execucao</li>
+<li>jobs pequenos devem iniciar praticamente instantaneamente</li>
+<li>jobs monstruosos nao devem degradar perceptivelmente o restante da fila</li>
+<li>o objetivo e fazer o jogador parar de pensar em limite de CPU</li>
+</ul>
+<h2 id="85-exibicao-especial-no-terminal">8.5 Exibicao especial no terminal</h2>
+<p>No <code>Nivel 3</code>, o AE deve mostrar algo equivalente a:</p>
+<ul>
+<li><code>Storage: ∞</code></li>
+<li><code>Co-Processors: ∞</code></li>
+<li>nome especial da CPU, por exemplo <code>Entropic Convergence Engine</code></li>
+</ul>
+<h3 id="regra-tecnica-recomendada">Regra tecnica recomendada</h3>
+<p>Nao depender de um numero gigante puro para a UX.</p>
+<p>Usar:</p>
+<ul>
+<li>um <code>flag</code> interno como <code>isInfinite</code></li>
+<li>ou um tipo/estado especial de CPU transcendente</li>
+</ul>
+<p>E renderizar <code>∞</code> no lado de GUI/listagem.</p>
+<p>Isso e melhor do que depender somente de <code>Long.MAX_VALUE</code>, porque:</p>
+<ul>
+<li>evita overflow</li>
+<li>facilita tooltip e formatacao propria</li>
+<li>permite comportamento especial controlado</li>
+</ul>
+<h2 id="86-diferencial-frente-ao-advancedae">8.6 Diferencial frente ao AdvancedAE</h2>
+<p>O <code>Quantum Computer</code> do <code>AdvancedAE</code> sera superado porque o <code>Entropic Convergence Engine</code>:</p>
+<ul>
+<li>ultrapassa a ideia de storage/co-processors multiplicados</li>
+<li>entra em estado visual e funcional de <code>infinito</code></li>
+<li>entrega dominio compartilhado de execucao em escala muito maior</li>
+<li>remove o sentimento de limite de CPU do AE</li>
+</ul>
+<hr />
+<h2 id="9-entropic-assembler-matrix">9. Entropic Assembler Matrix</h2>
+<h2 id="91-fantasia">9.1 Fantasia</h2>
+<p>Uma matriz de montagem entrópica que colapsa milhares ou milhoes de operacoes de pattern em batches industriais absurdos.</p>
+<h2 id="92-core-loop">9.2 Core loop</h2>
+<ol>
+<li>o jogador monta a matriz</li>
+<li>insere patterns ou hatches de pattern</li>
+<li>escolhe a capacidade ativa e os dominios de pattern na interface</li>
+<li>a matriz executa batch crafting em escala massiva</li>
+<li>no <code>Nivel 3</code>, a fabricacao deve parecer praticamente instantanea para varias linhas</li>
+</ol>
+<h2 id="93-beneficios-por-nivel">9.3 Beneficios por nivel</h2>
+<h3 id="nivel-1_2">Nivel 1</h3>
+<ul>
+<li>throughput muito acima de qualquer assembler matrix comum</li>
+<li>slots de patterns modulares</li>
+<li>batch crafting muito forte</li>
+</ul>
+<h3 id="nivel-2_2">Nivel 2</h3>
+<ul>
+<li>numero de patterns ativos drasticamente ampliado</li>
+<li>compressao de tarefas repetidas</li>
+<li>throughput suficiente para alimentar outros multiblocos sem gargalo</li>
+</ul>
+<h3 id="nivel-3_2">Nivel 3</h3>
+<ul>
+<li>capacidade maxima de patterns</li>
+<li>batches absurdos por operacao</li>
+<li>crafts massivos praticamente instantaneos</li>
+<li>o jogador para de tratar pattern throughput como problema</li>
+</ul>
+<h2 id="94-mecanicas-principais">9.4 Mecânicas principais</h2>
+<h3 id="capacidade-modular-de-patterns">Capacidade modular de patterns</h3>
+<p>A interface deve permitir escolher quantos slots de pattern ficam ativos.</p>
+<p>Faixas sugeridas:</p>
+<ul>
+<li><code>16</code></li>
+<li><code>64</code></li>
+<li><code>256</code></li>
+<li><code>1024</code></li>
+<li><code>4096</code></li>
+</ul>
+<p>Opcional de capstone:</p>
+<ul>
+<li>um estado especial de capacidade "transcendente" no <code>Nivel 3</code></li>
+</ul>
+<h3 id="pattern-compilation">Pattern compilation</h3>
+<p>Patterns muito usados podem ganhar estado de <code>compiled</code>, recebendo:</p>
+<ul>
+<li>menor custo logico de execucao</li>
+<li>maior velocidade de batch</li>
+<li>menor overhead interno</li>
+</ul>
+<h3 id="batch-materialization">Batch materialization</h3>
+<p>Receitas repetitivas devem ser agrupadas para execucao massiva.</p>
+<p>Fantasia:</p>
+<ul>
+<li>nao e "fazendo 1 pattern por vez mais rapido"</li>
+<li>e "materializando um lote industrial inteiro em um unico pulso"</li>
+</ul>
+<h2 id="95-diferencial-frente-ao-extendedae">9.5 Diferencial frente ao ExtendedAE</h2>
+<p>O <code>Assembler Matrix</code> do <code>ExtendedAE</code> sera superado porque o <code>Entropic Assembler Matrix</code>:</p>
+<ul>
+<li>nao so amplia patterns, mas amplia throughput real em outra escala</li>
+<li>comprime batches industriais inteiros</li>
+<li>e integrado ao endgame do UFO Future</li>
+<li>pode operar em regime praticamente instantaneo no <code>Nivel 3</code></li>
+</ul>
+<hr />
+<h2 id="10-estrutura-recomendada">10. Estrutura Recomendada</h2>
+<h2 id="101-filosofia-estrutural">10.1 Filosofia estrutural</h2>
+<p>Ambos devem ser:</p>
+<ul>
+<li>complexos para construir</li>
+<li>claros de ler visualmente</li>
+<li>simples de operar</li>
+</ul>
+<p>A complexidade deve vir da <strong>estrutura</strong>, nao de microgerenciamento irritante.</p>
+<h2 id="102-regra-visual">10.2 Regra visual</h2>
+<p>Cada multibloco precisa ter:</p>
+<ul>
+<li>casings externos fortes</li>
+<li>nucleo interno ou matriz interna visivel</li>
+<li>pontos dedicados de <code>field</code></li>
+<li>preenchimento interno que muda entre <code>Nivel 1</code>, <code>2</code> e <code>3</code></li>
+</ul>
+<h2 id="103-componentes-estruturais-recomendados">10.3 Componentes estruturais recomendados</h2>
+<p>Usar e expandir a familia atual:</p>
+<ul>
+<li><code>quantum_entropy_casing</code></li>
+<li><code>quantum_hyper_mechanical_casing</code></li>
+<li><code>entropy_singularity_casing</code></li>
+<li><code>entropy_assembler_core_casing</code></li>
+<li><code>entropy_computer_condensation_matrix</code></li>
+<li><code>stellar_field_generator_t1</code></li>
+<li><code>stellar_field_generator_t2</code></li>
+<li><code>stellar_field_generator_t3</code></li>
+<li>novos blocos internos especificos para cada multibloco</li>
+</ul>
+<hr />
+<h2 id="11-regras-de-balanceamento">11. Regras de Balanceamento</h2>
+<h2 id="111-principio-central">11.1 Princípio central</h2>
+<p>Os multiblocos devem ser absurdos em payoff, mas devem cobrar o jogador em:</p>
+<ul>
+<li>custo estrutural</li>
+<li>profundidade de cadeia</li>
+<li>materiais assinatura do mod</li>
+<li>componentes AE/UFO de alto tier</li>
+</ul>
+<p>Eles nao precisam ser "equilibrados" em relacao aos mods de referencia. O objetivo e superá-los.</p>
+<h2 id="112-custo-por-nivel">11.2 Custo por nivel</h2>
+<p>Aplicar a filosofia ja usada no mod:</p>
+<ul>
+<li><code>Nivel 2 ~= 10x</code> custo total do <code>Nivel 1</code></li>
+<li><code>Nivel 3 ~= 50x</code> custo total do <code>Nivel 2</code></li>
+</ul>
+<p>Distribuir o custo entre:</p>
+<ul>
+<li>blocos estruturais</li>
+<li>processadores</li>
+<li>matrizes/componentes</li>
+<li>materia estelar</li>
+<li>materiais raros</li>
+</ul>
+<h2 id="113-materiais-assinatura-recomendados">11.3 Materiais assinatura recomendados</h2>
+<p>Usar fortemente:</p>
+<ul>
+<li><code>dimensional_processor</code></li>
+<li><code>phase_shift_component_matrix</code></li>
+<li><code>hyper_dense_component_matrix</code></li>
+<li><code>tesseract_component_matrix</code></li>
+<li><code>event_horizon_component_matrix</code></li>
+<li><code>cosmic_string_component_matrix</code></li>
+<li><code>white_dwarf_matter</code></li>
+<li><code>neutron_star_matter</code></li>
+<li><code>pulsar_matter</code></li>
+<li><code>dark_matter</code></li>
+<li>mega storages atuais</li>
+<li>mega co-processors atuais</li>
+</ul>
+<hr />
+<h2 id="12-ux-e-interface">12. UX e Interface</h2>
+<h2 id="121-entropic-convergence-engine">12.1 Entropic Convergence Engine</h2>
+<p>A interface precisa ser simples e impactante.</p>
+<p>Mostrar:</p>
+<ul>
+<li>nivel atual</li>
+<li>status estrutural</li>
+<li>status dos fields</li>
+<li>storage</li>
+<li>co-processors</li>
+<li>status especial <code>infinito</code> no <code>Nivel 3</code></li>
+</ul>
+<h2 id="122-entropic-assembler-matrix">12.2 Entropic Assembler Matrix</h2>
+<p>Mostrar:</p>
+<ul>
+<li>nivel atual</li>
+<li>capacidade ativa de patterns</li>
+<li>patterns compilados</li>
+<li>throughput atual</li>
+<li>batches por ciclo</li>
+<li>gargalos atuais</li>
+</ul>
+<h2 id="123-leitura-imediata">12.3 Leitura imediata</h2>
+<p>O jogador deve entender em poucos segundos:</p>
+<ul>
+<li>o que falta para subir de nivel</li>
+<li>quantos <code>fields</code> faltam melhorar</li>
+<li>quanto preenchimento interno ainda falta</li>
+<li>se ja atingiu o estado transcendente</li>
+</ul>
+<hr />
+<h2 id="13-localizacao-e-apresentacao">13. Localizacao e Apresentacao</h2>
+<p>Novas chaves recomendadas:</p>
+<ul>
+<li><code>block.ufo.entropic_convergence_engine</code></li>
+<li><code>block.ufo.entropic_assembler_matrix</code></li>
+<li><code>tooltip.ufo.infinite</code></li>
+<li><code>gui.ufo.multiblock_level</code></li>
+<li><code>gui.ufo.field_requirement</code></li>
+<li><code>gui.ufo.fill_requirement</code></li>
+<li><code>gui.ufo.transcendent_state</code></li>
+</ul>
+<p>Exibicoes especiais recomendadas:</p>
+<ul>
+<li><code>Infinite</code></li>
+<li><code>∞</code></li>
+<li><code>Transcendent</code></li>
+<li><code>Unbounded</code></li>
+</ul>
+<hr />
+<h2 id="14-design-tecnico-de-alto-nivel">14. Design Tecnico de Alto Nivel</h2>
+<h2 id="141-entropic-convergence-engine">14.1 Entropic Convergence Engine</h2>
+<p>Vai exigir:</p>
+<ul>
+<li>um controller/block entity proprio</li>
+<li>logica de validacao de estrutura por preenchimento</li>
+<li>logica de tier baseada em <code>fields</code></li>
+<li>integracao forte com CPU selection/listagem do AE</li>
+<li>formatacao custom da UI para <code>∞</code></li>
+</ul>
+<h2 id="142-entropic-assembler-matrix">14.2 Entropic Assembler Matrix</h2>
+<p>Vai exigir:</p>
+<ul>
+<li>controller/block entity proprio</li>
+<li>controle de pattern capacity modular</li>
+<li>deteccao de nivel por preenchimento + <code>fields</code></li>
+<li>regras de batch throughput por nivel</li>
+<li>tela propria com foco em patterns e desempenho</li>
+</ul>
+<h2 id="143-reuso-recomendado">14.3 Reuso recomendado</h2>
+<p>Reaproveitar o maximo possivel de:</p>
+<ul>
+<li>sistema atual de <code>multiblock pattern</code></li>
+<li>predicados de <code>QuantumPatternHatch</code></li>
+<li>base de <code>AbstractParallelMultiblockControllerBE</code></li>
+<li>leitura de tier dos <code>stellar fields</code></li>
+<li>infraestrutura de menus/telas dos multiblocos atuais</li>
+</ul>
+<hr />
+<h2 id="15-ordem-recomendada-de-implementacao">15. Ordem Recomendada de Implementacao</h2>
+<h2 id="151-primeiro-entropic-convergence-engine">15.1 Primeiro: Entropic Convergence Engine</h2>
+<p>Motivo:</p>
+<ul>
+<li>o impacto no jogador e imediato</li>
+<li>a exibicao de <code>∞</code> no terminal do AE vende a fantasia rapidamente</li>
+<li>abre o teto de autocrafting para todo o resto</li>
+</ul>
+<h2 id="152-segundo-entropic-assembler-matrix">15.2 Segundo: Entropic Assembler Matrix</h2>
+<p>Motivo:</p>
+<ul>
+<li>aproveita a nova camada de CPU transcendente ja estabelecida</li>
+<li>pode ser afinado para alimentar os outros multiblocos em massa</li>
+<li>fecha o loop entre planejamento infinito e execucao massiva</li>
+</ul>
+<hr />
+<h2 id="16-open-questions-fechadas-por-este-prd">16. Open Questions Fechadas por Este PRD</h2>
+<h3 id="devem-ter-3-niveis">Devem ter 3 niveis?</h3>
+<p><strong>Sim.</strong></p>
+<h3 id="o-nivel-deve-depender-do-preenchimento-do-multibloco">O nivel deve depender do preenchimento do multibloco?</h3>
+<p><strong>Sim.</strong></p>
+<h3 id="o-nivel-deve-depender-diretamente-dos-nossos-fields">O nivel deve depender diretamente dos nossos fields?</h3>
+<p><strong>Sim.</strong></p>
+<h3 id="o-sucessor-do-quantum-computer-ainda-deve-se-chamar-quantum-computer">O sucessor do Quantum Computer ainda deve se chamar "Quantum Computer"?</h3>
+<p><strong>Nao.</strong></p>
+<p>Nome aprovado neste PRD: <code>Entropic Convergence Engine</code>.</p>
+<h3 id="o-terminal-do-ae-deve-mostrar-infinito-em-vez-de-numeros-fixos">O terminal do AE deve mostrar infinito em vez de numeros fixos?</h3>
+<p><strong>Sim, no Nivel 3.</strong></p>
+<h3 id="o-objetivo-e-superar-explicitamente-os-mods-de-referencia">O objetivo e superar explicitamente os mods de referencia?</h3>
+<p><strong>Sim.</strong></p>
+<p>Esse e o objetivo de fantasy e de payoff.</p>
+<hr />
+<h2 id="17-decisao-final">17. Decisao Final</h2>
+<p>Os dois novos capstones de automacao AE do UFO Future serao:</p>
+<ul>
+<li><code>Entropic Convergence Engine</code></li>
+<li><code>Entropic Assembler Matrix</code></li>
+</ul>
+<p>Ambos terao:</p>
+<ul>
+<li>3 niveis</li>
+<li>progressao por preenchimento estrutural</li>
+<li>dependencia direta de <code>Field T1/T2/T3</code></li>
+<li>payoff absurdamente acima de <code>AdvancedAE</code> e <code>ExtendedAE</code></li>
+</ul>
+<p>No <code>Nivel 3</code>, o <code>Entropic Convergence Engine</code> deve exibir <code>∞</code> no terminal do AE para storage e co-processors, com formatacao customizada do mod.</p>
+<p>Este documento passa a ser a fonte de verdade para a implementacao inicial desses dois multiblocos.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

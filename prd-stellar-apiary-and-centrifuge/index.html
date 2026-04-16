@@ -1,0 +1,1642 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://raishxn.github.io/UFO-Future-1.21.1/prd-stellar-apiary-and-centrifuge/">
+      
+      
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../pt/prd-stellar-apiary-and-centrifuge/" hreflang="pt">
+        
+          <link rel="alternate" href="../es/prd-stellar-apiary-and-centrifuge/" hreflang="es">
+        
+          <link rel="alternate" href="../zh/prd-stellar-apiary-and-centrifuge/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PRD: Stellar Apiary and Stellar Centrifuge - UFO Future Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#prd-stellar-apiary-and-stellar-centrifuge" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="UFO Future Documentation" class="md-header__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UFO Future Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PRD: Stellar Apiary and Stellar Centrifuge
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../pt/prd-stellar-apiary-and-centrifuge/" hreflang="pt" class="md-select__link">
+              Portugues
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../es/prd-stellar-apiary-and-centrifuge/" hreflang="es" class="md-select__link">
+              Espanol
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../zh/prd-stellar-apiary-and-centrifuge/" hreflang="zh" class="md-select__link">
+              Zhongwen
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../mega-storage/" class="md-tabs__link">
+          
+  
+  
+  Wiki
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="UFO Future Documentation" class="md-nav__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UFO Future Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wiki
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Wiki
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mega-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mega Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../containment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Containment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stellar-nexus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stellar Nexus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dimensional Matter Assembler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-matter-fabricator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Matter Fabricator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-slicer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Slicer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-processor-assembler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Processor Assembler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multiblock-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multiblock Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../catalysts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalysts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubejs-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KubeJS Recipes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools & Weapons
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../armor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Armor Sets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage-cells/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage Cells
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../materials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Materials & Fluids
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../progression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Crafting Progression
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipe-balance-audit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recipe Balance Audit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-product-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Product Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-player-fantasy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Player Fantasy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-position-in-progression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Position In Progression
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-machine-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Machine Identity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#51-stellar-apiary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Stellar Apiary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-stellar-centrifuge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Stellar Centrifuge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-structural-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Structural Concept
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-stellar-apiary-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Stellar Apiary Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62-stellar-centrifuge-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Stellar Centrifuge Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-field-tier-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Field Tier Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-recommended-scaling-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Recommended Scaling Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-bee-hatch-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Bee Hatch Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-production-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Production Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-main-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Main Outputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-special-upgrades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Special Upgrades
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-heat-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Heat System
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-recover-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Recover Mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-parallelism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Parallelism
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-gui-concept-for-stellar-apiary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. GUI Concept For Stellar Apiary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-stellar-centrifuge-core-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. Stellar Centrifuge Core Concept
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-me-massive-comb-input-bus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18. ME Massive Comb Input Bus
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-stellar-centrifuge-processing-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19. Stellar Centrifuge Processing Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#20-performance-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20. Performance Principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#21-open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        21. Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-possible-contradictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        22. Possible Contradictions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-main-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        23. Main Risks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#24-recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        24. Recommendation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="prd-stellar-apiary-and-stellar-centrifuge">PRD: Stellar Apiary and Stellar Centrifuge</h1>
+<h2 id="1-summary">1. Summary</h2>
+<p>This proposal adds a new endgame bee-processing line to UFO Future built around two multiblocks:</p>
+<ul>
+<li><strong>Stellar Apiary</strong></li>
+<li><strong>Stellar Centrifuge</strong></li>
+</ul>
+<p>The design goal is simple:</p>
+<ul>
+<li>integrate <strong>UFO Future + AE2 + Productive Bees</strong></li>
+<li>preserve the fantasy of running many bees inside a single industrial machine</li>
+<li>produce <strong>extreme-scale outputs</strong></li>
+<li>remain <strong>TPS-safe</strong> even inside large modpacks</li>
+</ul>
+<p>The core idea is to avoid simulating large numbers of live bee entities. Instead, the multiblocks treat bees as high-throughput production profiles managed by a controller, then push bulk outputs directly into AE2 through massive hatches.</p>
+<h2 id="2-product-goals">2. Product Goals</h2>
+<p>Add a bee-focused endgame system that:</p>
+<ul>
+<li>feels dramatically stronger than standard Productive Bees setups</li>
+<li>uses UFO Future field tiers as the main scaling model</li>
+<li>supports mass AE2 automation without inventory spam</li>
+<li>can generate millions of combs or comb blocks per minute in late game</li>
+<li>avoids catastrophic TPS loss from entity-heavy automation</li>
+<li>creates a clean two-step industrial loop:</li>
+<li><strong>Apiary</strong> for comb, comb block, and honey generation</li>
+<li><strong>Centrifuge</strong> for massive downstream processing</li>
+</ul>
+<h2 id="3-player-fantasy">3. Player Fantasy</h2>
+<p>The player should feel that they have:</p>
+<ul>
+<li>built a forbidden stellar-scale bee reactor</li>
+<li>compressed entire bee populations into a controlled field chamber</li>
+<li>industrialized Productive Bees far beyond normal progression</li>
+<li>connected the entire system directly to AE2 for absurd throughput</li>
+</ul>
+<p>This should feel more like a post-endgame industrial complex than an upgraded vanilla apiary.</p>
+<h2 id="4-position-in-progression">4. Position In Progression</h2>
+<p>This system should sit firmly in late game or post-endgame, after the player already has:</p>
+<ul>
+<li>stable AE2 infrastructure</li>
+<li>reliable coolant production</li>
+<li>DMA automation</li>
+<li>QMF / Quantum multiblock progression</li>
+<li>comfortable access to high-tier UFO materials</li>
+<li>strong processor production</li>
+</ul>
+<p>Recommended progression role:</p>
+<ul>
+<li>normal Productive Bees = species collection and early to mid automation</li>
+<li>Stellar Apiary = extreme comb and honey generation</li>
+<li>Stellar Centrifuge = extreme refinement and AE2-scale mass handling</li>
+</ul>
+<h2 id="5-machine-identity">5. Machine Identity</h2>
+<h2 id="51-stellar-apiary">5.1 Stellar Apiary</h2>
+<p>The <strong>Stellar Apiary</strong> is the high-output producer.</p>
+<p>Its responsibilities:</p>
+<ul>
+<li>hold many bees inside dedicated hatches</li>
+<li>convert those bees into bulk comb and honey output</li>
+<li>optionally compress output into comb blocks at higher tiers or with upgrades</li>
+<li>use field tiers, heat, and recover mode as the main balancing systems</li>
+</ul>
+<h2 id="52-stellar-centrifuge">5.2 Stellar Centrifuge</h2>
+<p>The <strong>Stellar Centrifuge</strong> is the bulk processor.</p>
+<p>Its responsibilities:</p>
+<ul>
+<li>pull selected combs or comb blocks directly from the AE network</li>
+<li>process them with high parallel throughput</li>
+<li>send item and fluid outputs directly back into AE2 through massive output hatches</li>
+</ul>
+<p>Together, these two machines form a clean industrial chain.</p>
+<h2 id="6-structural-concept">6. Structural Concept</h2>
+<h2 id="61-stellar-apiary-structure">6.1 Stellar Apiary Structure</h2>
+<p>Recommended footprint:</p>
+<ul>
+<li><strong>3x3x3</strong> for a compact version</li>
+<li><strong>5x5x5</strong> for a more premium endgame version</li>
+</ul>
+<p>Recommended structure rules:</p>
+<ul>
+<li>outer shell made from dedicated casings</li>
+<li>internal core reserved for UFO field components</li>
+<li>up to <strong>4 Bee Matrix Hatches</strong></li>
+<li>each hatch stores up to <strong>32 bees</strong></li>
+<li>each hatch is limited to <strong>one species</strong></li>
+<li>includes AE and output infrastructure on the shell</li>
+</ul>
+<p>Recommended shell components:</p>
+<ul>
+<li>controller</li>
+<li>casing blocks</li>
+<li>AE energy input</li>
+<li>ME massive output hatch</li>
+<li>optional ME massive fluid output hatch</li>
+<li>honey reservoir or internal tank hatch</li>
+<li>up to 4 bee hatches</li>
+</ul>
+<h2 id="62-stellar-centrifuge-structure">6.2 Stellar Centrifuge Structure</h2>
+<p>Recommended footprint:</p>
+<ul>
+<li><strong>5x5x5</strong> or a vertical <strong>3x3x5</strong></li>
+</ul>
+<p>Recommended shell components:</p>
+<ul>
+<li>controller</li>
+<li>casing blocks</li>
+<li>AE energy input</li>
+<li><strong>ME Massive Comb Input Bus</strong></li>
+<li>ME massive output hatch</li>
+<li>ME massive fluid output hatch</li>
+<li>internal field structure</li>
+</ul>
+<h2 id="7-field-tier-model">7. Field Tier Model</h2>
+<p>The machine line uses UFO field tiers as its primary scaling model.</p>
+<p>Suggested tiers:</p>
+<ul>
+<li><strong>Tier 0</strong> = no field blocks</li>
+<li><strong>Tier 1</strong></li>
+<li><strong>Tier 2</strong></li>
+<li><strong>Tier 3</strong></li>
+</ul>
+<p>Design intent:</p>
+<ul>
+<li>higher field tiers increase production</li>
+<li>higher field tiers increase speed</li>
+<li>higher field tiers reduce heat pressure</li>
+</ul>
+<p>This keeps the system aligned with UFO Future instead of adding a separate parallel upgrade language like food-only or floral-only scaling.</p>
+<h2 id="8-recommended-scaling-model">8. Recommended Scaling Model</h2>
+<p>The scaling should feel exponential, but still remain readable.</p>
+<p>Example starting point:</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th style="text-align: right;">Production Multiplier</th>
+<th style="text-align: right;">Speed Multiplier</th>
+<th style="text-align: right;">Heat Multiplier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier 0</td>
+<td style="text-align: right;"><code>1x</code></td>
+<td style="text-align: right;"><code>1x</code></td>
+<td style="text-align: right;"><code>1.00x</code></td>
+</tr>
+<tr>
+<td>Tier 1</td>
+<td style="text-align: right;"><code>4x</code></td>
+<td style="text-align: right;"><code>3x</code></td>
+<td style="text-align: right;"><code>0.85x</code></td>
+</tr>
+<tr>
+<td>Tier 2</td>
+<td style="text-align: right;"><code>20x</code></td>
+<td style="text-align: right;"><code>8x</code></td>
+<td style="text-align: right;"><code>0.70x</code></td>
+</tr>
+<tr>
+<td>Tier 3</td>
+<td style="text-align: right;"><code>100x</code></td>
+<td style="text-align: right;"><code>20x</code></td>
+<td style="text-align: right;"><code>0.50x</code></td>
+</tr>
+</tbody>
+</table>
+<p>Important note:</p>
+<p>If production and speed are both scaled aggressively, total throughput rises much faster than it looks. For example, <code>100x</code> production and <code>20x</code> speed effectively create a <code>2000x</code> throughput jump.</p>
+<p>That is acceptable for endgame, but should be a deliberate payoff.</p>
+<h2 id="9-bee-hatch-model">9. Bee Hatch Model</h2>
+<p>Each <strong>Bee Matrix Hatch</strong> should:</p>
+<ul>
+<li>accept up to <strong>32 bees</strong></li>
+<li>accept only <strong>one species at a time</strong></li>
+<li>show installed bee count</li>
+<li>show species identity</li>
+<li>show estimated contribution to output</li>
+</ul>
+<p>One species per hatch is recommended because it:</p>
+<ul>
+<li>simplifies balancing</li>
+<li>simplifies the GUI</li>
+<li>reduces edge cases</li>
+<li>makes output prediction easier</li>
+</ul>
+<p>With 4 hatches, the controller can support up to:</p>
+<ul>
+<li><code>128</code> bees total</li>
+<li><code>4</code> active species at once</li>
+</ul>
+<h2 id="10-production-model">10. Production Model</h2>
+<p>The Stellar Apiary should not simulate one active process per bee.</p>
+<p>Instead, it should:</p>
+<ul>
+<li>read the installed bees from each hatch</li>
+<li>aggregate total effective production by hatch and species</li>
+<li>run the machine in cycles</li>
+<li>generate bulk outputs at the end of each cycle</li>
+</ul>
+<p>Recommended logic:</p>
+<ol>
+<li>Read all valid hatches</li>
+<li>Resolve each hatch into a production profile</li>
+<li>Aggregate outputs</li>
+<li>Apply field tier multipliers</li>
+<li>Apply machine upgrades</li>
+<li>Generate item and fluid results in bulk</li>
+<li>Inject all outputs into AE2 in as few operations as possible</li>
+</ol>
+<p>This preserves the fantasy of “many bees working at once” without creating the TPS cost of many live entities.</p>
+<h2 id="11-main-outputs">11. Main Outputs</h2>
+<p>The Stellar Apiary should focus on:</p>
+<ul>
+<li>combs</li>
+<li>comb blocks</li>
+<li>honey</li>
+<li>optional secondary byproducts depending on species</li>
+</ul>
+<p>Recommended rule:</p>
+<ul>
+<li>baseline output is <strong>comb</strong></li>
+<li>higher tier or specialized upgrades can convert part of the output to <strong>comb block</strong></li>
+<li>honey is always generated as a fluid side-product and stored in an internal tank or exported directly</li>
+</ul>
+<p>This keeps the output model easy to read.</p>
+<h2 id="12-special-upgrades">12. Special Upgrades</h2>
+<p>The machine should have its own dedicated upgrade family.</p>
+<p>These upgrades should be stronger than current Omega-level upgrades in their specialty, but only for this machine line.</p>
+<p>Recommended philosophy:</p>
+<ul>
+<li>not “more Omega than Omega”</li>
+<li>instead “Omega-tier but apiculture-specialized”</li>
+</ul>
+<p>Possible upgrade themes:</p>
+<ul>
+<li>increase effective bee count per hatch</li>
+<li>improve comb-to-comb-block conversion</li>
+<li>improve byproduct chance</li>
+<li>reduce recover duration</li>
+<li>improve honey efficiency</li>
+</ul>
+<p>Recommended crafting direction:</p>
+<ul>
+<li>crafted from <strong>Omega upgrade + catalysts</strong></li>
+<li>assembled through <strong>DMA</strong> or <strong>QMF</strong></li>
+</ul>
+<h2 id="13-heat-system">13. Heat System</h2>
+<p>The heat system should be simpler than the DMA or Stellar Nexus failure model.</p>
+<p>Recommended behavior:</p>
+<ul>
+<li>heat rises while the machine is active</li>
+<li>field tiers reduce heat pressure</li>
+<li>high parallels and aggressive throughput raise heat faster</li>
+<li>reaching max heat does <strong>not</strong> explode the machine</li>
+<li>reaching max heat forces the machine into <strong>Recover Mode</strong></li>
+</ul>
+<p>This supports an “OP but stable” fantasy better than catastrophic destruction.</p>
+<h2 id="14-recover-mode">14. Recover Mode</h2>
+<p>When maximum heat is reached:</p>
+<ul>
+<li>the machine stops immediately</li>
+<li>it enters <strong>Recover Mode</strong></li>
+<li>it remains offline for <strong>10 minutes</strong></li>
+<li>this recover timer is saved in NBT</li>
+<li>breaking and replacing the controller must <strong>not</strong> reset the timer</li>
+</ul>
+<p>Recommended reasons for this design:</p>
+<ul>
+<li>prevents abuse</li>
+<li>avoids frustration from explosions</li>
+<li>still creates a meaningful cost for overdriving the machine</li>
+<li>preserves the identity of heat as a real balancing system</li>
+</ul>
+<p>Optional extension:</p>
+<ul>
+<li>future versions could scale recover duration by severity</li>
+<li>but the first implementation should prefer a simple fixed timer</li>
+</ul>
+<h2 id="15-parallelism">15. Parallelism</h2>
+<p>The machine should support very high throughput, but parallelism should remain aggregated.</p>
+<p>Recommended interpretation:</p>
+<ul>
+<li>parallels are not “one thread per bee”</li>
+<li>parallels are “how many bulk production batches the machine resolves per cycle”</li>
+</ul>
+<p>This matters because per-bee threading would become a hot path very quickly.</p>
+<p>Recommended throughput target:</p>
+<ul>
+<li>late game should comfortably reach <strong>millions of combs or comb blocks per minute</strong></li>
+</ul>
+<p>That is acceptable if the implementation remains:</p>
+<ul>
+<li>cycle-based</li>
+<li>aggregated</li>
+<li>AE2-native</li>
+<li>low-allocation</li>
+</ul>
+<h2 id="16-gui-concept-for-stellar-apiary">16. GUI Concept For Stellar Apiary</h2>
+<p>Recommended controller GUI sections:</p>
+<ul>
+<li>installed bee hatches</li>
+<li>species per hatch</li>
+<li>bee count per hatch</li>
+<li>machine upgrades</li>
+<li>projected outputs</li>
+<li>honey tank</li>
+<li>heat bar</li>
+<li>recover timer when locked</li>
+<li>current field tier</li>
+</ul>
+<p>Possible UX nicety:</p>
+<ul>
+<li>show estimated output per minute for the current configuration</li>
+</ul>
+<h2 id="17-stellar-centrifuge-core-concept">17. Stellar Centrifuge Core Concept</h2>
+<p>The <strong>Stellar Centrifuge</strong> should be built specifically for AE2 mass handling.</p>
+<p>Unlike simpler centrifuge designs with a few input and output slots, this machine should:</p>
+<ul>
+<li>pull large amounts of combs or comb blocks from AE2</li>
+<li>process them with high parallel throughput</li>
+<li>output items and fluids directly back into AE2</li>
+</ul>
+<p>This machine exists because once the Apiary is generating at absurd scale, normal slot-based centrifuge designs become the true bottleneck.</p>
+<h2 id="18-me-massive-comb-input-bus">18. ME Massive Comb Input Bus</h2>
+<p>The <strong>ME Massive Comb Input Bus</strong> is a special hatch for the Stellar Centrifuge.</p>
+<p>Its GUI should:</p>
+<ul>
+<li>display the combs and comb blocks currently available in the ME network</li>
+<li>let the player choose which types are valid inputs for the multiblock</li>
+<li>act as a selection and filtering layer rather than a normal inventory</li>
+</ul>
+<p>Recommended implementation rule:</p>
+<ul>
+<li>do <strong>not</strong> rescan the entire network every frame</li>
+</ul>
+<p>Instead, cache the visible list and refresh it:</p>
+<ul>
+<li>when the GUI opens</li>
+<li>when the player presses refresh</li>
+<li>or on a throttled interval</li>
+</ul>
+<p>Without this guardrail, the UI itself could become a performance hotspot on large AE networks.</p>
+<h2 id="19-stellar-centrifuge-processing-model">19. Stellar Centrifuge Processing Model</h2>
+<p>Recommended logic:</p>
+<ol>
+<li>Read selected comb filters from the input bus</li>
+<li>Pull large batches from the AE network</li>
+<li>Resolve centrifuge outputs in bulk</li>
+<li>Aggregate identical outputs</li>
+<li>Insert all item outputs through massive output hatches</li>
+<li>Insert all fluid outputs through massive fluid hatches</li>
+</ol>
+<p>This should support very high parallel counts without depending on many physical inventory slots.</p>
+<h2 id="20-performance-principles">20. Performance Principles</h2>
+<p>This proposal is only successful if it remains TPS-safe.</p>
+<p>Hard rules:</p>
+<ul>
+<li>do not simulate live bee entities inside the multiblock</li>
+<li>do not evaluate every bee every tick as an independent process</li>
+<li>do not insert outputs one item at a time</li>
+<li>do not poll the full AE network every frame for the GUI</li>
+<li>do not rebuild expensive lists when nothing changed</li>
+</ul>
+<p>Recommended guardrails:</p>
+<ul>
+<li>cycle-based processing every <code>20</code> or <code>40</code> ticks</li>
+<li>cached production profiles</li>
+<li>cached GUI item lists</li>
+<li>aggregated output maps</li>
+<li>one or few AE2 insert calls per output type</li>
+</ul>
+<h2 id="21-open-questions">21. Open Questions</h2>
+<p>These should be resolved before implementation:</p>
+<ul>
+<li>Should the machines use a <strong>3x3x3</strong> or <strong>5x5x5</strong> final footprint?</li>
+<li>Should the Apiary produce only <strong>comb</strong>, or also support <strong>direct comb block</strong> mode?</li>
+<li>Should honey be just a byproduct buffer, or also a machine upkeep resource?</li>
+<li>Should field tiers require all four internal positions to match, like other UFO multiblocks?</li>
+<li>Should the Apiary use only dedicated UFO upgrades, or also expose Productive Bees-style upgrade widgets?</li>
+<li>Should recover always be a fixed <strong>10 minutes</strong>, or scale later with overheat severity?</li>
+<li>Should the Centrifuge process both <strong>comb</strong> and <strong>comb block</strong> from day one, or launch with one format first?</li>
+</ul>
+<h2 id="22-possible-contradictions">22. Possible Contradictions</h2>
+<p>These are the main places where the concept could become internally inconsistent:</p>
+<ul>
+<li>Wanting a “simple” system while also deeply reproducing Productive Bees native upgrade behavior may add unnecessary complexity.</li>
+<li>Saying the new upgrades are “stronger than Omega” can blur the role of Omega unless these upgrades are clearly specialized.</li>
+<li>A Tier 0 version that is too strong may invalidate normal Productive Bees progression too early.</li>
+<li>Very high throughput with too many species-specific side-products can move the real bottleneck from the machine to GUI sync and AE2 insertion paths.</li>
+</ul>
+<h2 id="23-main-risks">23. Main Risks</h2>
+<p>Main implementation risks:</p>
+<ul>
+<li>coupling too tightly to Productive Bees internals instead of building a stable UFO-owned production layer</li>
+<li>making the GUI query AE2 too aggressively</li>
+<li>letting heat become cosmetic instead of meaningful</li>
+<li>allowing controller break-and-place to bypass recover mode</li>
+<li>balancing Tier 3 so high that Tier 1 and Tier 2 feel irrelevant</li>
+</ul>
+<h2 id="24-recommendation">24. Recommendation</h2>
+<p>Recommended implementation direction:</p>
+<ul>
+<li>build <strong>Stellar Apiary</strong> first</li>
+<li>use <strong>one species per hatch</strong></li>
+<li>use <strong>aggregated cycle-based production</strong></li>
+<li>use <strong>field tiers 0 to 3</strong></li>
+<li>use <strong>heat + recover mode</strong></li>
+<li>then build the <strong>Stellar Centrifuge</strong> as the dedicated post-processing solution</li>
+</ul>
+<p>This path preserves the intended fantasy while keeping the architecture friendly to large modpacks and AE2-scale factories.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
