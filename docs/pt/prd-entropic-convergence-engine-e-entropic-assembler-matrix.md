@@ -121,6 +121,34 @@ O jogador:
 3. melhora os `fields`
 4. o multibloco sobe automaticamente de nivel
 
+## 6.1.1 Geometria fechada
+
+Ambos os multiblocos usam a mesma geometria base:
+
+- estrutura externa em cubo `7x7x7`
+- volume interno util em cubo `5x5x5`
+- o interior e preenchivel
+
+Regra visual e funcional:
+
+- a casca externa define a estrutura
+- o volume interno define o tier real
+- o tier so muda quando o `5x5x5` interno estiver preenchido completamente por um unico tier de field
+
+Exemplos:
+
+- interior totalmente preenchido com `Field T1` -> `Nivel 1`
+- interior totalmente preenchido com `Field T2` -> `Nivel 2`
+- interior totalmente preenchido com `Field T3` -> `Nivel 3`
+
+Se o interior estiver:
+
+- incompleto
+- misturado
+- parcialmente vazio
+
+entao o multibloco **nao sobe de tier**.
+
 ## 6.2 Regra de nivel
 
 Cada multibloco possui:
@@ -174,6 +202,32 @@ Em termos de design:
 - os `fields` viram o principal marcador visual de tier
 - o preenchimento interno vira o principal marcador de investimento
 - isso conecta os dois novos multiblocos a uma linguagem que o jogador ja conhece no mod
+
+---
+
+## 6.5 Interacao sem controller visivel
+
+Esses dois multiblocos nao devem usar a fantasia classica de "controller block na frente".
+
+Regra aprovada:
+
+- nao existe controller visivel unico
+- qualquer bloco pertencente ao multibloco pode ser clicado
+- qualquer clique valido deve abrir a interface da maquina
+- a interface so abre quando a estrutura estiver formada e conectada a uma rede AE
+
+Implicacoes de implementacao:
+
+- a maquina precisa de um conceito interno de `anchor/master`, mas isso nao deve aparecer para o jogador como controller
+- o `anchor/master` deve ser deterministico e invisivel do ponto de vista de UX
+- a deteccao de estrutura nao pode depender da orientacao, porque o cubo e simetrico
+
+Regra tecnica recomendada:
+
+- usar um `anchor` canonico derivado da propria estrutura formada
+- permitir que qualquer bloco do cubo resolva esse `anchor`
+- impedir abertura de menu quando a estrutura nao estiver formada
+- impedir abertura de menu quando nao houver conexao valida com a rede AE
 
 ---
 
