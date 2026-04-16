@@ -18,6 +18,10 @@ public class MixinCPUSelectionList {
     private static final DecimalFormat ufo$DF = new DecimalFormat("#.##");
     @Unique
     private static final String[] ufo$UNITS = {"", "K", "M", "G", "T", "P", "E", "Y", "Z", "R", "Q"};
+    @Unique
+    private static final long ufo$INFINITE_STORAGE_THRESHOLD = Long.MAX_VALUE - 16;
+    @Unique
+    private static final int ufo$INFINITE_THREADS_THRESHOLD = Integer.MAX_VALUE;
 
     @Redirect(
             method = "getTooltip",
@@ -49,6 +53,9 @@ public class MixinCPUSelectionList {
             )
     )
     private MutableComponent ufo$formatCoProcessorsTooltip(long value) {
+        if (value >= ufo$INFINITE_THREADS_THRESHOLD) {
+            return Component.literal("∞").withStyle(Tooltips.NUMBER_TEXT);
+        }
         return Component.literal(ufo$formatStorage(value)).withStyle(Tooltips.NUMBER_TEXT);
     }
 
@@ -60,11 +67,17 @@ public class MixinCPUSelectionList {
             )
     )
     private String ufo$formatCoProcessorsLabel(int value) {
+        if (value >= ufo$INFINITE_THREADS_THRESHOLD) {
+            return "∞";
+        }
         return ufo$formatStorage(value);
     }
 
     @Unique
     private String ufo$formatStorage(long bytes) {
+        if (bytes >= ufo$INFINITE_STORAGE_THRESHOLD) {
+            return "∞";
+        }
         if (bytes < 1000) return ufo$DF.format(bytes);
         int unit = Math.min((int) (Math.log10(bytes) / 3), ufo$UNITS.length - 1);
         return ufo$DF.format(bytes / Math.pow(1000, unit)) + ufo$UNITS[unit];

@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-13T15:41:17.6567123	Loot Tables
+// 1.21.1	2026-04-16T18:05:45.2107568	Loot Tables
 aba597cd7ae8bef0da9188896eb4f4b55d797bfc data/ufo/loot_table/blocks/150m_mega_co_processor.json
 2c419982a9aba6bf4a6c011b5be266bda1362491 data/ufo/loot_table/blocks/1b_mega_crafting_storage.json
 668cc62d0394f4cef5fe88eb9bf057281e53ad4a data/ufo/loot_table/blocks/1qd_mega_crafting_storage.json
@@ -11,6 +11,8 @@ a5de2972a7cb411e6c79e832a4bea6d05633f96c data/ufo/loot_table/blocks/50m_mega_co_
 e0f17cd8e443f6bb0e5bdd92713b6907b2e5414f data/ufo/loot_table/blocks/750m_mega_co_processor.json
 5223d571728e86bae14cd1a95d70bbbc3fd7a323 data/ufo/loot_table/blocks/ae_energy_input_hatch.json
 34382ed08ce78e95f9c182faf280e0cf5c2a0e0f data/ufo/loot_table/blocks/dimensional_matter_assembler.json
+3cf98bb55ab8193c9cbb2676ec65a381697615f8 data/ufo/loot_table/blocks/entropic_assembler_matrix.json
+5784abb1835a2f019e0e9117846ae18e903ebdca data/ufo/loot_table/blocks/entropic_convergence_engine.json
 0c8fff849808280491c4ad4f1c3eb3630ddf3d89 data/ufo/loot_table/blocks/entropy_assembler_core_casing.json
 d3756b93b9bb063895152f60bc0c166c48805554 data/ufo/loot_table/blocks/entropy_computer_condensation_matrix.json
 4182c6ace1ad3a6dd252ec62925e9cd91711eecf data/ufo/loot_table/blocks/entropy_singularity_casing.json

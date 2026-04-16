@@ -21,6 +21,12 @@
       "ingredient": {
         "item": "ufo:neutron_star_fragment_ingot"
       }
+    },
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "minecraft:blue_ice"
+      }
     }
   ],
   "machine": "qmf",

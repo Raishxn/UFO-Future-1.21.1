@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ufo:entropy_assembler_core_casing"
+    },
+    "H": {
+      "item": "ufo:hyper_dense_component_matrix"
+    },
+    "P": {
+      "item": "ufo:quantum_pattern_hatch"
+    },
+    "Q": {
+      "item": "ufo:quantum_anomaly"
+    }
+  },
+  "pattern": [
+    "QCQ",
+    "HPH",
+    "QCQ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:entropic_assembler_matrix"
+  }
+}

@@ -31,6 +31,8 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get());
         this.dropSelf(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get());
         this.dropSelf(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
+        this.dropSelf(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get());
+        this.dropSelf(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_ENTROPY_CASING.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get());

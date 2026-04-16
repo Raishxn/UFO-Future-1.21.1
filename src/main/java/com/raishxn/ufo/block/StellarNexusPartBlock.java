@@ -1,11 +1,15 @@
 package com.raishxn.ufo.block;
 
+import com.raishxn.ufo.api.multiblock.EntropicMachineLocator;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
@@ -33,6 +37,19 @@ public class StellarNexusPartBlock extends Block implements net.minecraft.world.
     }
 
     @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        var controller = EntropicMachineLocator.findController(level, pos);
+        if (controller != null) {
+            if (!level.isClientSide() && controller.isAssembled() && controller.isNetworkConnected()
+                    && controller instanceof net.minecraft.world.MenuProvider menuProvider) {
+                player.openMenu(menuProvider, controller.getControllerPos());
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide());
+        }
+        return super.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock())) {
             if (level.getBlockEntity(pos) instanceof StellarNexusPartBE part) {
@@ -42,6 +59,9 @@ public class StellarNexusPartBlock extends Block implements net.minecraft.world.
                     controller.scanStructure(level);
                 }
                 part.unlinkFromController();
+            }
+            if (!level.isClientSide()) {
+                EntropicMachineLocator.markNearbyDirty(level, pos);
             }
         }
         super.onRemove(state, level, pos, newState, moved);
@@ -55,6 +75,7 @@ public class StellarNexusPartBlock extends Block implements net.minecraft.world.
             if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
                 controller.scanStructure(level);
             }
+            EntropicMachineLocator.markNearbyDirty(level, pos);
         }
     }
 }

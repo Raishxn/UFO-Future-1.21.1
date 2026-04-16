@@ -133,6 +133,27 @@ public class ModBlockEntities {
                 return type;
             });
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicAssemblerMatrixBE>> ENTROPIC_ASSEMBLER_MATRIX_BE =
+            BLOCK_ENTITIES.register("entropic_assembler_matrix", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> new com.raishxn.ufo.block.entity.EntropicAssemblerMatrixBE(pos, state),
+                    com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get()
+            ).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE>> ENTROPIC_CONVERGENCE_ENGINE_BE =
+            BLOCK_ENTITIES.register("entropic_convergence_engine", () -> {
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE(pos, state),
+                        com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get()
+                ).build(null);
+                ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get()).setBlockEntity(
+                        (Class) com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE.class,
+                        (BlockEntityType) type,
+                        null,
+                        null
+                );
+                return type;
+            });
+
     // ═══════════════════════════════════════════════════════════
     //  STELLAR NEXUS — Block Entities
     // ═══════════════════════════════════════════════════════════

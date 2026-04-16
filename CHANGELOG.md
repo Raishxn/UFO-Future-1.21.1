@@ -21,6 +21,7 @@ Fluxo combinado daqui para frente:
 - Ajustada a exibicao do JEI do `Stellar Nexus` para mostrar o coolant apenas como `MK1`, `MK2` ou `MK3`, com tooltip exibindo o nome completo do fluido.
 - Ajustada a exibicao do JEI do `Stellar Nexus` para mostrar o fuel em formato abreviado dentro do box, com tooltip exibindo o nome completo do combustivel e a quantidade.
 - Iniciada a base dos multiblocos `Entropic Convergence Engine` e `Entropic Assembler Matrix`, com PRD finalizado, notas tecnicas de estabilidade/performance e validador frio para cubo `7x7x7` com interior `5x5x5` preenchido por fields uniformes.
+- Implementada a primeira versao funcional do `Entropic Convergence Engine` e da `Entropic Assembler Matrix`, com proxy de interacao por qualquer bloco do cubo, controllers dedicados, tiers por preenchimento completo de fields, CPU colossal com exibicao `∞` no terminal do AE2, geracao de data/resources e execucao massiva de patterns via matriz.
 
 ## [2.0.0]
 

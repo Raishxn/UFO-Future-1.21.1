@@ -21,6 +21,12 @@
       "ingredient": {
         "item": "ufo:white_dwarf_fragment_ingot"
       }
+    },
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "minecraft:blue_ice"
+      }
     }
   ],
   "machine": "qmf",

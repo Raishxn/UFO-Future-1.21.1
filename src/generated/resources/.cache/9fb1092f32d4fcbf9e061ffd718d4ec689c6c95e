@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-14T19:40:13.3044736	Recipes
+// 1.21.1	2026-04-16T18:05:45.2137595	Recipes
 623466a712bf2b54aad620b471840892932161d4 data/ufo/advancement/recipes/misc/ae_energy_input_hatch.json
 a25a6bd915843952e3b74014247693fdda691447 data/ufo/advancement/recipes/misc/bismuth.json
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
@@ -7,6 +7,8 @@ eb7866de442289af9a906bdbf371421bb9e18e5a data/ufo/advancement/recipes/misc/copro
 c329c52c1cf665d32d0c4676c21a72563f6b324f data/ufo/advancement/recipes/misc/coprocessor_50m.json
 be3ad26fbd1e6a1fcf540a0efc63acf3c693e948 data/ufo/advancement/recipes/misc/coprocessor_750m.json
 ad8781cb7009056952f51b77421b471bdf8d2c1f data/ufo/advancement/recipes/misc/dimensional_matter_assembler.json
+07adb64b45b39b731ff3df1e60532d551a1e6ba9 data/ufo/advancement/recipes/misc/entropic_assembler_matrix.json
+c5adc1fceaff7d5e56a20a30c0da26a8a75dda5f data/ufo/advancement/recipes/misc/entropic_convergence_engine.json
 0d5f743983aff96a76c1ae614a923ec3ec990785 data/ufo/advancement/recipes/misc/entropy_assembler_core_casing.json
 c21fd064af707ccfdfe1e0536172550b1a27f558 data/ufo/advancement/recipes/misc/entropy_computer_condensation_matrix.json
 4efbf81ff94d9b30b6cf46ec2105ed5600a11dd6 data/ufo/advancement/recipes/misc/entropy_singularity_casing.json
@@ -105,7 +107,7 @@ f3f84667f1b49ad3cb7fa086b6bb460fb8e405eb data/ufo/recipe/dma/matterflow_catalyst
 2b710f4210d9387e73745cd7f89c3aed83c9e1b5 data/ufo/recipe/dma/matterflow_catalyst_t2.json
 c32f91e06d333bb3520570c09b168e1cc5d1d2ec data/ufo/recipe/dma/neutronium_sphere.json
 19f9a778df142d9a95625f9af2deae4ac9314b15 data/ufo/recipe/dma/neutron_star_dust.json
-af8962dfdd93cd595bda421bead2c52459fca201 data/ufo/recipe/dma/neutron_star_fluid.json
+f6f2ecb219f4aaf2dee285c82b14cac755013209 data/ufo/recipe/dma/neutron_star_fluid.json
 30058a77669ab3622e4df9c0938194fc4f9241f4 data/ufo/recipe/dma/neutron_star_fragment_rod.json
 58dae6ff88abd8ddbfa3871080895e1614551c3f data/ufo/recipe/dma/neutron_star_matter.json
 05b452dfc93724293093c35581def4d3ffd22f91 data/ufo/recipe/dma/nuclear_star.json
@@ -136,9 +138,11 @@ f147091b2bea939500e770f852ad458cc85811d1 data/ufo/recipe/dma/thermal_resistor_ma
 5f987b9bd51e410a9978f8e74cde9c91e658f0b6 data/ufo/recipe/dma/uu_matter.json
 331ce6a6ba63293a78ce20ec7590e12d5a479064 data/ufo/recipe/dma/uu_matter_crystal.json
 7b8e1ea38a3238bc2dcbb6a04fd1f89361d19de9 data/ufo/recipe/dma/white_dwarf_dust.json
-5f2aba5af129ed32cda9a4bdb5f0bf764943e112 data/ufo/recipe/dma/white_dwarf_fluid.json
+34b1f6dfbbfe010a23036b8b3ddc5763b7da7a66 data/ufo/recipe/dma/white_dwarf_fluid.json
 cf4b81ce61d0f396eb8a9609ec8e419089a8d44a data/ufo/recipe/dma/white_dwarf_fragment_rod.json
 34f09de25d32ed6c43f14c8bc6641620881495e9 data/ufo/recipe/dma/white_dwarf_matter.json
+be9f23d35af4f68e9356a30d1f076e8d90d207e9 data/ufo/recipe/entropic_assembler_matrix.json
+582495991131baa82c3fa124dcc21b4ac35c9882 data/ufo/recipe/entropic_convergence_engine.json
 739e234a080d382a317713f40819107115b3eadf data/ufo/recipe/entropy_assembler_core_casing.json
 d0518a9ce7190113425dae077dae4d00aed9b181 data/ufo/recipe/entropy_computer_condensation_matrix.json
 af792a576062f9741d290020ea205b7f99f7adfd data/ufo/recipe/entropy_singularity_casing.json
@@ -167,7 +171,7 @@ db0448722bee1bd7eea6f46e373db252fd507d04 data/ufo/recipe/pulsar_chamber_beaco.js
 b21707b4dda6d4d272f5a3aec5935fee367edd8f data/ufo/recipe/pulsar_fragment_ingot_from_block.json
 556d93393ed9053916675ee8f9cf228a2dad7bfa data/ufo/recipe/pulsar_fragment_ingot_from_nugget.json
 d75c15674fcca4dd88e4cf83891764db5c60c8e7 data/ufo/recipe/pulsar_fragment_nugget.json
-5b8b9f78ac3965ab9852425f984e7b3460a8eeec data/ufo/recipe/quantum_energy_cell.json
+3b5ff726e1be29021b4a1889950c612ba346be91 data/ufo/recipe/quantum_energy_cell.json
 da8ada9fa060fbef074486b6ecb95e14727477c1 data/ufo/recipe/quantum_entropy_casing.json
 9b330eca74fc771e54529d8b6bd01fdc36a4a9f9 data/ufo/recipe/quantum_hyper_mechanical_casing.json
 bd6df17b9e946e44bae722511cc14fbe4986a1c4 data/ufo/recipe/quantum_lattice_frame.json
@@ -231,7 +235,7 @@ f77bfb17d98acd04e3322387a5e956a287646710 data/ufo/recipe/universal/qmf/bulk/ingo
 f495bd0e29615fc15fbbd4d2243ae39b97ba828b data/ufo/recipe/universal/qmf/bulk/matterflow_catalyst_t2.json
 0fac8bd806fdf740a858b380adaf2af879aceba3 data/ufo/recipe/universal/qmf/bulk/neutronium_sphere.json
 b547c459e32c8ef115ccf3f2545df3cc67674212 data/ufo/recipe/universal/qmf/bulk/neutron_star_dust.json
-57ce026c66d41dc81f5354bdcb56cf080ede5a9e data/ufo/recipe/universal/qmf/bulk/neutron_star_fluid.json
+2f7677d70714564e612e69f11f6f214f24ddccc1 data/ufo/recipe/universal/qmf/bulk/neutron_star_fluid.json
 cf683f3b646dfc4eec857f1b7dec8dd728d59ec2 data/ufo/recipe/universal/qmf/bulk/neutron_star_fragment_rod.json
 55b068ac567955809bccdbe443df88aa8d25b71e data/ufo/recipe/universal/qmf/bulk/nuclear_star.json
 a55bef7ce27c1ecc9739044707fba672987437da data/ufo/recipe/universal/qmf/bulk/overflux_catalyst_t1.json
@@ -258,7 +262,7 @@ a62d3f2f2bcf24bf23c464f4b071d19566d6a12e data/ufo/recipe/universal/qmf/bulk/uu_a
 14a8acb4bd8157adb6cb452a2df0cc1d917449f8 data/ufo/recipe/universal/qmf/bulk/uu_matter.json
 195e2d112ea96ab3677541053337b85c96d9e93f data/ufo/recipe/universal/qmf/bulk/uu_matter_crystal.json
 9e4c78c82e67b55ced2044fb74a35d5adeb2b80b data/ufo/recipe/universal/qmf/bulk/white_dwarf_dust.json
-39003196975499617acfbc4ea3d77ebac997a104 data/ufo/recipe/universal/qmf/bulk/white_dwarf_fluid.json
+b72b5aef08d41fcc0beed07ffbb3ee24e54a8026 data/ufo/recipe/universal/qmf/bulk/white_dwarf_fluid.json
 9a0f3566f6e77551d5b108ebd82f4137aaccfb13 data/ufo/recipe/universal/qmf/bulk/white_dwarf_fragment_rod.json
 dca45cff6f5d4e7effa43dd7c55c64546c51dad5 data/ufo/recipe/universal/qmf/chrono_catalyst_t3_batch.json
 86760e653a154b9bd91dc8a988df52410d176eb5 data/ufo/recipe/universal/qmf/corporeal_matter_batch.json

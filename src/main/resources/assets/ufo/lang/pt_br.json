@@ -85,6 +85,8 @@
   "block.ufo.entropy_containment_chamber_components": "Componentes da Câmara de Contenção de Entropia",
   "block.ufo.entropy_coolant_matrix_components": "Componentes da Matriz de Refrigeração de Entropia",
   "block.ufo.entropy_computer_condensation_matrix": "Matriz de Condensação do Computador de Entropia",
+  "block.ufo.entropic_assembler_matrix": "Entropic Assembler Matrix",
+  "block.ufo.entropic_convergence_engine": "Entropic Convergence Engine",
   "block.ufo.entropy_catalyst_bank_components": "Banco de Componentes de Catalisador de Entropia",
   "block.ufo.entropy_singularity_array_controller": "Controlador do Array de Singularidade de Entropia",
 

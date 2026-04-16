@@ -181,6 +181,14 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(), new Item.Properties(),
                      ChatFormatting.RED, ChatFormatting.DARK_RED, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.LIGHT_PURPLE));
 
+     public static final DeferredItem<Item> ENTROPIC_ASSEMBLER_MATRIX = ITEMS.register("entropic_assembler_matrix",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get(), new Item.Properties(),
+                     ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED, ChatFormatting.GOLD));
+
+     public static final DeferredItem<Item> ENTROPIC_CONVERGENCE_ENGINE = ITEMS.register("entropic_convergence_engine",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED));
+
 
 
      // ═══════════════════════════════════════════════════════════

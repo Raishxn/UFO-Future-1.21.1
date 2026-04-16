@@ -21,15 +21,24 @@ public class MultiblockBlocks {
             DeferredRegister.createBlocks(UfoMod.MOD_ID);
 
     // --- Blocos Simples (não direcionais) ---
-    public static final DeferredBlock<Block> ENTROPY_ASSEMBLER_CORE_CASING = registerBlock("entropy_assembler_core_casing",
-            () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<EntropicMachineShellBlock> ENTROPY_ASSEMBLER_CORE_CASING = BLOCKS.register("entropy_assembler_core_casing",
+            () -> new EntropicMachineShellBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
 
-    public static final DeferredBlock<Block> ENTROPY_SINGULARITY_CASING = registerBlock("entropy_singularity_casing",
-            () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<EntropicMachineShellBlock> ENTROPY_SINGULARITY_CASING = BLOCKS.register("entropy_singularity_casing",
+            () -> new EntropicMachineShellBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
 
-    public static final DeferredBlock<Block> ENTROPY_COMPUTER_CONDENSATION_MATRIX = registerBlock("entropy_computer_condensation_matrix",
+    public static final DeferredBlock<EntropicMachineShellBlock> ENTROPY_COMPUTER_CONDENSATION_MATRIX = BLOCKS.register("entropy_computer_condensation_matrix",
 
-            () -> new Block(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+            () -> new EntropicMachineShellBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+
+    public static final DeferredBlock<EntropicAssemblerMatrixControllerBlock> ENTROPIC_ASSEMBLER_MATRIX = BLOCKS.register("entropic_assembler_matrix",
+            () -> new EntropicAssemblerMatrixControllerBlock(BlockBehaviour.Properties.of()
+                    .strength(30.0f, 1200.0f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> 12)));
+
+    public static final DeferredBlock<EntropicConvergenceEngineBlock> ENTROPIC_CONVERGENCE_ENGINE = BLOCKS.register("entropic_convergence_engine",
+            EntropicConvergenceEngineBlock::new);
 
 
 
