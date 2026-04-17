@@ -38,8 +38,9 @@ public abstract class MixinCraftingCPUCluster {
             this.status.add(monitor);
         }
 
-        if (te.getStorageBytes() > 0) {
-            this.storage += te.getStorageBytes();
+        long storageBytes = te.getStorageBytes();
+        if (storageBytes > 0) {
+            this.storage += storageBytes;
         }
 
         int threads = te.getAcceleratorThreads();

@@ -21,6 +21,8 @@ Fluxo combinado daqui para frente:
 - Removido o rescan quente por tick dos `Entropic Casing`, trocando a montagem para revalidacao por evento e definicao unica de anchor da estrutura, reduzindo custo de TPS e sincronizando melhor a conexao AE2.
 - Hotfix de estabilidade: removida a revalidacao automatica em `onReady()` dos `Entropic Casing`, evitando tempestade de scans e updates durante load/unload de chunks e entrada/saida do mundo.
 - Migrado o `Entropic Convergence` para uma base real de `CraftingBlockEntity`, aproximando o comportamento do `AdvancedAE/ExtendedAE`, removendo o ticker custom dessa estrutura e permitindo que a casing entre no fluxo real de CPU do AE2.
+- Hotfix de crash no load: corrigido o `BlockEntityType` usado pelo `Entropic Convergence`, separando corretamente o caminho da `Entropic Convergence Casing` e o caminho legado para evitar `Invalid block entity state` ao entrar no mundo.
+- Reduzido o custo de load do `Entropic Convergence`: removida a marcacao automática de `structureDirty` em `onReady()` e eliminada uma consulta duplicada de `getStorageBytes()` no mixin da CPU do AE2.
 
 ### Implementations
 

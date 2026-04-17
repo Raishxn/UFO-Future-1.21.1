@@ -53,6 +53,6 @@ public class EntropicConvergenceEngineBlock extends AbstractCraftingUnitBlock<En
     @Nullable
     @Override
     public EntropicConvergenceEngineBE newBlockEntity(BlockPos pos, BlockState state) {
-        return new EntropicConvergenceEngineBE(pos, state);
+        return new EntropicConvergenceEngineBE(com.raishxn.ufo.init.ModBlockEntities.ENTROPIC_CONVERGENCE_ENGINE_BE.get(), pos, state);
     }
 }

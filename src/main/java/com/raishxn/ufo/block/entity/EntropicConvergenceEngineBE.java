@@ -21,6 +21,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,14 +57,12 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
     private BlockPos anchorPos;
 
     public EntropicConvergenceEngineBE(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.ENTROPIC_CONVERGENCE_ENGINE_BE.get(), pos, state);
-        this.upgrades = UpgradeInventories.forMachine(state.getBlock().asItem(), 4, this::saveChanges);
+        this(ModBlockEntities.ENTROPIC_CONVERGENCE_ENGINE_BE.get(), pos, state);
     }
 
-    @Override
-    public void onReady() {
-        super.onReady();
-        this.structureDirty = true;
+    public EntropicConvergenceEngineBE(BlockEntityType<? extends EntropicConvergenceEngineBE> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+        this.upgrades = UpgradeInventories.forMachine(state.getBlock().asItem(), 4, this::saveChanges);
     }
 
     @Override
