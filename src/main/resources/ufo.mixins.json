@@ -5,6 +5,8 @@
   "priority": 3000,
   "mixins": [
     "AccessorBuiltInModelHooks",
+    "InvokerAEBaseBlockEntity",
+    "InvokerCraftingCPUCluster",
     "MixinCPUSelectionList",
     "MixinCraftingCPUCluster",
     "MixinAppEngBase",

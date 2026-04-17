@@ -3,12 +3,14 @@ package com.raishxn.ufo.block.entity;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
+import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.crafting.CraftingBlockEntity;
 import com.raishxn.ufo.api.multiblock.FieldTieredCubeValidator;
 import com.raishxn.ufo.api.multiblock.IEntropicMachineController;
 import com.raishxn.ufo.api.multiblock.MultiblockMachineTier;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.init.ModBlockEntities;
+import com.raishxn.ufo.mixin.InvokerAEBaseBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -48,10 +51,10 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
     };
 
     private final IUpgradeInventory upgrades;
+    private final EntropicConvergenceCalculator calc = new EntropicConvergenceCalculator(this);
     private final List<BlockPos> parts = new ArrayList<>();
     private final Set<BlockPos> partSet = new HashSet<>();
     private boolean structureAssembled;
-    private boolean structureDirty = true;
     private int machineTier = MultiblockMachineTier.MK1.level();
     @Nullable
     private BlockPos anchorPos;
@@ -67,52 +70,39 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
 
     @Override
     public void scanStructure(Level level) {
-        if (level.isClientSide()) {
-            return;
+        if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            this.calc.calculateMultiblock(serverLevel, this.worldPosition);
         }
+    }
 
-        boolean wasAssembled = this.structureAssembled;
-        BlockPos previousAnchor = this.anchorPos;
-        var result = FieldTieredCubeValidator.findMatchingCube(level, this.worldPosition,
-                (state, testLevel, pos) -> state.is(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get()));
+    @Override
+    public void onReady() {
+        ((InvokerAEBaseBlockEntity) (Object) this).ufo$invokeAeBaseOnReady();
+        this.getMainNode().create(getLevel(), getBlockEntity().getBlockPos());
 
-        this.parts.clear();
-        this.partSet.clear();
-        this.anchorPos = null;
-
-        if (result.isPresent() && result.get().valid() && result.get().shellPositions().contains(this.worldPosition)) {
-            this.structureAssembled = true;
-            this.machineTier = result.get().machineTier();
-            this.anchorPos = result.get().origin();
-
-            for (BlockPos pos : result.get().shellPositions()) {
-                if (!pos.equals(this.worldPosition)) {
-                    BlockPos immutable = pos.immutable();
-                    this.parts.add(immutable);
-                    this.partSet.add(immutable);
-                }
+        BlockState currentState = getBlockState();
+        if (currentState.getBlock() instanceof AEBaseEntityBlock<?> block) {
+            BlockState newState = block.getBlockEntityBlockState(currentState, this);
+            if (currentState != newState) {
+                this.markForUpdate();
             }
-            for (BlockPos pos : result.get().interiorPositions()) {
-                BlockPos immutable = pos.immutable();
-                this.parts.add(immutable);
-                this.partSet.add(immutable);
-            }
-        } else {
-            this.structureAssembled = false;
-            this.machineTier = MultiblockMachineTier.MK1.level();
         }
 
-        this.structureDirty = false;
-        if (wasAssembled != this.structureAssembled
-                || (previousAnchor == null ? this.anchorPos != null : !previousAnchor.equals(this.anchorPos))) {
-            level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), 3);
+        this.getMainNode().setVisualRepresentation(this.getItemFromBlockEntity());
+        if (this.level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            this.calc.calculateMultiblock(serverLevel, this.worldPosition);
         }
-        setChanged();
+    }
+
+    @Override
+    public void updateMultiBlock(BlockPos changedPos) {
+        if (this.level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            this.calc.updateMultiblockAfterNeighborUpdate(serverLevel, this.worldPosition, changedPos);
+        }
     }
 
     @Override
     public long getStorageBytes() {
-        ensureStructureState();
         if (!this.structureAssembled || !isAnchor()) {
             return 0L;
         }
@@ -121,7 +111,6 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
 
     @Override
     public int getAcceleratorThreads() {
-        ensureStructureState();
         if (!this.structureAssembled || !isAnchor()) {
             return 0;
         }
@@ -130,25 +119,24 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
 
     @Override
     public boolean isAssembled() {
-        ensureStructureState();
         return this.structureAssembled;
     }
 
     @Override
     public boolean canProxyInteract(BlockPos pos) {
-        ensureStructureState();
         return pos.equals(this.worldPosition) || this.partSet.contains(pos);
     }
 
     @Override
     public boolean isNetworkConnected() {
-        ensureStructureState();
         return getActionableNode() != null && getActionableNode().getGrid() != null && getActionableNode().isActive();
     }
 
     @Override
     public void markStructureDirty() {
-        this.structureDirty = true;
+        if (this.level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            this.calc.calculateMultiblock(serverLevel, this.worldPosition);
+        }
     }
 
     @Override
@@ -168,7 +156,6 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
 
     @Override
     public List<BlockPos> getParts() {
-        ensureStructureState();
         return Collections.unmodifiableList(this.parts);
     }
 
@@ -190,13 +177,11 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
 
     @Override
     public boolean isGuiAssembled() {
-        ensureStructureState();
         return this.structureAssembled;
     }
 
     @Override
     public boolean isGuiRunning() {
-        ensureStructureState();
         return this.isFormed() && isNetworkConnected();
     }
 
@@ -222,31 +207,26 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
 
     @Override
     public int getGuiMachineTier() {
-        ensureStructureState();
         return this.machineTier;
     }
 
     @Override
     public long getGuiStoredEnergy() {
-        ensureStructureState();
         return getStorageBytes();
     }
 
     @Override
     public long getGuiMaxEnergy() {
-        ensureStructureState();
         return getStorageBytes();
     }
 
     @Override
     public int getGuiActiveParallels() {
-        ensureStructureState();
         return this.structureAssembled ? getAcceleratorThreads() : 0;
     }
 
     @Override
     public int getGuiMaxParallels() {
-        ensureStructureState();
         return this.structureAssembled ? getAcceleratorThreads() : 1;
     }
 
@@ -282,7 +262,6 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putBoolean("StructureAssembled", this.structureAssembled);
-        tag.putBoolean("StructureDirty", this.structureDirty);
         tag.putInt("MachineTier", this.machineTier);
         if (this.anchorPos != null) {
             tag.put("AnchorPos", NbtUtils.writeBlockPos(this.anchorPos));
@@ -299,7 +278,6 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
     public void loadTag(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadTag(tag, registries);
         this.structureAssembled = tag.getBoolean("StructureAssembled");
-        this.structureDirty = tag.getBoolean("StructureDirty");
         this.machineTier = Math.max(MultiblockMachineTier.MK1.level(), tag.getInt("MachineTier"));
         this.anchorPos = null;
         if (tag.contains("AnchorPos")) {
@@ -318,10 +296,38 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
         }
     }
 
-    private void ensureStructureState() {
-        if (this.level != null && !this.level.isClientSide() && this.structureDirty) {
-            scanStructure(this.level);
+    @Override
+    public void disconnect(boolean update) {
+        super.disconnect(update);
+        clearCalculatedStructure();
+    }
+
+    public void clearCalculatedStructure() {
+        this.structureAssembled = false;
+        this.machineTier = MultiblockMachineTier.MK1.level();
+        this.anchorPos = null;
+        this.parts.clear();
+        this.partSet.clear();
+    }
+
+    public void applyCalculatedStructure(appeng.me.cluster.implementations.CraftingCPUCluster cluster,
+            FieldTieredCubeValidator.ValidationResult result) {
+        this.structureAssembled = true;
+        this.machineTier = result.machineTier();
+        this.anchorPos = result.origin().immutable();
+        this.parts.clear();
+        this.partSet.clear();
+
+        for (BlockPos shellPos : result.shellPositions()) {
+            if (!shellPos.equals(this.worldPosition)) {
+                BlockPos immutable = shellPos.immutable();
+                this.parts.add(immutable);
+                this.partSet.add(immutable);
+            }
         }
+
+        this.updateStatus(cluster);
+        this.setChanged();
     }
 
     private boolean isAnchor() {

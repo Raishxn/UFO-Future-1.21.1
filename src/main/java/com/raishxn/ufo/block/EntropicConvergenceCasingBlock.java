@@ -6,7 +6,6 @@ import appeng.block.crafting.CraftingUnitType;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
 import com.mojang.serialization.MapCodec;
-import com.raishxn.ufo.api.multiblock.EntropicMachineLocator;
 import com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -48,17 +47,23 @@ public class EntropicConvergenceCasingBlock extends AbstractCraftingUnitBlock<En
 
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block changedBlock, BlockPos changedPos, boolean isMoving) {
-        super.neighborChanged(state, level, pos, changedBlock, changedPos, isMoving);
-        if (!level.isClientSide()) {
-            EntropicMachineLocator.markNearbyDirty(level, pos);
+        EntropicConvergenceEngineBE be = this.getBlockEntity(level, pos);
+        if (be != null) {
+            be.updateMultiBlock(changedPos);
         }
     }
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock()) && !level.isClientSide()) {
-            EntropicMachineLocator.markNearbyDirty(level, pos);
+        if (newState.getBlock() == state.getBlock()) {
+            return;
         }
+
+        EntropicConvergenceEngineBE be = this.getBlockEntity(level, pos);
+        if (be != null) {
+            be.breakCluster();
+        }
+
         super.onRemove(state, level, pos, newState, isMoving);
     }
 
