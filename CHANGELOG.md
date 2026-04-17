@@ -24,6 +24,7 @@ Fluxo combinado daqui para frente:
 - Hotfix de crash no load: corrigido o `BlockEntityType` usado pelo `Entropic Convergence`, separando corretamente o caminho da `Entropic Convergence Casing` e o caminho legado para evitar `Invalid block entity state` ao entrar no mundo.
 - Reduzido o custo de load do `Entropic Convergence`: removida a marcacao automática de `structureDirty` em `onReady()` e eliminada uma consulta duplicada de `getStorageBytes()` no mixin da CPU do AE2.
 - Refeito o fluxo do `Entropic Convergence` para seguir mais de perto o padrao do `AdvancedAE/AE2`: calculadora estrutural propria para o cubo `7x7x7`, cluster real de CPU do AE2 com `GridCraftingCpuChange`, e atualizacao por `onReady` e `neighborChanged` em vez da validacao preguiçosa por getter.
+- Hotfix de crash na inicializacao do `Entropic Convergence`: removido o invoker que tentava atravessar `AEBaseBlockEntity.onReady()` e acabava entrando em recursao infinita durante o load do mundo.
 
 ### Implementations
 

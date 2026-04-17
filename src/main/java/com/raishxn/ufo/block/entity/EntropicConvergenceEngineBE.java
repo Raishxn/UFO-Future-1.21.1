@@ -10,7 +10,6 @@ import com.raishxn.ufo.api.multiblock.IEntropicMachineController;
 import com.raishxn.ufo.api.multiblock.MultiblockMachineTier;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.init.ModBlockEntities;
-import com.raishxn.ufo.mixin.InvokerAEBaseBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -77,7 +76,6 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
 
     @Override
     public void onReady() {
-        ((InvokerAEBaseBlockEntity) (Object) this).ufo$invokeAeBaseOnReady();
         this.getMainNode().create(getLevel(), getBlockEntity().getBlockPos());
 
         BlockState currentState = getBlockState();
