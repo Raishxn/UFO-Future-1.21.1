@@ -174,16 +174,16 @@ public class ModBlockEntities {
                 return type;
             });
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceCasingBE>> ENTROPIC_CONVERGENCE_CASING_BE =
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE>> ENTROPIC_CONVERGENCE_CASING_BE =
             BLOCK_ENTITIES.register("entropic_convergence_casing", () -> {
                 var type = BlockEntityType.Builder.of(
-                        (pos, state) -> new com.raishxn.ufo.block.entity.EntropicConvergenceCasingBE(pos, state),
+                        (pos, state) -> new com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE(pos, state),
                         com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get()
                 ).build(null);
                 AEBaseBlockEntity.registerBlockEntityItem(type,
                         com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get().asItem());
                 ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get()).setBlockEntity(
-                        (Class) com.raishxn.ufo.block.entity.EntropicConvergenceCasingBE.class,
+                        (Class) com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE.class,
                         (BlockEntityType) type,
                         null,
                         null

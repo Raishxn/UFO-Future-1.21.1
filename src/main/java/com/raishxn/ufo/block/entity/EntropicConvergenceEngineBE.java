@@ -75,8 +75,7 @@ public class EntropicConvergenceEngineBE extends CraftingBlockEntity
         boolean wasAssembled = this.structureAssembled;
         BlockPos previousAnchor = this.anchorPos;
         var result = FieldTieredCubeValidator.findMatchingCube(level, this.worldPosition,
-                (state, testLevel, pos) -> state.is(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
-                        || state.is(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get()));
+                (state, testLevel, pos) -> state.is(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get()));
 
         this.parts.clear();
         this.partSet.clear();

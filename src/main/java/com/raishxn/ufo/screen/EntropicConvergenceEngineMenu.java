@@ -1,7 +1,7 @@
 package com.raishxn.ufo.screen;
 
 import com.raishxn.ufo.block.MultiblockBlocks;
-import com.raishxn.ufo.block.entity.EntropicConvergenceCasingBE;
+import com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE;
 import com.raishxn.ufo.init.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,13 +12,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class EntropicConvergenceEngineMenu extends AbstractUniversalMultiblockControllerMenu<EntropicConvergenceCasingBE> {
+public class EntropicConvergenceEngineMenu extends AbstractUniversalMultiblockControllerMenu<EntropicConvergenceEngineBE> {
     public EntropicConvergenceEngineMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
         this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
     public EntropicConvergenceEngineMenu(int id, Inventory inv, BlockEntity entity) {
-        super(ModMenus.ENTROPIC_CONVERGENCE_ENGINE_MENU.get(), id, inv, (EntropicConvergenceCasingBE) entity,
+        super(ModMenus.ENTROPIC_CONVERGENCE_ENGINE_MENU.get(), id, inv, (EntropicConvergenceEngineBE) entity,
                 ContainerLevelAccess.create(entity.getLevel(), entity.getBlockPos()));
     }
 
