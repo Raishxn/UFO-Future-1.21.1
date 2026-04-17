@@ -13,6 +13,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
+import com.raishxn.ufo.block.entity.EntropicConvergenceCalculator;
 import com.raishxn.ufo.block.entity.StellarNexusPartBE;
 import com.raishxn.ufo.init.ModBlockEntities;
 
@@ -62,6 +63,9 @@ public class StellarNexusPartBlock extends Block implements net.minecraft.world.
             }
             if (!level.isClientSide()) {
                 EntropicMachineLocator.markNearbyDirty(level, pos);
+                if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+                    EntropicConvergenceCalculator.markNearbyDirty(serverLevel, pos);
+                }
             }
         }
         super.onRemove(state, level, pos, newState, moved);
@@ -76,6 +80,9 @@ public class StellarNexusPartBlock extends Block implements net.minecraft.world.
                 controller.scanStructure(level);
             }
             EntropicMachineLocator.markNearbyDirty(level, pos);
+            if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+                EntropicConvergenceCalculator.markNearbyDirty(serverLevel, pos);
+            }
         }
     }
 }

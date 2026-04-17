@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.Iterator;
 
 public final class EntropicConvergenceCalculator {
+    private static final int SEARCH_RADIUS = FieldTieredCubeValidator.OUTER_SIZE - 1;
     private final EntropicConvergenceEngineBE target;
 
     public EntropicConvergenceCalculator(EntropicConvergenceEngineBE target) {
@@ -119,6 +120,17 @@ public final class EntropicConvergenceCalculator {
 
     private boolean isRelevantBlock(BlockEntity blockEntity) {
         return blockEntity instanceof EntropicConvergenceEngineBE;
+    }
+
+    public static void markNearbyDirty(ServerLevel level, BlockPos origin) {
+        for (BlockPos pos : BlockPos.betweenClosed(
+                origin.offset(-SEARCH_RADIUS, -SEARCH_RADIUS, -SEARCH_RADIUS),
+                origin.offset(SEARCH_RADIUS, SEARCH_RADIUS, SEARCH_RADIUS))) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof EntropicConvergenceEngineBE convergence) {
+                convergence.scanStructure(level);
+            }
+        }
     }
 
     private static boolean isWithinBounds(BlockPos pos, BlockPos min, BlockPos max) {
