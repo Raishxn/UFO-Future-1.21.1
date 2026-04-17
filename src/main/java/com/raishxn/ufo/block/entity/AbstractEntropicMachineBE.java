@@ -79,14 +79,6 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         tickMachine();
     }
 
-    @Override
-    public void onReady() {
-        super.onReady();
-        if (this.level != null && !this.level.isClientSide()) {
-            EntropicMachineLocator.markNearbyDirty(this.level, this.worldPosition);
-        }
-    }
-
     protected abstract void tickMachine();
 
     protected abstract FieldTieredCubeValidator.ShellPredicate getShellPredicate();
