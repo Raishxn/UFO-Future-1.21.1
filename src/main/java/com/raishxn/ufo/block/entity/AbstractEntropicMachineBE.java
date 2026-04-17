@@ -10,6 +10,7 @@ import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.util.AECableType;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
+import com.raishxn.ufo.api.multiblock.EntropicMachineLocator;
 import com.raishxn.ufo.api.multiblock.FieldTieredCubeValidator;
 import com.raishxn.ufo.api.multiblock.IEntropicMachineController;
 import com.raishxn.ufo.api.multiblock.MultiblockMachineTier;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,12 +39,7 @@ import java.util.Set;
 
 public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         implements IEntropicMachineController, IUniversalMultiblockController, IUpgradeableObject, MenuProvider {
-    private static final int UNFORMED_SCAN_COOLDOWN = 40;
-    private static final int FORMED_SCAN_COOLDOWN = 200;
-
     protected boolean assembled;
-    protected boolean structureDirty = true;
-    protected int scanCooldown;
     protected final List<BlockPos> parts = new ArrayList<>();
     protected final Set<BlockPos> partSet = new HashSet<>();
     protected int machineTier = MultiblockMachineTier.MK1.level();
@@ -57,6 +54,8 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
     protected boolean overclocked;
     protected final List<UniversalDisplayedRecipe> displayedRecipes = new ArrayList<>();
     protected final IUpgradeInventory upgrades;
+    @Nullable
+    protected BlockPos anchorPos;
 
     protected AbstractEntropicMachineBE(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
         super(blockEntityType, pos, blockState);
@@ -73,22 +72,18 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
             return;
         }
 
-        if (this.structureDirty || --this.scanCooldown <= 0) {
-            scanStructure(this.level);
-            this.structureDirty = false;
-            this.scanCooldown = this.assembled ? FORMED_SCAN_COOLDOWN : UNFORMED_SCAN_COOLDOWN;
+        if (!isPrimaryMachine()) {
+            return;
         }
 
-        if (this.assembled) {
-            tickMachine();
-        } else {
-            this.running = false;
-            this.progress = 0;
-            this.maxProgress = 0;
-            this.temperature = 0;
-            this.storedEnergy = 0L;
-            this.maxStoredEnergy = 0L;
-            this.displayedRecipes.clear();
+        tickMachine();
+    }
+
+    @Override
+    public void onReady() {
+        super.onReady();
+        if (this.level != null && !this.level.isClientSide()) {
+            EntropicMachineLocator.markNearbyDirty(this.level, this.worldPosition);
         }
     }
 
@@ -100,35 +95,20 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
 
     @Override
     public void scanStructure(Level level) {
-        boolean wasAssembled = this.assembled;
-        var match = FieldTieredCubeValidator.findMatchingCube(level, this.worldPosition, getShellPredicate());
-
-        if (match.isEmpty()) {
-            clearStructureState();
-            if (wasAssembled) {
-                setChanged();
-                level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), 3);
-            }
-            return;
-        }
-
-        var result = match.get();
-        this.assembled = result.valid() && result.shellPositions().contains(this.worldPosition);
-        if (!this.assembled) {
-            clearStructureState();
-            return;
-        }
-
-        this.machineTier = result.machineTier();
-        rebuildParts(result);
-        setChanged();
-        updateVisualState();
-        if (wasAssembled != this.assembled) {
-            level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), 3);
-        }
+        EntropicMachineLocator.markNearbyDirty(level, this.worldPosition);
     }
 
-    private void rebuildParts(FieldTieredCubeValidator.ValidationResult result) {
+    public @Nullable FieldTieredCubeValidator.ValidationResult findStructure(Level level) {
+        return FieldTieredCubeValidator.findMatchingCube(level, this.worldPosition, getShellPredicate()).orElse(null);
+    }
+
+    public void applyStructure(FieldTieredCubeValidator.ValidationResult result) {
+        boolean wasAssembled = this.assembled;
+        BlockPos previousAnchor = this.anchorPos;
+
+        this.assembled = result.valid() && result.shellPositions().contains(this.worldPosition);
+        this.machineTier = result.machineTier();
+        this.anchorPos = result.origin();
         this.parts.clear();
         this.partSet.clear();
 
@@ -145,9 +125,17 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
             this.parts.add(immutable);
             this.partSet.add(immutable);
         }
+
+        setChanged();
+        updateVisualState();
+        if (this.level != null && (wasAssembled != this.assembled || !java.util.Objects.equals(previousAnchor, this.anchorPos))) {
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), 3);
+        }
     }
 
-    protected void clearStructureState() {
+    public void clearStructureState() {
+        boolean wasAssembled = this.assembled;
+        BlockPos previousAnchor = this.anchorPos;
         this.assembled = false;
         this.running = false;
         this.progress = 0;
@@ -159,8 +147,12 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         this.parts.clear();
         this.partSet.clear();
         this.displayedRecipes.clear();
+        this.anchorPos = null;
         updateVisualState();
         setChanged();
+        if (this.level != null && (wasAssembled || previousAnchor != null)) {
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), 3);
+        }
     }
 
     @Override
@@ -170,7 +162,7 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
 
     @Override
     public boolean canProxyInteract(BlockPos pos) {
-        return pos.equals(this.worldPosition) || this.partSet.contains(pos);
+        return isPrimaryMachine() && (pos.equals(this.worldPosition) || this.partSet.contains(pos));
     }
 
     @Override
@@ -193,8 +185,9 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
 
     @Override
     public void markStructureDirty() {
-        this.structureDirty = true;
-        this.scanCooldown = 0;
+        if (this.level != null && !this.level.isClientSide()) {
+            EntropicMachineLocator.markNearbyDirty(this.level, this.worldPosition);
+        }
     }
 
     @Override
@@ -219,7 +212,7 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
 
     @Override
     public BlockPos getControllerPos() {
-        return this.worldPosition;
+        return this.anchorPos != null ? this.anchorPos : this.worldPosition;
     }
 
     @Override
@@ -323,11 +316,12 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
     public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putBoolean("Assembled", this.assembled);
-        tag.putBoolean("StructureDirty", this.structureDirty);
-        tag.putInt("ScanCooldown", this.scanCooldown);
         tag.putInt("MachineTier", this.machineTier);
         tag.putBoolean("SafeMode", this.safeMode);
         tag.putBoolean("Overclocked", this.overclocked);
+        if (this.anchorPos != null) {
+            tag.put("EntropicAnchor", NbtUtils.writeBlockPos(this.anchorPos));
+        }
 
         ListTag partsTag = new ListTag();
         for (BlockPos partPos : this.parts) {
@@ -340,11 +334,13 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
     public void loadTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.loadTag(tag, registries);
         this.assembled = tag.getBoolean("Assembled");
-        this.structureDirty = tag.getBoolean("StructureDirty");
-        this.scanCooldown = tag.getInt("ScanCooldown");
         this.machineTier = Math.max(MultiblockMachineTier.MK1.level(), tag.getInt("MachineTier"));
         this.safeMode = !tag.contains("SafeMode") || tag.getBoolean("SafeMode");
         this.overclocked = tag.getBoolean("Overclocked");
+        this.anchorPos = null;
+        if (tag.contains("EntropicAnchor")) {
+            NbtUtils.readBlockPos(tag.getCompound("EntropicAnchor"), "").ifPresent(pos -> this.anchorPos = pos.immutable());
+        }
 
         this.parts.clear();
         this.partSet.clear();
@@ -378,25 +374,28 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
 
     private Iterator<IGridNode> getMultiblockNodes() {
         List<IGridNode> nodes = new ArrayList<>(this.parts.size() + 1);
-        addNode(nodes, this);
 
         if (this.level == null) {
+            addNode(nodes, this);
+            return nodes.iterator();
+        }
+
+        if (!this.assembled) {
+            addNode(nodes, this);
             return nodes.iterator();
         }
 
         for (BlockPos partPos : this.parts) {
-            if (partPos.equals(this.worldPosition)) {
-                continue;
-            }
-
             var part = this.level.getBlockEntity(partPos);
             if (part instanceof AbstractEntropicMachineBE machine
                     && machine.isAssembled()
-                    && machine.getClass() == this.getClass()) {
+                    && machine.getClass() == this.getClass()
+                    && java.util.Objects.equals(machine.anchorPos, this.anchorPos)) {
                 addNode(nodes, machine);
             }
         }
 
+        addNode(nodes, this);
         return nodes.iterator();
     }
 
@@ -405,5 +404,9 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         if (node != null) {
             nodes.add(node);
         }
+    }
+
+    public boolean isPrimaryMachine() {
+        return this.assembled && this.anchorPos != null && this.worldPosition.equals(this.anchorPos);
     }
 }

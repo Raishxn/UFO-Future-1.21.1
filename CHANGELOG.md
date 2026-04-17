@@ -18,6 +18,7 @@ Fluxo combinado daqui para frente:
 - Corrigida a conectividade AE2 dos multiblocos entropicos para seguir o padrao do `ExtendedAE`, com casings AE reais, node multiblock e canal compartilhado por estrutura.
 - Revertida a troca indevida das texturas antigas de `entropy_assembler_core_casing`, `entropy_assembler_core_casing_base`, `entropy_computer_condensation_matrix` e `entropy_singularity_casing`, preservando os outros multiblocos que dependiam delas.
 - Corrigido o clique direito dos blocos entropicos para so interceptar uso quando o multibloco estiver completo e conectado, permitindo colocar varios blocos seguidos com a mao vazia sem travar a montagem.
+- Removido o rescan quente por tick dos `Entropic Casing`, trocando a montagem para revalidacao por evento e definicao unica de anchor da estrutura, reduzindo custo de TPS e sincronizando melhor a conexao AE2.
 
 ### Implementations
 

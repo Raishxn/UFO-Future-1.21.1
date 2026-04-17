@@ -119,6 +119,11 @@ public class EntropicAssemblerMatrixBE extends AbstractEntropicMachineBE impleme
 
     @Override
     public boolean pushPattern(IPatternDetails patternDetails, KeyCounter[] inputs, net.minecraft.core.Direction ejectionDirection) {
+        EntropicAssemblerMatrixBE primary = getPrimaryAssembler();
+        if (primary != null && primary != this) {
+            return primary.pushPattern(patternDetails, inputs, ejectionDirection);
+        }
+
         if (!this.assembled || !isNetworkConnected() || this.jobs.size() >= getParallelThreadLimit()) {
             return false;
         }
@@ -128,15 +133,15 @@ public class EntropicAssemblerMatrixBE extends AbstractEntropicMachineBE impleme
             return false;
         }
 
-        GenericStack primary = outputs.getFirst();
-        var itemIcon = primary.what() instanceof AEItemKey itemKey ? itemKey.toStack() : net.minecraft.world.item.ItemStack.EMPTY;
-        var fluidIcon = primary.what() instanceof AEFluidKey fluidKey
-                ? new FluidStack(fluidKey.getFluid(), (int) Math.min(Integer.MAX_VALUE, primary.amount()))
+        GenericStack primaryOutput = outputs.getFirst();
+        var itemIcon = primaryOutput.what() instanceof AEItemKey itemKey ? itemKey.toStack() : net.minecraft.world.item.ItemStack.EMPTY;
+        var fluidIcon = primaryOutput.what() instanceof AEFluidKey fluidKey
+                ? new FluidStack(fluidKey.getFluid(), (int) Math.min(Integer.MAX_VALUE, primaryOutput.amount()))
                 : FluidStack.EMPTY;
 
         this.jobs.add(new JobState(
                 List.copyOf(outputs),
-                primary.what().getDisplayName(),
+                primaryOutput.what().getDisplayName(),
                 itemIcon,
                 fluidIcon,
                 outputs.stream().mapToLong(GenericStack::amount).sum(),
@@ -152,6 +157,10 @@ public class EntropicAssemblerMatrixBE extends AbstractEntropicMachineBE impleme
 
     @Override
     public boolean acceptsPlans() {
+        EntropicAssemblerMatrixBE primary = getPrimaryAssembler();
+        if (primary != null && primary != this) {
+            return primary.acceptsPlans();
+        }
         return this.assembled && isNetworkConnected() && this.jobs.size() < getParallelThreadLimit();
     }
 
@@ -187,6 +196,16 @@ public class EntropicAssemblerMatrixBE extends AbstractEntropicMachineBE impleme
             case 2 -> 10;
             default -> 40;
         };
+    }
+
+    @Nullable
+    private EntropicAssemblerMatrixBE getPrimaryAssembler() {
+        if (this.level == null || this.anchorPos == null) {
+            return this.isPrimaryMachine() ? this : null;
+        }
+
+        var be = this.level.getBlockEntity(this.anchorPos);
+        return be instanceof EntropicAssemblerMatrixBE machine ? machine : (this.isPrimaryMachine() ? this : null);
     }
 
     private static final class JobState {
