@@ -35,7 +35,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         // Blocos que são um cubo simples
         multiblockCube(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING);
         multiblockCube(MultiblockBlocks.ENTROPY_SINGULARITY_CASING);
-        multiblockCube(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX);
+        craftingLikeCube(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX, "entropy_computer_condensation_matrix");
         multiblockCubeWithTexture(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX, "entropy_assembler_core_casing");
         craftingLikeCube(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE, "entropy_computer_condensation_matrix");
         multiblockCubeWithTexture(MultiblockBlocks.QUANTUM_ENTROPY_CASING, "quantum_hyper_mechanical_casing");

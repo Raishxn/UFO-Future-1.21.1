@@ -27,9 +27,8 @@ public class MultiblockBlocks {
     public static final DeferredBlock<EntropicMachineShellBlock> ENTROPY_SINGULARITY_CASING = BLOCKS.register("entropy_singularity_casing",
             () -> new EntropicMachineShellBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
 
-    public static final DeferredBlock<EntropicMachineShellBlock> ENTROPY_COMPUTER_CONDENSATION_MATRIX = BLOCKS.register("entropy_computer_condensation_matrix",
-
-            () -> new EntropicMachineShellBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<EntropicConvergenceEngineBlock> ENTROPY_COMPUTER_CONDENSATION_MATRIX = BLOCKS.register("entropy_computer_condensation_matrix",
+            EntropicConvergenceEngineBlock::new);
 
     public static final DeferredBlock<EntropicAssemblerMatrixControllerBlock> ENTROPIC_ASSEMBLER_MATRIX = BLOCKS.register("entropic_assembler_matrix",
             () -> new EntropicAssemblerMatrixControllerBlock(BlockBehaviour.Properties.of()

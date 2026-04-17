@@ -1,7 +1,9 @@
 package com.raishxn.ufo.block;
 
+import appeng.block.AEBaseEntityBlock;
 import com.raishxn.ufo.api.multiblock.EntropicMachineLocator;
 import com.raishxn.ufo.api.multiblock.IEntropicMachineController;
+import com.raishxn.ufo.block.entity.EntropicMachinePartBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -12,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class EntropicMachineShellBlock extends Block {
+public class EntropicMachineShellBlock extends AEBaseEntityBlock<EntropicMachinePartBE> {
     public EntropicMachineShellBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
