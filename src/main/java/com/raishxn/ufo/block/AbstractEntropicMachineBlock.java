@@ -6,7 +6,6 @@ import com.raishxn.ufo.api.multiblock.EntropicMachineLocator;
 import com.raishxn.ufo.api.multiblock.IEntropicMachineController;
 import com.raishxn.ufo.block.entity.AbstractEntropicMachineBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -43,17 +42,11 @@ public abstract class AbstractEntropicMachineBlock<T extends AbstractEntropicMac
         }
 
         if (!controller.isAssembled()) {
-            if (!level.isClientSide()) {
-                player.displayClientMessage(Component.literal("§cMultibloco incompleto."), true);
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.PASS;
         }
 
         if (!controller.isNetworkConnected()) {
-            if (!level.isClientSide()) {
-                player.displayClientMessage(Component.literal("§eConecte o multibloco a uma rede AE2 para abrir a interface."), true);
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.PASS;
         }
 
         if (!level.isClientSide()) {

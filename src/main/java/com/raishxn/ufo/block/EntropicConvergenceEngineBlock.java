@@ -23,8 +23,8 @@ public class EntropicConvergenceEngineBlock extends AbstractCraftingUnitBlock<En
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof EntropicConvergenceEngineBE be) {
-            if (!be.isGuiAssembled()) {
-                return InteractionResult.sidedSuccess(level.isClientSide());
+            if (!be.isGuiAssembled() || !be.isNetworkConnected()) {
+                return InteractionResult.PASS;
             }
             if (!level.isClientSide()) {
                 MenuOpener.open(com.raishxn.ufo.init.ModMenus.ENTROPIC_CONVERGENCE_ENGINE_MENU.get(), player, MenuLocators.forBlockEntity(be));

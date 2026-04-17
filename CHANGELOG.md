@@ -17,6 +17,7 @@ Fluxo combinado daqui para frente:
 - Corrigida a sincronizacao de progresso dos multiblocos paralelos no controller, evitando casos em que crafts de fluidos continuavam processando no servidor enquanto a tela ficava travada em valores como `0.0/15.0s`.
 - Corrigida a conectividade AE2 dos multiblocos entropicos para seguir o padrao do `ExtendedAE`, com casings AE reais, node multiblock e canal compartilhado por estrutura.
 - Revertida a troca indevida das texturas antigas de `entropy_assembler_core_casing`, `entropy_assembler_core_casing_base`, `entropy_computer_condensation_matrix` e `entropy_singularity_casing`, preservando os outros multiblocos que dependiam delas.
+- Corrigido o clique direito dos blocos entropicos para so interceptar uso quando o multibloco estiver completo e conectado, permitindo colocar varios blocos seguidos com a mao vazia sem travar a montagem.
 
 ### Implementations
 

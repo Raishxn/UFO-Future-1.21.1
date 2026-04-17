@@ -5,7 +5,6 @@ import com.raishxn.ufo.api.multiblock.EntropicMachineLocator;
 import com.raishxn.ufo.api.multiblock.IEntropicMachineController;
 import com.raishxn.ufo.block.entity.EntropicMachinePartBE;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -22,22 +21,8 @@ public class EntropicMachineShellBlock extends AEBaseEntityBlock<EntropicMachine
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         IEntropicMachineController controller = EntropicMachineLocator.findController(level, pos);
-        if (controller == null) {
+        if (controller == null || !controller.isAssembled() || !controller.isNetworkConnected()) {
             return InteractionResult.PASS;
-        }
-
-        if (!controller.isAssembled()) {
-            if (!level.isClientSide()) {
-                player.displayClientMessage(Component.literal("§cMultibloco incompleto."), true);
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide());
-        }
-
-        if (!controller.isNetworkConnected()) {
-            if (!level.isClientSide()) {
-                player.displayClientMessage(Component.literal("§eConecte o multibloco a uma rede AE2 para abrir a interface."), true);
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide());
         }
 
         if (!level.isClientSide() && controller instanceof net.minecraft.world.MenuProvider menuProvider) {
