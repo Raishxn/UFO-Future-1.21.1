@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ufo:entropy_computer_condensation_matrix"
+    },
+    "E": {
+      "item": "ufo:event_horizon_component_matrix"
+    },
+    "M": {
+      "item": "ufo:2b_mega_co_processor"
+    },
+    "T": {
+      "item": "ufo:tesseract_component_matrix"
+    }
+  },
+  "pattern": [
+    "TCT",
+    "CMC",
+    "TET"
+  ],
+  "result": {
+    "count": 4,
+    "id": "ufo:entropic_convergence_casing"
+  }
+}

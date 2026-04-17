@@ -1,6 +1,10 @@
 package com.raishxn.ufo.block.entity;
 
+import appeng.api.networking.GridFlags;
+import appeng.api.networking.IGridMultiblock;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.IGridNodeListener;
+import appeng.api.orientation.BlockOrientation;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
@@ -25,12 +29,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         implements IEntropicMachineController, IUniversalMultiblockController, IUpgradeableObject, MenuProvider {
+    private static final int UNFORMED_SCAN_COOLDOWN = 40;
+    private static final int FORMED_SCAN_COOLDOWN = 200;
 
     protected boolean assembled;
     protected boolean structureDirty = true;
@@ -54,8 +62,10 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         super(blockEntityType, pos, blockState);
         this.upgrades = UpgradeInventories.forMachine(blockState.getBlock().asItem(), 4, this::saveChanges);
         this.getMainNode()
-                .setExposedOnSides(java.util.EnumSet.allOf(Direction.class))
+                .setFlags(GridFlags.MULTIBLOCK, GridFlags.REQUIRE_CHANNEL)
+                .addService(IGridMultiblock.class, this::getMultiblockNodes)
                 .setIdlePowerUsage(0);
+        onGridConnectableSidesChanged();
     }
 
     public void serverTick() {
@@ -65,11 +75,21 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
 
         if (this.structureDirty || --this.scanCooldown <= 0) {
             scanStructure(this.level);
-            this.scanCooldown = 40;
             this.structureDirty = false;
+            this.scanCooldown = this.assembled ? FORMED_SCAN_COOLDOWN : UNFORMED_SCAN_COOLDOWN;
         }
 
-        tickMachine();
+        if (this.assembled) {
+            tickMachine();
+        } else {
+            this.running = false;
+            this.progress = 0;
+            this.maxProgress = 0;
+            this.temperature = 0;
+            this.storedEnergy = 0L;
+            this.maxStoredEnergy = 0L;
+            this.displayedRecipes.clear();
+        }
     }
 
     protected abstract void tickMachine();
@@ -102,6 +122,7 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         this.machineTier = result.machineTier();
         rebuildParts(result);
         setChanged();
+        updateVisualState();
         if (wasAssembled != this.assembled) {
             level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), 3);
         }
@@ -138,6 +159,7 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         this.parts.clear();
         this.partSet.clear();
         this.displayedRecipes.clear();
+        updateVisualState();
         setChanged();
     }
 
@@ -155,6 +177,18 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
     public boolean isNetworkConnected() {
         IGridNode node = this.getActionableNode();
         return node != null && node.getGrid() != null && node.isActive();
+    }
+
+    @Override
+    public Set<Direction> getGridConnectableSides(BlockOrientation orientation) {
+        return this.assembled ? EnumSet.allOf(Direction.class) : EnumSet.noneOf(Direction.class);
+    }
+
+    @Override
+    public void onMainNodeStateChanged(IGridNodeListener.State reason) {
+        if (reason != IGridNodeListener.State.GRID_BOOT) {
+            updateVisualState();
+        }
     }
 
     @Override
@@ -321,6 +355,55 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
                 this.parts.add(immutable);
                 this.partSet.add(immutable);
             });
+        }
+        updateVisualState();
+    }
+
+    protected void updateVisualState() {
+        onGridConnectableSidesChanged();
+        if (this.level == null || this.level.isClientSide() || this.isRemoved()) {
+            return;
+        }
+
+        BlockState current = this.level.getBlockState(this.worldPosition);
+        if (current.getBlock() instanceof com.raishxn.ufo.block.AbstractEntropicMachineBlock<?> block) {
+            BlockState updated = current
+                    .setValue(com.raishxn.ufo.block.AbstractEntropicMachineBlock.FORMED, this.assembled)
+                    .setValue(com.raishxn.ufo.block.AbstractEntropicMachineBlock.POWERED, this.assembled && this.getMainNode().isOnline());
+            if (updated != current) {
+                this.level.setBlock(this.worldPosition, updated, 2);
+            }
+        }
+    }
+
+    private Iterator<IGridNode> getMultiblockNodes() {
+        List<IGridNode> nodes = new ArrayList<>(this.parts.size() + 1);
+        addNode(nodes, this);
+
+        if (this.level == null) {
+            return nodes.iterator();
+        }
+
+        for (BlockPos partPos : this.parts) {
+            if (partPos.equals(this.worldPosition)) {
+                continue;
+            }
+
+            var part = this.level.getBlockEntity(partPos);
+            if (part instanceof AbstractEntropicMachineBE machine
+                    && machine.isAssembled()
+                    && machine.getClass() == this.getClass()) {
+                addNode(nodes, machine);
+            }
+        }
+
+        return nodes.iterator();
+    }
+
+    private static void addNode(List<IGridNode> nodes, AbstractEntropicMachineBE machine) {
+        IGridNode node = machine.getActionableNode();
+        if (node != null) {
+            nodes.add(node);
         }
     }
 }

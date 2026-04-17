@@ -87,6 +87,8 @@
   "block.ufo.entropy_computer_condensation_matrix": "Entropy Computer Condensation Matrix",
   "block.ufo.entropic_assembler_matrix": "Entropic Assembler Matrix",
   "block.ufo.entropic_convergence_engine": "Entropic Convergence Engine",
+  "block.ufo.entropic_assembler_casing": "Entropic Assembler Casing",
+  "block.ufo.entropic_convergence_casing": "Entropic Convergence Casing",
   "block.ufo.entropy_catalyst_bank_components": "Entropy Catalyst Bank Components",
   "block.ufo.entropy_singularity_array_controller": "Entropy Singularity Array Controller",
 

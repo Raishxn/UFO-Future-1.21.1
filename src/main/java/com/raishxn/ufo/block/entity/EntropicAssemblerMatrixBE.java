@@ -93,9 +93,7 @@ public class EntropicAssemblerMatrixBE extends AbstractEntropicMachineBE impleme
 
     @Override
     protected FieldTieredCubeValidator.ShellPredicate getShellPredicate() {
-        return (state, level, pos) -> state.is(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
-                || state.is(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get())
-                || state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
+        return (state, level, pos) -> state.is(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get());
     }
 
     @Override
@@ -160,7 +158,7 @@ public class EntropicAssemblerMatrixBE extends AbstractEntropicMachineBE impleme
     @Override
     public PatternContainerGroup getCraftingMachineInfo() {
         return new PatternContainerGroup(
-                AEItemKey.of(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get().asItem()),
+                AEItemKey.of(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get().asItem()),
                 Component.translatable(getMachineNameKey()),
                 List.of(Component.literal("MK" + this.machineTier))
         );

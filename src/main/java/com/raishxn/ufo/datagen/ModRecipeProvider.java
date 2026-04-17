@@ -1162,8 +1162,30 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_quantum_pattern_hatch", has(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()))
                 .save(c);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get(), 4)
+                .pattern("ACA")
+                .pattern("HPH")
+                .pattern("ACA")
+                .define('A', ModItems.QUANTUM_ANOMALY.get())
+                .define('C', MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
+                .define('H', ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
+                .define('P', MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())
+                .unlockedBy("has_quantum_pattern_hatch", has(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()))
+                .save(c);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get())
                 .pattern("TET")
+                .pattern("CMC")
+                .pattern("TET")
+                .define('T', ModItems.TESSERACT_COMPONENT_MATRIX.get())
+                .define('E', ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get())
+                .define('C', MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
+                .define('M', ModBlocks.CO_PROCESSOR_BLOCKS.get(com.raishxn.ufo.core.MegaCoProcessorTier.COPROCESSOR_2B).get())
+                .unlockedBy("has_entropy_condensation_matrix", has(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get()))
+                .save(c);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get(), 4)
+                .pattern("TCT")
                 .pattern("CMC")
                 .pattern("TET")
                 .define('T', ModItems.TESSERACT_COMPONENT_MATRIX.get())

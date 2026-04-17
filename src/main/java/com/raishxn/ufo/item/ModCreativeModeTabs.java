@@ -212,9 +212,8 @@ public class ModCreativeModeTabs {
                         // --- ENTROPY MULTIBLOCK ---
                         output.accept(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get());
                         output.accept(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get());
-                        output.accept(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
-                        output.accept(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get());
-                        output.accept(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get());
+                        output.accept(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get());
+                        output.accept(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get());
 
                     }).build());
 

@@ -30,6 +30,12 @@ public class MultiblockBlocks {
     public static final DeferredBlock<EntropicConvergenceEngineBlock> ENTROPY_COMPUTER_CONDENSATION_MATRIX = BLOCKS.register("entropy_computer_condensation_matrix",
             EntropicConvergenceEngineBlock::new);
 
+    public static final DeferredBlock<EntropicAssemblerCasingBlock> ENTROPIC_ASSEMBLER_CASING = BLOCKS.register("entropic_assembler_casing",
+            EntropicAssemblerCasingBlock::new);
+
+    public static final DeferredBlock<EntropicConvergenceCasingBlock> ENTROPIC_CONVERGENCE_CASING = BLOCKS.register("entropic_convergence_casing",
+            EntropicConvergenceCasingBlock::new);
+
     public static final DeferredBlock<EntropicAssemblerMatrixControllerBlock> ENTROPIC_ASSEMBLER_MATRIX = BLOCKS.register("entropic_assembler_matrix",
             () -> new EntropicAssemblerMatrixControllerBlock(BlockBehaviour.Properties.of()
                     .strength(30.0f, 1200.0f)

@@ -38,6 +38,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         craftingLikeCube(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX, "entropy_computer_condensation_matrix");
         multiblockCubeWithTexture(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX, "entropy_assembler_core_casing");
         craftingLikeCube(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE, "entropy_computer_condensation_matrix");
+        entropicMachineCube(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING, "entropic_assembler_casing");
+        entropicMachineCube(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING, "entropic_convergence_casing");
         multiblockCubeWithTexture(MultiblockBlocks.QUANTUM_ENTROPY_CASING, "quantum_hyper_mechanical_casing");
         multiblockCube(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING);
         qmfControllerBlock(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER);
@@ -123,6 +125,20 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .partialState().with(AbstractCraftingUnitBlock.FORMED, false)
                 .setModels(new ConfiguredModel(model))
                 .partialState().with(AbstractCraftingUnitBlock.FORMED, true)
+                .setModels(new ConfiguredModel(model));
+
+        simpleBlockItem(block.get(), model);
+    }
+
+    private void entropicMachineCube(DeferredBlock<? extends Block> block, String textureName) {
+        String name = block.getId().getPath();
+        ResourceLocation texture = modLoc("block/multiblock/" + textureName);
+        ModelFile model = models().cubeAll(name, texture);
+
+        getVariantBuilder(block.get())
+                .partialState().with(com.raishxn.ufo.block.AbstractEntropicMachineBlock.FORMED, false)
+                .setModels(new ConfiguredModel(model))
+                .partialState().with(com.raishxn.ufo.block.AbstractEntropicMachineBlock.FORMED, true)
                 .setModels(new ConfiguredModel(model));
 
         simpleBlockItem(block.get(), model);

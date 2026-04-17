@@ -15,15 +15,17 @@ Fluxo combinado daqui para frente:
 ### Bug Fixes
 
 - Corrigida a sincronizacao de progresso dos multiblocos paralelos no controller, evitando casos em que crafts de fluidos continuavam processando no servidor enquanto a tela ficava travada em valores como `0.0/15.0s`.
-- Corrigida a conectividade AE2 dos multiblocos entrópicos: a `Entropy Computer Condensation Matrix` agora funciona como casca AE/crafting real em toda a estrutura, e as cascas entrópicas do assembler aceitam conexão direta na rede.
+- Corrigida a conectividade AE2 dos multiblocos entropicos para seguir o padrao do `ExtendedAE`, com casings AE reais, node multiblock e canal compartilhado por estrutura.
+- Revertida a troca indevida das texturas antigas de `entropy_assembler_core_casing`, `entropy_assembler_core_casing_base`, `entropy_computer_condensation_matrix` e `entropy_singularity_casing`, preservando os outros multiblocos que dependiam delas.
 
 ### Implementations
 
 - Ajustada a exibicao do JEI do `Stellar Nexus` para mostrar o coolant apenas como `MK1`, `MK2` ou `MK3`, com tooltip exibindo o nome completo do fluido.
 - Ajustada a exibicao do JEI do `Stellar Nexus` para mostrar o fuel em formato abreviado dentro do box, com tooltip exibindo o nome completo do combustivel e a quantidade.
 - Iniciada a base dos multiblocos `Entropic Convergence Engine` e `Entropic Assembler Matrix`, com PRD finalizado, notas tecnicas de estabilidade/performance e validador frio para cubo `7x7x7` com interior `5x5x5` preenchido por fields uniformes.
-- Implementada a primeira versao funcional do `Entropic Convergence Engine` e da `Entropic Assembler Matrix`, com proxy de interacao por qualquer bloco do cubo, controllers dedicados, tiers por preenchimento completo de fields, CPU colossal com exibicao `∞` no terminal do AE2, geracao de data/resources e execucao massiva de patterns via matriz.
-- Reestruturada a base entrópica para usar ancoragem lógica única de CPU colossal e validação estrutural sob demanda, removendo a dependência de blocos de casca "burros" e evitando scan quente por tick na `Condensation Matrix`.
+- Criados os novos blocos exclusivos `Entropic Assembler Casing` e `Entropic Convergence Casing`, que agora sao as unicas cascas validas desses dois multiblocos, com receitas, modelos e texturas proprias.
+- Alinhada a interacao para abrir a GUI por qualquer bloco da estrutura formada e conectada, sem controller visivel no shell.
+- Reduzido o custo de revalidacao estrutural, mantendo rescan periodico mais lento quando montado e resposta imediata via dirty flag quando a estrutura muda.
 
 ## [2.0.0]
 

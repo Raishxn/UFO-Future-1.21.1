@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-16T18:05:45.2137595	Recipes
+// 1.21.1	2026-04-16T23:55:31.3238849	Recipes
 623466a712bf2b54aad620b471840892932161d4 data/ufo/advancement/recipes/misc/ae_energy_input_hatch.json
 a25a6bd915843952e3b74014247693fdda691447 data/ufo/advancement/recipes/misc/bismuth.json
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
@@ -7,7 +7,9 @@ eb7866de442289af9a906bdbf371421bb9e18e5a data/ufo/advancement/recipes/misc/copro
 c329c52c1cf665d32d0c4676c21a72563f6b324f data/ufo/advancement/recipes/misc/coprocessor_50m.json
 be3ad26fbd1e6a1fcf540a0efc63acf3c693e948 data/ufo/advancement/recipes/misc/coprocessor_750m.json
 ad8781cb7009056952f51b77421b471bdf8d2c1f data/ufo/advancement/recipes/misc/dimensional_matter_assembler.json
+cb772c60acc0ddad82021064a3f8499c7872681b data/ufo/advancement/recipes/misc/entropic_assembler_casing.json
 07adb64b45b39b731ff3df1e60532d551a1e6ba9 data/ufo/advancement/recipes/misc/entropic_assembler_matrix.json
+a9bae6e8ddcdb6ee985e3dfe57763ec9fac4cea5 data/ufo/advancement/recipes/misc/entropic_convergence_casing.json
 c5adc1fceaff7d5e56a20a30c0da26a8a75dda5f data/ufo/advancement/recipes/misc/entropic_convergence_engine.json
 0d5f743983aff96a76c1ae614a923ec3ec990785 data/ufo/advancement/recipes/misc/entropy_assembler_core_casing.json
 c21fd064af707ccfdfe1e0536172550b1a27f558 data/ufo/advancement/recipes/misc/entropy_computer_condensation_matrix.json
@@ -141,7 +143,9 @@ f147091b2bea939500e770f852ad458cc85811d1 data/ufo/recipe/dma/thermal_resistor_ma
 34b1f6dfbbfe010a23036b8b3ddc5763b7da7a66 data/ufo/recipe/dma/white_dwarf_fluid.json
 cf4b81ce61d0f396eb8a9609ec8e419089a8d44a data/ufo/recipe/dma/white_dwarf_fragment_rod.json
 34f09de25d32ed6c43f14c8bc6641620881495e9 data/ufo/recipe/dma/white_dwarf_matter.json
+52667e920d0d7437cba677d726f91d3cdc3bdd3d data/ufo/recipe/entropic_assembler_casing.json
 be9f23d35af4f68e9356a30d1f076e8d90d207e9 data/ufo/recipe/entropic_assembler_matrix.json
+d0ee8de5cf5809cae03e3e44513a9b846a24c4d4 data/ufo/recipe/entropic_convergence_casing.json
 582495991131baa82c3fa124dcc21b4ac35c9882 data/ufo/recipe/entropic_convergence_engine.json
 739e234a080d382a317713f40819107115b3eadf data/ufo/recipe/entropy_assembler_core_casing.json
 d0518a9ce7190113425dae077dae4d00aed9b181 data/ufo/recipe/entropy_computer_condensation_matrix.json

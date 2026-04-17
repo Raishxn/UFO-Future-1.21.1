@@ -34,6 +34,6 @@ public class EntropicAssemblerMatrixMenu extends AbstractUniversalMultiblockCont
 
     @Override
     protected Block getValidBlock() {
-        return MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get();
+        return MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get();
     }
 }

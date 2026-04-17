@@ -189,6 +189,14 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get(), new Item.Properties(),
                      ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED));
 
+     public static final DeferredItem<Item> ENTROPIC_ASSEMBLER_CASING = ITEMS.register("entropic_assembler_casing",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get(), new Item.Properties(),
+                     ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED, ChatFormatting.GOLD));
+
+     public static final DeferredItem<Item> ENTROPIC_CONVERGENCE_CASING = ITEMS.register("entropic_convergence_casing",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED));
+
 
 
      // ═══════════════════════════════════════════════════════════
