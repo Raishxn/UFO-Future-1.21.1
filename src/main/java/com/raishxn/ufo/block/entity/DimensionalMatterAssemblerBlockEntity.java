@@ -21,6 +21,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.FluidStack;
 
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+
 import com.raishxn.ufo.block.DimensionalMatterAssemblerBlock;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
 import com.raishxn.ufo.init.ModRecipes;
@@ -70,6 +73,9 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     private static final int MAX_OUTPUT_SLOTS = 2;
     private static final int MAX_POWER_STORAGE = 500000;
     private static final int MAX_TANK_CAPACITY = 16000;
+
+    private static List<RecipeHolder<DimensionalMatterAssemblerRecipe>> sortedRecipeCache = null;
+    private static RecipeManager cachedRecipeManagerRef = null;
 
     private final IUpgradeInventory upgrades;
     private final IConfigManager configManager;
@@ -605,9 +611,27 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         return this.cachedTask;
     }
 
+    private static List<RecipeHolder<DimensionalMatterAssemblerRecipe>> getSortedRecipes(Level level) {
+        RecipeManager manager = level.getRecipeManager();
+        if (manager != cachedRecipeManagerRef || sortedRecipeCache == null) {
+            sortedRecipeCache = manager.getAllRecipesFor(ModRecipes.DMA_RECIPE_TYPE.get()).stream()
+                    .sorted(Comparator
+                            .comparingInt((RecipeHolder<DimensionalMatterAssemblerRecipe> holder) ->
+                                    (int) holder.value().getItemInputs().stream()
+                                            .filter(r -> r != null && !r.isEmpty()).count())
+                            .thenComparingLong((RecipeHolder<DimensionalMatterAssemblerRecipe> holder) ->
+                                    holder.value().getFluidInputs().stream()
+                                            .filter(f -> f != null && !f.isEmpty())
+                                            .mapToLong(f -> f.getAmount()).sum())
+                            .reversed())
+                    .toList();
+            cachedRecipeManagerRef = manager;
+        }
+        return sortedRecipeCache;
+    }
+
     private DimensionalMatterAssemblerRecipe findRecipe(Level level) {
-        // Find matching recipe in Recipe Manager
-        var possibleRecipes = level.getRecipeManager().getAllRecipesFor(ModRecipes.DMA_RECIPE_TYPE.get());
+        var possibleRecipes = getSortedRecipes(level);
         for (var recipeHolder : possibleRecipes) {
             var recipe = recipeHolder.value();
             boolean matches = true;
