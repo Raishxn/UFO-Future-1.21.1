@@ -1,0 +1,41 @@
+{
+  "type": "ufo:dimensional_assembly",
+  "energy": 4000000,
+  "fluid_inputs": [
+    {
+      "amount": 2000,
+      "ingredient": {
+        "fluid": "ufo:source_pulsar_fragment_fluid"
+      }
+    }
+  ],
+  "fluid_outputs": [],
+  "item_inputs": [
+    {
+      "amount": 16,
+      "ingredient": {
+        "item": "ufo:pulsar_fragment_dust"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:obsidian_matrix"
+      }
+    },
+    {
+      "amount": 2,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 1,
+      "#t": "ae2:i",
+      "id": "ufo:quantum_anomaly"
+    }
+  ],
+  "time": 600
+}
