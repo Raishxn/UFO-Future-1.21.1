@@ -916,14 +916,32 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private AENetworkedBlockEntity getConnectedNetworkNode() {
         if (this.level == null)
             return null;
+        AENetworkedBlockEntity fallback = null;
         for (BlockPos p : this.parts) {
-            if (this.level.getBlockEntity(p) instanceof AENetworkedBlockEntity nodeBE) {
-                if (nodeBE.getActionableNode() != null && nodeBE.getActionableNode().getGrid() != null) {
-                    return nodeBE;
-                }
+            if (!(this.level.getBlockEntity(p) instanceof AENetworkedBlockEntity nodeBE)) {
+                continue;
+            }
+            if (nodeBE.getActionableNode() == null || nodeBE.getActionableNode().getGrid() == null) {
+                continue;
+            }
+
+            BlockState state = this.level.getBlockState(p);
+            if (state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())) {
+                return nodeBE;
+            }
+            if (fallback == null && state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())) {
+                fallback = nodeBE;
+                continue;
+            }
+            if (fallback == null && state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())) {
+                fallback = nodeBE;
+                continue;
+            }
+            if (fallback == null && state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())) {
+                fallback = nodeBE;
             }
         }
-        return null;
+        return fallback;
     }
 
 
