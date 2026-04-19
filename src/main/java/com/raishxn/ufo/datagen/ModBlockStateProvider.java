@@ -135,11 +135,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         ResourceLocation texture = modLoc("block/multiblock/" + textureName);
         ModelFile model = models().cubeAll(name, texture);
 
-        getVariantBuilder(block.get())
-                .partialState().with(com.raishxn.ufo.block.AbstractEntropicMachineBlock.FORMED, false)
-                .setModels(new ConfiguredModel(model))
-                .partialState().with(com.raishxn.ufo.block.AbstractEntropicMachineBlock.FORMED, true)
-                .setModels(new ConfiguredModel(model));
+        getVariantBuilder(block.get()).forAllStates(state -> new ConfiguredModel[]{new ConfiguredModel(model)});
 
         simpleBlockItem(block.get(), model);
     }
