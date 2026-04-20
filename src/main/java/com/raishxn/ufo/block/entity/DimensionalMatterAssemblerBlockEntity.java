@@ -108,9 +108,6 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
     private boolean showWarning = false;
 
-    private static RecipeManager cachedRecipeManagerRef;
-    private static List<RecipeHolder<DimensionalMatterAssemblerRecipe>> sortedRecipeCache;
-
     // --- Thermal & Risk Mechanics ---
     private int temperature = 0;
     private int maxTemperature = 10000;
