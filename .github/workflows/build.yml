@@ -26,9 +26,10 @@ jobs:
 
       - name: Verify no stale generated resources
         run: |
-          if ! git diff --quiet src/generated/resources; then
+          status_output="$(git status --porcelain -- src/generated/resources)"
+          if [ -n "$status_output" ]; then
             echo "ERROR: Generated resources are out of date. Run './gradlew runData' and commit the result."
-            git diff --stat src/generated/resources
+            printf '%s\n' "$status_output"
             exit 1
           fi
 
