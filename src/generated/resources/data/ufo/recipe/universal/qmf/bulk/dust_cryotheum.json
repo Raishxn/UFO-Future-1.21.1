@@ -36,5 +36,5 @@
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/bulk/dust_cryotheum",
-  "time": 100
+  "time": 60
 }

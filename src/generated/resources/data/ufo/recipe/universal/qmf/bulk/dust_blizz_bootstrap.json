@@ -30,5 +30,5 @@
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/bulk/dust_blizz_bootstrap",
-  "time": 60
+  "time": 40
 }

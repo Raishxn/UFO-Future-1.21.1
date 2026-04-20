@@ -14,7 +14,7 @@
     "amount": 1,
     "id": "ufo:source_gelid_cryotheum"
   },
-  "fluid_output_amount": 128000,
+  "fluid_output_amount": 256000,
   "item_inputs": [
     {
       "amount": 256,
@@ -25,5 +25,5 @@
   ],
   "machine": "qmf",
   "recipe_name": "universal/qmf/bulk/gelid_cryotheum_bootstrap",
-  "time": 180
+  "time": 80
 }

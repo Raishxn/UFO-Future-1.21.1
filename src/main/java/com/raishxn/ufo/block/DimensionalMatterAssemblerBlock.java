@@ -16,7 +16,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -39,7 +41,10 @@ public class DimensionalMatterAssemblerBlock extends AEBaseEntityBlock<Dimension
     public static final BooleanProperty WORKING = BooleanProperty.create("working");
 
     public DimensionalMatterAssemblerBlock() {
-        super(metalProps().noOcclusion());
+        super(BlockBehaviour.Properties.of()
+                .strength(1.5f, 4.0f)
+                .sound(SoundType.METAL)
+                .noOcclusion());
         this.registerDefaultState(this.defaultBlockState().setValue(WORKING, false));
     }
 

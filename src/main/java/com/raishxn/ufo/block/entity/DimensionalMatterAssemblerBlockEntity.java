@@ -1,6 +1,7 @@
 package com.raishxn.ufo.block.entity;
 
 import java.util.*;
+import java.util.Comparator;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -104,6 +107,9 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     private final HashMap<Direction, Map<AEKeyType, ExternalStorageStrategy>> exportStrategies = new HashMap<>();
 
     private boolean showWarning = false;
+
+    private static RecipeManager cachedRecipeManagerRef;
+    private static List<RecipeHolder<DimensionalMatterAssemblerRecipe>> sortedRecipeCache;
 
     // --- Thermal & Risk Mechanics ---
     private int temperature = 0;
@@ -233,7 +239,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                 } else if (fluidId.contains("starlight")) {
                     heatPerMB = 30; // good utility coolant, but below stable coolant
                 } else if (fluidId.contains("gelid_cryotheum")) {
-                    mBPerHeat = 120; // intentionally weak early coolant
+                    mBPerHeat = 24; // starter coolant should sustain a single basic DMA
                 } else {
                     heatPerMB = 15; // default fallback for generic fluids
                 }
@@ -708,6 +714,9 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                     this.setProcessingTime(0);
                     this.setWorking(false);
                     this.cachedTask = null;
+                } else if (recipe != this.cachedTask) {
+                    this.setProcessingTime(0);
+                    this.cachedTask = recipe;
                 }
             }
             this.setChanged();
