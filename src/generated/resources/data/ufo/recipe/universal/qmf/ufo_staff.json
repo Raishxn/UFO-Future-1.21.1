@@ -1,15 +1,15 @@
 {
-  "type": "ufo:dimensional_assembly",
+  "type": "ufo:universal_multiblock",
   "energy": 100000000,
   "fluid_inputs": [
     {
       "amount": 12000,
-      "ingredient": {
-        "fluid": "ufo:source_liquid_starlight_fluid"
+      "fluid": {
+        "amount": 1,
+        "id": "ufo:source_liquid_starlight_fluid"
       }
     }
   ],
-  "fluid_outputs": [],
   "item_inputs": [
     {
       "amount": 4,
@@ -54,12 +54,11 @@
       }
     }
   ],
-  "item_outputs": [
-    {
-      "#": 1,
-      "#t": "ae2:i",
-      "id": "ufo:ufo_staff"
-    }
-  ],
+  "item_output": {
+    "id": "ufo:ufo_staff"
+  },
+  "machine": "qmf",
+  "recipe_name": "universal/qmf/ufo_staff",
+  "required_tier": 3,
   "time": 12000
 }

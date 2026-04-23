@@ -3,13 +3,13 @@
   "category": "misc",
   "key": {
     "C": {
-      "item": "ufo:charged_enriched_neutronium_sphere"
+      "item": "ufo:dark_matter"
     },
     "D": {
       "item": "ae2:dense_energy_cell"
     },
     "E": {
-      "item": "ufo:event_horizon_component_matrix"
+      "item": "ufo:cosmic_string_component_matrix"
     },
     "Q": {
       "item": "ufo:quantum_anomaly"

@@ -37,8 +37,18 @@ Mixed tiers invalidate the structure.
 - **Safe Mode** costs **2.5x** AE, fuel and coolant, but shuts down instead of exploding
 - **Overclock** gives **5x** speed, **10x** AE cost and **5x** fuel, heat and coolant use
 
+## Heat Profile
+
+- Base heat generation: **recipe cooling level + 1 HU/tick**.
+- Overclock heat generation: **5x** the recipe heat per tick.
+- Stronger recipes naturally run hotter, so cooling level is part of the machine's thermal burden.
+
 ## Coolant Ladder
 
-- **Gelid Cryotheum**: low efficiency
-- **Stable Coolant**: medium efficiency
-- **Temporal Fluid**: extreme efficiency
+- The controller tries to consume **100 mB/tick** of coolant while running.
+- **Safe Mode** raises that to **250 mB/tick**.
+- **Overclock** multiplies coolant draw by **5x** on top of that.
+- **Gelid Cryotheum**: **1 cooling per mB**.
+- **Stable Coolant**: **4 cooling per mB**.
+- **Temporal Fluid**: **8 cooling per mB**.
+- Final cooling is multiplied by your field tier bonus, so better field generators make the same coolant stronger.

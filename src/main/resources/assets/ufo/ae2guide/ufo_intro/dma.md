@@ -27,13 +27,16 @@ The **DMA** is the first advanced machine in UFO Future. It handles shapeless it
 DMA recipes should not ask for coolant in their normal fluid inputs. Coolants belong in the coolant tank only.
 
 ## Coolant Progression
-- **Gelid Cryotheum**: low-efficiency starter coolant.
-- **Stable Coolant**: mid-tier sustained coolant.
-- **Temporal Fluid**: extreme endgame coolant.
+- **Gelid Cryotheum**: removes **1 HU per 24 mB**, up to **1000 mB/tick**.
+- **Stable Coolant**: removes **50 HU per mB**, up to **10 mB/tick**.
+- **Temporal Fluid**: removes **100 HU per mB**, up to **10 mB/tick**.
+- **Liquid Starlight**: utility coolant that removes **30 HU per mB**, up to **10 mB/tick**.
 
 The intended path is **Gelid -> Stable -> Temporal**. If you push Chrono-heavy catalyst setups too early, Gelid Cryotheum will not keep up for long.
 
 ## Heat and Meltdown
+- Base heat generation while working: **+1 HU every 4 ticks** = **+5 HU/s** before catalyst heat multipliers.
+- Passive cooling while idle: **-1 HU every 40 ticks** = **-0.5 HU/s**.
 - Below 50% heat: stable operation.
 - Above 50% heat: hazard zone, visual warning effects and nearby damage.
 - At 100% heat: meltdown countdown, then a destructive explosion if the machine is not cooled in time.

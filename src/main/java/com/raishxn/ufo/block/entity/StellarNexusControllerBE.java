@@ -65,6 +65,7 @@ import java.util.List;
  * </ul>
  */
 import com.raishxn.ufo.screen.StellarNexusControllerMenu;
+import com.raishxn.ufo.block.MultiblockBlocks;
 
 public class StellarNexusControllerBE extends BlockEntity implements IMultiblockController, MenuProvider {
 
@@ -911,12 +912,22 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         this.explosionTick = 0;
         this.explosionShellRadius = 0;
         resetExplosionCursor();
+        removeControllerBlockAfterExplosion();
+    }
+
+    private void removeControllerBlockAfterExplosion() {
+        if (this.level == null || this.level.getBlockEntity(this.worldPosition) != this) {
+            return;
+        }
+
+        this.level.removeBlock(this.worldPosition, false);
     }
 
     private AENetworkedBlockEntity getConnectedNetworkNode() {
         if (this.level == null)
             return null;
         AENetworkedBlockEntity fallback = null;
+
         for (BlockPos p : this.parts) {
             if (!(this.level.getBlockEntity(p) instanceof AENetworkedBlockEntity nodeBE)) {
                 continue;
@@ -941,6 +952,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                 fallback = nodeBE;
             }
         }
+
         return fallback;
     }
 

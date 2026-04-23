@@ -356,10 +356,19 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                 this.level.explode(null, this.worldPosition.getX(), this.worldPosition.getY(),
                         this.worldPosition.getZ(),
                         10.0f, net.minecraft.world.level.Level.ExplosionInteraction.BLOCK); // Powerful block breaking
-                                                                                            // explosion
+                                                                                             // explosion
+                removeBlockAfterCatastrophicExplosion();
                 this.overloadTimer = -1;
             }
         }
+    }
+
+    private void removeBlockAfterCatastrophicExplosion() {
+        if (this.level == null || this.level.getBlockEntity(this.worldPosition) != this) {
+            return;
+        }
+
+        this.level.removeBlock(this.worldPosition, false);
     }
 
     private void updateBlockState(boolean working) {

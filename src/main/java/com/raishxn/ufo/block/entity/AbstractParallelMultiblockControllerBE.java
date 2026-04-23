@@ -236,6 +236,10 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         return this.overclocked ? OVERCLOCK_SPEED_MULTIPLIER : 1;
     }
 
+    protected double getHeatGenerationMultiplier() {
+        return 1.0D;
+    }
+
     private void chargeEnergy(ParallelProcessState state, IEnergyService energyService, long targetEnergy) {
         if (state.getEnergyBuffer() >= targetEnergy) {
             return;
@@ -406,7 +410,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
         } else if (activeThreads > 0) {
             if (this.thermalTicker % 2 == 0) {
-                int heatToAdd = Math.max(1, activeThreads) * (this.overclocked ? 5 : 1);
+                int baseHeat = Math.max(1, activeThreads) * (this.overclocked ? 5 : 1);
+                int heatToAdd = Math.max(1, (int) Math.ceil(baseHeat * getHeatGenerationMultiplier()));
                 this.temperature = Math.min(this.maxTemperature, this.temperature + heatToAdd);
             }
         } else if (this.temperature > 0 && this.thermalTicker % 40 == 0) {
@@ -532,6 +537,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 THERMAL_EXPLOSION_POWER,
                 Level.ExplosionInteraction.BLOCK);
         onControllerBroken();
+        removeControllerBlockAfterExplosion();
         this.temperature = 0;
         this.overloadTimer = -1;
         this.running = false;
@@ -541,6 +547,18 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         updateDisplayedEnergy(Map.of(), false);
         this.displayedRecipes.clear();
         saveChanges();
+    }
+
+    private void removeControllerBlockAfterExplosion() {
+        if (this.level == null) {
+            return;
+        }
+
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
+            return;
+        }
+
+        this.level.removeBlock(this.worldPosition, false);
     }
 
     private AENetworkedBlockEntity getConnectedNetworkNode() {

@@ -16,3 +16,16 @@ The **Quantum Cryoforge** is the universal multiblock dedicated to large-scale c
 - Shares the same controller flow as the other universal multiblocks.
 - Accepts universal hatches in valid casing positions.
 - Focuses on coolant and thermal-fluid throughput.
+
+## Thermal Profile
+
+- Heat generation is reduced to **50%** of the normal universal multiblock rate.
+- Base heat generation: **ceil(active threads x 0.5) HU/tick**.
+- Overclock heat generation: **ceil(active threads x 5 x 0.5) HU/tick**.
+- Idle passive cooling: **-1 HU every 40 ticks**.
+
+## Coolant Tank
+
+- **Gelid Cryotheum** removes **1 HU per 120 mB**, up to **1000 mB/tick**.
+- **Stable Coolant** removes **50 HU per mB**, up to **10 mB/tick**.
+- **Temporal Fluid** removes **100 HU per mB**, up to **10 mB/tick**.

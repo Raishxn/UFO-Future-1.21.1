@@ -14,6 +14,10 @@ Fluxo combinado daqui para frente:
 
 ### Bug Fixes
 
+- Corrigido o comportamento de falha termica do `Dimensional Matter Assembler`, dos multiblocos universais paralelos e do `Stellar Nexus`: a explosao agora remove o controller em vez de repetir efeitos infinitos enquanto o bloco resistente continua no mundo.
+- Corrigidos os pendentes do PDF de tasks ligados a recipes e JEI: `Quantum Cryoforge Controller` agora tem recipe visivel, `Quantum Pattern Provider` ganhou conversao recipe visivel com o hatch, e o `Quantum Energy Cell` foi atualizado para usar `Cosmic String Component Matrix` e `Dark Matter`.
+- Ajustada a progressao dos `component matrix batch recipes` do QMF para output de `24`, evitando que `Tesseract`, `Event Horizon` e `Cosmic String` continuem baratos demais no bulk craft.
+
 - Corrigido o matcher do `Dimensional Matter Assembler` para priorizar receitas mais especificas e trocar a recipe em cache quando os inputs mudam, evitando que a craft de `neutron star fragment ingot` execute a recipe de `white dwarf fragment rod`.
 - Rebalanceado o coolant inicial do DMA: `gelid cryotheum` agora resfria com eficiencia muito maior, e as recipes de bootstrap/producao inicial foram aceleradas e tiveram output ajustado para sustentar melhor a progressao.
 - Reduzida a resistencia do `Dimensional Matter Assembler` para facilitar reposicionamento sem wrench e evitar que a maquina pareca dura demais para o stage em que aparece.
@@ -33,6 +37,9 @@ Fluxo combinado daqui para frente:
 - Corrigido o gatilho de formacao do `Entropic Convergence`: mudancas nos `Stellar Field Generator` agora tambem notificam a CPU entropica, permitindo que a estrutura entre no grid quando o ultimo bloco colocado estiver no interior.
 
 ### Implementations
+
+- Adicionadas paginas e notas mais completas no guide do AE2 para `DMA`, `QMF`, `Quantum Cryoforge` e `Stellar Nexus`, incluindo valores de `HU`, ladder de coolant e perfil termico.
+- Movido o `UFO Staff` para a linha de recipe universal do `QMF`, alinhando a progressao dele com a UFO suit e removendo o craft direto no `DMA`.
 
 - Ajustada a exibicao do JEI do `Stellar Nexus` para mostrar o coolant apenas como `MK1`, `MK2` ou `MK3`, com tooltip exibindo o nome completo do fluido.
 - Ajustada a exibicao do JEI do `Stellar Nexus` para mostrar o fuel em formato abreviado dentro do box, com tooltip exibindo o nome completo do combustivel e a quantidade.
