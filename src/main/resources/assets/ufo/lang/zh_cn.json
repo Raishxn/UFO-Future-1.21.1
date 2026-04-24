@@ -51,6 +51,11 @@
   "tooltip.ufo.capacity_exact": "精确容量: %s",
   "tooltip.ufo.accelerator_threads": "协同处理器: %s 线程",
   "item.ufo.infinity_cell_tooltip": "提供无限量的单种物品或流体。",
+  "item.ufo.infinity_genesis_cell": "Infinity Genesis Cell",
+  "item.ufo.infinity_genesis_cell.tooltip": "Turns any inserted item, fluid, or AE resource into an infinite source.",
+  "item.ufo.infinity_genesis_cell.types": "Learned Types: %s",
+  "item.ufo.infinity_genesis_cell.learned": "Learned Resources:",
+  "item.ufo.infinity_genesis_cell.more": "...and %s more",
 
   "item.ufo.phase_shift_component_matrix": "相移组件矩阵",
   "item.ufo.hyper_dense_component_matrix": "超致密组件矩阵",

@@ -4,6 +4,7 @@ import appeng.api.client.StorageCellModels;
 import appeng.api.storage.StorageCells;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.item.custom.cell.AEBigIntegerCellHandler;
+import com.raishxn.ufo.item.custom.cell.InfinityGenesisCellInventory;
 import com.raishxn.ufo.item.custom.cell.InfinityCellInventory;
 
 public class UFORegistryHandler {
@@ -46,6 +47,7 @@ public class UFORegistryHandler {
 
     private void registerStorageHandler() {
         StorageCells.addCellHandler(InfinityCellInventory.HANDLER);
+        StorageCells.addCellHandler(InfinityGenesisCellInventory.HANDLER);
         StorageCells.addCellHandler(AEBigIntegerCellHandler.INSTANCE);
         // --- Infinity Cells → 3D drive model (purple/cosmic) ---
         StorageCellModels.registerModel(ModCells.INFINITY_WATER_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
@@ -87,6 +89,7 @@ public class UFORegistryHandler {
         StorageCellModels.registerModel(ModCells.INFINITY_GREEN_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
         StorageCellModels.registerModel(ModCells.INFINITY_RED_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
         StorageCellModels.registerModel(ModCells.INFINITY_BLACK_DYE_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
+        StorageCellModels.registerModel(ModCells.INFINITY_GENESIS_CELL.get(), UfoMod.id("drive/cells/infinity_cell"));
 
         // --- White Dwarf Item Cells → 3D drive model (gray/silver) ---
         StorageCellModels.registerModel(ModCellItems.ITEM_CELL_40M.get(), UfoMod.id("drive/cells/white_dwarf_cell"));

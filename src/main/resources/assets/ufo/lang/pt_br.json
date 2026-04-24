@@ -53,6 +53,11 @@
   "tooltip.ufo.accelerator_threads": "Coproc.: %s Threads",
   "tooltip.ufo.stored_energy_infinite": "Energia Armazenada: Infinita/Infinita (100%)",
   "item.ufo.infinity_cell_tooltip": "Fornece uma quantidade infinita de um único item ou fluido.",
+  "item.ufo.infinity_genesis_cell": "Célula Infinity Genesis",
+  "item.ufo.infinity_genesis_cell.tooltip": "Transforma qualquer item, fluido ou recurso AE inserido em uma fonte infinita.",
+  "item.ufo.infinity_genesis_cell.types": "Tipos Aprendidos: %s",
+  "item.ufo.infinity_genesis_cell.learned": "Recursos Aprendidos:",
+  "item.ufo.infinity_genesis_cell.more": "...e mais %s",
 
   "item.ufo.phase_shift_component_matrix": "Matriz de Componente Phase-Shift",
   "item.ufo.hyper_dense_component_matrix": "Matriz de Componente Hyper-Dense",

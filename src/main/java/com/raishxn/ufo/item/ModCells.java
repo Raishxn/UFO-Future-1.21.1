@@ -108,6 +108,9 @@ public class ModCells {
     public static final DeferredItem<Item> INFINITY_BLACK_DYE_CELL = ITEMS.register("infinity_black_dye_cell",
             () -> new InfinityCell(() -> AEItemKey.of(Items.BLACK_DYE), ChatFormatting.BLACK, ChatFormatting.DARK_GRAY));
 
+    public static final DeferredItem<Item> INFINITY_GENESIS_CELL = ITEMS.register("infinity_genesis_cell",
+            InfinityGenesisCell::new);
+
     public static void register(IEventBus eventBus) {
         // Cells are registered through ModItems.ITEMS
     }

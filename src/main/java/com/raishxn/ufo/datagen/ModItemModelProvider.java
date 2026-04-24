@@ -99,6 +99,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModCells.INFINITY_GREEN_DYE_CELL.get());
         basicItem(ModCells.INFINITY_RED_DYE_CELL.get());
         basicItem(ModCells.INFINITY_BLACK_DYE_CELL.get());
+        basicItem(ModCells.INFINITY_GENESIS_CELL.get());
 
         customParentItem(ModTools.UFO_AXE, "item/ufoset/axe");
         customParentItem(ModTools.UFO_HOE, "item/ufoset/hoe");

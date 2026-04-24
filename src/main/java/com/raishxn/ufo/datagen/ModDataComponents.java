@@ -34,6 +34,11 @@ public class ModDataComponents {
     // LINHA CORRIGIDA ABAIXO
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<GenericStack>>> CELL_SHOW_TOOLTIP_STACKS = register("cell_show_tooltip_stacks", builder -> builder.persistent(GenericStack.CODEC.listOf()).networkSynchronized(GenericStack.STREAM_CODEC.apply(ByteBufCodecs.list())));
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<GenericStack>>> INFINITY_GENESIS_CELL_KEYS =
+            register("infinity_genesis_cell_keys", builder -> builder
+                    .persistent(GenericStack.FAULT_TOLERANT_LIST_CODEC)
+                    .networkSynchronized(GenericStack.STREAM_CODEC.apply(ByteBufCodecs.list())));
+
 
     // Para a Picareta
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> AUTO_SMELT =

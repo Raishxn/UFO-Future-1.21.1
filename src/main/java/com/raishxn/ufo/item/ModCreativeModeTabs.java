@@ -144,6 +144,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModCells.INFINITY_GREEN_DYE_CELL.get());
                         output.accept(ModCells.INFINITY_RED_DYE_CELL.get());
                         output.accept(ModCells.INFINITY_BLACK_DYE_CELL.get());
+                        output.accept(ModCells.INFINITY_GENESIS_CELL.get());
 
 
                         // --- HOUSINGS DE CÉLULAS (de ModCellItems) ---
