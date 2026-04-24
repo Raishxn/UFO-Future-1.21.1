@@ -1,39 +1,39 @@
 # UFO Future 2.0.0-fix4
 
-Resumo publico das mudancas desde `2.0.0-fix3`.
+Public changelog for all changes since `2.0.0-fix3`.
 
-## Destaques
+## Highlights
 
-- Adicionada a `Infinity Genesis Cell`, uma celula endgame para AE2 que aprende qualquer recurso inserido e passa a disponibilizar esse recurso como infinito na rede, cobrindo items, fluidos e chemicals compatíveis com o storage do AE.
-- `UFO Energy Cell` e `Quantum Energy Cell` agora exportam FE automaticamente para blocos adjacentes e expõem capability de energia para cabos e maquinas externas.
-- Adicionada a linha endgame `Astral Nexus`, com set de armadura, render de asas, imunidade absoluta a dano/morte, voo criativo, visao noturna, respiracao aquatica, step assist e limpeza de radiacao do Mekanism quando disponivel.
-- Adicionada a `Reality Ripper`, espada endgame com dano extremo e remocao forcada de alvos resistentes.
+- Added the `Infinity Genesis Cell`, an AE2 endgame cell that learns any inserted resource and then provides that resource infinitely to the network, covering items, fluids, and AE-compatible chemicals.
+- `UFO Energy Cell` and `Quantum Energy Cell` now automatically export FE to adjacent blocks and expose an energy capability for external cables and machines.
+- Added the `Astral Nexus` endgame line, including armor set, wing rendering, absolute damage/death immunity, creative flight, night vision, water breathing, step assist, and Mekanism radiation cleanup when Mekanism is present.
+- Added the `Reality Ripper`, an endgame sword with extreme damage and forced removal behavior for highly resistant targets.
 
-## Balanceamento e recipes
+## Balance And Recipes
 
-- Corrigido o matcher do `Dimensional Matter Assembler` para priorizar receitas mais especificas e trocar a recipe em cache quando os inputs mudam.
-- Rebalanceado o bootstrap do DMA, melhorando o papel do `Gelid Cryotheum` como coolant inicial e ajustando tempo/output de recipes de progressao.
-- Reduzida a resistencia do `Dimensional Matter Assembler` para facilitar reposicionamento no ponto em que a maquina aparece.
-- Ajustado o espelhamento de recipes do DMA para o bulk do QMF, permitindo desligar mirrors quando a progressao exige uma rota separada.
-- Ajustadas recipes do QMF/DMA para poeiras, rods e materias de `White Dwarf` e `Neutron Star`.
-- Removidos mirrors bulk indevidos para a `Thermal Resistor Exosuit` e para o `UFO Staff` quando esses crafts nao devem seguir a rota automatica do DMA.
-- `Quantum Cryoforge` agora gera metade do calor base, ficando menos agressivo termicamente.
+- Fixed the `Dimensional Matter Assembler` matcher so it prioritizes more specific recipes and swaps its cached recipe when inputs change.
+- Rebalanced the DMA bootstrap flow, making `Gelid Cryotheum` a stronger early coolant and adjusting progression recipe time/output.
+- Reduced the `Dimensional Matter Assembler` block resistance so it is easier to move at the stage where it appears.
+- Adjusted DMA recipe mirroring into QMF bulk recipes, allowing specific recipes to opt out when progression needs a separate route.
+- Updated QMF/DMA recipes for `White Dwarf` and `Neutron Star` dusts, rods, and matter items.
+- Removed invalid bulk mirrors for the `Thermal Resistor Exosuit` and `UFO Staff` where those crafts should not follow the automatic DMA route.
+- `Quantum Cryoforge` now generates half of its base heat, making its thermal profile less punishing.
 
-## Fixes e estabilidade
+## Fixes And Stability
 
-- Corrigido o comportamento de falha termica do DMA, dos multiblocos universais paralelos e do `Stellar Nexus`: a explosao remove o controller e evita repeticao infinita de efeitos.
-- Corrigidas pendencias de recipes/JEI: recipe visivel para `Quantum Cryoforge Controller`, conversao visivel de `Quantum Pattern Provider` via hatch, e recipe atualizada da `Quantum Energy Cell`.
-- Ajustada a progressao dos `component matrix batch recipes` do QMF para output de `24`.
-- Corrigida a sincronizacao de progresso dos multiblocos paralelos para evitar UI travada enquanto o servidor continuava processando.
-- Corrigida a conectividade AE2 dos multiblocos entropicos usando casings AE reais, node multiblock e canal compartilhado por estrutura.
-- Reduzido o custo de validacao dos multiblocos entropicos durante load/unload e mudancas de estrutura.
-- Corrigidos crashes e revalidacoes recursivas no `Entropic Convergence`, incluindo separacao de `BlockEntityType` e remocao de fluxo que podia recursar durante `onReady`.
+- Fixed thermal failure behavior for the DMA, universal parallel multiblocks, and `Stellar Nexus`: explosions now remove the controller and avoid repeating effects forever.
+- Fixed pending recipe/JEI issues: visible recipe for `Quantum Cryoforge Controller`, visible `Quantum Pattern Provider` conversion through the hatch, and updated `Quantum Energy Cell` recipe.
+- Adjusted QMF component matrix batch recipes to output `24`.
+- Fixed parallel multiblock progress synchronization so the UI no longer appears frozen while the server keeps processing.
+- Fixed AE2 connectivity for entropic multiblocks using real AE casings, a multiblock node, and a shared channel across the structure.
+- Reduced entropic multiblock validation cost during load/unload and structure changes.
+- Fixed crashes and recursive validation cases in `Entropic Convergence`, including proper `BlockEntityType` separation and safer `onReady` behavior.
 
-## Guide, JEI e dados
+## Guide, JEI And Data
 
-- AE2 Guide recebeu notas de perfil termico para `Quantum Processor Assembler` e `Quantum Slicer`.
-- Paginas e notas do guide foram ampliadas para DMA, QMF, Quantum Cryoforge e Stellar Nexus, com valores de HU, coolant ladder e comportamento termico.
-- JEI do `Stellar Nexus` mostra coolant como `MK1`, `MK2` ou `MK3` e fuel em formato abreviado, mantendo o nome completo no tooltip.
-- `runData` passou a ser validado no CI para evitar generated resources desatualizados.
-- Workflow de release por tag foi adicionado para publicar artefatos gerados pelo GitHub Actions.
+- AE2 Guide now includes thermal profile notes for `Quantum Processor Assembler` and `Quantum Slicer`.
+- Guide pages were expanded for DMA, QMF, Quantum Cryoforge, and Stellar Nexus, including HU values, coolant ladder, and thermal behavior.
+- Stellar Nexus JEI now shows coolant as `MK1`, `MK2`, or `MK3`, and fuel in a shortened format while keeping full names in tooltips.
+- `runData` is now validated by CI to prevent outdated generated resources from reaching published artifacts.
+- Added a tag-based release workflow for publishing GitHub Actions artifacts.
 
