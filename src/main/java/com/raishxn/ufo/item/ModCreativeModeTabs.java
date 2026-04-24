@@ -26,14 +26,19 @@ public class ModCreativeModeTabs {
                     .displayItems((itemDisplayParameters, output) -> {
                         output.accept(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
                         output.accept(ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
-                        output.accept(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
                         output.accept(ModItems.TESSERACT_COMPONENT_MATRIX.get());
+                        output.accept(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
                         output.accept(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
 
                         output.accept(ModArmor.UFO_HELMET.get());
                         output.accept(ModArmor.UFO_CHESTPLATE.get());
                         output.accept(ModArmor.UFO_LEGGINGS.get());
                         output.accept(ModArmor.UFO_BOOTS.get());
+                        output.accept(ModArmor.ASTRAL_NEXUS_HELMET.get());
+                        output.accept(ModArmor.ASTRAL_NEXUS_CHESTPLATE.get());
+                        output.accept(ModArmor.ASTRAL_NEXUS_LEGGINGS.get());
+                        output.accept(ModArmor.ASTRAL_NEXUS_BOOTS.get());
+                        output.accept(ModTools.REALITY_RIPPER.get());
                         output.accept(ModTools.UFO_STAFF);
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR_PRESS.get());
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR.get());

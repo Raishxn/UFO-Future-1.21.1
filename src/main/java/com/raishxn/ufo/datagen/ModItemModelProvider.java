@@ -115,6 +115,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModArmor.UFO_CHESTPLATE.get());
         basicItem(ModArmor.UFO_LEGGINGS.get());
         basicItem(ModArmor.UFO_BOOTS.get());
+        basicItem(ModArmor.ASTRAL_NEXUS_HELMET.get());
         basicItem(ModArmor.THERMAL_RESISTOR_BOOTS.get());
         basicItem(ModArmor.THERMAL_RESISTOR_CHEST.get());
         basicItem(ModArmor.THERMAL_RESISTOR_MASK.get());

@@ -38,6 +38,11 @@ public class QuantumCryoforgeControllerBE extends AbstractParallelMultiblockCont
         return "block.ufo.quantum_cryoforge_controller";
     }
 
+    @Override
+    protected double getHeatGenerationMultiplier() {
+        return 0.5D;
+    }
+
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {

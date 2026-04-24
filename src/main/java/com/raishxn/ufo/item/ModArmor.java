@@ -1,9 +1,11 @@
 package com.raishxn.ufo.item;
 
 import com.raishxn.ufo.datagen.ModDataComponents;
+import com.raishxn.ufo.item.custom.AstralNexusArmorItem;
 import com.raishxn.ufo.item.custom.UfoArmorItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 
@@ -28,6 +30,26 @@ public class ModArmor {
     public static final DeferredItem<Item> UFO_BOOTS = ITEMS.register("ufo_boots",
             () -> new UfoArmorItem(ModArmorMaterials.UFO_ARMOR, ArmorItem.Type.BOOTS, new Item.Properties()
                     .component(ModDataComponents.ENERGY.get(), 0).stacksTo(1)));
+
+    public static final DeferredItem<Item> ASTRAL_NEXUS_HELMET = ITEMS.register("astral_nexus_helmet",
+            () -> new AstralNexusArmorItem(ModArmorMaterials.ASTRAL_NEXUS, ArmorItem.Type.HELMET, new Item.Properties()
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    public static final DeferredItem<Item> ASTRAL_NEXUS_CHESTPLATE = ITEMS.register("astral_nexus_chestplate",
+            () -> new AstralNexusArmorItem(ModArmorMaterials.ASTRAL_NEXUS, ArmorItem.Type.CHESTPLATE, new Item.Properties()
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    public static final DeferredItem<Item> ASTRAL_NEXUS_LEGGINGS = ITEMS.register("astral_nexus_leggings",
+            () -> new AstralNexusArmorItem(ModArmorMaterials.ASTRAL_NEXUS, ArmorItem.Type.LEGGINGS, new Item.Properties()
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
+    public static final DeferredItem<Item> ASTRAL_NEXUS_BOOTS = ITEMS.register("astral_nexus_boots",
+            () -> new AstralNexusArmorItem(ModArmorMaterials.ASTRAL_NEXUS, ArmorItem.Type.BOOTS, new Item.Properties()
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
 
     public static final Supplier<Item> THERMAL_RESISTOR_PLATING = ITEMS.register(
             "thermal_resistor_plating",

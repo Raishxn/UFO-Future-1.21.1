@@ -11,6 +11,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -135,9 +137,23 @@ public class ModBlockStateProvider extends BlockStateProvider {
         ResourceLocation texture = modLoc("block/multiblock/" + textureName);
         ModelFile model = models().cubeAll(name, texture);
 
-        getVariantBuilder(block.get()).forAllStates(state -> new ConfiguredModel[]{new ConfiguredModel(model)});
+        getVariantBuilder(block.get()).forAllStates(state -> {
+            boolean formed = getBooleanPropertyByName(state, "formed");
+            return ConfiguredModel.builder()
+                    .modelFile(model)
+                    .build();
+        });
 
         simpleBlockItem(block.get(), model);
+    }
+
+    private boolean getBooleanPropertyByName(BlockState state, String propertyName) {
+        for (var property : state.getProperties()) {
+            if (property.getName().equals(propertyName) && property instanceof BooleanProperty booleanProperty) {
+                return state.getValue(booleanProperty);
+            }
+        }
+        return false;
     }
 
     /**

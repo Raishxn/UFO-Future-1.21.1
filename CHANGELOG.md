@@ -14,6 +14,16 @@ Fluxo combinado daqui para frente:
 
 ### Bug Fixes
 
+- Nenhuma mudanca ainda.
+
+### Implementations
+
+- Nenhuma mudanca ainda.
+
+## [2.0.0-fix4] - 2026-04-23
+
+### Bug Fixes
+
 - Corrigido o comportamento de falha termica do `Dimensional Matter Assembler`, dos multiblocos universais paralelos e do `Stellar Nexus`: a explosao agora remove o controller em vez de repetir efeitos infinitos enquanto o bloco resistente continua no mundo.
 - Corrigidos os pendentes do PDF de tasks ligados a recipes e JEI: `Quantum Cryoforge Controller` agora tem recipe visivel, `Quantum Pattern Provider` ganhou conversao recipe visivel com o hatch, e o `Quantum Energy Cell` foi atualizado para usar `Cosmic String Component Matrix` e `Dark Matter`.
 - Ajustada a progressao dos `component matrix batch recipes` do QMF para output de `24`, evitando que `Tesseract`, `Event Horizon` e `Cosmic String` continuem baratos demais no bulk craft.

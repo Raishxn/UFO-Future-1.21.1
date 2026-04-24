@@ -30,6 +30,7 @@ public class DMARecipeBuilder {
     private final List<GenericStack> fluidOutputs = new ArrayList<>();
     private int energy = 0;
     private int time = 0; // The recipe class doesn't seem to use time, but we keep it for API compatibility.
+    private boolean bulkQmfMirrorEnabled = true;
 
     private DMARecipeBuilder(String name) {
         this.name = name;
@@ -93,6 +94,11 @@ public class DMARecipeBuilder {
         return this;
     }
 
+    public DMARecipeBuilder noBulkQmfMirror() {
+        this.bulkQmfMirrorEnabled = false;
+        return this;
+    }
+
     public void save(RecipeOutput output) {
         save(output, ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, this.name));
     }
@@ -111,6 +117,10 @@ public class DMARecipeBuilder {
     }
 
     private void saveBulkQmfMirror(RecipeOutput output) {
+        if (!this.bulkQmfMirrorEnabled) {
+            return;
+        }
+
         if (!this.name.startsWith("dma/")) {
             return;
         }

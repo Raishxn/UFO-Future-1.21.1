@@ -16,6 +16,12 @@
       "ingredient": {
         "item": "ufo:white_dwarf_fragment_ingot"
       }
+    },
+    {
+      "amount": 64,
+      "ingredient": {
+        "item": "ae2:tiny_tnt"
+      }
     }
   ],
   "item_output": {

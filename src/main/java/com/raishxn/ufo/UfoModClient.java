@@ -5,6 +5,7 @@ import appeng.hooks.BuiltInModelHooks;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.client.render.ModCoProcessorModelProvider; // <<-- NOVO IMPORT
 import com.raishxn.ufo.client.render.ModCraftingStorageModelProvider;
+import com.raishxn.ufo.client.render.layer.AstralNexusWingsLayer;
 import com.raishxn.ufo.client.renderer.ApocalypseTypeARenderer;
 import com.raishxn.ufo.core.MegaCoProcessorTier; // <<-- NOVO IMPORT
 import com.raishxn.ufo.core.MegaCraftingStorageTier;
@@ -36,6 +37,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import com.raishxn.ufo.client.renderer.StellarNexusRenderer;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModEntities;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 
 public class UfoModClient {
 
@@ -46,6 +48,7 @@ public class UfoModClient {
         eventBus.addListener(this::onRegisterKeyMappings);
         eventBus.addListener(this::registerScreens); // <--- Adicione esta linha
         eventBus.addListener(this::registerRenderers);
+        eventBus.addListener(this::onAddLayers);
         eventBus.addListener(com.raishxn.ufo.client.render.StellarModelRegistry::registerAdditional);
     }
 
@@ -72,6 +75,15 @@ public class UfoModClient {
     private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.STELLAR_NEXUS_CONTROLLER_BE.get(), StellarNexusRenderer::new);
         event.registerEntityRenderer(ModEntities.APOCALYPSE_TYPE_A.get(), ApocalypseTypeARenderer::new);
+    }
+
+    private void onAddLayers(EntityRenderersEvent.AddLayers event) {
+        for (var skin : event.getSkins()) {
+            var renderer = event.getSkin(skin);
+            if (renderer instanceof PlayerRenderer playerRenderer) {
+                playerRenderer.addLayer(new AstralNexusWingsLayer(playerRenderer));
+            }
+        }
     }
 
 

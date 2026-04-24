@@ -25,6 +25,11 @@ public class ModTools {
                     .attributes(SwordItem.createAttributes(ModToolTiers.UFO, 5, -2.4f))
                     .component(ModDataComponents.TOOL_MODE_INDEX.get(), 0).stacksTo(1)));
 
+    public static final DeferredItem<SwordItem> REALITY_RIPPER = ITEMS.register("reality_ripper",
+            () -> new RealityRipperItem(ModToolTiers.UFO, unbreakableToolProperties()
+                    .rarity(Rarity.EPIC)
+                    .fireResistant()));
+
     public static final DeferredItem<PickaxeItem> UFO_PICKAXE = ITEMS.register("ufo_pickaxe",
             () -> new UfoEnergyPickaxeItem(ModToolTiers.UFO, unbreakableToolProperties()
                     .attributes(PickaxeItem.createAttributes(ModToolTiers.UFO, 1.0F, -2.8f))
