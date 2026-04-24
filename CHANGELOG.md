@@ -38,6 +38,7 @@ Fluxo combinado daqui para frente:
 
 ### Implementations
 
+- `UFO Energy Cell` e `Quantum Energy Cell` agora exportam FE automaticamente para blocos adjacentes em todas as faces e tambem expõem capability de energia para integracao com cabos/maquinas externas.
 - Adicionadas paginas e notas mais completas no guide do AE2 para `DMA`, `QMF`, `Quantum Cryoforge` e `Stellar Nexus`, incluindo valores de `HU`, ladder de coolant e perfil termico.
 - Movido o `UFO Staff` para a linha de recipe universal do `QMF`, alinhando a progressao dele com a UFO suit e removendo o craft direto no `DMA`.
 

@@ -67,6 +67,16 @@ public class ModCapabilityEvents {
                 ModBlockEntities.DIMENSIONAL_MATTER_ASSEMBLER_BE.get(),
                 AEBasePoweredBlockEntity::getEnergyStorage
         );
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                ModBlockEntities.UFO_ENERGY_CELL_BE.get(),
+                (be, context) -> be.getExposedEnergy()
+        );
+        event.registerBlockEntity(
+                Capabilities.EnergyStorage.BLOCK,
+                ModBlockEntities.QUANTUM_ENERGY_CELL_BE.get(),
+                (be, context) -> be.getExposedEnergy()
+        );
 
         if (ModList.get().isLoaded("mekanism")) {
             com.raishxn.ufo.compat.mekanism.MekanismChemicalCompat.registerCapabilities(event, ModBlockEntities.ME_MASSIVE_OUTPUT_HATCH_BE.get());
@@ -150,6 +160,14 @@ public class ModCapabilityEvents {
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
                 ModArmor.UFO_BOOTS.get()
         );
+        if (ModList.get().isLoaded("mekanism")) {
+            event.registerItem(mekanism.common.capabilities.Capabilities.RADIATION_SHIELDING, (stack, context) -> () -> 1.0,
+                    ModArmor.ASTRAL_NEXUS_HELMET.get(),
+                    ModArmor.ASTRAL_NEXUS_CHESTPLATE.get(),
+                    ModArmor.ASTRAL_NEXUS_LEGGINGS.get(),
+                    ModArmor.ASTRAL_NEXUS_BOOTS.get()
+            );
+        }
     }
-    }
+}
 

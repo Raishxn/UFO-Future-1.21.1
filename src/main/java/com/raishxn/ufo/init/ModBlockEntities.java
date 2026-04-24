@@ -3,10 +3,10 @@ package com.raishxn.ufo.init;
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.crafting.CraftingBlockEntity;
-import appeng.blockentity.networking.CreativeEnergyCellBlockEntity;
-import appeng.blockentity.networking.EnergyCellBlockEntity;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.ModBlocks;
+import com.raishxn.ufo.block.entity.QuantumEnergyCellBlockEntity;
+import com.raishxn.ufo.block.entity.UfoEnergyCellBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -61,29 +61,37 @@ public class ModBlockEntities {
                 return type;
             });
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyCellBlockEntity>> UFO_ENERGY_CELL_BE =
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<UfoEnergyCellBlockEntity>> UFO_ENERGY_CELL_BE =
             BLOCK_ENTITIES.register("ufo_energy_cell", () -> {
-                final AtomicReference<BlockEntityType<EnergyCellBlockEntity>> typeHolder = new AtomicReference<>();
+                final AtomicReference<BlockEntityType<UfoEnergyCellBlockEntity>> typeHolder = new AtomicReference<>();
                 var type = BlockEntityType.Builder.of(
-                        (pos, state) -> new EnergyCellBlockEntity(typeHolder.get(), pos, state),
+                        (pos, state) -> new UfoEnergyCellBlockEntity(typeHolder.get(), pos, state),
                         ModBlocks.UFO_ENERGY_CELL.get()
                 ).build(null);
                 typeHolder.set(type);
                 AEBaseBlockEntity.registerBlockEntityItem(type, ModBlocks.UFO_ENERGY_CELL.get().asItem());
-                ModBlocks.UFO_ENERGY_CELL.get().setBlockEntity(EnergyCellBlockEntity.class, type, null, null);
+                ((appeng.block.AEBaseEntityBlock<?>) ModBlocks.UFO_ENERGY_CELL.get()).setBlockEntity(
+                        (Class) UfoEnergyCellBlockEntity.class,
+                        (BlockEntityType) type,
+                        null,
+                        (level, pos, state, be) -> ((UfoEnergyCellBlockEntity) be).serverTick());
                 return type;
             });
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CreativeEnergyCellBlockEntity>> QUANTUM_ENERGY_CELL_BE =
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<QuantumEnergyCellBlockEntity>> QUANTUM_ENERGY_CELL_BE =
             BLOCK_ENTITIES.register("quantum_energy_cell", () -> {
-                final AtomicReference<BlockEntityType<CreativeEnergyCellBlockEntity>> typeHolder = new AtomicReference<>();
+                final AtomicReference<BlockEntityType<QuantumEnergyCellBlockEntity>> typeHolder = new AtomicReference<>();
                 var type = BlockEntityType.Builder.of(
-                        (pos, state) -> new CreativeEnergyCellBlockEntity(typeHolder.get(), pos, state),
+                        (pos, state) -> new QuantumEnergyCellBlockEntity(typeHolder.get(), pos, state),
                         ModBlocks.QUANTUM_ENERGY_CELL.get()
                 ).build(null);
                 typeHolder.set(type);
                 AEBaseBlockEntity.registerBlockEntityItem(type, ModBlocks.QUANTUM_ENERGY_CELL.get().asItem());
-                ModBlocks.QUANTUM_ENERGY_CELL.get().setBlockEntity(CreativeEnergyCellBlockEntity.class, type, null, null);
+                ((appeng.block.AEBaseEntityBlock<?>) ModBlocks.QUANTUM_ENERGY_CELL.get()).setBlockEntity(
+                        (Class) QuantumEnergyCellBlockEntity.class,
+                        (BlockEntityType) type,
+                        null,
+                        (level, pos, state, be) -> ((QuantumEnergyCellBlockEntity) be).serverTick());
                 return type;
             });
 
