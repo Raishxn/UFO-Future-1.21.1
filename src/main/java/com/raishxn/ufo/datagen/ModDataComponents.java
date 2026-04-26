@@ -80,6 +80,9 @@ public class ModDataComponents {
                     .persistent(Codec.BOOL)
                     .build());
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> DMA_ALLOWED_OUTPUTS =
+            register("dma_allowed_outputs", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>> FLUID_CONTENT = register("fluid_content",
             builder -> builder.persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC));
 

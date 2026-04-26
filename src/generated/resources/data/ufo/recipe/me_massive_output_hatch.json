@@ -3,13 +3,13 @@
   "category": "misc",
   "key": {
     "C": {
-      "item": "ufo:cosmic_string_component_matrix"
+      "item": "ufo:hyper_dense_component_matrix"
     },
     "D": {
       "item": "ufo:pulsar_matter"
     },
     "E": {
-      "item": "ufo:event_horizon_component_matrix"
+      "item": "ufo:hyper_dense_component_matrix"
     },
     "L": {
       "item": "ufo:dimensional_processor"

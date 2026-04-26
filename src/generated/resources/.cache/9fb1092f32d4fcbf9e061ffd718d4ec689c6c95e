@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-23T20:30:30.6899671	Recipes
+// 1.21.1	2026-04-26T16:52:24.9724609	Recipes
 623466a712bf2b54aad620b471840892932161d4 data/ufo/advancement/recipes/misc/ae_energy_input_hatch.json
 a25a6bd915843952e3b74014247693fdda691447 data/ufo/advancement/recipes/misc/bismuth.json
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
@@ -79,7 +79,7 @@ b1d951052c5562bfdab7e66b98d1df10e8abc207 data/ufo/advancement/recipes/tools/ufo_
 9aa8eb87c26f7ca1e2f1bf6d1e3db1eea08c3868 data/ufo/advancement/recipes/tools/ufo_pickaxe.json
 a2c02578fe975672df457518aa88fb25a138d397 data/ufo/advancement/recipes/tools/ufo_shovel.json
 74c37445372a53f077033b79ec69d08a18d392b3 data/ufo/advancement/recipes/tools/ufo_sword.json
-b8bce2217b6aeac66a18404c03b11c82214dfe68 data/ufo/recipe/ae_energy_input_hatch.json
+469bdd1d3a8e5f83fd539b619351c3a401b9e635 data/ufo/recipe/ae_energy_input_hatch.json
 7295706f32dd23569f2bea75bef304c34d70f34b data/ufo/recipe/bismuth.json
 a1ecf1720a92c2db00eda06f221457eb0dfe670e data/ufo/recipe/coprocessor_150m.json
 c5ab167c71773215a725831e3692cd4c71b2c0cf data/ufo/recipe/coprocessor_2b.json
@@ -156,9 +156,9 @@ d0ee8de5cf5809cae03e3e44513a9b846a24c4d4 data/ufo/recipe/entropic_convergence_ca
 d0518a9ce7190113425dae077dae4d00aed9b181 data/ufo/recipe/entropy_computer_condensation_matrix.json
 af792a576062f9741d290020ea205b7f99f7adfd data/ufo/recipe/entropy_singularity_casing.json
 39eb5ce5a7462e4d7a5dea58f6335f368326cd63 data/ufo/recipe/graviton_plated_casing.json
-5190ba405f999dd30f055449d0668babda7d9b54 data/ufo/recipe/me_massive_fluid_hatch.json
-c253b321c2dee4a7d4c51d56b3484894bc283b7b data/ufo/recipe/me_massive_input_hatch.json
-a5191a0ecf738cac75f77267746a4d03ac8cca0e data/ufo/recipe/me_massive_output_hatch.json
+68b809f036999afaa5861b66a2cc9f47443aa0ec data/ufo/recipe/me_massive_fluid_hatch.json
+6f173487eb7f49ac28066c177fe0d374bdada1dc data/ufo/recipe/me_massive_input_hatch.json
+ec95f969d58653122913af47af18143440d90226 data/ufo/recipe/me_massive_output_hatch.json
 0b001fce60c2e1feb0302f9553020edb67571d1e data/ufo/recipe/neutron_fluid_cell_housing.json
 71f886a4b9dcef5429e40c319e3916a5153b2318 data/ufo/recipe/neutron_star_fragment_block.json
 3d39a7881a35ca1352ceab7b78317af0fa306a86 data/ufo/recipe/neutron_star_fragment_ingot_from_block.json

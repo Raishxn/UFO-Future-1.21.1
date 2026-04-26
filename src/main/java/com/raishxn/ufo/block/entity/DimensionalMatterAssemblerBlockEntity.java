@@ -28,6 +28,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import com.raishxn.ufo.block.DimensionalMatterAssemblerBlock;
+import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
 import com.raishxn.ufo.init.ModRecipes;
 
@@ -1073,11 +1074,34 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     @Override
     public void exportSettings(SettingsFrom mode, DataComponentMap.Builder builder, @Nullable Player player) {
         super.exportSettings(mode, builder, player);
+        builder.set(ModDataComponents.DMA_ALLOWED_OUTPUTS.get(), encodeAllowedOutputs());
     }
 
     @Override
     public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
+        Integer exportedOutputs = input.get(ModDataComponents.DMA_ALLOWED_OUTPUTS.get());
+        if (exportedOutputs != null) {
+            updateOutputSides(decodeAllowedOutputs(exportedOutputs));
+        }
+    }
+
+    private int encodeAllowedOutputs() {
+        int mask = 0;
+        for (RelativeSide side : this.allowedOutputs) {
+            mask |= 1 << side.ordinal();
+        }
+        return mask;
+    }
+
+    private static EnumSet<RelativeSide> decodeAllowedOutputs(int mask) {
+        EnumSet<RelativeSide> outputs = EnumSet.noneOf(RelativeSide.class);
+        for (RelativeSide side : RelativeSide.values()) {
+            if ((mask & (1 << side.ordinal())) != 0) {
+                outputs.add(side);
+            }
+        }
+        return outputs;
     }
 
     private void onConfigChanged(IConfigManager manager, Setting<?> setting) {
