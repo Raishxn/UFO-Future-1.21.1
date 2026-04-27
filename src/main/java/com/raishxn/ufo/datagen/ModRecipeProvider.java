@@ -323,7 +323,7 @@ public class ModRecipeProvider extends RecipeProvider {
         this.createProgressiveCatalyst(c, ModItems.CHRONO_CATALYST_T2.get(), ModItems.CHRONO_CATALYST_T1.get(), 2, ModItems.CORPOREAL_MATTER.get(), 2, 2, ModFluids.SOURCE_SPATIAL_FLUID, 2000, 300000, 400);
         this.createProgressiveCatalyst(c, ModItems.OVERFLUX_CATALYST_T1.get(), ModItems.OBSIDIAN_MATRIX.get(), 1, ModItems.PROTO_MATTER.get(), 2, 0, ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID, 1000, 150000, 200);
         this.createProgressiveCatalyst(c, ModItems.OVERFLUX_CATALYST_T2.get(), ModItems.OVERFLUX_CATALYST_T1.get(), 2, ModItems.CORPOREAL_MATTER.get(), 2, 2, ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID, 2000, 600000, 400);
-        this.createProgressiveCatalyst(c, ModItems.QUANTUM_CATALYST_T1.get(), ModItems.OBSIDIAN_MATRIX.get(), 1, ModItems.PROTO_MATTER.get(), 2, 0, ModFluids.SOURCE_SPATIAL_FLUID, 1000, 200000, 200);
+        this.createProgressiveCatalyst(c, ModItems.QUANTUM_CATALYST_T1.get(), ModItems.QUANTUM_ANOMALY.get(), 1, ModItems.PROTO_MATTER.get(), 2, 0, ModFluids.SOURCE_SPATIAL_FLUID, 1000, 200000, 200);
         this.createProgressiveCatalyst(c, ModItems.QUANTUM_CATALYST_T2.get(), ModItems.QUANTUM_CATALYST_T1.get(), 2, ModItems.CORPOREAL_MATTER.get(), 2, 2, ModFluids.SOURCE_SPATIAL_FLUID, 2000, 800000, 500);
     }
 
@@ -775,7 +775,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.NEUTRON_STAR_MATTER.get(), 32)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 128)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 32000)
-                .outputItem(ModItems.MATTERFLOW_CATALYST_T3.get(), 64)
+                .outputItem(ModItems.MATTERFLOW_CATALYST_T3.get(), 16)
                 .energy(180000000)
                 .time(1200)
                 .requiredTier(1)
@@ -786,7 +786,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.PULSAR_MATTER.get(), 32)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 128)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 40000)
-                .outputItem(ModItems.CHRONO_CATALYST_T3.get(), 64)
+                .outputItem(ModItems.CHRONO_CATALYST_T3.get(), 16)
                 .energy(12000000)
                 .time(1200)
                 .requiredTier(1)
@@ -797,7 +797,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.WHITE_DWARF_MATTER.get(), 32)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 160)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 48000)
-                .outputItem(ModItems.OVERFLUX_CATALYST_T3.get(), 64)
+                .outputItem(ModItems.OVERFLUX_CATALYST_T3.get(), 16)
                 .energy(280000000)
                 .time(1800)
                 .requiredTier(2)
@@ -808,7 +808,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.DARK_MATTER.get(), 8)
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 192)
                 .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 64000)
-                .outputItem(ModItems.QUANTUM_CATALYST_T3.get(), 64)
+                .outputItem(ModItems.QUANTUM_CATALYST_T3.get(), 16)
                 .energy(400000000)
                 .time(2400)
                 .requiredTier(2)
@@ -819,12 +819,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputItem(ModItems.CHRONO_CATALYST_T3.get(), 16)
                 .inputItem(ModItems.OVERFLUX_CATALYST_T3.get(), 16)
                 .inputItem(ModItems.QUANTUM_CATALYST_T3.get(), 16)
-                .inputItem(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get(), 8)
-                .inputItem(ModItems.DARK_MATTER.get(), 8)
-                .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 128000)
+                .inputItem(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get(), 24)
+                .inputItem(ModItems.DARK_MATTER.get(), 64)
+                .inputItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get(), 32)
+                .inputItem(ModItems.QUANTUM_ANOMALY.get(), 256)
+                .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 2048)
+                .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 512000)
                 .outputItem(ModItems.DIMENSIONAL_CATALYST.get(), 1)
-                .energy(1500000000L)
-                .time(9600)
+                .energy(12000000000L)
+                .time(38400)
                 .requiredTier(3)
                 .save(c);
 
