@@ -168,7 +168,7 @@ public class ModRecipeProvider extends RecipeProvider {
         DMARecipeBuilder.create("dma/component/phase_shift")
                 .output(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get())
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 8)
-                .inputItem(AEItems.CELL_COMPONENT_256K.get(), 4)
+                .inputItem(AEItems.CELL_COMPONENT_256K.get(), 256)
                 .inputItem(AEBlocks.QUARTZ_VIBRANT_GLASS, 8)
                 .inputItem(Items.NETHER_STAR,8)
                 .inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 1000)
