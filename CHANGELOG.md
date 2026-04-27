@@ -20,6 +20,19 @@ Fluxo combinado daqui para frente:
 
 - Nenhuma mudanca ainda.
 
+## [2.0.0-fix6] - 2026-04-27
+
+### Bug Fixes
+
+- Corrigida a mineracao dos blocos de multiblocos UFO, incluindo o `Quantum Matter Fabricator Controller`, adicionando os controllers, hatches, casings e field generators nas tags de picareta/ferramenta correta.
+- Adicionado suporte de wrench AE/tag `c:tools/wrench` para rotacionar controllers direcionais e desmontar controllers de multiblocos com shift + wrench.
+- Corrigida a progressao do `Stellar Field Generator MK1`: a receita nao depende mais de hatches/pecas entropicas tardias e agora usa materiais pre-QMF.
+- Reduzido o custo inicial do `Phase Shift Component Matrix` de `256` componentes AE `256k` para `4`, removendo o gargalo absurdo no primeiro degrau de storage/progressao.
+
+### Implementations
+
+- Nenhuma mudanca ainda.
+
 ## [2.0.0-fix4] - 2026-04-23
 
 ### Bug Fixes

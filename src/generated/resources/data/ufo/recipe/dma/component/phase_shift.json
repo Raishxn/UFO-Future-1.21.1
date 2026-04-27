@@ -18,7 +18,7 @@
       }
     },
     {
-      "amount": 256,
+      "amount": 4,
       "ingredient": {
         "item": "ae2:cell_component_256k"
       }

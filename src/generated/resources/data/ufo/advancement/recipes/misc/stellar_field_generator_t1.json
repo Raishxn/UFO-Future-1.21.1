@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_energy_hatch": {
+    "has_phase_shift_component": {
       "conditions": {
         "items": [
           {
-            "items": "ufo:ae_energy_input_hatch"
+            "items": "ufo:phase_shift_component_matrix"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_energy_hatch"
+      "has_phase_shift_component"
     ]
   ],
   "rewards": {

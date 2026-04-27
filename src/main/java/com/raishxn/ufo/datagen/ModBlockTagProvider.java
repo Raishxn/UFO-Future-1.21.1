@@ -2,6 +2,7 @@ package com.raishxn.ufo.datagen;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.ModBlocks;
+import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -24,13 +25,57 @@ public class ModBlockTagProvider extends BlockTagsProvider {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(ModBlocks.QUANTUM_LATTICE_FRAME.get())         // <<-- ADICIONE .get() AQUI
                 .add(ModBlocks.GRAVITON_PLATED_CASING.get())       // <<-- E AQUI
-                .add(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get());  // <<-- E AQUI
+                .add(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get())  // <<-- E AQUI
+                .add(MultiblockBlocks.QUANTUM_ENTROPY_CASING.get())
+                .add(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
+                .add(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get())
+                .add(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get())
+                .add(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get())
+                .add(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get())
+                .add(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())
+                .add(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get())
+                .add(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())
+                .add(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())
+                .add(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get())
+                .add(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
+                .add(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())
+                .add(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
+                .add(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
+                .add(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
+                .add(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get())
+                .add(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
+                .add(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get())
+                .add(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get())
+                .add(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get())
+                .add(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get());
 
 
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(ModBlocks.QUANTUM_LATTICE_FRAME.get())         // <<-- ADICIONE .get() AQUI
                 .add(ModBlocks.GRAVITON_PLATED_CASING.get())       // <<-- E AQUI
-                .add(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get());  // <<-- E AQUI
+                .add(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get())  // <<-- E AQUI
+                .add(MultiblockBlocks.QUANTUM_ENTROPY_CASING.get())
+                .add(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
+                .add(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get())
+                .add(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get())
+                .add(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get())
+                .add(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get())
+                .add(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())
+                .add(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get())
+                .add(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())
+                .add(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())
+                .add(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get())
+                .add(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
+                .add(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())
+                .add(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
+                .add(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
+                .add(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
+                .add(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get())
+                .add(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
+                .add(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get())
+                .add(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get())
+                .add(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get())
+                .add(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get());
         // --- FIM DA CORREÇÃO ---
 
 

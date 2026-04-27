@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-27T13:43:17.116565	Recipes
+// 1.21.1	2026-04-27T15:43:19.7233067	Recipes
 623466a712bf2b54aad620b471840892932161d4 data/ufo/advancement/recipes/misc/ae_energy_input_hatch.json
 a25a6bd915843952e3b74014247693fdda691447 data/ufo/advancement/recipes/misc/bismuth.json
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
@@ -50,7 +50,7 @@ eda202daea7de51756c14e832cd427ec9b9b63ed data/ufo/advancement/recipes/misc/quant
 9c74dc8819758ab6773eb0bfcb89ccd0be728f05 data/ufo/advancement/recipes/misc/quantum_pattern_provider_part.json
 402c4d3d986bcbc5441ab791b80c4efaf4d58e6d data/ufo/advancement/recipes/misc/quantum_processor_assembler_controller.json
 f6cffd33f5179f7bfe0ad49254952b128fb1852f data/ufo/advancement/recipes/misc/quantum_slicer_controller.json
-5cadc99ef1d07cb7cb33ff1d23c1be87c34e3f91 data/ufo/advancement/recipes/misc/stellar_field_generator_t1.json
+9958c509a72b6e16369a9e4f067240d79481e336 data/ufo/advancement/recipes/misc/stellar_field_generator_t1.json
 cd0efd4b867cf72d255892d05da0e69071cfd585 data/ufo/advancement/recipes/misc/stellar_field_generator_t2.json
 dc2750b03062750ae3f2a800cb422e95263cb7a7 data/ufo/advancement/recipes/misc/stellar_field_generator_t3.json
 8769de91c2ae6428243453584bf8af6e8b63a843 data/ufo/advancement/recipes/misc/stellar_nexus_controller.json
@@ -92,7 +92,7 @@ c5ab167c71773215a725831e3692cd4c71b2c0cf data/ufo/recipe/coprocessor_2b.json
 63c3f88da425358f1bd9961c8fd9a80baefd3ddb data/ufo/recipe/dma/chrono_catalyst_t1.json
 a07bba1d4435f3251a8cd5d1246adefadbe5547e data/ufo/recipe/dma/chrono_catalyst_t2.json
 bb3f85cb6f10db7af59d5607d43ec3e0d0e29562 data/ufo/recipe/dma/component/hyper_dense_component_matrix.json
-d91a0ebc1da92709742e313193bbde9b349c5acf data/ufo/recipe/dma/component/phase_shift.json
+a11ae6baf5b9cf1ad8e21a8ba73f6260c1d2d60c data/ufo/recipe/dma/component/phase_shift.json
 6ae3b2561479562b86519d17c85df9707d26ba47 data/ufo/recipe/dma/corporeal_matter.json
 5297e03130211f38b0a936787548d36a266f9e1c data/ufo/recipe/dma/cryotheum_dust_bootstrap.json
 4e878e9491bb4b2976ddcc38c3922e9a0875a128 data/ufo/recipe/dma/dimensional_processor.json
@@ -191,7 +191,7 @@ bf99783993d1854a8809dcc48ca599a16a345b9e data/ufo/recipe/quantum_pattern_hatch.j
 1f42a01f45512514102ef041b040120884766f14 data/ufo/recipe/quantum_pattern_provider_part.json
 7275787e0ffab28e38bc6515d3c709595b7aa468 data/ufo/recipe/quantum_processor_assembler_controller.json
 a86448001aa1a320628595e361e3b8c10f19c521 data/ufo/recipe/quantum_slicer_controller.json
-9a8269c6cfd4fcf14c25c1bbe3241b3f86c33ba5 data/ufo/recipe/stellar_field_generator_t1.json
+48ec74b400e47b4fd30d7b5433fc1ddb811ee10e data/ufo/recipe/stellar_field_generator_t1.json
 1815e1d209dea38fb672670ebbf6714d0a18f466 data/ufo/recipe/stellar_field_generator_t2.json
 25d70300637d5fc70e8d095de2c3af0651fdda05 data/ufo/recipe/stellar_field_generator_t3.json
 b0e6b0bc1c4e28c87e736c0f8a8baf4956eabfcf data/ufo/recipe/stellar_nexus_controller.json
@@ -228,7 +228,7 @@ b21984580dca4ed79373339c13c7a2bc343b566a data/ufo/recipe/ufo_hammer.json
 4e726a16661d8d110e7da0c294c9c2be5b987f7f data/ufo/recipe/universal/qmf/bulk/chrono_catalyst_t1.json
 2c9e285887301fc5c47de5932f463795f814f6f7 data/ufo/recipe/universal/qmf/bulk/chrono_catalyst_t2.json
 0e87435e224f3ce61ec16a28eaa99ab2d0c740f3 data/ufo/recipe/universal/qmf/bulk/component/hyper_dense_component_matrix.json
-af5efc86f2ebf7538931efdc1d77cce0e249789b data/ufo/recipe/universal/qmf/bulk/component/phase_shift.json
+92fe6453e69a4c79d1a1de4f236794ab4e1c601b data/ufo/recipe/universal/qmf/bulk/component/phase_shift.json
 1d1a7b756f93dd99dbcf82d69d7c0c2659b0fd61 data/ufo/recipe/universal/qmf/bulk/cryotheum_dust_bootstrap.json
 fd38f127b5f12d284f889d7c2020386402ae4cc4 data/ufo/recipe/universal/qmf/bulk/dimensional_processor.json
 b8f299ccc5025311edebe704caace88a287b5593 data/ufo/recipe/universal/qmf/bulk/dimensional_processor_press.json

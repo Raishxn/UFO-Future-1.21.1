@@ -2,14 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "ufo:ae_energy_input_hatch"
-    },
     "C": {
-      "item": "ufo:entropy_assembler_core_casing"
+      "item": "ufo:graviton_plated_casing"
     },
     "E": {
-      "item": "ufo:entropy_singularity_casing"
+      "item": "ae2:dense_energy_cell"
+    },
+    "F": {
+      "item": "ufo:quantum_lattice_frame"
     },
     "P": {
       "item": "ufo:phase_shift_component_matrix"
@@ -19,8 +19,8 @@
     }
   },
   "pattern": [
-    "PAP",
-    "ECE",
+    "PEP",
+    "FCF",
     "PQP"
   ],
   "result": {

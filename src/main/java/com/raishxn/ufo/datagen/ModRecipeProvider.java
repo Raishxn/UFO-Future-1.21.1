@@ -168,7 +168,7 @@ public class ModRecipeProvider extends RecipeProvider {
         DMARecipeBuilder.create("dma/component/phase_shift")
                 .output(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get())
                 .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 8)
-                .inputItem(AEItems.CELL_COMPONENT_256K.get(),256)
+                .inputItem(AEItems.CELL_COMPONENT_256K.get(), 4)
                 .inputItem(AEBlocks.QUARTZ_VIBRANT_GLASS, 8)
                 .inputItem(Items.NETHER_STAR,8)
                 .inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 1000)
@@ -1296,15 +1296,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(c);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())
-                .pattern("PAP")
-                .pattern("ECE")
+                .pattern("PEP")
+                .pattern("FCF")
                 .pattern("PQP")
                 .define('P', ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get())
-                .define('A', MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
-                .define('E', MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get())
-                .define('C', MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
+                .define('E', AEBlocks.DENSE_ENERGY_CELL)
+                .define('F', ModBlocks.QUANTUM_LATTICE_FRAME.get())
+                .define('C', ModBlocks.GRAVITON_PLATED_CASING.get())
                 .define('Q', ModItems.NEUTRONIUM_SPHERE.get())
-                .unlockedBy("has_energy_hatch", has(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()))
+                .unlockedBy("has_phase_shift_component", has(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get()))
                 .save(c);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())
