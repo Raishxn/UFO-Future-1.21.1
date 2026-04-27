@@ -433,6 +433,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     private double currentHeatMultiplier = 1.0;
     private double currentSpeedMultiplier = 1.0;
     private double currentPowerMultiplier = 1.0;
+    private double currentBonusDropChance = 0.0;
     private boolean hasCreativeCatalyst = false;
 
     private void recalculateUpgrades() {
@@ -440,6 +441,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         double heatMult = 1.0;
         double speedMult = 1.0;
         double powerMult = 1.0;
+        double bonusDropChance = 0.0;
 
         int identicalCount = 0;
         com.raishxn.ufo.item.custom.BaseCatalystItem firstCatalyst = null;
@@ -461,6 +463,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                     heatMult += Math.max(0, catalyst.getStaticHeat() / 100.0);
                     speedMult *= catalyst.getSpeedMultiplier();
                     powerMult *= catalyst.getPowerMultiplier();
+                    bonusDropChance += catalyst.getBonusDropChance();
 
                     if (firstCatalyst == null) {
                         firstCatalyst = catalyst;
@@ -494,6 +497,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
              heatMult = 0.0;
              speedMult = 1000.0;
              powerMult = 0.0;
+             bonusDropChance = 1.0;
              newMaxPower = MAX_POWER_STORAGE;
         }
 
@@ -501,6 +505,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         this.currentHeatMultiplier = heatMult;
         this.currentSpeedMultiplier = speedMult;
         this.currentPowerMultiplier = powerMult;
+        this.currentBonusDropChance = bonusDropChance;
         this.localMaxPower = (int) Math.min(Integer.MAX_VALUE, newMaxPower);
         this.maxTemperature = 10000; // Reset max capacity; heat is now a multiplier payload
         this.setInternalMaxPower(this.localMaxPower);
@@ -591,7 +596,8 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             for (int i = 0; i < task.getItemOutputs().size(); i++) {
                 var outStack = task.getItemOutputs().get(i);
                 if (outStack.what() instanceof AEItemKey itemKey) {
-                    var stack = itemKey.toStack((int) outStack.amount());
+                    int outputAmount = getOutputAmountWithMaxBonus(outStack.amount());
+                    var stack = itemKey.toStack(outputAmount);
                     if (!this.outputInv.insertItem(i, stack, true).isEmpty()) {
                         outputsFit = false;
                         break;
@@ -622,6 +628,25 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             this.cachedTask = findRecipe(level);
         }
         return this.cachedTask;
+    }
+
+    private int getOutputAmountWithMaxBonus(long baseAmount) {
+        long multiplier = 1L + (long) Math.ceil(Math.max(0.0, this.currentBonusDropChance));
+        return (int) Math.min(Integer.MAX_VALUE, Math.max(0L, baseAmount) * multiplier);
+    }
+
+    private int getOutputAmountWithRolledBonus(long baseAmount) {
+        long safeBaseAmount = Math.max(0L, baseAmount);
+        double bonusChance = Math.max(0.0, this.currentBonusDropChance);
+        long guaranteedBonusRolls = (long) bonusChance;
+        double fractionalBonusRoll = bonusChance - guaranteedBonusRolls;
+        long bonusRolls = guaranteedBonusRolls;
+
+        if (fractionalBonusRoll > 0.0 && this.level != null && this.level.random.nextDouble() < fractionalBonusRoll) {
+            bonusRolls++;
+        }
+
+        return (int) Math.min(Integer.MAX_VALUE, safeBaseAmount * (1L + bonusRolls));
     }
 
     private static List<RecipeHolder<DimensionalMatterAssemblerRecipe>> getSortedRecipes(Level level) {
@@ -826,7 +851,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                     for (int i = 0; i < out.getItemOutputs().size(); i++) {
                         if (out.getItemOutputs().get(i) != null
                                 && out.getItemOutputs().get(i).what() instanceof AEItemKey itemKey) {
-                            int outAmount = (int) out.getItemOutputs().get(i).amount();
+                            int outAmount = getOutputAmountWithRolledBonus(out.getItemOutputs().get(i).amount());
                             var toIns = itemKey.toStack(outAmount);
                             this.outputInv.insertItem(i, toIns, false);
                         }

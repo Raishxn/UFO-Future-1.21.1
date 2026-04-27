@@ -78,6 +78,16 @@ public class BaseCatalystItem extends UpgradeCardItem {
         return 1.0;
     }
 
+    public double getBonusDropChance() {
+        if ("quantum".equals(family)) {
+            double tierMultiplier = 1.0;
+            if (tier == 2) tierMultiplier = 2.5;
+            if (tier == 3) tierMultiplier = 5.0;
+            return 0.10 * tierMultiplier;
+        }
+        return 0.0;
+    }
+
     public int getBufferMultiplier() {
         if ("matterflow".equals(family) || "chrono".equals(family)) {
             if (tier == 1) return 10;
