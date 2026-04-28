@@ -26,7 +26,8 @@ public class UFORegistryHandler {
                 com.raishxn.ufo.block.ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER_BLOCK.get().asItem(),
                 com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().asItem(),
                 com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get().asItem(),
-                com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem());
+                com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem(),
+                com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get().asItem());
 
         for (var machineItem : machineItems) {
             appeng.api.upgrades.Upgrades.add(ModItems.MATTERFLOW_CATALYST_T1.get(), machineItem, 4);

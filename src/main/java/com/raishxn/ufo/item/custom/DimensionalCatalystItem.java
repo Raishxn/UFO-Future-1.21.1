@@ -3,8 +3,10 @@ package com.raishxn.ufo.item.custom;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
 
 import appeng.items.materials.UpgradeCardItem;
 
@@ -18,6 +20,11 @@ public class DimensionalCatalystItem extends UpgradeCardItem {
 
     public DimensionalCatalystItem(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        return CatalystUpgradeUseHelper.tryInstallHeldCatalyst(context);
     }
 
     @Override

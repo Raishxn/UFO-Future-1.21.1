@@ -20,6 +20,19 @@ Fluxo combinado daqui para frente:
 
 - Nenhuma mudanca ainda.
 
+## [2.0.0-fix7] - 2026-04-28
+
+### Bug Fixes
+
+- Corrigido o crash ao abrir a GUI dos controllers universais, incluindo o `Quantum Slicer`, adicionando o include do `toolbox` exigido pelo `UpgradeableScreen` do AE2.
+- Corrigida a textura preto/rosa do JEI do `Stellar Nexus`, apontando a categoria para o caminho correto da textura.
+- Corrigido o suporte de catalysts no `Quantum Cryoforge`, registrando o controller na lista de maquinas que aceitam os catalysts UFO.
+- Adicionada instalacao direta de catalysts com `Shift + botao direito` no controller do multibloco, mantendo a GUI limpa sem inventario do jogador sobreposto.
+
+### Implementations
+
+- Nenhuma mudanca ainda.
+
 ## [2.0.0-fix6] - 2026-04-27
 
 ### Bug Fixes

@@ -3,8 +3,10 @@ package com.raishxn.ufo.item.custom;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
 
 import appeng.items.materials.UpgradeCardItem;
 
@@ -95,6 +97,11 @@ public class BaseCatalystItem extends UpgradeCardItem {
             if (tier == 3) return 1000;
         }
         return 1;
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        return CatalystUpgradeUseHelper.tryInstallHeldCatalyst(context);
     }
 
     // Usando a assinatura de método moderna (1.21.1+)

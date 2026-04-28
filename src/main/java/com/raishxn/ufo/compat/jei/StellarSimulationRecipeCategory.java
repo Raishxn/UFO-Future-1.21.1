@@ -42,7 +42,7 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         this.icon = guiHelper.createDrawableItemStack(
                 MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get().asItem().getDefaultInstance());
         this.background = guiHelper.createDrawable(
-                ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "textures/gui/stellar_nexus_jei.png"),
+                ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "textures/guis/stellar_nexus_jei.png"),
                 0, 0, WIDTH, HEIGHT);
     }
 

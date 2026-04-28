@@ -1,7 +1,8 @@
 {
   "$schema": "schema.json",
   "includes": [
-    "common/common.json"
+    "common/common.json",
+    "common/toolbox.json"
   ],
   "background": {
     "texture": "guis/universal_new_gui.png",
