@@ -132,12 +132,19 @@ dependencies {
     compileOnly "curse.maven:applied-flux-965012:${applied_flux_file_id}"
 
     // ===========================================
+    // RuntimeOnly - Optional integrations
+    // ===========================================
+    runtimeOnly "curse.maven:applied-flux-965012:${applied_flux_file_id}"
+    runtimeOnly "curse.maven:mega-cells-622112:${mega_file_id}"
+
+    // ===========================================
     // Local Runtime - Dev test mods
     // ===========================================
     localRuntime "curse.maven:building-gadgets-298187:6850515"
     localRuntime "curse.maven:applied-mekanistics-574300:7096962"
     localRuntime "curse.maven:avaritianeo-1083158:7353987"
     localRuntime "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    localRuntime "curse.maven:applied-flux-965012:${applied_flux_file_id}"
     localRuntime "curse.maven:mega-cells-622112:${mega_file_id}"
     localRuntime "mekanism:Mekanism:${mekanism_version}"
     localRuntime "mekanism:Mekanism:${mekanism_version}:generators"

@@ -20,6 +20,20 @@ Fluxo combinado daqui para frente:
 
 - Nenhuma mudanca ainda.
 
+## [2.1-fix1] - 2026-05-05
+
+### Bug Fixes
+
+- Corrigida a textura preto/rosa do JEI do `Stellar Nexus`, usando o caminho correto da textura da GUI e desenhando o background explicitamente na categoria JEI.
+- Atualizados os nomes dos mega crafting storages e mega co-processors no guia aberto pela tecla `G`, removendo referencias antigas como `Quantum Drive Matrix`, `Tesseract Unit` e `Singularity Accelerator`.
+- Ajustado o `Entropic Assembler Matrix` para aceitar apenas patterns compativeis com molecular assembler, evitando que patterns de outros tipos entrem no fluxo errado.
+
+### Implementations
+
+- Adicionado `zh_cn.json` como idioma chines do mod, com as mesmas chaves do `en_us.json`.
+- Atualizados os nomes chineses dos mega crafting storages e mega co-processors para acompanhar a nomenclatura atual.
+- Adicionadas recipes condicionais do Applied Flux para `Printed Energy Processor` e `Energy Processor`, junto com dependencias runtime opcionais para Applied Flux e MEGA Cells.
+
 ## [2.1] - 2026-05-05
 
 ### Bug Fixes

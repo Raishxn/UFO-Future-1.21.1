@@ -9,6 +9,7 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
+import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
 import com.raishxn.ufo.api.multiblock.FieldTieredCubeValidator;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.init.ModBlockEntities;
@@ -129,7 +130,7 @@ public class EntropicAssemblerMatrixBE extends AbstractEntropicMachineBE impleme
         }
 
         List<GenericStack> outputs = patternDetails.getOutputs();
-        if (outputs.isEmpty()) {
+        if (!(patternDetails instanceof IMolecularAssemblerSupportedPattern) || outputs.isEmpty()) {
             return false;
         }
 

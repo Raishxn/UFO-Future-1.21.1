@@ -33,6 +33,7 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     private static final int HEIGHT = 128;
     private static final int CONTROLLER_X = 170;
     private static final int CONTROLLER_Y = 4;
+    private static final ResourceLocation BACKGROUND = UfoMod.id("textures/gui/stellar_nexus_jei.png");
 
     private final IDrawable icon;
     private final IDrawable background;
@@ -41,9 +42,7 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         var guiHelper = helpers.getGuiHelper();
         this.icon = guiHelper.createDrawableItemStack(
                 MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get().asItem().getDefaultInstance());
-        this.background = guiHelper.createDrawable(
-                ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "textures/guis/stellar_nexus_jei.png"),
-                0, 0, WIDTH, HEIGHT);
+        this.background = guiHelper.createDrawable(BACKGROUND, 0, 0, WIDTH, HEIGHT);
     }
 
     @Override
@@ -159,6 +158,8 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
     @Override
     public void draw(StellarSimulationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics gfx, double mouseX, double mouseY) {
+        this.background.draw(gfx);
+
         Font font = Minecraft.getInstance().font;
 
         String simulationName = recipe.getSimulationName();

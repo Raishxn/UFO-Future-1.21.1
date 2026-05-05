@@ -24,16 +24,16 @@ UFO Future extends AE2 crafting infrastructure with very large crafting storages
 
 ## Mega Crafting Storages
 
+- Phase-Shift Crafting Storage
+- Hyper-Dense Crafting Storage
+- Tesseract Crafting Storage
 - Event Horizon Crafting Storage
-- Quantum Drive Matrix Crafting Storage
-- Tesseract Unit Crafting Storage
-- Dimensional Storage Cube Crafting Storage
-- Hyper-Dense Stellar Crafting Storage
+- Cosmic String Crafting Storage
 
 ## Mega Co-Processors
 
-- Singularity Accelerator
-- Qubit Co-Processor
-- Tesseract Logic Unit
-- Subspace Co-Processor
-- Galactic Core Co-Processor
+- Phase-Shift Co-Processor
+- Hyper-Dense Co-Processor
+- Tesseract Co-Processor
+- Event Horizon Co-Processor
+- Cosmic String Co-Processor
