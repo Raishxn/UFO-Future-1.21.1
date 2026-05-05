@@ -180,7 +180,10 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
     private static void drawBackground(GuiGraphics gfx) {
         drawPanel(gfx, 0, 0, WIDTH, HEIGHT, 0xFFC8C8C8, 0xFFFFFFFF, 0xFF6A6A6A);
-        drawPanel(gfx, 5, 12, 186, 123, 0xFF050505, 0xFF9E9E9E, 0xFF2B2B2B);
+        drawPanel(gfx, 5, 12, 186, 123, 0xFFD6D6D6, 0xFFFFFFFF, 0xFF8B8B8B);
+
+        gfx.fill(8, 15, 105, 116, 0xFF111111);
+        gfx.fill(122, 15, 184, 116, 0xFF111111);
 
         drawSlot(gfx, CONTROLLER_X, CONTROLLER_Y);
 
