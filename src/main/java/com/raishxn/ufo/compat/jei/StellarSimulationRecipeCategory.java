@@ -33,7 +33,6 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     private static final int HEIGHT = 128;
     private static final int CONTROLLER_X = 170;
     private static final int CONTROLLER_Y = 4;
-    private static final ResourceLocation BACKGROUND = UfoMod.id("textures/gui/stellar_nexus_jei.png");
 
     private final IDrawable icon;
     private final IDrawable background;
@@ -42,7 +41,7 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         var guiHelper = helpers.getGuiHelper();
         this.icon = guiHelper.createDrawableItemStack(
                 MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get().asItem().getDefaultInstance());
-        this.background = guiHelper.createDrawable(BACKGROUND, 0, 0, WIDTH, HEIGHT);
+        this.background = guiHelper.createBlankDrawable(WIDTH, HEIGHT);
     }
 
     @Override
@@ -158,7 +157,7 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
     @Override
     public void draw(StellarSimulationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics gfx, double mouseX, double mouseY) {
-        this.background.draw(gfx);
+        drawBackground(gfx);
 
         Font font = Minecraft.getInstance().font;
 
@@ -177,6 +176,48 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         drawScaledCenteredString(gfx, font, recipe.getFormattedTime(), 29, 88, 0xFFFFFF, 0.8f);
         drawScaledCenteredString(gfx, font, "Mk." + toRoman(recipe.getFieldTier()), 73, 88, 0xFFFFFF, 0.8f);
         drawScaledCenteredString(gfx, font, formatAmount(recipe.getTotalEnergy()) + " AE", 51, 100, 0xFFDF00, 0.7f);
+    }
+
+    private static void drawBackground(GuiGraphics gfx) {
+        drawPanel(gfx, 0, 0, WIDTH, HEIGHT, 0xFFC8C8C8, 0xFFFFFFFF, 0xFF6A6A6A);
+        drawPanel(gfx, 5, 12, 186, 123, 0xFF050505, 0xFF9E9E9E, 0xFF2B2B2B);
+
+        drawSlot(gfx, CONTROLLER_X, CONTROLLER_Y);
+
+        for (int i = 0; i < 9; i++) {
+            int col = i % 3;
+            int row = i / 3;
+            drawSlot(gfx, 11 + (col * 18), 16 + (row * 18));
+            drawSlot(gfx, 127 + (col * 18), 16 + (row * 18));
+        }
+
+        for (int i = 0; i < 3; i++) {
+            drawTankSlot(gfx, 71, 16 + (i * 20));
+        }
+
+        for (int i = 0; i < 6; i++) {
+            int col = i % 3;
+            int row = i / 3;
+            int[] xOffsets = {127, 148, 169};
+            drawTankSlot(gfx, xOffsets[col], 75 + (row * 20));
+        }
+
+        gfx.fill(94, 38, 114, 49, 0xFF171019);
+        gfx.fill(95, 39, 113, 48, 0xFF080808);
+    }
+
+    private static void drawSlot(GuiGraphics gfx, int x, int y) {
+        drawPanel(gfx, x - 1, y - 1, x + 17, y + 17, 0xFF121212, 0xFFBDBDBD, 0xFF414141);
+    }
+
+    private static void drawTankSlot(GuiGraphics gfx, int x, int y) {
+        drawPanel(gfx, x - 1, y - 1, x + 12, y + 15, 0xFF121212, 0xFFBDBDBD, 0xFF414141);
+    }
+
+    private static void drawPanel(GuiGraphics gfx, int left, int top, int right, int bottom, int fill, int light, int dark) {
+        gfx.fill(left, top, right, bottom, dark);
+        gfx.fill(left, top, right - 1, bottom - 1, light);
+        gfx.fill(left + 1, top + 1, right - 1, bottom - 1, fill);
     }
 
     private void drawScaledCenteredString(GuiGraphics gfx, Font font, String text, int x, int y, int color, float scale) {

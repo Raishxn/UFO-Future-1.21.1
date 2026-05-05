@@ -20,6 +20,16 @@ Fluxo combinado daqui para frente:
 
 - Nenhuma mudanca ainda.
 
+## [2.1-fix2] - 2026-05-05
+
+### Bug Fixes
+
+- Corrigida novamente a tela JEI do `Stellar Nexus`: a categoria deixou de depender de PNG externo para o fundo e agora desenha o layout diretamente em codigo, evitando o fundo preto/rosa mesmo quando o resource pack/cache falha ao resolver a textura.
+
+### Implementations
+
+- Nenhuma mudanca ainda.
+
 ## [2.1-fix1] - 2026-05-05
 
 ### Bug Fixes
