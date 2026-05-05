@@ -17,8 +17,8 @@
   },
   "pattern": [
     " M ",
-    "SPS",
-    " D "
+    " P ",
+    "SDS"
   ],
   "result": {
     "count": 1,

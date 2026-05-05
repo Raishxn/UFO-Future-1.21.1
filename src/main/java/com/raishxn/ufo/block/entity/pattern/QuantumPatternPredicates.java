@@ -72,10 +72,14 @@ public final class QuantumPatternPredicates {
     }
 
     public static Component fieldName() {
-        return Component.literal("Any Stellar Field Generator (T1/T2/T3)");
+        return Component.literal("Stellar Field Generator Mk.I or better");
     }
 
     public static List<BlockState> fieldCandidates() {
+        return List.of(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().defaultBlockState());
+    }
+
+    public static List<BlockState> allFieldCandidates() {
         return List.of(
                 MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().defaultBlockState(),
                 MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get().defaultBlockState(),

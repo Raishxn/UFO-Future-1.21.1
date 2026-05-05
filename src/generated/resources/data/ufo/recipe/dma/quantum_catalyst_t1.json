@@ -23,6 +23,11 @@
       }
     },
     {
+      "ingredient": {
+        "item": "ufo:nuclear_star"
+      }
+    },
+    {
       "amount": 2,
       "ingredient": {
         "item": "ae2:quartz_vibrant_glass"

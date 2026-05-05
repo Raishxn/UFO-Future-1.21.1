@@ -12,7 +12,7 @@
   ],
   "item_inputs": [
     {
-      "amount": 64,
+      "amount": 24,
       "ingredient": {
         "item": "ufo:tesseract_component_matrix"
       }
@@ -37,7 +37,6 @@
     }
   ],
   "item_output": {
-    "count": 24,
     "id": "ufo:event_horizon_component_matrix"
   },
   "machine": "qmf",

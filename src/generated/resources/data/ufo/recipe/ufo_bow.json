@@ -16,9 +16,9 @@
     }
   },
   "pattern": [
-    " M ",
-    "SPS",
-    " D "
+    " MS",
+    "P D",
+    "  S"
   ],
   "result": {
     "count": 1,

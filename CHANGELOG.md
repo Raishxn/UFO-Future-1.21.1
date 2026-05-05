@@ -20,6 +20,22 @@ Fluxo combinado daqui para frente:
 
 - Nenhuma mudanca ainda.
 
+## [2.1] - 2026-05-05
+
+### Bug Fixes
+
+- Corrigida a progressao dos `component matrix batch recipes` do QMF: `Tesseract`, `Event Horizon` e `Cosmic String` agora consomem `24` do tier anterior para produzir `1` item, seguindo a regra correta de tier anterior em vez de gerar lotes baratos.
+- Corrigida a confusao da primeira montagem do `Quantum Matter Fabricator`: a preview do multibloco agora aponta para `Stellar Field Generator Mk.I or better`, mostrando Mk.I como candidato inicial sem sugerir indevidamente tiers que dependem de `Event Horizon Component Matrix`.
+- Corrigida a colisao de recipes dos catalysts T1 no `Dimensional Matter Assembler`: cada familia agora tem um ingrediente assinatura proprio, evitando que AE/automacao transforme pedidos de `Chrono Catalyst T1` em outro catalyst.
+- Removidos recipes bulk QMF obsoletos dos catalysts, evitando rotas antigas conflitantes com a progressao atual do DMA.
+- Corrigida outra colisao de assinatura em recipes de processo: rods de `White Dwarf Fragment` e `Neutron Star Fragment` nao compartilham mais os mesmos itens das recipes de dust.
+- Corrigidos crafts duplicados das ferramentas UFO que compartilhavam o mesmo pattern por pares, evitando resultados ambiguos na crafting table e em patterns AE.
+- Auditados os recipes gerados e hand-authored para duplicatas de assinatura e loops de progressao bloqueantes; os ciclos restantes sao conversoes reversiveis ou loops tardios com rota de entrada existente.
+
+### Implementations
+
+- Nenhuma mudanca ainda.
+
 ## [2.0.0-fix7] - 2026-04-28
 
 ### Bug Fixes

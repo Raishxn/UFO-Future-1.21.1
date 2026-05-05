@@ -15,11 +15,6 @@
       "ingredient": {
         "item": "ufo:neutron_star_fragment_ingot"
       }
-    },
-    {
-      "ingredient": {
-        "item": "ae2:tiny_tnt"
-      }
     }
   ],
   "item_outputs": [

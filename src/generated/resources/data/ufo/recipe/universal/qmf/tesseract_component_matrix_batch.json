@@ -12,7 +12,7 @@
   ],
   "item_inputs": [
     {
-      "amount": 64,
+      "amount": 24,
       "ingredient": {
         "item": "ufo:hyper_dense_component_matrix"
       }
@@ -31,7 +31,6 @@
     }
   ],
   "item_output": {
-    "count": 24,
     "id": "ufo:tesseract_component_matrix"
   },
   "machine": "qmf",

@@ -23,6 +23,12 @@
       }
     },
     {
+      "amount": 4,
+      "ingredient": {
+        "item": "ufo:neutron_star_fragment_dust"
+      }
+    },
+    {
       "amount": 2,
       "ingredient": {
         "item": "ae2:quartz_vibrant_glass"
