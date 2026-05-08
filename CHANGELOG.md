@@ -14,6 +14,16 @@ Fluxo combinado daqui para frente:
 
 ### Bug Fixes
 
+- Nenhuma mudanca ainda.
+
+### Implementations
+
+- Nenhuma mudanca ainda.
+
+## [2.1-fix3] - 2026-05-08
+
+### Bug Fixes
+
 - Corrigido o reload das CPUs de crafting UFO do AE2: mega crafting storages e mega co-processors agora tentam reformar/reconectar o multibloco apos carregar no servidor, evitando a necessidade de quebrar e recolocar blocos.
 - Corrigida a formatacao dos mega co-processors e mega crafting storages na lista de CPUs do terminal AE2, exibindo valores compactos como `50M`/`1T` em vez de numeros longos ilegiveis.
 - Corrigida novamente a textura JEI do `Stellar Nexus`, usando explicitamente o asset `ufo:textures/guis/stellar_nexus_jei.png` em minusculas e removendo a copia duplicada em `assets/ae2` com nome maiusculo.
