@@ -14,11 +14,13 @@ Fluxo combinado daqui para frente:
 
 ### Bug Fixes
 
-- Nenhuma mudanca ainda.
+- Corrigida a renderizacao visual do fluido no `Dimensional Matter Assembler`, usando o fluido presente nos tanques da maquina e mantendo os dois reservatorios visiveis mesmo quando apenas um fluido esta carregado.
+- Corrigidas falhas visuais nas juncoes do modelo custom do `Dimensional Matter Assembler`, trocando o modelo para renderizacao `cutout` adequada a textura sem semi-transparencia.
 
 ### Implementations
 
-- Nenhuma mudanca ainda.
+- Reformulado o visual do `Dimensional Matter Assembler` com modelo e textura customizados em Blockbench.
+- Adicionado renderer client-side dedicado para exibir o volume de fluido dinamico dentro do `Dimensional Matter Assembler`.
 
 ## [2.1-fix2] - 2026-05-05
 

@@ -578,6 +578,9 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
     public void onChangeTank() {
         onChangeInventory();
+        if (this.level != null && !this.level.isClientSide()) {
+            this.markForUpdate();
+        }
     }
 
     private boolean hasAutoExportWork() {
