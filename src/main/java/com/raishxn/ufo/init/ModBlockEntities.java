@@ -8,7 +8,9 @@ import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.entity.QuantumEnergyCellBlockEntity;
 import com.raishxn.ufo.block.entity.UfoEnergyCellBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -37,11 +39,27 @@ public class ModBlockEntities {
                 typeHolder.set(type);
 
                 for (var block : validBlocks) {
-                    block.setBlockEntity(CraftingBlockEntity.class, type, null, null);
+                    ((AEBaseEntityBlock<CraftingBlockEntity>) block)
+                            .setBlockEntity(CraftingBlockEntity.class, type, null, ModBlockEntities::tickMegaCraftingUnit);
                 }
 
                 return type;
             });
+
+    private static void tickMegaCraftingUnit(
+            net.minecraft.world.level.Level level,
+            net.minecraft.core.BlockPos pos,
+            BlockState state,
+            CraftingBlockEntity blockEntity) {
+        if (!(level instanceof ServerLevel) || blockEntity.isFormed()) {
+            return;
+        }
+
+        long stagger = Math.floorMod(pos.asLong(), 20);
+        if ((level.getGameTime() + stagger) % 20 == 0) {
+            blockEntity.updateMultiBlock(pos);
+        }
+    }
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity>> DIMENSIONAL_MATTER_ASSEMBLER_BE =
             BLOCK_ENTITIES.register("dimensional_matter_assembler", () -> {

@@ -1,6 +1,7 @@
 package com.raishxn.ufo.mixin;
 
 import appeng.core.localization.Tooltips;
+import appeng.menu.me.crafting.CraftingStatusMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,16 +44,49 @@ public class MixinCPUSelectionList {
         if (value >= ufo$INFINITE_THREADS_THRESHOLD) {
             return Component.literal("\u221E").withStyle(Tooltips.NUMBER_TEXT);
         }
-        return Component.literal(ufo$formatStorage(value)).withStyle(Tooltips.NUMBER_TEXT);
+        return Component.literal(ufo$formatDecimal(value)).withStyle(Tooltips.NUMBER_TEXT);
     }
 
     @Unique
-    private String ufo$formatStorage(long bytes) {
+    private static String ufo$formatStorage(long bytes) {
         if (bytes >= ufo$INFINITE_STORAGE_THRESHOLD) {
             return "\u221E";
         }
-        if (bytes < 1000) return ufo$DF.format(bytes);
-        int unit = Math.min((int) (Math.log10(bytes) / 3), ufo$UNITS.length - 1);
-        return ufo$DF.format(bytes / Math.pow(1000, unit)) + ufo$UNITS[unit];
+        if (bytes < 1024) return ufo$DF.format(bytes);
+        int unit = Math.min((int) (Math.log(bytes) / Math.log(1024)), ufo$UNITS.length - 1);
+        return ufo$DF.format(bytes / Math.pow(1024, unit)) + ufo$UNITS[unit];
+    }
+
+    @Redirect(
+            method = "drawBackgroundLayer",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lappeng/client/gui/widgets/CPUSelectionList;formatStorage(Lappeng/menu/me/crafting/CraftingStatusMenu$CraftingCpuListEntry;)Ljava/lang/String;"
+            )
+    )
+    private String ufo$formatVisibleStorage(appeng.client.gui.widgets.CPUSelectionList instance,
+                                            CraftingStatusMenu.CraftingCpuListEntry cpu) {
+        return ufo$formatStorage(cpu.storage());
+    }
+
+    @Redirect(
+            method = "drawBackgroundLayer",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/lang/String;valueOf(I)Ljava/lang/String;"
+            )
+    )
+    private String ufo$formatVisibleCoProcessors(int coProcessors) {
+        if (coProcessors >= ufo$INFINITE_THREADS_THRESHOLD) {
+            return "\u221E";
+        }
+        return ufo$formatDecimal(coProcessors);
+    }
+
+    @Unique
+    private static String ufo$formatDecimal(long amount) {
+        if (amount < 1000) return ufo$DF.format(amount);
+        int unit = Math.min((int) (Math.log10(amount) / 3), ufo$UNITS.length - 1);
+        return ufo$DF.format(amount / Math.pow(1000, unit)) + ufo$UNITS[unit];
     }
 }
