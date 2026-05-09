@@ -2,7 +2,7 @@
   <img src="https://img.shields.io/badge/Minecraft-1.21.1-62B47A?style=for-the-badge&logo=mojang-studios&logoColor=white" alt="Minecraft 1.21.1"/>
   <img src="https://img.shields.io/badge/NeoForge-21.1-orange?style=for-the-badge" alt="NeoForge"/>
   <img src="https://img.shields.io/badge/AE2-Addon-5C7CFA?style=for-the-badge" alt="AE2 Addon"/>
-  <img src="https://img.shields.io/badge/License-ARR-red?style=for-the-badge" alt="License"/>
+  <img src="https://img.shields.io/badge/License-LGPLv3%20%2F%20CC%20BY--NC--SA%203.0-blue?style=for-the-badge" alt="License"/>
 </p>
 
 <h1 align="center">🛸 UFO Future</h1>
@@ -170,9 +170,22 @@ Contributions, bug reports, and suggestions are welcome! Please open an issue on
 
 ---
 
+## Credits
+
+Special thanks to the following projects for texture inspiration and/or texture assets used in UFO Future:
+
+- [AE2 Crystal Science](https://github.com/Frostbite-time/AE2-Crystal-Science)
+- [GT New Horizons Modpack](https://github.com/GTNewHorizons/GT-New-Horizons-Modpack)
+
+---
+
 ## 📜 License
 
-All Rights Reserved. This mod and its assets may not be redistributed without permission.
+Code is licensed under the **GNU Lesser General Public License v3.0 or later (LGPLv3+)**.
+
+Art, textures, models, and other visual assets are licensed under **Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)**.
+
+This split follows the licensing model used by Applied Energistics 2, since UFO Future is an AE2 addon and may derive from, interoperate with, or visually reference AE2 code and assets. See [LICENSE.md](LICENSE.md) for the full project notice.
 
 ---
 
