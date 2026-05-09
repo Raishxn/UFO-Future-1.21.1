@@ -20,6 +20,17 @@ Fluxo combinado daqui para frente:
 
 - Nenhuma mudanca ainda.
 
+## [2.1-fix4] - 2026-05-09
+
+### Bug Fixes
+
+- Nenhuma mudanca ainda.
+
+### Implementations
+
+- Atualizada a licenca do projeto para separar codigo sob LGPLv3+ e assets visuais sob CC BY-NC-SA 3.0, mantendo compatibilidade com o modelo de licenciamento do AE2.
+- Adicionados creditos para AE2 Crystal Science e GT New Horizons Modpack por texturas usadas, adaptadas ou usadas como inspiracao.
+
 ## [2.1-fix3] - 2026-05-08
 
 ### Bug Fixes
