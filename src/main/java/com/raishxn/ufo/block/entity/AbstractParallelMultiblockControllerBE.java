@@ -24,6 +24,7 @@ import com.raishxn.ufo.block.entity.processing.ParallelProcessState;
 import com.raishxn.ufo.compat.mekanism.MekanismChemicalStorage;
 import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.init.ModSounds;
+import com.raishxn.ufo.item.custom.BaseCatalystItem;
 import com.raishxn.ufo.item.custom.DimensionalCatalystItem;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
@@ -81,7 +82,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
             this.displayedRecipes.clear();
-            updateTemperature(0, null, null, false);
+            updateTemperature(0, null, null, CatalystProfile.DEFAULT);
             syncClientState(false);
             return;
         }
@@ -99,7 +100,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
             rebuildDisplayedRecipes(recipeIndex);
-            updateTemperature(0, null, null, false);
+            updateTemperature(0, null, null, CatalystProfile.DEFAULT);
             syncClientState(false);
             return;
         }
@@ -115,7 +116,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
             rebuildDisplayedRecipes(recipeIndex);
-            updateTemperature(0, null, null, false);
+            updateTemperature(0, null, null, CatalystProfile.DEFAULT);
             syncClientState(false);
             return;
         }
@@ -125,7 +126,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         MEStorage inventory = storageService.getInventory();
         IActionSource src = IActionSource.ofMachine(nodeBE);
         refreshProcessStates(recipeIndex);
-        boolean hasCreativeCatalyst = hasCreativeCatalystInstalled();
+        CatalystProfile catalystProfile = getCatalystProfile();
 
         boolean anyRunning = false;
         int hottestMaxProgress = 0;
@@ -145,7 +146,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
 
-            int scaledMaxProgress = getAdjustedProcessingTime(recipe, hasCreativeCatalyst);
+            int scaledMaxProgress = getAdjustedProcessingTime(recipe, catalystProfile);
             if (scaledMaxProgress > hottestMaxProgress) {
                 hottestMaxProgress = scaledMaxProgress;
                 hottestProgress = processState.getProgress();
@@ -160,7 +161,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
 
             processState.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size(), recipe.chemicalInputs().size());
-            long scaledEnergy = getAdjustedEnergyCost(recipe, hasCreativeCatalyst);
+            long scaledEnergy = getAdjustedEnergyCost(recipe, catalystProfile);
             chargeEnergy(processState, energyService, scaledEnergy);
             boolean materialsFulfilled = pullIngredients(processState, recipe, inventory, src);
             if (!materialsFulfilled || processState.getEnergyBuffer() < scaledEnergy) {
@@ -178,9 +179,9 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.running = anyRunning;
         this.maxProgress = hottestMaxProgress;
         this.progress = hottestProgress;
-        updateDisplayedEnergy(recipeIndex, hasCreativeCatalyst);
-        rebuildDisplayedRecipes(recipeIndex);
-        updateTemperature(runningThreads, inventory, src, hasCreativeCatalyst);
+        updateDisplayedEnergy(recipeIndex, catalystProfile);
+        rebuildDisplayedRecipes(recipeIndex, catalystProfile);
+        updateTemperature(runningThreads, inventory, src, catalystProfile);
         this.setChanged();
         syncClientState(true);
     }
@@ -335,9 +336,10 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     }
 
     private void finishRecipe(ParallelProcessState state, MultiblockProcessingRecipe recipe, MEStorage inventory, IActionSource src) {
+        CatalystProfile catalystProfile = getCatalystProfile();
         for (var output : recipe.outputs()) {
             if (!output.item().isEmpty()) {
-                inventory.insert(AEItemKey.of(output.item()), output.amount(), Actionable.MODULATE, src);
+                inventory.insert(AEItemKey.of(output.item()), getAdjustedItemOutputAmount(output.amount(), catalystProfile), Actionable.MODULATE, src);
             }
             if (!output.fluid().isEmpty()) {
                 inventory.insert(AEFluidKey.of(output.fluid().getFluid()), output.amount(), Actionable.MODULATE, src);
@@ -348,6 +350,10 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     }
 
     private void rebuildDisplayedRecipes(Map<ResourceLocation, MultiblockProcessingRecipe> recipeIndex) {
+        rebuildDisplayedRecipes(recipeIndex, getCatalystProfile());
+    }
+
+    private void rebuildDisplayedRecipes(Map<ResourceLocation, MultiblockProcessingRecipe> recipeIndex, CatalystProfile catalystProfile) {
         this.displayedRecipes.clear();
         for (ParallelProcessState processState : this.processStates) {
             if (!processState.isActive()) {
@@ -358,7 +364,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
             var primaryOutput = recipe.primaryOutput();
-            int scaledMaxProgress = getAdjustedProcessingTime(recipe, hasCreativeCatalystInstalled());
+            int scaledMaxProgress = getAdjustedProcessingTime(recipe, catalystProfile);
             int displayedMaxProgress = getDisplayedTicks(scaledMaxProgress);
             int displayedProgress = Math.min(displayedMaxProgress, getDisplayedTicks(processState.getProgress()));
             Component label = primaryOutput.item().isEmpty()
@@ -371,7 +377,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                     primaryOutput.item(),
                     primaryOutput.fluid(),
                     label,
-                    primaryOutput.amount(),
+                    primaryOutput.item().isEmpty() ? primaryOutput.amount() : getMaximumAdjustedItemOutputAmount(primaryOutput.amount(), catalystProfile),
                     displayedProgress,
                     displayedMaxProgress));
         }
@@ -382,7 +388,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         return Math.max(0, (rawTicks + divisor - 1) / divisor);
     }
 
-    private void updateDisplayedEnergy(Map<ResourceLocation, MultiblockProcessingRecipe> recipeIndex, boolean hasCreativeCatalyst) {
+    private void updateDisplayedEnergy(Map<ResourceLocation, MultiblockProcessingRecipe> recipeIndex, CatalystProfile catalystProfile) {
         long bufferedEnergy = 0L;
         long targetEnergy = 0L;
         for (ParallelProcessState processState : this.processStates) {
@@ -393,7 +399,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             bufferedEnergy += Math.max(0L, processState.getEnergyBuffer());
             MultiblockProcessingRecipe recipe = recipeIndex.get(processState.getRecipeId());
             if (recipe != null) {
-                targetEnergy += Math.max(0L, getAdjustedEnergyCost(recipe, hasCreativeCatalyst));
+                targetEnergy += Math.max(0L, getAdjustedEnergyCost(recipe, catalystProfile));
             }
         }
 
@@ -401,17 +407,17 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.maxStoredEnergy = targetEnergy;
     }
 
-    private void updateTemperature(int activeThreads, @Nullable MEStorage inventory, @Nullable IActionSource src, boolean hasCreativeCatalyst) {
+    private void updateTemperature(int activeThreads, @Nullable MEStorage inventory, @Nullable IActionSource src, CatalystProfile catalystProfile) {
         this.thermalTicker++;
 
-        if (hasCreativeCatalyst) {
+        if (catalystProfile.creative()) {
             if (this.temperature > 0 && inventory != null && src != null) {
                 this.temperature -= consumeCoolant(inventory, src);
             }
         } else if (activeThreads > 0) {
             if (this.thermalTicker % 2 == 0) {
                 int baseHeat = Math.max(1, activeThreads) * (this.overclocked ? 5 : 1);
-                int heatToAdd = Math.max(1, (int) Math.ceil(baseHeat * getHeatGenerationMultiplier()));
+                int heatToAdd = Math.max(0, (int) Math.ceil(baseHeat * getHeatGenerationMultiplier() * catalystProfile.heatMultiplier()));
                 this.temperature = Math.min(this.maxTemperature, this.temperature + heatToAdd);
             }
         } else if (this.temperature > 0 && this.thermalTicker % 40 == 0) {
@@ -544,7 +550,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.progress = 0;
         this.maxProgress = 0;
         clearProcessStates();
-        updateDisplayedEnergy(Map.of(), false);
+        updateDisplayedEnergy(Map.of(), CatalystProfile.DEFAULT);
         this.displayedRecipes.clear();
         saveChanges();
     }
@@ -575,28 +581,120 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         return null;
     }
 
-    private boolean hasCreativeCatalystInstalled() {
+    private CatalystProfile getCatalystProfile() {
+        double heatMultiplier = 1.0D;
+        double speedMultiplier = 1.0D;
+        double energyMultiplier = 1.0D;
+        double bonusDropChance = 0.0D;
+        boolean creative = false;
+        int identicalCount = 0;
+        BaseCatalystItem firstCatalyst = null;
+        boolean synergyPossible = true;
+
         for (int i = 0; i < this.upgrades.size(); i++) {
             ItemStack upgradeStack = this.upgrades.getStackInSlot(i);
-            if (!upgradeStack.isEmpty() && upgradeStack.getItem() instanceof DimensionalCatalystItem) {
-                return true;
+            if (upgradeStack.isEmpty()) {
+                synergyPossible = false;
+                continue;
+            }
+
+            if (upgradeStack.getItem() instanceof DimensionalCatalystItem) {
+                creative = true;
+                synergyPossible = false;
+                continue;
+            }
+
+            if (upgradeStack.getItem() instanceof BaseCatalystItem catalyst) {
+                heatMultiplier += catalyst.getStaticHeat() / 100.0D;
+                speedMultiplier *= catalyst.getSpeedMultiplier();
+                energyMultiplier *= catalyst.getPowerMultiplier();
+                bonusDropChance += catalyst.getBonusDropChance();
+
+                if (firstCatalyst == null) {
+                    firstCatalyst = catalyst;
+                    identicalCount++;
+                } else if (firstCatalyst == catalyst) {
+                    identicalCount++;
+                } else {
+                    synergyPossible = false;
+                }
+                continue;
+            }
+
+            synergyPossible = false;
+        }
+
+        if (synergyPossible && identicalCount == 4 && firstCatalyst != null) {
+            heatMultiplier *= 1.5D;
+            if ("chrono".equals(firstCatalyst.getFamily())) {
+                speedMultiplier *= 2.0D;
+            } else if ("matterflow".equals(firstCatalyst.getFamily())) {
+                energyMultiplier *= 0.5D;
+            } else if ("quantum".equals(firstCatalyst.getFamily())) {
+                bonusDropChance += 0.5D;
+            } else if ("overflux".equals(firstCatalyst.getFamily())) {
+                heatMultiplier *= 0.5D;
             }
         }
-        return false;
+
+        if (creative) {
+            return CatalystProfile.CREATIVE;
+        }
+
+        return new CatalystProfile(
+                false,
+                Math.max(0.0D, heatMultiplier),
+                Math.max(0.01D, speedMultiplier),
+                Math.max(0.0D, energyMultiplier),
+                Math.max(0.0D, bonusDropChance));
     }
 
-    private int getAdjustedProcessingTime(MultiblockProcessingRecipe recipe, boolean hasCreativeCatalyst) {
-        if (hasCreativeCatalyst) {
+    private int getAdjustedProcessingTime(MultiblockProcessingRecipe recipe, CatalystProfile catalystProfile) {
+        if (catalystProfile.creative()) {
             return 1;
         }
-        return MultiblockTierScaling.adjustedTime(recipe.time(), this.machineTier, recipe.requiredTier());
+        int tierAdjustedTime = MultiblockTierScaling.adjustedTime(recipe.time(), this.machineTier, recipe.requiredTier());
+        return Math.max(1, (int) Math.ceil(tierAdjustedTime / catalystProfile.speedMultiplier()));
     }
 
-    private long getAdjustedEnergyCost(MultiblockProcessingRecipe recipe, boolean hasCreativeCatalyst) {
-        if (hasCreativeCatalyst) {
+    private long getAdjustedEnergyCost(MultiblockProcessingRecipe recipe, CatalystProfile catalystProfile) {
+        if (catalystProfile.creative()) {
             return 0L;
         }
-        return MultiblockTierScaling.adjustedEnergy(recipe.energy(), this.machineTier, recipe.requiredTier());
+        long tierAdjustedEnergy = MultiblockTierScaling.adjustedEnergy(recipe.energy(), this.machineTier, recipe.requiredTier());
+        return Math.max(1L, (long) Math.ceil(tierAdjustedEnergy * catalystProfile.energyMultiplier()));
+    }
+
+    private long getAdjustedItemOutputAmount(long baseAmount, CatalystProfile catalystProfile) {
+        if (baseAmount <= 0L) {
+            return 0L;
+        }
+
+        double bonusChance = Math.max(0.0D, catalystProfile.bonusDropChance());
+        long bonusRolls = (long) bonusChance;
+        double fractionalBonusRoll = bonusChance - bonusRolls;
+        if (fractionalBonusRoll > 0.0D && this.level != null && this.level.random.nextDouble() < fractionalBonusRoll) {
+            bonusRolls++;
+        }
+
+        return saturatedMultiply(baseAmount, 1L + bonusRolls);
+    }
+
+    private long getMaximumAdjustedItemOutputAmount(long baseAmount, CatalystProfile catalystProfile) {
+        if (baseAmount <= 0L) {
+            return 0L;
+        }
+        return saturatedMultiply(baseAmount, 1L + (long) Math.ceil(Math.max(0.0D, catalystProfile.bonusDropChance())));
+    }
+
+    private long saturatedMultiply(long value, long multiplier) {
+        if (value <= 0L || multiplier <= 0L) {
+            return 0L;
+        }
+        if (value > Long.MAX_VALUE / multiplier) {
+            return Long.MAX_VALUE;
+        }
+        return value * multiplier;
     }
 
     protected abstract List<MultiblockProcessingRecipe> getAvailableRecipes();
@@ -815,6 +913,16 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     }
 
     private record CoolantProfile(int heatPerMillibucket, int millibucketsPerHeat, long maxConsumePerTick) {
+    }
+
+    private record CatalystProfile(
+            boolean creative,
+            double heatMultiplier,
+            double speedMultiplier,
+            double energyMultiplier,
+            double bonusDropChance) {
+        private static final CatalystProfile DEFAULT = new CatalystProfile(false, 1.0D, 1.0D, 1.0D, 0.0D);
+        private static final CatalystProfile CREATIVE = new CatalystProfile(true, 0.0D, 1000.0D, 0.0D, 1.0D);
     }
 
     @Override
