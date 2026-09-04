@@ -3,6 +3,7 @@ package com.raishxn.ufo.item.custom;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.event.ArmorEffectRefreshPolicy;
 import com.raishxn.ufo.item.ModArmorMaterials;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -86,7 +87,9 @@ public class ThermalResistorExosuitItem extends ArmorItem implements IThermalArm
         }
 
         // Adiciona Resistência II se o set estiver completo
-        if (hasFullSet(player)) {
+        if (this.type == Type.CHESTPLATE && hasFullSet(player)
+                && ArmorEffectRefreshPolicy.shouldRefresh(
+                player.getEffect(MobEffects.DAMAGE_RESISTANCE), 1, 200)) {
             // <-- ATUALIZADO: Amplificador 1 = Nível II -->
             player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 220, 1, false, false, true));
         }

@@ -1,11 +1,11 @@
 package com.raishxn.ufo.registry;
 
-import com.glodblock.github.glodium.Glodium; // Supondo que você tenha esta classe de uma lib
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -59,23 +59,27 @@ public class RegistryHandler {
     }
 
     protected void onRegisterBlocks() {
-        this.blocks.forEach((e) -> Registry.register(BuiltInRegistries.BLOCK, Glodium.id(this.id, e.getLeft()), e.getRight()));
+        this.blocks.forEach((e) -> Registry.register(BuiltInRegistries.BLOCK, id(e.getLeft()), e.getRight()));
     }
 
     protected void onRegisterItems() {
         for(Pair<String, Block> e : this.blocks) {
             Function<Block, Item> itemFunc = this.itemBlocks.getOrDefault(e.getLeft(), (block) -> new BlockItem(block, new Item.Properties()));
-            Registry.register(BuiltInRegistries.ITEM, Glodium.id(this.id, e.getLeft()), itemFunc.apply(e.getRight()));
+            Registry.register(BuiltInRegistries.ITEM, id(e.getLeft()), itemFunc.apply(e.getRight()));
         }
 
-        this.items.forEach((e) -> Registry.register(BuiltInRegistries.ITEM, Glodium.id(this.id, e.getLeft()), e.getRight()));
+        this.items.forEach((e) -> Registry.register(BuiltInRegistries.ITEM, id(e.getLeft()), e.getRight()));
     }
 
     protected void onRegisterTileEntities() {
-        this.tiles.forEach((e) -> Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Glodium.id(this.id, e.getLeft()), e.getRight()));
+        this.tiles.forEach((e) -> Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, id(e.getLeft()), e.getRight()));
     }
 
     protected void onRegisterComponents() {
-        this.components.forEach((e) -> Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Glodium.id(this.id, e.getLeft()), e.getRight()));
+        this.components.forEach((e) -> Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, id(e.getLeft()), e.getRight()));
+    }
+
+    private ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(this.id, path);
     }
 }

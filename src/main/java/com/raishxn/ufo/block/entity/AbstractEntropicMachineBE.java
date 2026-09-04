@@ -14,6 +14,8 @@ import com.raishxn.ufo.api.multiblock.EntropicMachineLocator;
 import com.raishxn.ufo.api.multiblock.FieldTieredCubeValidator;
 import com.raishxn.ufo.api.multiblock.IEntropicMachineController;
 import com.raishxn.ufo.api.multiblock.MultiblockMachineTier;
+import com.raishxn.ufo.diagnostic.MachineMetricKey;
+import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -56,6 +58,7 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
     protected final IUpgradeInventory upgrades;
     @Nullable
     protected BlockPos anchorPos;
+    private MachineMetricKey performanceMetricKey;
 
     protected AbstractEntropicMachineBE(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
         super(blockEntityType, pos, blockState);
@@ -76,7 +79,13 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
             return;
         }
 
-        tickMachine();
+        long startedAt = System.nanoTime();
+        try {
+            tickMachine();
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordTick(
+                    performanceMetricKey(), System.nanoTime() - startedAt, this.level.getGameTime());
+        }
     }
 
     protected abstract void tickMachine();
@@ -91,7 +100,24 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
     }
 
     public @Nullable FieldTieredCubeValidator.ValidationResult findStructure(Level level) {
-        return FieldTieredCubeValidator.findMatchingCube(level, this.worldPosition, getShellPredicate()).orElse(null);
+        long startedAt = System.nanoTime();
+        try {
+            return FieldTieredCubeValidator.findMatchingCube(level, this.worldPosition, getShellPredicate()).orElse(null);
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordScan(
+                    performanceMetricKey(), System.nanoTime() - startedAt,
+                    FieldTieredCubeValidator.BLOCK_TESTS_PER_FULL_SEARCH, level.getGameTime());
+        }
+    }
+
+    protected final MachineMetricKey performanceMetricKey() {
+        if (this.performanceMetricKey == null && this.level != null) {
+            this.performanceMetricKey = new MachineMetricKey(
+                    this.level.dimension().location().toString(),
+                    this.worldPosition.asLong(),
+                    this.getClass().getSimpleName());
+        }
+        return this.performanceMetricKey;
     }
 
     public void applyStructure(FieldTieredCubeValidator.ValidationResult result) {

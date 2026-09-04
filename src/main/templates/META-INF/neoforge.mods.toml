@@ -84,9 +84,76 @@ config = "ufo.mixins.json"
 [[dependencies.${mod_id}]]
     modId="minecraft"
     type="required"
-    # This version range declares a minimum of the current minecraft version up to but not including the next major version
     versionRange="${minecraft_version_range}"
     ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="ae2"
+    type="required"
+    reason="UFO FUTURE extends AE2 storage, networking, crafting and GUI APIs."
+    versionRange="${ae2_version_range}"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="ufocore"
+    type="required"
+    reason="UFO FUTURE uses UFO Core multiblock, exact amount and GUI infrastructure."
+    versionRange="${ufocore_version_range}"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="ae2addonlib"
+    type="required"
+    reason="UFO FUTURE uses AE2AddonLib recipes, registries, menus and widgets."
+    versionRange="${ae2addonlib_version_range}"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="geckolib"
+    type="required"
+    reason="The Apocalypse Type-A entity and renderer use GeckoLib."
+    versionRange="${geckolib_version_range}"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="mekanism"
+    type="required"
+    reason="UFO FUTURE registers Mekanism-backed cells and chemical integration."
+    versionRange="${mekanism_version_range}"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="jei"
+    type="optional"
+    reason="Enables UFO recipe categories and multiblock previews."
+    ordering="AFTER"
+    side="CLIENT"
+
+[[dependencies.${mod_id}]]
+    modId="emi"
+    type="optional"
+    reason="Keeps EMI's ingredient sidebar clear of attached UFO GUI widgets."
+    ordering="AFTER"
+    side="CLIENT"
+
+[[dependencies.${mod_id}]]
+    modId="appmek"
+    type="optional"
+    reason="Uses Applied Mekanistics chemical keys when available."
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="appflux"
+    type="optional"
+    reason="Enables Applied Flux energy integration when available."
+    ordering="AFTER"
     side="BOTH"
 
 

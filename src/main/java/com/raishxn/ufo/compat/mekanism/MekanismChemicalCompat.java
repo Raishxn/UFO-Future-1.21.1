@@ -1,5 +1,6 @@
 package com.raishxn.ufo.compat.mekanism;
 
+import appeng.api.stacks.AEKey;
 import mekanism.api.Action;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.ChemicalStack;
@@ -7,6 +8,7 @@ import mekanism.api.chemical.IChemicalHandler;
 import mekanism.common.capabilities.Capabilities;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
 public final class MekanismChemicalCompat {
@@ -34,6 +36,23 @@ public final class MekanismChemicalCompat {
 
     public static ResourceLocation getChemicalId(ChemicalStack stack) {
         return ResourceLocation.parse(stack.getChemicalHolder().getRegisteredName());
+    }
+
+    public static @Nullable ResourceLocation getChemicalId(AEKey key) {
+        if (key instanceof UfoMekanismKey ufoKey) {
+            return ufoKey.getId();
+        }
+        return ModList.get().isLoaded("appmek") ? AppliedMekanisticsCompat.chemicalId(key) : null;
+    }
+
+    public static @Nullable AEKey createAeKey(ResourceLocation chemicalId, long amount) {
+        ChemicalStack stack = createStack(chemicalId, amount);
+        if (stack.isEmpty()) {
+            return null;
+        }
+        return ModList.get().isLoaded("appmek")
+                ? AppliedMekanisticsCompat.keyOf(stack)
+                : UfoMekanismKey.of(stack);
     }
 
     private static final class HatchChemicalHandler implements IChemicalHandler {
@@ -87,20 +106,10 @@ public final class MekanismChemicalCompat {
             if (tank != 0 || stack.isEmpty()) {
                 return stack;
             }
-            ResourceLocation currentId = this.storage.getStoredChemicalId();
             ResourceLocation incomingId = getChemicalId(stack);
-            if (currentId != null && !currentId.equals(incomingId)) {
-                return stack;
-            }
-
-            long stored = this.storage.getStoredChemicalAmount();
-            long inserted = Math.min(stack.getAmount(), Math.max(0L, this.storage.getChemicalCapacity() - stored));
+            long inserted = this.storage.insertChemical(incomingId, stack.getAmount(), action.simulate());
             if (inserted <= 0L) {
                 return stack;
-            }
-
-            if (action.execute()) {
-                this.storage.setStoredChemical(incomingId, stored + inserted);
             }
             return stack.getAmount() == inserted ? ChemicalStack.EMPTY : stack.copyWithAmount(stack.getAmount() - inserted);
         }
@@ -111,17 +120,12 @@ public final class MekanismChemicalCompat {
                 return ChemicalStack.EMPTY;
             }
             ResourceLocation currentId = this.storage.getStoredChemicalId();
-            long stored = this.storage.getStoredChemicalAmount();
-            if (currentId == null || stored <= 0L) {
+            if (currentId == null) {
                 return ChemicalStack.EMPTY;
             }
 
-            long extracted = Math.min(amount, stored);
+            long extracted = this.storage.extractChemical(currentId, amount, action.simulate());
             ChemicalStack result = createStack(currentId, extracted);
-            if (action.execute()) {
-                long remaining = stored - extracted;
-                this.storage.setStoredChemical(remaining > 0L ? currentId : null, remaining);
-            }
             return result;
         }
     }

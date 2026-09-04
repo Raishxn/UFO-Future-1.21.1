@@ -68,6 +68,11 @@ public class ModPackets {
                 PacketToggleStellarOverclock::handle
         );
         registrar.playToServer(
+                PacketToggleStellarPause.TYPE,
+                PacketToggleStellarPause.STREAM_CODEC,
+                PacketToggleStellarPause::handle
+        );
+        registrar.playToServer(
                 PacketToggleUniversalSafeMode.TYPE,
                 PacketToggleUniversalSafeMode.STREAM_CODEC,
                 PacketToggleUniversalSafeMode::handle
@@ -81,6 +86,16 @@ public class ModPackets {
                 PacketScanUniversalStructure.TYPE,
                 PacketScanUniversalStructure.STREAM_CODEC,
                 PacketScanUniversalStructure::handle
+        );
+        registrar.playToServer(
+                PacketToggleUniversalProcessPaused.TYPE,
+                PacketToggleUniversalProcessPaused.STREAM_CODEC,
+                PacketToggleUniversalProcessPaused::handle
+        );
+        registrar.playToServer(
+                PacketAutoBuildMultiblock.TYPE,
+                PacketAutoBuildMultiblock.STREAM_CODEC,
+                PacketAutoBuildMultiblock::handle
         );
     }
 

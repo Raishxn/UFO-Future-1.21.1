@@ -1,8 +1,12 @@
 package com.raishxn.ufo.block.entity.pattern;
 
+import com.raishxn.ufo.api.multiblock.MultiblockCellRole;
+import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
+import com.raishxn.ufo.api.multiblock.topology.QuantumCryoforgeTopologySchema;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -13,7 +17,29 @@ import java.util.Map;
 
 public final class QuantumCryoforgePatternFactory {
 
+    private static MultiblockDefinition definition;
+
     private QuantumCryoforgePatternFactory() {
+    }
+
+    public static synchronized MultiblockDefinition getDefinition() {
+        if (definition == null) {
+            definition = new MultiblockDefinition(
+                    ResourceLocation.fromNamespaceAndPath("ufo", "quantum_cryoforge"),
+                    QuantumCryoforgeTopologySchema.schemaVersion(),
+                    Component.translatable("block.ufo.quantum_cryoforge_controller"),
+                    createPattern(),
+                    getDefaultCreativeStates(),
+                    MultiblockDefinition.horizontalFacings(),
+                    Map.of(
+                            'C', MultiblockCellRole.CONTROLLER,
+                            'B', MultiblockCellRole.STRUCTURE,
+                            'D', MultiblockCellRole.STRUCTURE,
+                            'F', MultiblockCellRole.STRUCTURE,
+                            'E', MultiblockCellRole.STRUCTURE,
+                            'A', MultiblockCellRole.AIR));
+        }
+        return definition;
     }
 
     public static Map<Character, BlockState> getDefaultCreativeStates() {
@@ -31,71 +57,13 @@ public final class QuantumCryoforgePatternFactory {
     }
 
     public static MultiblockPattern getPattern() {
-        return new MultiblockPattern.Builder()
+        return getDefinition().pattern();
+    }
+
+    private static MultiblockPattern createPattern() {
+        MultiblockPattern.Builder builder = new MultiblockPattern.Builder()
+                .strict()
                 .controllerChar('C')
-                .layer(new String[]{
-                        "BBBBAA",
-                        "BBBBBA",
-                        "BBBBBB",
-                        "BBBBBB",
-                        "ABBBBB",
-                        "AABBBA",
-                        "BBAAAA"
-                })
-                .layer(new String[]{
-                        "BEBBBA",
-                        "BEEEEB",
-                        "BEFFEB",
-                        "BEEEEC",
-                        "BBFFEB",
-                        "ABBBBB",
-                        "BBBBBA"
-                })
-                .layer(new String[]{
-                        "BEBBBA",
-                        "BFFFEB",
-                        "BEAAAD",
-                        "BFAAAD",
-                        "BAAAAD",
-                        "BBFFEB",
-                        "BBBBBA"
-                })
-                .layer(new String[]{
-                        "BEBBBA",
-                        "BEEEFB",
-                        "BFAAAD",
-                        "BEAAAD",
-                        "BAAAAD",
-                        "BBEEFB",
-                        "BBBBBA"
-                })
-                .layer(new String[]{
-                        "BEBBBA",
-                        "BFFFEB",
-                        "BEAAAD",
-                        "BFAAAD",
-                        "BAAAAD",
-                        "BBFFEB",
-                        "BBBBBA"
-                })
-                .layer(new String[]{
-                        "BEBBBA",
-                        "BEEEEB",
-                        "BEFFEB",
-                        "BEEEFB",
-                        "BBFFEB",
-                        "BBBBBB",
-                        "ABBBBA"
-                })
-                .layer(new String[]{
-                        "BBBBAA",
-                        "BBBBBA",
-                        "BBBBBA",
-                        "BBBBBA",
-                        "BBBBBA",
-                        "ABBBBA",
-                        "BABBAA"
-                })
                 .where('C', (state, level, pos) -> state.is(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get()))
                 .where('B', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasingOrUniversalHatch(state),
                         QuantumPatternPredicates.casingOrHatchName())
@@ -105,11 +73,12 @@ public final class QuantumCryoforgePatternFactory {
                 .candidates('D', net.minecraft.world.level.block.Blocks.BLUE_ICE.defaultBlockState())
                 .where('F', (state, level, pos) -> QuantumPatternPredicates.isAnyFieldGenerator(state),
                         QuantumPatternPredicates.fieldName())
-                .candidates('F', QuantumPatternPredicates.fieldCandidates())
+                .candidates('F', QuantumPatternPredicates.allFieldCandidates())
                 .where('E', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state),
                         QuantumPatternPredicates.glassName())
                 .candidates('E', QuantumPatternPredicates.glassCandidates())
-                .where('A', (state, level, pos) -> state.isAir())
-                .build();
+                .where('A', (state, level, pos) -> state.isAir());
+        QuantumCryoforgeTopologySchema.layers().forEach(builder::layer);
+        return builder.build();
     }
 }

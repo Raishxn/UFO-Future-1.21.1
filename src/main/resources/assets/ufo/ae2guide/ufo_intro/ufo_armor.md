@@ -1,8 +1,9 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
-  title: UFO Armor
-  position: 70
+  parent: ufo_intro/equipment.md
+  title: Armor Sets
+  icon: ufo:ufo_chestplate
+  position: 20
 item_ids:
   - ufo:ufo_helmet
   - ufo:ufo_chestplate
@@ -12,138 +13,56 @@ item_ids:
   - ufo:thermal_resistor_chest
   - ufo:thermal_resistor_pants
   - ufo:thermal_resistor_boots
----
-# UFO Armor — Player Guide
-
-The UFO Armor Set is an advanced high-tier armor providing unique survival mechanics, thermal protection, and powerful passive effects.
-
-<div style="display: flex; gap: 10px; margin-bottom: 20px;">
-  <ItemImage id="ufo:ufo_helmet" scale="2" />
-  <ItemImage id="ufo:ufo_chestplate" scale="2" />
-  <ItemImage id="ufo:ufo_leggings" scale="2" />
-  <ItemImage id="ufo:ufo_boots" scale="2" />
-</div>
-
+  - ufo:astral_nexus_helmet
+  - ufo:astral_nexus_chestplate
+  - ufo:astral_nexus_leggings
+  - ufo:astral_nexus_boots
 ---
 
-# 🛡️ Full Set Bonuses
+# Armor Sets
 
-When a player wears the **complete UFO Armor set (helmet, chestplate, leggings, boots)**:
+## Thermal Resistor Set
 
-## ✔ **Invulnerability to /kill**
-Players cannot be killed by the `/kill` command.  
-This includes:
-- `/kill @p`
-- `/kill @a`
-- Admin-triggered kill commands
+<ItemImage id="ufo:thermal_resistor_chest" scale="3" float="left" />
 
-This makes the armor ideal for:
-- Boss arenas
-- Anti-cheat safe zones
-- Admin events
-- High-risk dimensions
+Wear the Mask, Chest, Pants and Boots together to satisfy UFO's thermal
+protection check. A complete Thermal Resistor set, or a complete powered UFO set,
+protects against tagged hazardous materials and the DMA industrial heat zone.
+Individual pieces alone do not satisfy the full protection contract.
 
----
+## Powered UFO Armor
 
-## ✔ **Void Death Immunity**
-If the player falls into the **Void**, they **do not die**.
+<ItemImage id="ufo:ufo_chestplate" scale="3" float="left" />
 
-Typical behavior:
-- HP does not decrease from void damage.
-- Player remains alive even at Y < -64 or in custom void dimensions.
-- Server owners can add optional “teleport-back” plugins if desired.
+All four pieces must be equipped and each piece must contain at least **400 RF**
+for the continuous set bonuses to remain active.
 
----
+- Resistance X and Night Vision are maintained while powered.
+- Maximum health increases by 40 points (20 hearts).
+- UFO-owned creative flight is granted without stealing flight supplied by
+  Creative, Spectator or another system.
+- Every piece consumes **400 RF per second** while the set is active.
 
-## ✔ **Thermal Protection**
-UFO Armor integrates with the DMA Thermo System:
+Emergency protocols draw energy from the combined armor buffers:
 
-- Prevents **heat damage** caused by overheated machines.
-- Allows players to safely stand near DMAs in **OVERHEAT**, **INEFFICIENCY**, and even **DESTABILIZATION** zones.
-- Reduces or nullifies environmental fire or lava-based temperature spikes.
+| Protocol | Trigger | Energy |
+|---|---|---:|
+| Void recovery | Ordinary void damage | 50,000 RF |
+| Anti-death | `/kill`-class or extreme damage | 100,000 RF |
+| Emergency evacuation | Incoming damage would leave 2 hearts or less | 10,000 RF |
+| Lazarus | Death event not already prevented | 200,000 RF |
 
-Useful during:
-- DMA meltdown recovery
-- Debugging coolant failures
-- High-heat crafting sessions
+When energy is unavailable, energy-dependent protection and flight do not
+activate. Hold Shift over a piece to inspect its stored RF.
 
----
+## Astral Nexus Armor
 
-## ✔ Additional Suggested Bonuses (if your mod includes them)
-Depending on your version of the mod, UFO Armor may also grant:
+<ItemImage id="ufo:astral_nexus_chestplate" scale="3" float="left" />
 
-- Bonus armor points above Netherite
-- Knockback resistance
-- Fire immunity or strong resistance
-- Radiation/energy shielding (if Mekanism integration enabled)
-- Increased mining speed
-- Explosion resistance
+The complete Astral Nexus set is the final armor tier. Its server-side contract
+includes damage/death cancellation, one-million-times damage reflection,
+creative flight, Night Vision, Water Breathing, Step Assist and full air supply.
+When Mekanism is installed it also clears accumulated player radiation.
 
-Add or remove these effects depending on your mod configuration.
-
----
-
-# 🛠️ Recommended Use Cases
-
-### Dimension Exploration
-Void-immune + high resistance = perfect for:
-- The End
-- Custom generated void dimensions
-- Skyblock-style maps
-
-### High-End Automation Areas
-Wear full set near:
-- DMAs running with Chrono/Quantum catalysts
-- Coolant-depleted thermal danger zones
-- Hazardous fluid tanks (Liquid Starlight, Transcending Matter Fluid, Cryotheum, etc.)
-
-### Boss Hunts & PvE
-Infinite scaling swords + durable armor turn players into late-game tanks.
-
----
-
-# 🔧 Crafting Source
-UFO Armor is usually a **mid-to-late game craft** requiring:
-- Star-matter alloys
-- High-tier fluids
-- Processor components
-- DMA crafting steps
-
-Server owners may gate the armor behind:
-- Quests
-- Boss drops
-- Multiple DMA tiers
-- Fusion-like multi-block structures
-
----
-
-# 🧪 Extra Tips & Server Notes
-
-- Consider disabling UFO Armor `/kill` immunity for PvP servers if needed.
-- For lore-based packs, this armor fits as “interdimensional exo-suit technology”.
-- If combined with Thermal Exosuit, players become completely immune to heat and environmental damage.
-
----
-
-# 🌋 Thermal Suit
-
-The **Thermal Suit** focuses mainly on environmental and heat protection, ensuring absolute safety when exploring hazardous areas or working closely with advanced thermal systems.
-
-<div style="display: flex; gap: 10px; margin-bottom: 20px;">
-  <ItemImage id="ufo:thermal_resistor_mask" scale="2" />
-  <ItemImage id="ufo:thermal_resistor_chest" scale="2" />
-  <ItemImage id="ufo:thermal_resistor_pants" scale="2" />
-  <ItemImage id="ufo:thermal_resistor_boots" scale="2" />
-</div>
-
-## ✔ **Absolute Heat Immunity**
-When wearing the Thermal Suit:
-- Completely negates all burns from the **Dimensional Matter Assembler (DMA)** HAZARD zones.
-- Grants immunity to natural fire, lava, and hot environments.
-- Protects the player from radiation or passive environmental heat damage.
-
-This makes the Thermal Suit the best starter-to-midgame gear for surviving while you build your first UFO setups!
-
----
-
-*End of UFO Armor Guide.*
+Astral protection requires the exact four Astral Nexus pieces. Mixing armor
+families does not activate a complete-set bonus.

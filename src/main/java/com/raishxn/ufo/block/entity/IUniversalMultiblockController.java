@@ -33,5 +33,8 @@ public interface IUniversalMultiblockController {
 
     void toggleOverclock();
 
+    default void toggleProcessPaused(int processIndex) {
+    }
+
     List<UniversalDisplayedRecipe> getDisplayedRecipes();
 }

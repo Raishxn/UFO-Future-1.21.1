@@ -1,6 +1,6 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/infrastructure.md
   title: Mega Storage
   position: 50
 ---

@@ -1,26 +1,72 @@
 {
   "variants": {
-    "facing=down": {
+    "casing_style=default,facing=down": {
       "model": "ufo:block/me_massive_input_hatch",
       "x": 90
     },
-    "facing=east": {
+    "casing_style=default,facing=east": {
       "model": "ufo:block/me_massive_input_hatch",
       "y": 90
     },
-    "facing=north": {
+    "casing_style=default,facing=north": {
       "model": "ufo:block/me_massive_input_hatch"
     },
-    "facing=south": {
+    "casing_style=default,facing=south": {
       "model": "ufo:block/me_massive_input_hatch",
       "y": 180
     },
-    "facing=up": {
+    "casing_style=default,facing=up": {
       "model": "ufo:block/me_massive_input_hatch",
       "x": -90
     },
-    "facing=west": {
+    "casing_style=default,facing=west": {
       "model": "ufo:block/me_massive_input_hatch",
+      "y": 270
+    },
+    "casing_style=entropy,facing=down": {
+      "model": "ufo:block/me_massive_input_hatch_entropy",
+      "x": 90
+    },
+    "casing_style=entropy,facing=east": {
+      "model": "ufo:block/me_massive_input_hatch_entropy",
+      "y": 90
+    },
+    "casing_style=entropy,facing=north": {
+      "model": "ufo:block/me_massive_input_hatch_entropy"
+    },
+    "casing_style=entropy,facing=south": {
+      "model": "ufo:block/me_massive_input_hatch_entropy",
+      "y": 180
+    },
+    "casing_style=entropy,facing=up": {
+      "model": "ufo:block/me_massive_input_hatch_entropy",
+      "x": -90
+    },
+    "casing_style=entropy,facing=west": {
+      "model": "ufo:block/me_massive_input_hatch_entropy",
+      "y": 270
+    },
+    "casing_style=quantum,facing=down": {
+      "model": "ufo:block/me_massive_input_hatch_quantum",
+      "x": 90
+    },
+    "casing_style=quantum,facing=east": {
+      "model": "ufo:block/me_massive_input_hatch_quantum",
+      "y": 90
+    },
+    "casing_style=quantum,facing=north": {
+      "model": "ufo:block/me_massive_input_hatch_quantum"
+    },
+    "casing_style=quantum,facing=south": {
+      "model": "ufo:block/me_massive_input_hatch_quantum",
+      "y": 180
+    },
+    "casing_style=quantum,facing=up": {
+      "model": "ufo:block/me_massive_input_hatch_quantum",
+      "x": -90
+    },
+    "casing_style=quantum,facing=west": {
+      "model": "ufo:block/me_massive_input_hatch_quantum",
       "y": 270
     }
   }

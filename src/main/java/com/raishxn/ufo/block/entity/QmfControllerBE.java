@@ -1,5 +1,6 @@
 package com.raishxn.ufo.block.entity;
 
+import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
 import com.raishxn.ufo.block.entity.pattern.QmfPatternFactory;
 import com.raishxn.ufo.block.entity.processing.MultiblockProcessingRecipe;
@@ -20,18 +21,18 @@ import java.util.List;
 
 public class QmfControllerBE extends AbstractParallelMultiblockControllerBE {
 
-    private static MultiblockPattern PATTERN;
-
     public QmfControllerBE(BlockPos pos, BlockState state) {
         super(ModBlockEntities.QMF_CONTROLLER.get(), pos, state);
     }
 
     @Override
     protected MultiblockPattern getControllerPattern() {
-        if (PATTERN == null) {
-            PATTERN = QmfPatternFactory.getPattern();
-        }
-        return PATTERN;
+        return getMultiblockDefinition().pattern();
+    }
+
+    @Override
+    protected MultiblockDefinition getMultiblockDefinition() {
+        return QmfPatternFactory.getDefinition();
     }
 
     @Override

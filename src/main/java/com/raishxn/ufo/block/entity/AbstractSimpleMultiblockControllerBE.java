@@ -3,8 +3,15 @@ package com.raishxn.ufo.block.entity;
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
 import com.raishxn.ufo.api.multiblock.MultiblockMachineTier;
+import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
+import com.raishxn.ufo.api.multiblock.MultiblockScanMode;
+import com.raishxn.ufo.api.multiblock.MultiblockRuntimeState;
+import com.raishxn.ufo.api.multiblock.StructureMembershipIndex;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
+import com.raishxn.ufo.diagnostic.MachineMetricKey;
+import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
+import com.raishxn.ufo.block.entity.processing.ParallelViewerSnapshotBudget;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
@@ -34,14 +41,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity implements IMultiblockController, MenuProvider, IUniversalMultiblockController, IUpgradeableObject {
-    private static final int PERIODIC_STRUCTURE_SCAN_TICKS = 200;
-
     protected boolean assembled = false;
     protected boolean structureDirty = true;
-    protected int scanCooldown = 0;
     protected final List<BlockPos> parts = new ArrayList<>();
     protected boolean running = false;
     protected int progress = 0;
@@ -53,8 +59,13 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
     protected long maxStoredEnergy = 0L;
     protected boolean safeMode = true;
     protected boolean overclocked = false;
+    protected MultiblockRuntimeState runtimeState = MultiblockRuntimeState.UNFORMED;
     protected final List<UniversalDisplayedRecipe> displayedRecipes = new ArrayList<>();
     protected final IUpgradeInventory upgrades;
+    private MachineMetricKey performanceMetricKey;
+    @Nullable
+    private Direction indexedFootprintFacing;
+    private List<Long> indexedFootprint = List.of();
 
     protected final ContainerData data = new ContainerData() {
         @Override
@@ -101,6 +112,23 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
 
     protected abstract MultiblockPattern getControllerPattern();
 
+    /** Migrated controllers override this to opt into the compiled 3.0 scanner. */
+    protected MultiblockDefinition getMultiblockDefinition() {
+        return null;
+    }
+
+    public MultiblockRuntimeState getRuntimeState() {
+        return this.runtimeState;
+    }
+
+    public boolean usesCompiledDefinition() {
+        return getMultiblockDefinition() != null;
+    }
+
+    protected final void setRuntimeState(MultiblockRuntimeState state) {
+        if (getMultiblockDefinition() != null) this.runtimeState = state;
+    }
+
     protected abstract String getControllerTranslationKey();
 
     public ContainerData getContainerData() {
@@ -112,13 +140,17 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
             return;
         }
 
-        if (this.structureDirty || --this.scanCooldown <= 0) {
-            scanStructure(this.level);
-            this.scanCooldown = PERIODIC_STRUCTURE_SCAN_TICKS;
-            this.structureDirty = false;
-        }
+        long startedAt = System.nanoTime();
+        try {
+            if (this.structureDirty) {
+                scanStructure(this.level);
+                this.structureDirty = false;
+            }
 
-        machineTick();
+            machineTick();
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordTick(performanceMetricKey(), System.nanoTime() - startedAt, this.level.getGameTime());
+        }
     }
 
     protected void machineTick() {
@@ -145,32 +177,68 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
 
     @Override
     public void scanStructure(Level level) {
-        BlockState state = level.getBlockState(this.worldPosition);
-        Direction facing = MultiblockControllerDefinitions.getPatternFacing(this, state);
+        long startedAt = System.nanoTime();
+        MultiblockPattern pattern = getControllerPattern();
+        try {
+            boolean wasAssembled = this.assembled;
+            boolean wasRunning = this.running;
+            int previousProgress = this.progress;
+            int previousMaxProgress = this.maxProgress;
+            int previousTemperature = this.temperature;
+            int previousMachineTier = this.machineTier;
+            MultiblockRuntimeState previousRuntimeState = this.runtimeState;
+            BlockState state = level.getBlockState(this.worldPosition);
+            Direction facing = MultiblockControllerDefinitions.getPatternFacing(this, state);
 
-        MultiblockPattern.MatchResult result = getControllerPattern().match(level, this.worldPosition, facing);
-        boolean wasAssembled = this.assembled;
-        this.assembled = result.isValid();
+            MultiblockDefinition definition = getMultiblockDefinition();
+            if (definition != null) {
+                setRuntimeState(MultiblockRuntimeState.FORMING);
+                if (this.indexedFootprintFacing != facing || this.indexedFootprint.isEmpty()) {
+                    List<BlockPos> trackedPositions = pattern.getTrackedPositions(this.worldPosition, facing);
+                    List<Long> packedPositions = new ArrayList<>(trackedPositions.size());
+                    for (BlockPos trackedPos : trackedPositions) packedPositions.add(trackedPos.asLong());
+                    this.indexedFootprint = List.copyOf(packedPositions);
+                    this.indexedFootprintFacing = facing;
+                }
+                StructureMembershipIndex.INSTANCE.register(
+                        level.dimension().location().toString(),
+                        this.worldPosition.asLong(),
+                        this.indexedFootprint);
+            }
+            MultiblockPattern.MatchResult result = definition == null
+                    ? pattern.match(level, this.worldPosition, facing)
+                    : definition.scan(level, this.worldPosition, facing, MultiblockScanMode.FAST);
+            this.assembled = result.isValid() && validateMatchedStructure(level, result, facing);
+            if (definition != null) {
+                setRuntimeState(this.assembled ? MultiblockRuntimeState.IDLE : MultiblockRuntimeState.UNFORMED);
+            }
 
-        for (BlockPos existingPart : new ArrayList<>(this.parts)) {
-            if (!result.partPositions().contains(existingPart)
-                    && level.getBlockEntity(existingPart) instanceof IMultiblockPart part) {
-                part.unlinkFromController();
+        List<BlockPos> matchedParts = result.partPositions();
+        boolean layoutChanged = !this.parts.equals(matchedParts);
+        if (layoutChanged && !this.parts.isEmpty()) {
+            Set<BlockPos> matchedPartSet = new HashSet<>(matchedParts);
+            for (BlockPos existingPart : this.parts) {
+                if (!matchedPartSet.contains(existingPart)
+                        && level.getBlockEntity(existingPart) instanceof IMultiblockPart part) {
+                    part.unlinkFromController();
+                }
             }
         }
 
-        this.parts.clear();
         if (this.assembled) {
             this.machineTier = resolveMachineTier(result);
-            for (BlockPos partPos : result.partPositions()) {
-                if (!partPos.equals(this.worldPosition)) {
-                    this.parts.add(partPos);
-                    if (level.getBlockEntity(partPos) instanceof IMultiblockPart part) {
-                        part.linkToController(this.worldPosition);
-                    }
+            if (layoutChanged) {
+                this.parts.clear();
+                this.parts.addAll(matchedParts);
+            }
+            for (BlockPos partPos : matchedParts) {
+                if (level.getBlockEntity(partPos) instanceof IMultiblockPart part
+                        && !this.worldPosition.equals(part.getControllerPos())) {
+                    part.linkToController(this.worldPosition);
                 }
             }
         } else {
+            if (layoutChanged) this.parts.clear();
             this.running = false;
             this.progress = 0;
             this.maxProgress = 0;
@@ -179,7 +247,31 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         }
 
         updateControllerBlockState(level.getBlockState(this.worldPosition), wasAssembled);
-        this.setChanged();
+        if (layoutChanged
+                || wasAssembled != this.assembled
+                || wasRunning != this.running
+                || previousProgress != this.progress
+                || previousMaxProgress != this.maxProgress
+                || previousTemperature != this.temperature
+                || previousMachineTier != this.machineTier
+                || previousRuntimeState != this.runtimeState) {
+            this.setChanged();
+        }
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordScan(
+                    performanceMetricKey(), System.nanoTime() - startedAt,
+                    pattern.getTestedPositionCount(), level.getGameTime());
+        }
+    }
+
+    protected final MachineMetricKey performanceMetricKey() {
+        if (this.performanceMetricKey == null && this.level != null) {
+            this.performanceMetricKey = new MachineMetricKey(
+                    this.level.dimension().location().toString(),
+                    this.worldPosition.asLong(),
+                    this.getClass().getSimpleName());
+        }
+        return this.performanceMetricKey;
     }
 
     private void updateControllerBlockState(BlockState currentState, boolean wasAssembled) {
@@ -199,11 +291,14 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
 
     public void markStructureDirty() {
         this.structureDirty = true;
-        this.scanCooldown = 0;
     }
 
     protected int resolveMachineTier(MultiblockPattern.MatchResult result) {
         return MultiblockMachineTier.MK1.level();
+    }
+
+    protected boolean validateMatchedStructure(Level level, MultiblockPattern.MatchResult result, Direction facing) {
+        return true;
     }
 
     protected boolean hasOngoingWork() {
@@ -214,6 +309,13 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         if (this.level == null) {
             return;
         }
+
+        if (getMultiblockDefinition() != null) {
+            StructureMembershipIndex.INSTANCE.unregister(
+                    this.level.dimension().location().toString(), this.worldPosition.asLong());
+        }
+        this.indexedFootprint = List.of();
+        this.indexedFootprintFacing = null;
 
         for (BlockPos partPos : this.parts) {
             if (this.level.getBlockEntity(partPos) instanceof IMultiblockPart part) {
@@ -228,6 +330,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         this.maxProgress = 0;
         this.temperature = 0;
         this.machineTier = MultiblockMachineTier.MK1.level();
+        setRuntimeState(MultiblockRuntimeState.UNFORMED);
         this.setChanged();
     }
 
@@ -273,6 +376,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         tag.putLong("maxStoredEnergy", this.maxStoredEnergy);
         tag.putBoolean("safeMode", this.safeMode);
         tag.putBoolean("overclocked", this.overclocked);
+        if (getMultiblockDefinition() != null) tag.putString("runtimeState", this.runtimeState.name());
         this.upgrades.writeToNBT(tag, "upgrades", registries);
 
         ListTag partsList = new ListTag();
@@ -280,11 +384,14 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
             partsList.add(NbtUtils.writeBlockPos(pos));
         }
         tag.put("parts", partsList);
-        tag.put("displayedRecipes", saveDisplayedRecipes());
     }
 
     @Override
     protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+        if (tag.contains("viewerState", Tag.TAG_COMPOUND)) {
+            loadViewerState(tag.getCompound("viewerState"));
+            return;
+        }
         super.loadAdditional(tag, registries);
         this.assembled = tag.getBoolean("assembled");
         this.running = tag.getBoolean("running");
@@ -301,6 +408,13 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         this.maxStoredEnergy = tag.getLong("maxStoredEnergy");
         this.safeMode = !tag.contains("safeMode") || tag.getBoolean("safeMode");
         this.overclocked = tag.getBoolean("overclocked");
+        if (getMultiblockDefinition() != null && tag.contains("runtimeState", Tag.TAG_STRING)) {
+            try {
+                this.runtimeState = MultiblockRuntimeState.valueOf(tag.getString("runtimeState"));
+            } catch (IllegalArgumentException ignored) {
+                this.runtimeState = this.assembled ? MultiblockRuntimeState.IDLE : MultiblockRuntimeState.UNFORMED;
+            }
+        }
 
         this.parts.clear();
         if (tag.contains("parts", Tag.TAG_LIST)) {
@@ -313,13 +427,17 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         loadDisplayedRecipes(tag);
 
         this.structureDirty = true;
-        this.scanCooldown = 0;
+        this.indexedFootprint = List.of();
+        this.indexedFootprintFacing = null;
     }
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
         CompoundTag tag = super.getUpdateTag(registries);
-        saveAdditional(tag, registries);
+        tag.put("viewerState", saveViewerState());
+        if (this.level != null && !this.level.isClientSide()) {
+            MachinePerformanceRegistry.INSTANCE.recordSync(performanceMetricKey(), tag.sizeInBytes(), this.level.getGameTime());
+        }
         return tag;
     }
 
@@ -454,7 +572,9 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
 
     private ListTag saveDisplayedRecipes() {
         ListTag recipeList = new ListTag();
-        for (UniversalDisplayedRecipe recipe : this.displayedRecipes) {
+        int recipeCount = ParallelViewerSnapshotBudget.rowCount(this.displayedRecipes.size());
+        for (int recipeIndex = 0; recipeIndex < recipeCount; recipeIndex++) {
+            UniversalDisplayedRecipe recipe = this.displayedRecipes.get(recipeIndex);
             CompoundTag recipeTag = new CompoundTag();
             if (!recipe.itemIcon().isEmpty()) {
                 ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(recipe.itemIcon().getItem());
@@ -472,9 +592,48 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
             recipeTag.putLong("outputAmount", recipe.outputAmount());
             recipeTag.putInt("progress", recipe.progress());
             recipeTag.putInt("maxProgress", recipe.maxProgress());
+            recipeTag.putInt("processIndex", recipe.processIndex());
+            recipeTag.putBoolean("paused", recipe.paused());
             recipeList.add(recipeTag);
         }
         return recipeList;
+    }
+
+    /**
+     * Client-only presentation data. It deliberately excludes persistent process
+     * ledgers, upgrades and structure membership, which are only needed by the
+     * server/save path.
+     */
+    private CompoundTag saveViewerState() {
+        CompoundTag viewerState = new CompoundTag();
+        viewerState.putBoolean("assembled", this.assembled);
+        viewerState.putBoolean("running", this.running);
+        viewerState.putInt("progress", this.progress);
+        viewerState.putInt("maxProgress", this.maxProgress);
+        viewerState.putInt("temperature", this.temperature);
+        viewerState.putInt("maxTemperature", this.maxTemperature);
+        viewerState.putInt("machineTier", this.machineTier);
+        viewerState.putLong("storedEnergy", this.storedEnergy);
+        viewerState.putLong("maxStoredEnergy", this.maxStoredEnergy);
+        viewerState.putBoolean("safeMode", this.safeMode);
+        viewerState.putBoolean("overclocked", this.overclocked);
+        viewerState.put("displayedRecipes", saveDisplayedRecipes());
+        return viewerState;
+    }
+
+    private void loadViewerState(CompoundTag viewerState) {
+        this.assembled = viewerState.getBoolean("assembled");
+        this.running = viewerState.getBoolean("running");
+        this.progress = viewerState.getInt("progress");
+        this.maxProgress = viewerState.getInt("maxProgress");
+        this.temperature = viewerState.getInt("temperature");
+        this.maxTemperature = Math.max(1, viewerState.getInt("maxTemperature"));
+        this.machineTier = Math.max(MultiblockMachineTier.MK1.level(), viewerState.getInt("machineTier"));
+        this.storedEnergy = viewerState.getLong("storedEnergy");
+        this.maxStoredEnergy = viewerState.getLong("maxStoredEnergy");
+        this.safeMode = viewerState.getBoolean("safeMode");
+        this.overclocked = viewerState.getBoolean("overclocked");
+        loadDisplayedRecipes(viewerState);
     }
 
     private void loadDisplayedRecipes(CompoundTag tag) {
@@ -509,7 +668,9 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
                     Component.literal(recipeTag.getString("label")),
                     recipeTag.getLong("outputAmount"),
                     recipeTag.getInt("progress"),
-                    recipeTag.getInt("maxProgress")));
+                    recipeTag.getInt("maxProgress"),
+                    recipeTag.contains("processIndex") ? recipeTag.getInt("processIndex") : -1,
+                    recipeTag.getBoolean("paused")));
         }
     }
 }

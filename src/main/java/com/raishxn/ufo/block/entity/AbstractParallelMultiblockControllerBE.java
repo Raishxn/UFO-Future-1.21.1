@@ -17,13 +17,25 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
+import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.api.multiblock.MultiblockTierScaling;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
+import com.raishxn.ufo.api.multiblock.MultiblockPattern;
+import com.raishxn.ufo.api.multiblock.MultiblockRuntimeStateResolver;
+import com.raishxn.ufo.api.multiblock.Ae2NodeAvailability;
+import com.raishxn.ufocore.api.port.ChemicalPort;
+import com.raishxn.ufocore.api.port.ChemicalPortGroup;
+import com.raishxn.ufocore.api.port.FluidInputPort;
+import com.raishxn.ufocore.api.port.FluidPortGroup;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import com.raishxn.ufo.block.entity.processing.AutocraftingOutputPolicy;
+import com.raishxn.ufo.block.entity.processing.KeyedTransferBatch;
 import com.raishxn.ufo.block.entity.processing.MultiblockProcessingRecipe;
 import com.raishxn.ufo.block.entity.processing.ParallelProcessState;
+import com.raishxn.ufo.block.entity.processing.ParallelRuntimeCadence;
+import com.raishxn.ufo.block.entity.processing.ThermalSystem;
+import com.raishxn.ufo.compat.mekanism.MekanismChemicalCompat;
 import com.raishxn.ufo.compat.mekanism.MekanismChemicalStorage;
-import com.raishxn.ufo.compat.mekanism.UfoMekanismKey;
 import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.init.ModSounds;
 import com.raishxn.ufo.item.custom.BaseCatalystItem;
@@ -36,6 +48,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -48,6 +61,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,8 +73,18 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     private static final int THERMAL_MAX = 10000;
     private static final int OVERLOAD_TICKS = 100;
     private static final float THERMAL_EXPLOSION_POWER = 30.0F;
+    private static final long LEGACY_MAXIMUM_BONUS_ROLLS = 3L;
+    private static final ThermalSystem.CoolantProfile TEMPORAL_COOLANT_PROFILE =
+            new ThermalSystem.CoolantProfile(100L, 1L, 10L);
+    private static final ThermalSystem.CoolantProfile STABLE_COOLANT_PROFILE =
+            new ThermalSystem.CoolantProfile(50L, 1L, 10L);
+    private static final ThermalSystem.CoolantProfile GELID_COOLANT_PROFILE =
+            new ThermalSystem.CoolantProfile(1L, 120L, 1_000L);
+    private static final ThermalSystem.CoolantProfile FALLBACK_COOLANT_PROFILE =
+            new ThermalSystem.CoolantProfile(15L, 1L, 10L);
     protected final List<ParallelProcessState> processStates = new ArrayList<>();
-    private long lastClientSyncTick = Long.MIN_VALUE;
+    private AEFluidKey[][] coolantPriorityByTier;
+    private long lastClientSyncEvaluationTick = Long.MIN_VALUE;
     private int lastClientSyncHash = Integer.MIN_VALUE;
     private int thermalTicker = 0;
     private int overloadTimer = -1;
@@ -72,6 +96,11 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     @Nullable
     private Map<ResourceLocation, MultiblockProcessingRecipe> cachedRecipeIndex;
     private long lastRecipeCacheRefreshTick = Long.MIN_VALUE;
+    private ChemicalPortGroup<ResourceLocation> chemicalPorts = ChemicalPortGroup.empty();
+    private FluidPortGroup<AEFluidKey> coolantPorts = FluidPortGroup.empty();
+    private List<AENetworkedBlockEntity> networkNodeCandidates = List.of();
+    @Nullable
+    private CatalystProfile cachedCatalystProfile;
 
     protected AbstractParallelMultiblockControllerBE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -82,8 +111,112 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     }
 
     @Override
+    public void scanStructure(Level level) {
+        super.scanStructure(level);
+        rebuildChemicalPorts(level);
+        rebuildCoolantPorts(level);
+        rebuildNetworkNodeCandidates(level);
+    }
+
+    @Override
+    public void markStructureDirty() {
+        this.chemicalPorts = ChemicalPortGroup.empty();
+        this.coolantPorts = FluidPortGroup.empty();
+        this.networkNodeCandidates = List.of();
+        super.markStructureDirty();
+    }
+
+    private void rebuildCoolantPorts(Level level) {
+        if (!this.assembled) {
+            this.coolantPorts = FluidPortGroup.empty();
+            return;
+        }
+        List<FluidInputPort<AEFluidKey>> detectedPorts = new ArrayList<>();
+        for (BlockPos partPos : this.parts) {
+            if (level.getBlockEntity(partPos) instanceof MassiveOutputHatchBE hatch
+                    && hatch.supportsFluidInput()) {
+                detectedPorts.add(hatch);
+            }
+        }
+        this.coolantPorts = new FluidPortGroup<>(detectedPorts);
+    }
+
+    public int getCoolantPortCount() {
+        return this.coolantPorts.size();
+    }
+
+    @Override
+    protected boolean validateMatchedStructure(Level level, MultiblockPattern.MatchResult result, Direction facing) {
+        if (this instanceof QuantumCryoforgeControllerBE) {
+            return true;
+        }
+        int patternHatches = 0;
+        for (BlockPos partPos : result.partPositions()) {
+            if (level.getBlockState(partPos).is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())) {
+                patternHatches++;
+            }
+        }
+        return patternHatches == 1;
+    }
+
+    private void rebuildChemicalPorts(Level level) {
+        if (!this.assembled) {
+            this.chemicalPorts = ChemicalPortGroup.empty();
+            return;
+        }
+
+        List<ChemicalPort<ResourceLocation>> detectedPorts = new ArrayList<>();
+        for (BlockPos partPos : this.parts) {
+            if (level.getBlockEntity(partPos) instanceof MekanismChemicalStorage storage
+                    && storage.supportsChemicalIO()) {
+                detectedPorts.add(storage);
+            }
+        }
+        this.chemicalPorts = new ChemicalPortGroup<>(detectedPorts);
+    }
+
+    public int getChemicalPortCount() {
+        return this.chemicalPorts.size();
+    }
+
+    private void rebuildNetworkNodeCandidates(Level level) {
+        if (!this.assembled) {
+            this.networkNodeCandidates = List.of();
+            return;
+        }
+        List<AENetworkedBlockEntity> candidates = new ArrayList<>();
+        for (BlockPos partPos : this.parts) {
+            if (level.getBlockEntity(partPos) instanceof AENetworkedBlockEntity nodeBE) {
+                candidates.add(nodeBE);
+            }
+        }
+        this.networkNodeCandidates = List.copyOf(candidates);
+    }
+
+    public long getPendingPromisedOutputAmount() {
+        long total = 0L;
+        for (ParallelProcessState state : this.processStates) {
+            for (GenericStack output : state.getPendingOutputs()) {
+                total = saturatedAdd(total, output.amount());
+            }
+        }
+        return total;
+    }
+
+    public long getPendingByproductAmount() {
+        long total = 0L;
+        for (ParallelProcessState state : this.processStates) {
+            for (GenericStack byproduct : state.getPendingByproducts()) {
+                total = saturatedAdd(total, byproduct.amount());
+            }
+        }
+        return total;
+    }
+
+    @Override
     protected void machineTick() {
         if (!this.assembled || this.level == null) {
+            updateRuntimeState(false, false, 0, 0, 0, 0);
             this.running = false;
             this.progress = 0;
             this.maxProgress = 0;
@@ -101,32 +234,34 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
         AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
         if (nodeBE == null || nodeBE.getActionableNode() == null) {
-            clearProcessStates();
-            refreshProcessStates(recipeIndex);
+            updateRuntimeState(true, false, getActiveProcessCount(), 0, countBlockedOutputs(), 0);
             this.running = false;
             this.progress = 0;
             this.maxProgress = 0;
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
-            rebuildDisplayedRecipes(recipeIndex);
             updateTemperature(0, null, null, CatalystProfile.DEFAULT);
-            syncClientState(false);
+            if (shouldEvaluateClientState(true)) {
+                rebuildDisplayedRecipes(recipeIndex);
+                syncClientState(false);
+            }
             return;
         }
 
         IGridNode node = nodeBE.getActionableNode();
         IGrid grid = node.getGrid();
         if (grid == null) {
-            clearProcessStates();
-            refreshProcessStates(recipeIndex);
+            updateRuntimeState(true, false, getActiveProcessCount(), 0, countBlockedOutputs(), 0);
             this.running = false;
             this.progress = 0;
             this.maxProgress = 0;
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
-            rebuildDisplayedRecipes(recipeIndex);
             updateTemperature(0, null, null, CatalystProfile.DEFAULT);
-            syncClientState(false);
+            if (shouldEvaluateClientState(true)) {
+                rebuildDisplayedRecipes(recipeIndex);
+                syncClientState(false);
+            }
             return;
         }
 
@@ -136,6 +271,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         IActionSource src = IActionSource.ofMachine(nodeBE);
         refreshProcessStates(recipeIndex);
         CatalystProfile catalystProfile = getCatalystProfile();
+        boolean persistentActivityBefore = hasPersistentRuntimeActivity();
 
         boolean anyRunning = false;
         int hottestMaxProgress = 0;
@@ -143,15 +279,21 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         int runningThreads = 0;
         boolean thermalLocked = this.safeMode && this.temperature >= this.maxTemperature;
         int parallelLimit = getParallelThreadLimit();
+        List<PreparedProcess> preparedProcesses = new ArrayList<>();
+        List<ParallelProcessState> invalidProcesses = new ArrayList<>();
 
         for (ParallelProcessState processState : this.processStates) {
             if (!processState.isActive()) {
                 continue;
             }
 
+            if (processState.isOutputsPrepared()) {
+                continue;
+            }
+
             MultiblockProcessingRecipe recipe = recipeIndex.get(processState.getRecipeId());
             if (recipe == null) {
-                processState.clear();
+                invalidProcesses.add(processState);
                 continue;
             }
 
@@ -165,34 +307,70 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
 
-            if (runningThreads >= parallelLimit) {
+            if (processState.isPaused()) {
                 continue;
             }
 
-            processState.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size(), recipe.chemicalInputs().size());
             long scaledEnergy = getAdjustedEnergyCost(recipe, catalystProfile);
-            chargeEnergy(processState, energyService, scaledEnergy);
-            boolean materialsFulfilled = pullIngredients(processState, recipe, inventory, src);
-            if (!materialsFulfilled || processState.getEnergyBuffer() < scaledEnergy) {
+            preparedProcesses.add(new PreparedProcess(processState, recipe, scaledEnergy, scaledMaxProgress));
+        }
+
+        cancelInvalidProcesses(invalidProcesses, inventory, energyService, src);
+
+        KeyedTransferBatch<AEKey, IngredientTarget> inputBatch = new KeyedTransferBatch<>();
+        Map<AEKey, Long> simulatedAvailability = new HashMap<>();
+        int plannedRunningThreads = 0;
+        for (PreparedProcess prepared : preparedProcesses) {
+            if (plannedRunningThreads >= parallelLimit) {
+                break;
+            }
+            ParallelProcessState processState = prepared.state();
+            MultiblockProcessingRecipe recipe = prepared.recipe();
+            processState.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size(), recipe.chemicalInputs().size());
+            chargeEnergy(processState, energyService, prepared.scaledEnergy());
+            boolean materialsPlanned = planIngredientPulls(
+                    processState, recipe, inventory, src, simulatedAvailability, inputBatch);
+            if (materialsPlanned && processState.getEnergyBuffer() >= prepared.scaledEnergy()) {
+                plannedRunningThreads++;
+            }
+        }
+        applyIngredientPulls(inputBatch, inventory, src);
+
+        for (PreparedProcess prepared : preparedProcesses) {
+            if (runningThreads >= parallelLimit) {
+                break;
+            }
+            ParallelProcessState processState = prepared.state();
+            if (!hasAllIngredients(processState, prepared.recipe())
+                    || processState.getEnergyBuffer() < prepared.scaledEnergy()) {
                 continue;
             }
 
             runningThreads++;
             anyRunning = true;
             processState.setProgress(processState.getProgress() + getProgressPerTick());
-            if (processState.getProgress() >= scaledMaxProgress) {
-                finishRecipe(processState, recipe, inventory, src);
+            if (processState.getProgress() >= prepared.scaledMaxProgress()) {
+                finishRecipe(processState, prepared.recipe());
             }
         }
+
+        flushPendingOutputs(this.processStates, inventory, src);
+        clearDeliveredProcesses();
 
         this.running = anyRunning;
         this.maxProgress = hottestMaxProgress;
         this.progress = hottestProgress;
-        updateDisplayedEnergy(recipeIndex, catalystProfile);
-        rebuildDisplayedRecipes(recipeIndex, catalystProfile);
+        updateRuntimeState(true, true, getActiveProcessCount(), runningThreads,
+                countBlockedOutputs(), countInvalidRecipes(recipeIndex), thermalLocked);
         updateTemperature(runningThreads, inventory, src, catalystProfile);
-        this.setChanged();
-        syncClientState(true);
+        if (persistentActivityBefore || hasPersistentRuntimeActivity()) {
+            this.setChanged();
+        }
+        if (shouldEvaluateClientState(true)) {
+            updateDisplayedEnergy(recipeIndex, catalystProfile);
+            rebuildDisplayedRecipes(recipeIndex, catalystProfile);
+            syncClientState(false);
+        }
     }
 
     private Map<ResourceLocation, MultiblockProcessingRecipe> indexRecipes(List<MultiblockProcessingRecipe> availableRecipes) {
@@ -234,21 +412,15 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
 
             MultiblockProcessingRecipe recipe = recipeIndex.get(state.getRecipeId());
-            if (recipe == null || !MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())) {
-                state.clear();
+            if (recipe == null) {
                 continue;
             }
 
             state.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size(), recipe.chemicalInputs().size());
-            if (!state.isPatternPushed() && !state.hasBufferedWork()) {
+            if (!state.isPatternPushed() && !state.hasBufferedWork()
+                    && MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())) {
                 state.clear();
             }
-        }
-    }
-
-    private void clearProcessStates() {
-        for (ParallelProcessState state : this.processStates) {
-            state.clear();
         }
     }
 
@@ -264,6 +436,33 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
         }
         return count;
+    }
+
+    private int countBlockedOutputs() {
+        int count = 0;
+        for (ParallelProcessState state : this.processStates) {
+            if (state.isOutputsPrepared() && state.hasPendingOutputs()) count++;
+        }
+        return count;
+    }
+
+    private int countInvalidRecipes(Map<ResourceLocation, MultiblockProcessingRecipe> recipeIndex) {
+        int count = 0;
+        for (ParallelProcessState state : this.processStates) {
+            if (state.isActive() && state.getRecipeId() != null && !recipeIndex.containsKey(state.getRecipeId())) count++;
+        }
+        return count;
+    }
+
+    private void updateRuntimeState(boolean formed, boolean gridConnected, int active, int running,
+                                    int blocked, int invalid) {
+        updateRuntimeState(formed, gridConnected, active, running, blocked, invalid, false);
+    }
+
+    private void updateRuntimeState(boolean formed, boolean gridConnected, int active, int running,
+                                    int blocked, int invalid, boolean overheated) {
+        setRuntimeState(MultiblockRuntimeStateResolver.resolve(new MultiblockRuntimeStateResolver.Signals(
+                formed, gridConnected, overheated, active, running, blocked, invalid)));
     }
 
     protected int getProgressPerTick() {
@@ -284,7 +483,12 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         state.setEnergyBuffer(state.getEnergyBuffer() + (long) extracted);
     }
 
-    private boolean pullIngredients(ParallelProcessState state, MultiblockProcessingRecipe recipe, MEStorage inventory, IActionSource src) {
+    private boolean planIngredientPulls(ParallelProcessState state,
+                                        MultiblockProcessingRecipe recipe,
+                                        MEStorage inventory,
+                                        IActionSource src,
+                                        Map<AEKey, Long> simulatedAvailability,
+                                        KeyedTransferBatch<AEKey, IngredientTarget> inputBatch) {
         boolean materialsFulfilled = true;
 
         for (int i = 0; i < recipe.itemInputs().size(); i++) {
@@ -294,15 +498,19 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
             long needed = requirement.amount() - state.getItemBuffers()[i];
             long toExtract = Math.min(needed, 100_000L);
+            long planned = 0L;
             for (ItemStack match : requirement.ingredient().getItems()) {
-                long extracted = inventory.extract(AEItemKey.of(match), toExtract, Actionable.MODULATE, src);
-                state.getItemBuffers()[i] += extracted;
-                toExtract -= extracted;
+                AEItemKey key = AEItemKey.of(match);
+                long reserved = reserveSimulatedAvailability(
+                        key, toExtract, inventory, src, simulatedAvailability);
+                inputBatch.add(key, new IngredientTarget(state, BufferKind.ITEM, i), reserved);
+                planned += reserved;
+                toExtract -= reserved;
                 if (toExtract <= 0) {
                     break;
                 }
             }
-            if (state.getItemBuffers()[i] < requirement.amount()) {
+            if (state.getItemBuffers()[i] + planned < requirement.amount()) {
                 materialsFulfilled = false;
             }
         }
@@ -313,9 +521,11 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
             long needed = requirement.amount() - state.getFluidBuffers()[i];
-            long extracted = inventory.extract(AEFluidKey.of(requirement.fluid().getFluid()), Math.min(needed, 1_000_000L), Actionable.MODULATE, src);
-            state.getFluidBuffers()[i] += extracted;
-            if (state.getFluidBuffers()[i] < requirement.amount()) {
+            AEFluidKey key = AEFluidKey.of(requirement.fluid().getFluid());
+            long reserved = reserveSimulatedAvailability(
+                    key, Math.min(needed, 1_000_000L), inventory, src, simulatedAvailability);
+            inputBatch.add(key, new IngredientTarget(state, BufferKind.FLUID, i), reserved);
+            if (state.getFluidBuffers()[i] + reserved < requirement.amount()) {
                 materialsFulfilled = false;
             }
         }
@@ -328,6 +538,10 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             long needed = requirement.amount() - state.getChemicalBuffers()[i];
             long extracted = extractChemicalFromHatches(requirement.chemicalId(), Math.min(needed, 1_000_000L));
             state.getChemicalBuffers()[i] += extracted;
+            if (extracted > 0L) {
+                AEKey key = MekanismChemicalCompat.createAeKey(requirement.chemicalId(), extracted);
+                state.recordBufferedInput(key, extracted);
+            }
             if (state.getChemicalBuffers()[i] < requirement.amount()) {
                 materialsFulfilled = false;
             }
@@ -336,50 +550,214 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         return materialsFulfilled;
     }
 
+    private long reserveSimulatedAvailability(AEKey key,
+                                              long requested,
+                                              MEStorage inventory,
+                                              IActionSource src,
+                                              Map<AEKey, Long> simulatedAvailability) {
+        if (requested <= 0L) {
+            return 0L;
+        }
+        long available = simulatedAvailability.computeIfAbsent(key, ignored -> {
+            long simulated = inventory.extract(key, Long.MAX_VALUE, Actionable.SIMULATE, src);
+            recordStorageOperation();
+            return Math.max(0L, simulated);
+        });
+        long reserved = Math.min(requested, available);
+        simulatedAvailability.put(key, available - reserved);
+        return reserved;
+    }
+
+    private void applyIngredientPulls(KeyedTransferBatch<AEKey, IngredientTarget> inputBatch,
+                                      MEStorage inventory,
+                                      IActionSource src) {
+        for (var allocation : inputBatch.execute((key, requested) -> {
+            long extracted = inventory.extract(key, requested, Actionable.MODULATE, src);
+            recordStorageOperation();
+            return extracted;
+        })) {
+            IngredientTarget target = allocation.target();
+            long[] buffers = target.kind() == BufferKind.ITEM
+                    ? target.state().getItemBuffers()
+                    : target.state().getFluidBuffers();
+            buffers[target.index()] = saturatedAdd(buffers[target.index()], allocation.amount());
+            target.state().recordBufferedInput(allocation.key(), allocation.amount());
+        }
+    }
+
+    private boolean hasAllIngredients(ParallelProcessState state, MultiblockProcessingRecipe recipe) {
+        for (int i = 0; i < recipe.itemInputs().size(); i++) {
+            if (state.getItemBuffers()[i] < recipe.itemInputs().get(i).amount()) {
+                return false;
+            }
+        }
+        for (int i = 0; i < recipe.fluidInputs().size(); i++) {
+            if (state.getFluidBuffers()[i] < recipe.fluidInputs().get(i).amount()) {
+                return false;
+            }
+        }
+        for (int i = 0; i < recipe.chemicalInputs().size(); i++) {
+            if (state.getChemicalBuffers()[i] < recipe.chemicalInputs().get(i).amount()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private long extractChemicalFromHatches(ResourceLocation chemicalId, long amount) {
-        if (this.level == null || amount <= 0L) {
+        if (amount <= 0L) {
             return 0L;
         }
 
-        long remaining = amount;
-        long extractedTotal = 0L;
-        for (BlockPos partPos : this.parts) {
-            if (!(this.level.getBlockEntity(partPos) instanceof MekanismChemicalStorage storage) || !storage.supportsChemicalIO()) {
-                continue;
-            }
-
-            ResourceLocation storedId = storage.getStoredChemicalId();
-            if (storedId == null || !storedId.equals(chemicalId)) {
-                continue;
-            }
-
-            long extracted = Math.min(remaining, storage.getStoredChemicalAmount());
-            if (extracted <= 0L) {
-                continue;
-            }
-
-            storage.setStoredChemical(storedId, storage.getStoredChemicalAmount() - extracted);
-            extractedTotal += extracted;
-            remaining -= extracted;
-            if (remaining <= 0L) {
-                break;
-            }
-        }
-        return extractedTotal;
+        return this.chemicalPorts.extractTransactional(chemicalId, amount);
     }
 
-    private void finishRecipe(ParallelProcessState state, MultiblockProcessingRecipe recipe, MEStorage inventory, IActionSource src) {
-        CatalystProfile catalystProfile = getCatalystProfile();
-        for (var output : recipe.outputs()) {
-            if (!output.item().isEmpty()) {
-                inventory.insert(AEItemKey.of(output.item()), getAdjustedItemOutputAmount(output.amount(), catalystProfile), Actionable.MODULATE, src);
+    private void finishRecipe(ParallelProcessState state, MultiblockProcessingRecipe recipe) {
+        if (!state.isOutputsPrepared()) {
+            CatalystProfile catalystProfile = getCatalystProfile();
+            List<GenericStack> outputs = new ArrayList<>();
+            List<GenericStack> byproducts = new ArrayList<>();
+            for (var output : recipe.outputs()) {
+                if (!output.item().isEmpty()) {
+                    prepareOutputAmounts(state, outputs, byproducts,
+                            AEItemKey.of(output.item()), output.amount(), catalystProfile);
+                }
+                if (!output.fluid().isEmpty()) {
+                    prepareOutputAmounts(state, outputs, byproducts,
+                            AEFluidKey.of(output.fluid().getFluid()), output.amount(), catalystProfile);
+                }
             }
-            if (!output.fluid().isEmpty()) {
-                inventory.insert(AEFluidKey.of(output.fluid().getFluid()), getAdjustedItemOutputAmount(output.amount(), catalystProfile), Actionable.MODULATE, src);
+            state.clearBuffers();
+            state.setEnergyBuffer(0L);
+            state.prepareOutputs(outputs, byproducts);
+        }
+
+    }
+
+    private void prepareOutputAmounts(ParallelProcessState state,
+                                      List<GenericStack> outputs,
+                                      List<GenericStack> byproducts,
+                                      AEKey key,
+                                      long baseAmount,
+                                      CatalystProfile catalystProfile) {
+        if (state.getOutputPolicyVersion() < AutocraftingOutputPolicy.DETERMINISTIC_BASE) {
+            long legacySafeAmount = AutocraftingOutputPolicy.legacySafeTotal(
+                    baseAmount, LEGACY_MAXIMUM_BONUS_ROLLS);
+            outputs.add(new GenericStack(key, legacySafeAmount));
+            return;
+        }
+
+        AutocraftingOutputPolicy.OutputPlan plan = AutocraftingOutputPolicy.plan(
+                baseAmount,
+                catalystProfile.bonusDropChance(),
+                () -> this.level != null ? this.level.random.nextDouble() : 1.0D);
+        outputs.add(new GenericStack(key, plan.promisedAmount()));
+        if (plan.byproductAmount() > 0L) {
+            byproducts.add(new GenericStack(key, plan.byproductAmount()));
+        }
+    }
+
+    private void flushPendingOutputs(List<ParallelProcessState> states, MEStorage inventory, IActionSource src) {
+        KeyedTransferBatch<AEKey, OutputTarget> outputBatch = new KeyedTransferBatch<>();
+        for (ParallelProcessState state : states) {
+            if (!state.isActive() || !state.isOutputsPrepared()) {
+                continue;
+            }
+            for (GenericStack output : state.getPendingOutputs()) {
+                outputBatch.add(output.what(), new OutputTarget(state, false), output.amount());
+            }
+            for (GenericStack byproduct : state.getPendingByproducts()) {
+                outputBatch.add(byproduct.what(), new OutputTarget(state, true), byproduct.amount());
             }
         }
 
-        state.clear();
+        for (var allocation : outputBatch.execute((key, requested) -> {
+            long inserted = inventory.insert(key, requested, Actionable.MODULATE, src);
+            recordStorageOperation();
+            return inserted;
+        })) {
+            if (allocation.target().byproduct()) {
+                allocation.target().state().consumePendingByproduct(allocation.key(), allocation.amount());
+            } else {
+                allocation.target().state().consumePendingOutput(allocation.key(), allocation.amount());
+            }
+        }
+    }
+
+    private void clearDeliveredProcesses() {
+        for (ParallelProcessState state : this.processStates) {
+            if (state.isActive() && state.isOutputsPrepared() && !state.hasPendingOutputs()) {
+                state.clear();
+            }
+        }
+    }
+
+    private void cancelInvalidProcesses(List<ParallelProcessState> states,
+                                        MEStorage inventory,
+                                        IEnergyService energyService,
+                                        IActionSource src) {
+        if (states.isEmpty()) {
+            return;
+        }
+        Map<ParallelProcessState, Boolean> hadTrackedInputs = new HashMap<>();
+        for (ParallelProcessState state : states) {
+            hadTrackedInputs.put(state, state.hasTrackedInputs());
+        }
+        refundTrackedInputs(states, inventory, src);
+        for (ParallelProcessState state : states) {
+            refundEnergy(state, energyService);
+            if (state.hasTrackedInputs() || state.getEnergyBuffer() > 0L) {
+                continue;
+            }
+            if (!hadTrackedInputs.get(state) && state.hasLegacyMaterialBuffers()) {
+                continue;
+            }
+            state.clear();
+        }
+    }
+
+    private void refundTrackedInputs(List<ParallelProcessState> states, MEStorage inventory, IActionSource src) {
+        KeyedTransferBatch<AEKey, ParallelProcessState> refundBatch = new KeyedTransferBatch<>();
+        for (ParallelProcessState state : states) {
+            for (GenericStack input : state.getBufferedInputs()) {
+                refundBatch.add(input.what(), state, input.amount());
+            }
+        }
+        for (var allocation : refundBatch.execute((key, requested) -> {
+            long inserted = inventory.insert(key, requested, Actionable.MODULATE, src);
+            recordStorageOperation();
+            return inserted;
+        })) {
+            allocation.target().consumeBufferedInput(allocation.key(), allocation.amount());
+        }
+
+        for (ParallelProcessState state : states) {
+            for (GenericStack input : state.getBufferedInputs()) {
+                ResourceLocation chemicalId = MekanismChemicalCompat.getChemicalId(input.what());
+                if (chemicalId != null) {
+                    long inserted = insertChemicalIntoHatches(chemicalId, input.amount());
+                    state.consumeBufferedInput(input.what(), inserted);
+                }
+            }
+        }
+    }
+
+    private void refundEnergy(ParallelProcessState state, IEnergyService energyService) {
+        long buffered = state.getEnergyBuffer();
+        if (buffered <= 0L) {
+            return;
+        }
+        double overflow = energyService.injectPower(buffered, Actionable.MODULATE);
+        long remaining = overflow <= 0.0D ? 0L : Math.min(buffered, (long) Math.ceil(overflow));
+        state.setEnergyBuffer(remaining);
+    }
+
+    private long insertChemicalIntoHatches(ResourceLocation chemicalId, long amount) {
+        if (amount <= 0L) {
+            return 0L;
+        }
+
+        return this.chemicalPorts.insertTransactional(chemicalId, amount);
     }
 
     private void rebuildDisplayedRecipes(Map<ResourceLocation, MultiblockProcessingRecipe> recipeIndex) {
@@ -388,7 +766,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
     private void rebuildDisplayedRecipes(Map<ResourceLocation, MultiblockProcessingRecipe> recipeIndex, CatalystProfile catalystProfile) {
         this.displayedRecipes.clear();
-        for (ParallelProcessState processState : this.processStates) {
+        for (int processIndex = 0; processIndex < this.processStates.size(); processIndex++) {
+            ParallelProcessState processState = this.processStates.get(processIndex);
             if (!processState.isActive()) {
                 continue;
             }
@@ -412,8 +791,25 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                     label,
                     primaryOutput.item().isEmpty() ? primaryOutput.amount() : getMaximumAdjustedItemOutputAmount(primaryOutput.amount(), catalystProfile),
                     displayedProgress,
-                    displayedMaxProgress));
+                    displayedMaxProgress,
+                    processIndex,
+                    processState.isPaused()));
         }
+    }
+
+    @Override
+    public void toggleProcessPaused(int processIndex) {
+        if (processIndex < 0 || processIndex >= this.processStates.size()) {
+            return;
+        }
+        ParallelProcessState processState = this.processStates.get(processIndex);
+        if (!processState.isActive()) {
+            return;
+        }
+        processState.togglePaused();
+        rebuildDisplayedRecipes(getRecipeSnapshot().index());
+        this.setChanged();
+        syncClientState(false);
     }
 
     protected int getDisplayedTicks(int rawTicks) {
@@ -497,70 +893,68 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
 
-            CoolantProfile profile = getCoolantProfile(coolantKey.getFluid());
-            long simulatedAvailable = inventory.extract(coolantKey, profile.maxConsumePerTick(), Actionable.SIMULATE, src);
+            ThermalSystem.CoolantProfile profile = getCoolantProfile(coolantKey.getFluid());
+            long simulatedAvailable = this.coolantPorts.extract(coolantKey, profile.maxFlowPerTick(), true);
+            if (simulatedAvailable < profile.maxFlowPerTick()) {
+                long fallback = inventory.extract(coolantKey,
+                        profile.maxFlowPerTick() - simulatedAvailable, Actionable.SIMULATE, src);
+                recordStorageOperation();
+                simulatedAvailable = saturatedAdd(simulatedAvailable, Math.max(0L, fallback));
+            }
             if (simulatedAvailable <= 0L) {
                 continue;
             }
 
-            long amountToConsume;
-            long heatCooled;
-            if (profile.millibucketsPerHeat() > 0) {
-                amountToConsume = Math.min(simulatedAvailable, profile.maxConsumePerTick());
-                long possibleHeat = amountToConsume / profile.millibucketsPerHeat();
-                heatCooled = Math.min(this.temperature, possibleHeat);
-                amountToConsume = heatCooled * profile.millibucketsPerHeat();
-            } else {
-                amountToConsume = Math.min(simulatedAvailable, profile.maxConsumePerTick());
-                long possibleHeat = amountToConsume * profile.heatPerMillibucket();
-                if (this.temperature < possibleHeat) {
-                    amountToConsume = Math.max(1L,
-                            (long) Math.ceil(this.temperature / (double) profile.heatPerMillibucket()));
-                }
-                heatCooled = Math.min(this.temperature, amountToConsume * profile.heatPerMillibucket());
-            }
-
-            if (amountToConsume <= 0L || heatCooled <= 0L) {
+            ThermalSystem.CoolingPlan plan = ThermalSystem.planCooling(
+                    this.temperature, simulatedAvailable, profile);
+            if (plan.requestedMillibuckets() <= 0L || plan.heatRemoved() <= 0L) {
                 continue;
             }
 
-            long extracted = inventory.extract(coolantKey, amountToConsume, Actionable.MODULATE, src);
+            long extracted = this.coolantPorts.extract(coolantKey, plan.requestedMillibuckets(), false);
+            if (extracted < plan.requestedMillibuckets()) {
+                long fallback = inventory.extract(coolantKey,
+                        plan.requestedMillibuckets() - extracted, Actionable.MODULATE, src);
+                recordStorageOperation();
+                extracted = saturatedAdd(extracted, Math.max(0L, fallback));
+            }
             if (extracted <= 0L) {
                 continue;
             }
 
-            if (profile.millibucketsPerHeat() > 0) {
-                return (int) Math.min(this.temperature, extracted / profile.millibucketsPerHeat());
-            }
-
-            return (int) Math.min(this.temperature, extracted * profile.heatPerMillibucket());
+            return (int) Math.min(
+                    this.temperature, ThermalSystem.coolingFromExtracted(extracted, profile));
         }
 
         return 0;
     }
 
     private AEFluidKey[] getCoolantPriority() {
-        AEFluidKey tier1 = AEFluidKey.of(ModFluids.SOURCE_GELID_CRYOTHEUM.get());
-        AEFluidKey tier2 = AEFluidKey.of(ModFluids.SOURCE_STABLE_COOLANT.get());
-        AEFluidKey tier3 = AEFluidKey.of(ModFluids.SOURCE_TEMPORAL_FLUID.get());
-        return switch (this.machineTier) {
-            case 3 -> new AEFluidKey[]{tier3, tier2, tier1};
-            case 2 -> new AEFluidKey[]{tier2, tier3, tier1};
-            default -> new AEFluidKey[]{tier1, tier2, tier3};
-        };
+        if (this.coolantPriorityByTier == null) {
+            AEFluidKey tier1 = AEFluidKey.of(ModFluids.SOURCE_GELID_CRYOTHEUM.get());
+            AEFluidKey tier2 = AEFluidKey.of(ModFluids.SOURCE_STABLE_COOLANT.get());
+            AEFluidKey tier3 = AEFluidKey.of(ModFluids.SOURCE_TEMPORAL_FLUID.get());
+            this.coolantPriorityByTier = new AEFluidKey[][]{
+                    {tier1, tier2, tier3},
+                    {tier1, tier2, tier3},
+                    {tier2, tier3, tier1},
+                    {tier3, tier2, tier1}
+            };
+        }
+        return this.coolantPriorityByTier[Math.max(1, Math.min(3, this.machineTier))];
     }
 
-    private CoolantProfile getCoolantProfile(Fluid fluid) {
+    private ThermalSystem.CoolantProfile getCoolantProfile(Fluid fluid) {
         if (fluid == ModFluids.SOURCE_TEMPORAL_FLUID.get() || fluid == ModFluids.FLOWING_TEMPORAL_FLUID.get()) {
-            return new CoolantProfile(100, 0, 10);
+            return TEMPORAL_COOLANT_PROFILE;
         }
         if (fluid == ModFluids.SOURCE_STABLE_COOLANT.get() || fluid == ModFluids.FLOWING_STABLE_COOLANT.get()) {
-            return new CoolantProfile(50, 0, 10);
+            return STABLE_COOLANT_PROFILE;
         }
         if (fluid == ModFluids.SOURCE_GELID_CRYOTHEUM.get() || fluid == ModFluids.FLOWING_GELID_CRYOTHEUM.get()) {
-            return new CoolantProfile(0, 120, 1000);
+            return GELID_COOLANT_PROFILE;
         }
-        return new CoolantProfile(15, 0, 10);
+        return FALLBACK_COOLANT_PROFILE;
     }
 
     private void triggerThermalExplosion() {
@@ -582,7 +976,6 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.running = false;
         this.progress = 0;
         this.maxProgress = 0;
-        clearProcessStates();
         updateDisplayedEnergy(Map.of(), CatalystProfile.DEFAULT);
         this.displayedRecipes.clear();
         saveChanges();
@@ -604,17 +997,27 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         if (this.level == null) {
             return null;
         }
-        for (BlockPos position : this.parts) {
-            if (this.level.getBlockEntity(position) instanceof AENetworkedBlockEntity nodeBE) {
-                if (nodeBE.getActionableNode() != null && nodeBE.getActionableNode().getGrid() != null) {
-                    return nodeBE;
-                }
+        for (AENetworkedBlockEntity nodeBE : this.networkNodeCandidates) {
+            if (nodeBE.isRemoved()) {
+                continue;
+            }
+            IGridNode node = nodeBE.getActionableNode();
+            if (Ae2NodeAvailability.isUsable(
+                    node != null,
+                    node != null && node.getGrid() != null,
+                    node != null && node.isActive(),
+                    node != null && node.isPowered())) {
+                return nodeBE;
             }
         }
         return null;
     }
 
     private CatalystProfile getCatalystProfile() {
+        if (this.cachedCatalystProfile != null) {
+            return this.cachedCatalystProfile;
+        }
+
         double heatMultiplier = 1.0D;
         double speedMultiplier = 1.0D;
         double energyMultiplier = 1.0D;
@@ -671,15 +1074,23 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         }
 
         if (creative) {
-            return CatalystProfile.CREATIVE;
+            this.cachedCatalystProfile = CatalystProfile.CREATIVE;
+            return this.cachedCatalystProfile;
         }
 
-        return new CatalystProfile(
+        this.cachedCatalystProfile = new CatalystProfile(
                 false,
                 Math.max(0.0D, heatMultiplier),
                 Math.max(0.01D, speedMultiplier),
                 Math.max(0.0D, energyMultiplier),
                 Math.max(0.0D, bonusDropChance));
+        return this.cachedCatalystProfile;
+    }
+
+    @Override
+    public void saveChanges() {
+        this.cachedCatalystProfile = null;
+        super.saveChanges();
     }
 
     private int getAdjustedProcessingTime(MultiblockProcessingRecipe recipe, CatalystProfile catalystProfile) {
@@ -698,36 +1109,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         return Math.max(1L, (long) Math.ceil(tierAdjustedEnergy * catalystProfile.energyMultiplier()));
     }
 
-    private long getAdjustedItemOutputAmount(long baseAmount, CatalystProfile catalystProfile) {
-        if (baseAmount <= 0L) {
-            return 0L;
-        }
-
-        double bonusChance = Math.max(0.0D, catalystProfile.bonusDropChance());
-        long bonusRolls = (long) bonusChance;
-        double fractionalBonusRoll = bonusChance - bonusRolls;
-        if (fractionalBonusRoll > 0.0D && this.level != null && this.level.random.nextDouble() < fractionalBonusRoll) {
-            bonusRolls++;
-        }
-
-        return saturatedMultiply(baseAmount, 1L + bonusRolls);
-    }
-
     private long getMaximumAdjustedItemOutputAmount(long baseAmount, CatalystProfile catalystProfile) {
-        if (baseAmount <= 0L) {
-            return 0L;
-        }
-        return saturatedMultiply(baseAmount, 1L + (long) Math.ceil(Math.max(0.0D, catalystProfile.bonusDropChance())));
-    }
-
-    private long saturatedMultiply(long value, long multiplier) {
-        if (value <= 0L || multiplier <= 0L) {
-            return 0L;
-        }
-        if (value > Long.MAX_VALUE / multiplier) {
-            return Long.MAX_VALUE;
-        }
-        return value * multiplier;
+        return AutocraftingOutputPolicy.maximumTotal(baseAmount, catalystProfile.bonusDropChance());
     }
 
     protected abstract List<MultiblockProcessingRecipe> getAvailableRecipes();
@@ -776,19 +1159,22 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         state.clear();
         state.setRecipeId(recipe.id());
         state.setPatternPushed(true);
+        state.setOutputPolicyVersion(AutocraftingOutputPolicy.DETERMINISTIC_BASE);
         state.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size(), recipe.chemicalInputs().size());
-        for (int i = 0; i < recipe.itemInputs().size(); i++) {
-            state.getItemBuffers()[i] = recipe.itemInputs().get(i).amount();
-        }
+        // Item ownership remains with the processing-pattern delivery. Populate
+        // from the exact counters AE2 handed to this job; an item port must not
+        // charge the same recipe requirements a second time.
+        populatePatternItemBuffers(state, recipe, flattenInputs(inputs));
         for (int i = 0; i < recipe.fluidInputs().size(); i++) {
             state.getFluidBuffers()[i] = recipe.fluidInputs().get(i).amount();
         }
-        for (int i = 0; i < recipe.chemicalInputs().size(); i++) {
-            state.getChemicalBuffers()[i] = recipe.chemicalInputs().get(i).amount();
-        }
+        populatePatternChemicalBuffers(state, recipe, flattenInputs(inputs));
         state.setEnergyBuffer(0L);
         state.setProgress(0);
 
+        for (PatternStack input : flattenInputs(inputs)) {
+            state.recordBufferedInput(input.key(), input.amount());
+        }
         for (KeyCounter input : inputs) {
             input.clear();
         }
@@ -818,17 +1204,13 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         List<MultiblockProcessingRecipe> outputMatches = new ArrayList<>();
         for (MultiblockProcessingRecipe recipe : getRecipeSnapshot().recipes()) {
             if (MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())
-                    && patternMatchesOutputs(patternDetails.getOutputs(), recipe.outputs(), getCatalystProfile())) {
+                    && patternMatchesOutputs(patternDetails.getOutputs(), recipe.outputs())) {
                 outputMatches.add(recipe);
             }
         }
 
         if (outputMatches.isEmpty()) {
             return null;
-        }
-
-        if (outputMatches.size() == 1) {
-            return outputMatches.getFirst();
         }
 
         for (MultiblockProcessingRecipe recipe : outputMatches) {
@@ -857,15 +1239,58 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 return false;
             }
         }
+        // AE2 may deliver chemicals encoded in the processing pattern. They are
+        // optional here because a formed ChemicalPort can supply any missing
+        // amount. Wrong chemicals and amounts above the recipe requirement stay
+        // in remaining and make the pattern fail closed.
         for (var requirement : recipe.chemicalInputs()) {
-            if (!removeMatchingChemicalRequirement(remaining, requirement)) {
-                return false;
-            }
+            consumeMatchingChemicalRequirement(remaining, requirement);
         }
         return remaining.isEmpty();
     }
 
-    private boolean patternMatchesOutputs(List<GenericStack> outputs, List<MultiblockProcessingRecipe.OutputStack> recipeOutputs, CatalystProfile catalystProfile) {
+    private void populatePatternChemicalBuffers(ParallelProcessState state,
+                                                MultiblockProcessingRecipe recipe,
+                                                List<PatternStack> deliveredInputs) {
+        List<PatternStack> remaining = new ArrayList<>(deliveredInputs);
+        for (int i = 0; i < recipe.chemicalInputs().size(); i++) {
+            state.getChemicalBuffers()[i] = consumeMatchingChemicalRequirement(
+                    remaining, recipe.chemicalInputs().get(i));
+        }
+    }
+
+    private void populatePatternItemBuffers(ParallelProcessState state,
+                                            MultiblockProcessingRecipe recipe,
+                                            List<PatternStack> deliveredInputs) {
+        List<PatternStack> remaining = new ArrayList<>(deliveredInputs);
+        for (int i = 0; i < recipe.itemInputs().size(); i++) {
+            state.getItemBuffers()[i] = consumeMatchingItemRequirement(
+                    remaining, recipe.itemInputs().get(i));
+        }
+    }
+
+    private long consumeMatchingChemicalRequirement(List<PatternStack> remaining,
+                                                     MultiblockProcessingRecipe.ChemicalRequirement requirement) {
+        for (int i = 0; i < remaining.size(); i++) {
+            PatternStack stack = remaining.get(i);
+            ResourceLocation chemicalId = MekanismChemicalCompat.getChemicalId(stack.key);
+            if (chemicalId == null || !chemicalId.equals(requirement.chemicalId())) {
+                continue;
+            }
+
+            long consumed = Math.min(stack.amount, requirement.amount());
+            long leftover = stack.amount - consumed;
+            if (leftover > 0L) {
+                remaining.set(i, new PatternStack(stack.key, leftover));
+            } else {
+                remaining.remove(i);
+            }
+            return consumed;
+        }
+        return 0L;
+    }
+
+    private boolean patternMatchesOutputs(List<GenericStack> outputs, List<MultiblockProcessingRecipe.OutputStack> recipeOutputs) {
         if (outputs.size() != recipeOutputs.size()) {
             return false;
         }
@@ -886,7 +1311,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             boolean matched = false;
             for (int i = 0; i < remaining.size(); i++) {
                 PatternStack candidate = remaining.get(i);
-                if (candidate.key.equals(expectedKey) && patternOutputAmountMatches(candidate.amount, output.amount(), catalystProfile)) {
+                if (candidate.key.equals(expectedKey) && patternOutputAmountMatches(candidate.amount, output.amount())) {
                     remaining.remove(i);
                     matched = true;
                     break;
@@ -901,36 +1326,46 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         return remaining.isEmpty();
     }
 
-    private boolean patternOutputAmountMatches(long patternAmount, long baseAmount, CatalystProfile catalystProfile) {
-        return patternAmount == baseAmount || patternAmount == getMaximumAdjustedItemOutputAmount(baseAmount, catalystProfile);
+    private boolean patternOutputAmountMatches(long patternAmount, long baseAmount) {
+        return AutocraftingOutputPolicy.matchesDeterministicPromise(patternAmount, baseAmount);
     }
 
     private List<PatternStack> flattenInputs(KeyCounter[] inputs) {
-        List<PatternStack> stacks = new ArrayList<>();
+        Map<AEKey, Long> totals = new LinkedHashMap<>();
         for (KeyCounter counter : inputs) {
             for (var entry : counter) {
-                stacks.add(new PatternStack(entry.getKey(), entry.getLongValue()));
+                totals.merge(entry.getKey(), entry.getLongValue(), this::saturatedAdd);
             }
         }
+        List<PatternStack> stacks = new ArrayList<>(totals.size());
+        totals.forEach((key, amount) -> stacks.add(new PatternStack(key, amount)));
         return stacks;
     }
 
+    private long saturatedAdd(long left, long right) {
+        return left > Long.MAX_VALUE - right ? Long.MAX_VALUE : left + right;
+    }
+
     private boolean removeMatchingItemRequirement(List<PatternStack> remaining, MultiblockProcessingRecipe.ItemRequirement requirement) {
+        return consumeMatchingItemRequirement(remaining, requirement) == requirement.amount();
+    }
+
+    private long consumeMatchingItemRequirement(List<PatternStack> remaining, MultiblockProcessingRecipe.ItemRequirement requirement) {
         for (int i = 0; i < remaining.size(); i++) {
             PatternStack stack = remaining.get(i);
             if (stack.key instanceof AEItemKey itemKey
                     && stack.amount >= requirement.amount()
-                    && requirement.ingredient().test(itemKey.toStack((int) stack.amount))) {
+                    && requirement.ingredient().test(itemKey.toStack(1))) {
                 long leftover = stack.amount - requirement.amount();
                 if (leftover > 0L) {
                     remaining.set(i, new PatternStack(stack.key, leftover));
                 } else {
                     remaining.remove(i);
                 }
-                return true;
+                return requirement.amount();
             }
         }
-        return false;
+        return 0L;
     }
 
     private boolean removeMatchingFluidRequirement(List<PatternStack> remaining, MultiblockProcessingRecipe.FluidRequirement requirement) {
@@ -951,33 +1386,35 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         return false;
     }
 
-    private boolean removeMatchingChemicalRequirement(List<PatternStack> remaining, MultiblockProcessingRecipe.ChemicalRequirement requirement) {
-        for (int i = 0; i < remaining.size(); i++) {
-            PatternStack stack = remaining.get(i);
-            if (stack.key instanceof UfoMekanismKey chemicalKey
-                    && stack.amount >= requirement.amount()
-                    && chemicalKey.getId().equals(requirement.chemicalId())) {
-                long leftover = stack.amount - requirement.amount();
-                if (leftover > 0L) {
-                    remaining.set(i, new PatternStack(stack.key, leftover));
-                } else {
-                    remaining.remove(i);
-                }
-                return true;
-            }
-        }
-        return false;
+    private record PatternStack(AEKey key, long amount) {
     }
 
-    private record PatternStack(AEKey key, long amount) {
+    private enum BufferKind {
+        ITEM,
+        FLUID
+    }
+
+    private record IngredientTarget(
+            ParallelProcessState state,
+            BufferKind kind,
+            int index) {
+    }
+
+    private record OutputTarget(
+            ParallelProcessState state,
+            boolean byproduct) {
+    }
+
+    private record PreparedProcess(
+            ParallelProcessState state,
+            MultiblockProcessingRecipe recipe,
+            long scaledEnergy,
+            int scaledMaxProgress) {
     }
 
     private record RecipeSnapshot(
             List<MultiblockProcessingRecipe> recipes,
             Map<ResourceLocation, MultiblockProcessingRecipe> index) {
-    }
-
-    private record CoolantProfile(int heatPerMillibucket, int millibucketsPerHeat, long maxConsumePerTick) {
     }
 
     private record CatalystProfile(
@@ -1017,7 +1454,12 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
     @Override
     public void onControllerBroken() {
+        recoverProcessesBeforeRemoval();
         super.onControllerBroken();
+        this.chemicalPorts = ChemicalPortGroup.empty();
+        this.coolantPorts = FluidPortGroup.empty();
+        this.networkNodeCandidates = List.of();
+        this.cachedCatalystProfile = null;
         invalidateRecipeCache();
         for (ParallelProcessState processState : this.processStates) {
             processState.clear();
@@ -1025,6 +1467,61 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.storedEnergy = 0L;
         this.maxStoredEnergy = 0L;
         this.overloadTimer = -1;
+    }
+
+    private void recoverProcessesBeforeRemoval() {
+        if (this.level == null || this.level.isClientSide()) {
+            return;
+        }
+
+        AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
+        IGridNode node = nodeBE != null ? nodeBE.getActionableNode() : null;
+        IGrid grid = node != null ? node.getGrid() : null;
+        MEStorage inventory = grid != null ? grid.getStorageService().getInventory() : null;
+        IEnergyService energyService = grid != null ? grid.getEnergyService() : null;
+        IActionSource src = nodeBE != null ? IActionSource.ofMachine(nodeBE) : IActionSource.empty();
+
+        List<ParallelProcessState> activeStates = this.processStates.stream()
+                .filter(ParallelProcessState::isActive)
+                .toList();
+        if (inventory != null) {
+            flushPendingOutputs(activeStates, inventory, src);
+            refundTrackedInputs(activeStates, inventory, src);
+        }
+
+        for (ParallelProcessState state : activeStates) {
+            if (!state.isActive()) {
+                continue;
+            }
+            if (energyService != null) {
+                refundEnergy(state, energyService);
+            }
+
+            dropRecoveryStacks(state.getBufferedInputs());
+            dropRecoveryStacks(state.getPendingOutputs());
+            dropRecoveryStacks(state.getPendingByproducts());
+            if (!state.hasTrackedInputs() && !state.isOutputsPrepared() && state.hasLegacyMaterialBuffers()) {
+                UfoMod.LOGGER.warn("Could not recover legacy untracked process buffers while removing controller at {}", this.worldPosition);
+            }
+            state.clear();
+        }
+    }
+
+    private void dropRecoveryStacks(List<GenericStack> stacks) {
+        if (this.level == null) {
+            return;
+        }
+        for (GenericStack stack : stacks) {
+            if (stack.amount() <= 0L) {
+                continue;
+            }
+            Containers.dropItemStack(
+                    this.level,
+                    this.worldPosition.getX() + 0.5D,
+                    this.worldPosition.getY() + 0.5D,
+                    this.worldPosition.getZ() + 0.5D,
+                    GenericStack.wrapInItemStack(stack));
+        }
     }
 
     @Override
@@ -1079,19 +1576,42 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             return;
         }
 
+        if (!shouldEvaluateClientState(throttle)) {
+            return;
+        }
+
+        long gameTime = this.level.getGameTime();
+        this.lastClientSyncEvaluationTick = gameTime;
+
         int syncHash = computeClientSyncHash();
         if (syncHash == this.lastClientSyncHash) {
             return;
         }
 
-        long gameTime = this.level.getGameTime();
-        if (throttle && this.lastClientSyncTick != Long.MIN_VALUE && gameTime - this.lastClientSyncTick < 5L) {
-            return;
-        }
-
-        this.lastClientSyncTick = gameTime;
         this.lastClientSyncHash = syncHash;
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), net.minecraft.world.level.block.Block.UPDATE_ALL);
+    }
+
+    private boolean shouldEvaluateClientState(boolean throttle) {
+        return this.level != null && ParallelRuntimeCadence.shouldEvaluateClientState(
+                this.level.getGameTime(), this.lastClientSyncEvaluationTick, throttle);
+    }
+
+    private boolean hasPersistentRuntimeActivity() {
+        return ParallelRuntimeCadence.hasPersistentActivity(
+                getActiveProcessCount(), this.temperature, this.overloadTimer)
+                || this.running
+                || this.progress > 0
+                || this.maxProgress > 0
+                || this.storedEnergy > 0L
+                || this.maxStoredEnergy > 0L;
+    }
+
+    private void recordStorageOperation() {
+        if (this.level != null && !this.level.isClientSide()) {
+            com.raishxn.ufo.diagnostic.MachinePerformanceRegistry.INSTANCE.recordStorageOperation(
+                    performanceMetricKey(), this.level.getGameTime());
+        }
     }
 
     private int computeClientSyncHash() {
@@ -1116,6 +1636,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             hash = 31 * hash + recipe.label().getString().hashCode();
             hash = 31 * hash + recipe.progress();
             hash = 31 * hash + recipe.maxProgress();
+            hash = 31 * hash + recipe.processIndex();
+            hash = 31 * hash + Boolean.hashCode(recipe.paused());
             hash = 31 * hash + Long.hashCode(recipe.outputAmount());
             hash = 31 * hash + java.util.Objects.hashCode(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(recipe.itemIcon().getItem()));
             hash = 31 * hash + java.util.Objects.hashCode(net.minecraft.core.registries.BuiltInRegistries.FLUID.getKey(recipe.fluidIcon().getFluid()));

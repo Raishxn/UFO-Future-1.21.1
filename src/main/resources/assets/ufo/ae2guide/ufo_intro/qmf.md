@@ -1,11 +1,10 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/machines.md
   title: Quantum Matter Fabricator
   position: 42
 item_ids:
   - ufo:quantum_matter_fabricator_controller
-  - ufo:quantum_pattern_hatch
 ---
 
 # Quantum Matter Fabricator
@@ -13,6 +12,8 @@ item_ids:
 <BlockImage id="ufo:quantum_matter_fabricator_controller" scale="4"></BlockImage>
 
 The **QMF** is the multiblock evolution of the DMA for heavy automation, bulk crafting and AE2 pattern workflows.
+
+<SubPages />
 
 ## Main Benefits
 
@@ -32,6 +33,18 @@ The **QMF** is the multiblock evolution of the DMA for heavy automation, bulk cr
 - Exposes the multiblock as a crafting machine to AE2
 - Lets the controller run multiple jobs in parallel
 
+## First Automated Job
+
+1. Confirm the controller reports `IDLE`, not `UNFORMED` or `PAUSED_NO_GRID`.
+2. Encode one processing pattern with the deterministic base output shown by JEI.
+3. Insert it in the Quantum Pattern Hatch and request one craft from an ME terminal.
+4. Confirm one process cell appears in the controller GUI.
+5. Scale to 27 jobs only after input, coolant, energy and output paths are stable.
+
+Pattern-delivered items are not extracted from ME twice. Any output rejected by
+storage remains persistently buffered and changes the controller state to
+`OUTPUT_BLOCKED` until capacity returns.
+
 ## Thermal Profile
 
 - Base heat generation: **1 HU per active thread per tick**.
@@ -41,3 +54,6 @@ The **QMF** is the multiblock evolution of the DMA for heavy automation, bulk cr
 - Gelid Cryotheum removes **1 HU per 120 mB**, up to **1000 mB/tick**.
 - Stable Coolant removes **50 HU per mB**, up to **10 mB/tick**.
 - Temporal Fluid removes **100 HU per mB**, up to **10 mB/tick**.
+
+Safe Mode prevents progress at the thermal ceiling and limits parallel work to
+9 threads. Overclock multiplies progress and base heat by five.

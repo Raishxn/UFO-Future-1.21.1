@@ -22,5 +22,6 @@ Some UFO Future textures are based on, adapted from, or inspired by work from th
 
 - AE2 Crystal Science: https://github.com/Frostbite-time/AE2-Crystal-Science
 - GT New Horizons Modpack: https://github.com/GTNewHorizons/GT-New-Horizons-Modpack
+- AE2 Lightning Tech: its interactive multiblock preview, auto-build architecture, and compact connected-texture geometry were ported and adapted for UFO Future under LGPL-3.0. The `quick_build.png` toolbar icon is redistributed under CC BY-NC-SA 3.0 with attribution to the AE2 Lightning Tech contributors: https://github.com/ae2lt/AE2-Lightning-Tech
 
 The NeoForge MDK template files remain covered by their own MIT license notice in `TEMPLATE_LICENSE.txt`.

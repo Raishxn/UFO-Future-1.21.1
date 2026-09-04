@@ -2,6 +2,7 @@ package com.raishxn.ufo.network.packet;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.entity.IUniversalMultiblockController;
+import com.raishxn.ufo.network.MachinePacketGuard;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
@@ -24,7 +25,9 @@ public record PacketToggleUniversalOverclock(BlockPos pos) implements CustomPack
 
     public static void handle(final PacketToggleUniversalOverclock packet, final IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (context.player().level().getBlockEntity(packet.pos()) instanceof IUniversalMultiblockController controller) {
+            IUniversalMultiblockController controller = MachinePacketGuard.requireUniversal(
+                    context, packet.pos(), MachinePacketGuard.Action.TOGGLE_OVERCLOCK);
+            if (controller != null) {
                 controller.toggleOverclock();
             }
         });

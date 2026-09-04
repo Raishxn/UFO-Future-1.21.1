@@ -1,11 +1,10 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/machines.md
   title: Quantum Processor Assembler
   position: 44
 item_ids:
   - ufo:quantum_processor_assembler_controller
-  - ufo:quantum_pattern_hatch
 ---
 
 # Quantum Processor Assembler
@@ -13,6 +12,8 @@ item_ids:
 <BlockImage id="ufo:quantum_processor_assembler_controller" scale="4"></BlockImage>
 
 The **Quantum Processor Assembler** is the bulk processor-finishing multiblock.
+
+<SubPages />
 
 ## Features
 
@@ -27,6 +28,13 @@ The **Quantum Processor Assembler** is the bulk processor-finishing multiblock.
 - The **Quantum Pattern Hatch** stores **72 encoded patterns**
 - It exposes the controller to AE2 as a crafting machine
 - Each pushed pattern reserves one free thread
+
+## Production-Line Role
+
+Keep Slicer patterns and final-assembly patterns visible to the same crafting
+network. AE2 can then request printed components as dependencies and dispatch
+the final processor step here. If all 27 threads are reserved, new jobs wait
+until a process completes and its output is accepted.
 
 ## Thermal Profile
 

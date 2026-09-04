@@ -1,6 +1,6 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/machines.md
   title: Stellar Nexus
   position: 50
 item_ids:
@@ -13,6 +13,8 @@ item_ids:
 
 The **Stellar Nexus** is the endgame stellar simulation multiblock.
 
+<SubPages />
+
 ## Core Mechanics
 
 - Reads inputs directly from the ME network
@@ -21,6 +23,8 @@ The **Stellar Nexus** is the endgame stellar simulation multiblock.
 - Consumes coolant while running
 - Generates heat continuously during operation
 - Requires one item input hatch, one item output hatch, one fluid output hatch and one AE energy input hatch
+
+The **AE Energy Input Hatch** is the only port that charges the internal buffer. Every massive hatch connects to AE2 only through the face indicated by its orientation; the other five faces are electrically isolated, so neighboring hatches cannot create an invisible grid connection through the structure shell.
 
 ## Field Tiers
 
@@ -37,6 +41,8 @@ Mixed tiers invalidate the structure.
 - **Safe Mode** costs **2.5x** AE, fuel and coolant, but shuts down instead of exploding
 - **Overclock** gives **5x** speed, **10x** AE cost and **5x** fuel, heat and coolant use
 
+With Safe Mode disabled, overheat causes a local containment blast by default. Destructive block grief is disabled unless a server administrator explicitly enables it; the opted-in wave remains bounded by radius, per-tick CPU/block budgets, a total block limit and a dimension allowlist.
+
 ## Heat Profile
 
 - Base heat generation: **recipe cooling level + 1 HU/tick**.
@@ -52,3 +58,18 @@ Mixed tiers invalidate the structure.
 - **Stable Coolant**: **4 cooling per mB**.
 - **Temporal Fluid**: **8 cooling per mB**.
 - Final cooling is multiplied by your field tier bonus, so better field generators make the same coolant stronger.
+
+The values **1/4/8** are server-configurable under `stellar.coolant`; zero disables that coolant for the Stellar Nexus. The listed values are the defaults used by UFO progression.
+
+## Safe Startup Procedure
+
+1. Form the structure with four identical field generators.
+2. Connect every massive hatch on its indicated face.
+3. Wait for the internal buffer to charge and verify fuel/coolant availability.
+4. Keep Safe Mode enabled for the first cycle.
+5. Start one known recipe and watch temperature, stored AE and pending output.
+6. Enable Overclock only after cooling remains stable for a complete normal
+   cycle.
+
+If output storage fills, the promised result remains buffered. If the AE grid is
+disconnected, the controller pauses instead of discarding the active operation.

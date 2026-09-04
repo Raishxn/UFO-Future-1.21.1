@@ -10,7 +10,19 @@ public record UniversalDisplayedRecipe(
         Component label,
         long outputAmount,
         int progress,
-        int maxProgress) {
+        int maxProgress,
+        int processIndex,
+        boolean paused) {
+
+    public UniversalDisplayedRecipe(
+            ItemStack itemIcon,
+            FluidStack fluidIcon,
+            Component label,
+            long outputAmount,
+            int progress,
+            int maxProgress) {
+        this(itemIcon, fluidIcon, label, outputAmount, progress, maxProgress, -1, false);
+    }
 
     public UniversalDisplayedRecipe {
         itemIcon = itemIcon == null ? ItemStack.EMPTY : itemIcon;
@@ -19,5 +31,6 @@ public record UniversalDisplayedRecipe(
         outputAmount = Math.max(0, outputAmount);
         progress = Math.max(0, progress);
         maxProgress = Math.max(0, maxProgress);
+        processIndex = Math.max(-1, processIndex);
     }
 }

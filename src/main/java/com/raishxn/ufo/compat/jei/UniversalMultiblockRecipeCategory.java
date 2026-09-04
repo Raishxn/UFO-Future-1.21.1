@@ -2,8 +2,11 @@ package com.raishxn.ufo.compat.jei;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import com.raishxn.ufo.compat.mekanism.MekanismChemicalCompat;
 import com.raishxn.ufo.recipe.UniversalMultiblockMachineKind;
 import com.raishxn.ufo.recipe.UniversalMultiblockRecipe;
+import mekanism.client.recipe_viewer.jei.ChemicalStackRenderer;
+import mekanism.client.recipe_viewer.jei.MekanismJEI;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -113,6 +116,22 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
                     .setFluidRenderer(16000, false, 12, 54)
                     .addIngredient(NeoForgeTypes.FLUID_STACK, ingredient.fluid().copyWithAmount((int) ingredient.amount()))
                     .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Required: " + formatAmount(ingredient.amount()) + " mB")));
+        }
+
+        var chemicalInputs = recipe.getChemicalInputs();
+        for (int i = 0; i < chemicalInputs.size(); i++) {
+            var ingredient = chemicalInputs.get(i);
+            int tankIndex = fluidInputs.size() + i;
+            int x = tankIndex == 0 ? 28 : 9;
+            builder.addInputSlot(x, 21)
+                    .setCustomRenderer(
+                            MekanismJEI.TYPE_CHEMICAL,
+                            new ChemicalStackRenderer(Math.max(1L, ingredient.amount()), 12, 54))
+                    .addIngredient(
+                            MekanismJEI.TYPE_CHEMICAL,
+                            MekanismChemicalCompat.createStack(ingredient.chemicalId(), ingredient.amount()))
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(
+                            Component.literal("Required chemical: " + formatAmount(ingredient.amount()) + " mB")));
         }
 
         if (!recipe.getItemOutput().isEmpty()) {

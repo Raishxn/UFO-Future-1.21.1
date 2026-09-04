@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "ufo:item/astral_nexus_helmet"
-  }
-}

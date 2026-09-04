@@ -19,6 +19,7 @@ import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
 import com.raishxn.ufo.recipe.QMFRecipe;
 import com.raishxn.ufo.recipe.UniversalMultiblockMachineKind;
 import com.raishxn.ufo.recipe.UniversalMultiblockRecipe;
+import com.raishxn.ufo.screen.StellarNexusControllerScreen;
 
 import net.pedroksl.ae2addonlib.recipes.IngredientStack;
 
@@ -28,6 +29,8 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.runtime.IJeiRuntime;
 
 @JeiPlugin
@@ -143,6 +146,18 @@ public class UfoJeiPlugin implements IModPlugin {
         var quantumCryoforgeController = MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get().asItem().getDefaultInstance();
         registration.addRecipeCatalyst(quantumCryoforgeController, UniversalMultiblockRecipeCategory.QUANTUM_CRYOFORGE_RECIPE_TYPE);
         registration.addRecipeCatalyst(quantumCryoforgeController, MultiblockInfoCategory.RECIPE_TYPE);
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGuiContainerHandler(StellarNexusControllerScreen.class,
+                new IGuiContainerHandler<>() {
+                    @Override
+                    public List<net.minecraft.client.renderer.Rect2i> getGuiExtraAreas(
+                            StellarNexusControllerScreen screen) {
+                        return List.of(screen.getRequirementsExclusionArea());
+                    }
+                });
     }
 
     public static ItemStack getHoveredItemStack() {

@@ -29,6 +29,8 @@ public final class FieldTieredCubeValidator {
     public static final int INNER_SIZE = 5;
     public static final int OUTER_RADIUS = OUTER_SIZE - 1;
     public static final int INNER_OFFSET = 1;
+    public static final int BLOCK_TESTS_PER_FULL_SEARCH = OUTER_SIZE * OUTER_SIZE * OUTER_SIZE
+            * OUTER_SIZE * OUTER_SIZE * OUTER_SIZE;
 
     private FieldTieredCubeValidator() {
     }

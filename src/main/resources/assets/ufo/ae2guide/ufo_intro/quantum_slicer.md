@@ -1,11 +1,10 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/machines.md
   title: Quantum Slicer
   position: 43
 item_ids:
   - ufo:quantum_slicer_controller
-  - ufo:quantum_pattern_hatch
 ---
 
 # Quantum Slicer
@@ -13,6 +12,8 @@ item_ids:
 <BlockImage id="ufo:quantum_slicer_controller" scale="4"></BlockImage>
 
 The **Quantum Slicer** prepares printed components for large processor and circuit pipelines.
+
+<SubPages />
 
 ## What It Does
 
@@ -27,6 +28,13 @@ The **Quantum Slicer** prepares printed components for large processor and circu
 - The **Quantum Pattern Hatch** stores **72 encoded patterns**
 - It links to the controller after assembly
 - AE2 can push jobs without manual inventory handling
+
+## Production-Line Role
+
+Encode the Slicer output as the input used by the Quantum Processor Assembler.
+Start with one copy and verify that AE2 returns the printed component before
+requesting a large processor batch. A blocked output remains saved in its thread
+and is not produced twice.
 
 ## Thermal Profile
 

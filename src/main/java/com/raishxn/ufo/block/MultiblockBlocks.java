@@ -201,7 +201,7 @@ public class MultiblockBlocks {
 
         @Override
         public BlockState getStateForPlacement(BlockPlaceContext context) {
-            return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+            return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
         }
 
         @Override
@@ -211,7 +211,7 @@ public class MultiblockBlocks {
 
         @Override
         public IOrientationStrategy getOrientationStrategy() {
-            return OrientationStrategies.facing();
+            return OrientationStrategies.horizontalFacing();
         }
 
         @Override

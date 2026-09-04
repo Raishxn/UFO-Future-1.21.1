@@ -1,13 +1,14 @@
 package com.raishxn.ufo.network.packet;
 
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
+import com.raishxn.ufo.network.MachinePacketGuard;
+import com.raishxn.ufo.recipe.StellarSimulationRecipe;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record PacketChangeStellarRecipe(BlockPos pos, ResourceLocation recipeId) implements CustomPacketPayload {
@@ -27,11 +28,15 @@ public record PacketChangeStellarRecipe(BlockPos pos, ResourceLocation recipeId)
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
-            Player player = context.player();
-            if (player != null && player.level().isLoaded(pos)) {
-                if (player.level().getBlockEntity(pos) instanceof StellarNexusControllerBE controller) {
-                    controller.setActiveRecipe(recipeId);
-                }
+            StellarNexusControllerBE controller = MachinePacketGuard.requireStellar(
+                    context, pos, MachinePacketGuard.Action.CHANGE_RECIPE);
+            if (controller == null || controller.getLevel() == null) {
+                return;
+            }
+
+            var recipe = controller.getLevel().getRecipeManager().byKey(recipeId);
+            if (recipe.isPresent() && recipe.get().value() instanceof StellarSimulationRecipe) {
+                controller.setActiveRecipe(recipeId);
             }
         });
     }

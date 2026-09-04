@@ -2,12 +2,10 @@ package com.raishxn.ufo.event;
 
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.MultiblockBlocks;
-import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
 import com.raishxn.ufo.block.custom.MegaCoProcessorBlockItem;
 import com.raishxn.ufo.item.ModItems;
 import com.raishxn.ufo.item.custom.MegaCraftingStorageBlockItem;
 import com.raishxn.ufo.util.NumberFormattingUtil; // <-- IMPORTAR A NOVA CLASSE
-import com.raishxn.ufo.event.ModKeyBindings;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.client.gui.screens.Screen;
@@ -27,14 +25,6 @@ public class ModTooltipEventHandler {
     @SubscribeEvent
     public static void onTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
-        if (MultiblockControllerDefinitions.getPreviewEntries().stream()
-                .anyMatch(entry -> stack.is(entry.iconStack().getItem()))) {
-            event.getToolTip().add(Component.translatable(
-                    "ufo.tutorial.tooltip.hold",
-                    ModKeyBindings.OPEN_UFO_TUTORIAL.getTranslatedKeyMessage()
-            ).withStyle(ChatFormatting.DARK_GRAY));
-        }
-
         if (stack.getItem() instanceof MegaCraftingStorageBlockItem item) {
             var tier = item.getTier();
             long capacity = tier.getStorageBytes();
@@ -89,9 +79,14 @@ public class ModTooltipEventHandler {
             event.getToolTip().add(Component.literal("Stable Coolant requires machine tier MK3.").withStyle(ChatFormatting.GRAY));
             event.getToolTip().add(Component.literal("Use MK3 field generators in every field position.").withStyle(ChatFormatting.DARK_GRAY));
         }
+        else if (stack.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get().asItem())) {
+            event.getToolTip().add(Component.literal("Hybrid coolant hatch: 16,000,000 mB local tank + ME fallback.").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(Component.literal("External fluid pipes may fill it from any side; connect ME cable to the indicated face.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(Component.literal("Accepts Gelid Cryotheum, Stable Coolant, or Temporal Fluid only.").withStyle(ChatFormatting.DARK_GRAY));
+        }
         else if (isAeHatch(stack)) {
-            event.getToolTip().add(Component.literal("AE2 grid hatch: connect ME cable to any side.").withStyle(ChatFormatting.GRAY));
-            event.getToolTip().add(Component.literal("Items, fluids and AE are read from ME storage, not sided pipes.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(Component.literal("AE2 grid hatch: connect ME cable to the indicated face.").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(Component.literal("Items and AE are read from ME storage, not sided pipes.").withStyle(ChatFormatting.DARK_GRAY));
         }
         else if (stack.is(ModItems.STABLE_COOLANT_BUCKET.get())) {
             event.getToolTip().add(Component.literal("Stable Coolant: 50 HU/mB, up to 10 mB/tick.").withStyle(ChatFormatting.GRAY));

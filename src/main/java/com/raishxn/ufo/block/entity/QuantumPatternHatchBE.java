@@ -8,6 +8,8 @@ import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
+import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
+import com.raishxn.ufo.block.QuantumPatternHatchBlock;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModMenus;
@@ -54,14 +56,34 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     @Override
     public void linkToController(BlockPos controllerPos) {
         if (controllerPos.equals(this.controllerPos)) {
+            // Clear the temporary L-0038 casing skin from worlds that were
+            // saved during its short-lived use. Pattern Hatches deliberately
+            // retain their native texture even when a multiblock is formed.
+            updateCasingStyle(MultiblockCasingStyle.DEFAULT);
             return;
         }
         this.controllerPos = controllerPos;
+        updateCasingStyle(MultiblockCasingStyle.DEFAULT);
         setChanged();
     }
 
     @Override
     public void unlinkFromController() {
+        if (this.controllerPos == null) {
+            return;
+        }
+        this.controllerPos = null;
+        updateCasingStyle(MultiblockCasingStyle.DEFAULT);
+        setChanged();
+    }
+
+    /**
+     * Detaches during physical removal without changing the block state.
+     * A block-state update from {@code Block#onRemove} re-enters Minecraft's
+     * removal path and can restore the hatch instead of letting the break
+     * complete.
+     */
+    public void unlinkForRemoval() {
         if (this.controllerPos == null) {
             return;
         }
@@ -72,6 +94,17 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     @Override
     public @Nullable BlockPos getControllerPos() {
         return this.controllerPos;
+    }
+
+    private void updateCasingStyle(MultiblockCasingStyle style) {
+        if (this.level == null || this.level.isClientSide()
+                || !this.getBlockState().hasProperty(QuantumPatternHatchBlock.CASING_STYLE)
+                || this.getBlockState().getValue(QuantumPatternHatchBlock.CASING_STYLE) == style) {
+            return;
+        }
+        this.level.setBlock(this.worldPosition,
+                this.getBlockState().setValue(QuantumPatternHatchBlock.CASING_STYLE, style),
+                net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
     }
 
     public Direction getPushDirectionForController() {

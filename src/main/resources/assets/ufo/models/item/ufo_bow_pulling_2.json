@@ -1,6 +1,0 @@
-{
-  "parent": "ufo:item/ufo_bow",
-  "textures": {
-    "layer0": "ufo:item/ufo_bow_2"
-  }
-}

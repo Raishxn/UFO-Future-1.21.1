@@ -38,6 +38,14 @@ repositories {
             includeGroup "software.bernie.geckolib"
         }
     }
+    maven {
+        // EMI API for optional recipe-viewer GUI integration.
+        name 'Sleeping Town'
+        url 'https://repo.sleeping.town/'
+        content {
+            includeGroup "dev.emi"
+        }
+    }
 }
 
 base {
@@ -108,25 +116,24 @@ dependencies {
     // Implementation - Maven (version by name)
     // ===========================================
     implementation "org.appliedenergistics:appliedenergistics2:${ae2_version}"
+    implementation "com.raishxn.ufocore:ufocore:${ufocore_version}"
     implementation "io.github.pedroksl:ae2addonlib:${ae2addonlib_version}-${minecraft_version}"
     implementation "org.appliedenergistics:guideme:${guideme_version}"
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    compileOnly "org.appliedenergistics.yoga:yoga:${yoga_version}"
-    compileOnly "dev.vfyjxf:taffy:${taffy_version}"
-    // GeckoLib was removed since it's not being used.
+    // Required by the registered Apocalypse Type-A entity and its client renderer.
 
     // ===========================================
     // Implementation - CurseForge (file ID)
     // ===========================================
-    implementation "curse.maven:ldlib-626676:${ldlib_file_id}"
-    implementation "curse.maven:glodium-957920:${glodium_file_id}"
 
     // ===========================================
     // CompileOnly - API access only (not bundled)
     // ===========================================
     compileOnly "mekanism:Mekanism:${mekanism_version}"
     compileOnly "mekanism:Mekanism:${mekanism_version}:generators"
+    compileOnly "curse.maven:applied-mekanistics-574300:${applied_mekanistics_file_id}"
     compileOnly "curse.maven:jei-238222:${jei_file_id}"
+    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     compileOnly "curse.maven:kubejs-238086:${kubejs_file_id}"
     compileOnly "curse.maven:rhino-416294:${rhino_file_id}"
     compileOnly "curse.maven:applied-flux-965012:${applied_flux_file_id}"
@@ -141,21 +148,33 @@ dependencies {
     // Local Runtime - Dev test mods
     // ===========================================
     localRuntime "curse.maven:building-gadgets-298187:6850515"
-    localRuntime "curse.maven:applied-mekanistics-574300:7096962"
+    localRuntime "curse.maven:applied-mekanistics-574300:${applied_mekanistics_file_id}"
     localRuntime "curse.maven:avaritianeo-1083158:7353987"
     localRuntime "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     localRuntime "curse.maven:applied-flux-965012:${applied_flux_file_id}"
+    // Required by Extended AE / Applied Flux in the development pack, not by UFO code.
+    localRuntime "curse.maven:glodium-957920:${glodium_file_id}"
     localRuntime "curse.maven:mega-cells-622112:${mega_file_id}"
     localRuntime "mekanism:Mekanism:${mekanism_version}"
     localRuntime "mekanism:Mekanism:${mekanism_version}:generators"
     localRuntime "curse.maven:ex-pattern-provider-892005:${ex_pattern_file_id}"
     localRuntime "curse.maven:jei-238222:${jei_file_id}"
+    localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime "curse.maven:ae2-jei-integration-1074338:${ae2_jei_integration_file_id}"
     localRuntime "curse.maven:mmmmmmmmmmmm-225738:${mmmmmmmmmmmm_file_id}"
     localRuntime "curse.maven:selene-499980:${selene_file_id}"
     localRuntime "curse.maven:kubejs-238086:${kubejs_file_id}"
     localRuntime "curse.maven:rhino-416294:${rhino_file_id}"
     localRuntime "curse.maven:advancedae-1084104:${advancedae_file_id}"
+
+    // Pure unit tests for infrastructure that does not require a running game.
+    testImplementation platform("org.junit:junit-bom:5.10.2")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+tasks.named('test', Test).configure {
+    useJUnitPlatform()
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
@@ -166,6 +185,11 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             minecraft_version_range: minecraft_version_range,
             neo_version            : neo_version,
             loader_version_range   : loader_version_range,
+            ae2_version_range      : ae2_version_range,
+            ae2addonlib_version_range: ae2addonlib_version_range,
+            geckolib_version_range : geckolib_version_range,
+            mekanism_version_range : mekanism_version_range,
+            ufocore_version_range  : ufocore_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
             mod_license            : mod_license,
@@ -204,6 +228,7 @@ tasks.withType(ProcessResources).configureEach {
 
 def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
     dependsOn tasks.named('runData'), generateModMetadata
+    mustRunAfter tasks.named('compileTestJava'), tasks.named('test')
     from('src/generated/resources')
     from('src/main/resources')
     from(generateModMetadata)

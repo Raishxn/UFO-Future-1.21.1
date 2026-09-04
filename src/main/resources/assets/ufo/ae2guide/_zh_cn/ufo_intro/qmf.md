@@ -1,6 +1,6 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/machines.md
   title: Quantum Matter Fabricator
   position: 42
 ---

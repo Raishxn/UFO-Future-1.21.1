@@ -1,6 +1,6 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/materials.md
   title: Advanced Star Matter
   position: 20
 ---
@@ -19,9 +19,10 @@ This page documents the primary star-matter ingots, how to obtain them, and thei
 
 ### Acquisition
 
-White Dwarf Ingots are crafted in the DMA from compressed precursor materials and reactive fluids. Use the DMA recipe for `white_dwarf_ingot` to convert base components into this ingot.
+White Dwarf Fragment Ingots are crafted in the DMA from compressed precursor
+materials and reactive fluids.
 
-<Recipe id="ufo:dma/ingot/white_dwarf_ingot" />
+<Recipe id="ufo:dma/ingot/white_dwarf_fragment" />
 
 ### Common uses
 
@@ -39,7 +40,7 @@ White Dwarf Ingots are crafted in the DMA from compressed precursor materials an
 
 Produced in the DMA using more exotic inputs, higher energy cost, and special fluids or catalysts.
 
-<Recipe id="ufo:dma/ingot/neutron_star_ingot" />
+<Recipe id="ufo:dma/ingot/neutron_star_fragment" />
 
 ### Common uses
 
@@ -57,7 +58,7 @@ Produced in the DMA using more exotic inputs, higher energy cost, and special fl
 
 Crafted in the DMA with top-tier inputs and usually requires strong catalysts and premium coolant, such as Transcending Matter Fluid.
 
-<Recipe id="ufo:dma/ingot/pulsar_ingot" />
+<Recipe id="ufo:dma/ingot/pulsar_fragment" />
 
 ### Common uses
 
@@ -80,7 +81,9 @@ The mod also includes several related high-density items and transitional materi
 ## Notes & best practices
 
 - **DMA only:** These ingots must be assembled in the DMA. Make sure you have sufficient energy, catalysts, and coolant before attempting advanced recipes.
-- **Catalyst & coolant guidance:** High-tier ingots commonly require T2/T3 catalysts and premium coolants. Use Overflux to reduce failure risk and Matterflow to reduce energy cost.
+- **Catalyst & coolant guidance:** Matterflow reduces AE cost, Chrono increases
+  speed, Overflux offsets heat and Quantum adds bonus output. High tiers may
+  require stronger cooling when several catalysts are combined.
 - **Recipe complexity rule:** Some DMA recipes enforce `ItemInputs + FluidInputs &lt;= 4`. If a DMA recipe fails validation, check the number of distinct item/fluid inputs.
 - **Server admins:** Consider gating Pulsar and Transcending-tier recipes behind progression, quests, boss drops, or research to avoid early-game imbalance.
 
@@ -89,7 +92,8 @@ The mod also includes several related high-density items and transitional materi
 ## Troubleshooting
 
 - Recipe is not showing in DMA: verify the recipe ID and that the DMA `data/` JSON is enabled in your datapack or mod.
-- Frequent failures: add Overflux catalysts and stronger coolant, or reduce Chrono catalysts that increase heat.
+- Thermal lock or overheating: add stronger coolant, use Overflux, enable Safe
+  Mode where available or reduce Chrono catalysts.
 - High energy drain: add Matterflow T2/T3 to reduce energy cost.
 
 Use JEI/GuideME recipe lookup if a pack overrides these DMA recipes.

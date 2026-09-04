@@ -1,8 +1,9 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
-  title: Catalysts System
-  position: 35
+  parent: ufo_intro/materials.md
+  title: Catalysts
+  icon: ufo:chrono_catalyst_t1
+  position: 20
 item_ids:
   - ufo:matterflow_catalyst_t1
   - ufo:matterflow_catalyst_t2
@@ -19,73 +20,46 @@ item_ids:
   - ufo:dimensional_catalyst
 ---
 
-# DMA Catalysts
+# Catalysts
 
-Catalysts are highly advanced processor cards placed inside the **Dimensional Matter Assembler (DMA)** upgrade slots. Unlike standard ME Acceleration Cards, Catalysts introduce massive buffs accompanied by balancing debuffs that require careful base management to avoid Catastrophic Meltdowns.
+Catalysts are upgrade cards accepted by the DMA and universal quantum
+controllers. Shift + Right Click a compatible controller to install one directly,
+or use its upgrade slots. Up to four installed catalysts combine
+multiplicatively/additively according to their stat.
 
-## Matterflow Catalysts (Efficiency)
-<div style="display: flex; gap: 10px; margin-bottom: 20px;">
-  <ItemImage id="ufo:matterflow_catalyst_t1" scale="2" />
-  <ItemImage id="ufo:matterflow_catalyst_t2" scale="2" />
-  <ItemImage id="ufo:matterflow_catalyst_t3" scale="2" />
-</div>
-**Matterflow Catalysts** optimize the energy consumption rate during matter aggregation.
+## Families
 
-- **T1:** `0.8x` Energy Multiplier
-- **T2:** `0.6x` Energy Multiplier
-- **T3:** `0.4x` Energy Multiplier
+| Family | T1 | T2 | T3 | Thermal contribution |
+|---|---:|---:|---:|---:|
+| Matterflow | 0.90× AE | 0.75× AE | 0.50× AE | +50 / +100 / +200% |
+| Chrono | 1.25× speed | 1.625× speed | 2.25× speed | +100 / +250 / +400% |
+| Overflux | thermal control | thermal control | thermal control | −50 / −100 / −200% |
+| Quantum | +10% bonus | +25% bonus | +50% bonus | +75 / +150 / +300% |
 
-**Debuff:** Increases crafting time slightly and reduces thermal shielding integrity, meaning ambient machine heat dissipates slower.
+Heat contributions are added to the base heat multiplier. Overflux can offset
+other families, but the final multiplier cannot become negative.
 
-## Chrono Catalysts (Speed)
-<div style="display: flex; gap: 10px; margin-bottom: 20px;">
-  <ItemImage id="ufo:chrono_catalyst_t1" scale="2" />
-  <ItemImage id="ufo:chrono_catalyst_t2" scale="2" />
-  <ItemImage id="ufo:chrono_catalyst_t3" scale="2" />
-</div>
-**Chrono Catalysts** rewrite local time dilation fields, drastically speeding up recipes.
+Quantum bonus output is separated from the deterministic amount promised to
+AE2. The promised base output completes the crafting job; bonus material is
+inserted as a byproduct and remains buffered if storage rejects it.
 
-- **T1:** `1.5x` Speed Multiplier
-- **T2:** `2.5x` Speed Multiplier
-- **T3:** `4.0x` Speed Multiplier
+## Four-Card Synergy
 
-**Debuffs:** Massive **Heat Multiplier.** A T3 Chrono Catalyst will make the machine generate significantly more heat per tick! Stacking these without a strong Coolant infrastructure is a fast track to a void explosion.
+Four identical catalyst items activate a family synergy and add a 1.5× thermal
+penalty:
 
-## Overflux Catalysts (Stability)
-<div style="display: flex; gap: 10px; margin-bottom: 20px;">
-  <ItemImage id="ufo:overflux_catalyst_t1" scale="2" />
-  <ItemImage id="ufo:overflux_catalyst_t2" scale="2" />
-  <ItemImage id="ufo:overflux_catalyst_t3" scale="2" />
-</div>
-**Overflux Catalysts** stabilize the matter formation array.
-
-- They are often strict **requirements** for endgame Infinity Cell synthesis.
-- Increases the machine's absolute Heat Capacity, preventing Meltdowns.
-- **T3** practically triples the tolerance to heat spikes.
-
-**Debuffs:** Reduces base crafting speed and increases Energy capacity bounds, increasing power grid flickering if you lack AE2 Dense Energy Cells.
-
-## Quantum Catalysts (Yield)
-<div style="display: flex; gap: 10px; margin-bottom: 20px;">
-  <ItemImage id="ufo:quantum_catalyst_t1" scale="2" />
-  <ItemImage id="ufo:quantum_catalyst_t2" scale="2" />
-  <ItemImage id="ufo:quantum_catalyst_t3" scale="2" />
-</div>
-**Quantum Catalysts** exploit probabilistic anomalies to potentially yield extra materials and byproducts!
-
-- Used to farm extremely rare anomalies like `SCAR` or extra `Proto-Matter`.
-- **T3** forces the simulation to roll outcome tables three times.
-
-**Debuffs:** Highly volatile. Increases destabilization zones and makes the recipes violently inconsistent in power demands.
+- Chrono doubles the combined speed multiplier.
+- Matterflow halves the combined AE multiplier.
+- Quantum adds another 50% bonus chance.
+- Overflux halves the resulting heat multiplier after the common penalty.
 
 ## Dimensional Catalyst
-<div style="display: flex; gap: 10px; margin-bottom: 20px;">
-  <ItemImage id="ufo:dimensional_catalyst" scale="2" />
-</div>
-**Dimensional Catalyst** is the Creative tier of Catalysts that provides:
-- Instant processing
-- 100% bonus drop
-- 0% failure risk
-- Zero cost of energy
 
-While also reducing temperature of the dimensional assembler. Use with extreme caution.
+<ItemImage id="ufo:dimensional_catalyst" scale="3" float="left" />
+
+The creative Dimensional Catalyst overrides normal profiles: near-instant
+processing, zero AE cost, no generated heat and a guaranteed 100% bonus roll.
+Recipe inputs are still consumed.
+
+> Catalyst combinations can exceed the cooling capacity of an otherwise stable
+> machine. Test one job, then increase thread count while watching temperature.

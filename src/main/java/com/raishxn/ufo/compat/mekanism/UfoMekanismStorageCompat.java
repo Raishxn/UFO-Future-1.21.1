@@ -32,11 +32,11 @@ public final class UfoMekanismStorageCompat {
     }
 
     public static AEKeyType getChemicalKeyType() {
-        return Holder.KEY_TYPE;
+        return ModList.get().isLoaded("appmek") ? AppliedMekanisticsCompat.keyType() : Holder.KEY_TYPE;
     }
 
     public static boolean isChemicalBlacklisted(ItemStack cellItem, AEKey requestedAddition) {
-        return !(requestedAddition instanceof UfoMekanismKey);
+        return requestedAddition.getType() != getChemicalKeyType();
     }
 
     private static void onRegisterEvent(RegisterEvent event) {

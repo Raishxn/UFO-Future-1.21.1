@@ -1,6 +1,6 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/materials.md
   title: UFO Storage Cells
   position: 40
 item_ids:
@@ -28,7 +28,7 @@ item_ids:
   - ufo:infinity_amethyst_shard_cell
   - ufo:infinity_sky_stone_cell
   - ufo:infinity_antimatter_pellet_cell
-  - ufo:infinity_plUTONIUM_pellet_cell
+  - ufo:infinity_plutonium_pellet_cell
   - ufo:infinity_polonium_pellet_cell
   - ufo:infinity_hdpe_pellet_cell
   - ufo:infinity_white_dye_cell

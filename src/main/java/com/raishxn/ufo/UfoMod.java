@@ -4,9 +4,8 @@ package com.raishxn.ufo;
 import com.mojang.logging.LogUtils;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.MultiblockBlocks;
-import com.raishxn.ufo.client.tutorial.screen.UfoTutorialScreen;
-import com.raishxn.ufo.client.tutorial.UfoTutorialScreens;
 import com.raishxn.ufo.datagen.ModDataComponents;
+import com.raishxn.ufo.diagnostic.UfoDebugCommands;
 import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModEntities;
@@ -32,19 +31,17 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import org.slf4j.Logger;
 
 @Mod(UfoMod.MOD_ID)
 public class UfoMod {
     public static final String MOD_ID = "ufo";
     public static final Logger LOGGER = LogUtils.getLogger();
-    private static final int TUTORIAL_HOLD_TICKS = 12;
-    private int tutorialHoldTicks;
-    private boolean tutorialHoldOpened;
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
@@ -68,6 +65,7 @@ public class UfoMod {
         ModSounds.register(modEventBus);
         com.raishxn.ufo.compat.mekanism.UfoMekanismStorageCompat.initialize(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, UFOConfig.SERVER_SPEC);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::loadComplete);
         modEventBus.addListener(this::registerPackets);
@@ -78,6 +76,17 @@ public class UfoMod {
 
     private void registerPackets(final RegisterPayloadHandlersEvent event) {
         ModPackets.register(event);
+    }
+
+    @SubscribeEvent
+    public void registerCommands(RegisterCommandsEvent event) {
+        UfoDebugCommands.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
+    public void onServerStopped(ServerStoppedEvent event) {
+        com.raishxn.ufo.diagnostic.MachinePerformanceRegistry.INSTANCE.reset();
+        com.raishxn.ufo.api.multiblock.StructureMembershipIndex.INSTANCE.reset();
     }
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
@@ -117,29 +126,6 @@ public class UfoMod {
         }
     }
 
-    @SubscribeEvent
-    public void onClientTick(ClientTickEvent.Post event) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.screen == null || mc.screen instanceof UfoTutorialScreen) {
-            resetTutorialHold();
-            return;
-        }
-
-        if (!ModKeyBindings.OPEN_UFO_TUTORIAL.isDown()) {
-            resetTutorialHold();
-            return;
-        }
-
-        this.tutorialHoldTicks++;
-        if (!this.tutorialHoldOpened && this.tutorialHoldTicks >= TUTORIAL_HOLD_TICKS) {
-            this.tutorialHoldOpened = UfoTutorialScreens.openFromCurrentContext();
-        }
-    }
-
-    private void resetTutorialHold() {
-        this.tutorialHoldTicks = 0;
-        this.tutorialHoldOpened = false;
-    }
     private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(ModKeyBindings.CYCLE_TOOL_FORWARD);
         event.register(ModKeyBindings.CYCLE_TOOL_BACKWARD);

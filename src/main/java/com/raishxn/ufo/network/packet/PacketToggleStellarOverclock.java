@@ -2,6 +2,7 @@ package com.raishxn.ufo.network.packet;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
+import com.raishxn.ufo.network.MachinePacketGuard;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
@@ -24,7 +25,9 @@ public record PacketToggleStellarOverclock(BlockPos pos) implements CustomPacket
 
     public static void handle(final PacketToggleStellarOverclock packet, final IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (context.player().level().getBlockEntity(packet.pos()) instanceof StellarNexusControllerBE controller) {
+            StellarNexusControllerBE controller = MachinePacketGuard.requireStellar(
+                    context, packet.pos(), MachinePacketGuard.Action.TOGGLE_OVERCLOCK);
+            if (controller != null) {
                 controller.toggleOverclock();
             }
         });

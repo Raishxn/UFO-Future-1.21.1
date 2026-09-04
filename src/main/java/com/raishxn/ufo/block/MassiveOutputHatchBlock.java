@@ -1,6 +1,7 @@
 package com.raishxn.ufo.block;
 
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
+import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
 import com.raishxn.ufo.block.entity.MassiveOutputHatchBE;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
@@ -10,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,10 +35,14 @@ import org.jetbrains.annotations.Nullable;
  * {@link com.raishxn.ufo.api.ae.IMassiveInjector}.
  */
 public class MassiveOutputHatchBlock extends DirectionalBlock implements net.minecraft.world.level.block.EntityBlock {
+    public static final EnumProperty<MultiblockCasingStyle> CASING_STYLE =
+            EnumProperty.create("casing_style", MultiblockCasingStyle.class);
 
     public MassiveOutputHatchBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(CASING_STYLE, MultiblockCasingStyle.DEFAULT));
     }
 
     @Override
@@ -51,7 +58,7 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, CASING_STYLE);
     }
 
     // --- Block Entity ---
@@ -67,14 +74,37 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof MassiveOutputHatchBE be) {
-            String status = be.isNetworkReady()
-                    ? "§a" + (be.isLinked() ? "Online — Linked to Controller" : "Online — Standalone")
-                    : "§cOffline — No ME Network";
+            net.minecraft.network.chat.MutableComponent status = be.isNetworkReady()
+                    ? net.minecraft.network.chat.Component.literal(
+                            be.isLinked() ? "Online — Linked to Controller" : "Online — Standalone")
+                            .withStyle(net.minecraft.ChatFormatting.GREEN)
+                    : net.minecraft.network.chat.Component.literal("Offline — No ME Network")
+                            .withStyle(net.minecraft.ChatFormatting.RED);
             player.displayClientMessage(
-                    net.minecraft.network.chat.Component.literal("ME Massive Output Hatch: " + status), true);
+                    state.getBlock().getName().copy()
+                            .append(net.minecraft.network.chat.Component.literal(": "))
+                            .append(status)
+                            .append(coolantStatus(be)),
+                    true);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    private static net.minecraft.network.chat.Component coolantStatus(MassiveOutputHatchBE be) {
+        if (!be.supportsFluidInput()) {
+            return net.minecraft.network.chat.Component.empty();
+        }
+        FluidStack stored = be.getStoredCoolant();
+        if (stored.isEmpty()) {
+            return net.minecraft.network.chat.Component.literal(" — Coolant tank empty")
+                    .withStyle(net.minecraft.ChatFormatting.GRAY);
+        }
+        return net.minecraft.network.chat.Component.literal(" — ")
+                .append(stored.getHoverName())
+                .append(net.minecraft.network.chat.Component.literal(
+                        " " + stored.getAmount() + "/" + MassiveOutputHatchBE.COOLANT_CAPACITY + " mB"))
+                .withStyle(net.minecraft.ChatFormatting.AQUA);
     }
 
     // --- Multiblock integration ---

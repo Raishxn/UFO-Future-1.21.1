@@ -29,6 +29,10 @@ import net.minecraft.world.item.crafting.RecipeManager;
 
 import com.raishxn.ufo.block.DimensionalMatterAssemblerBlock;
 import com.raishxn.ufo.datagen.ModDataComponents;
+import com.raishxn.ufo.block.entity.processing.SingleTankFluidReservation;
+import com.raishxn.ufo.block.entity.processing.DmaHazardCadence;
+import com.raishxn.ufo.diagnostic.MachineMetricKey;
+import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
 import com.raishxn.ufo.init.ModRecipes;
 
@@ -102,6 +106,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     private boolean dirty = false;
 
     private DimensionalMatterAssemblerRecipe cachedTask = null;
+    private MachineMetricKey performanceMetricKey;
 
     private EnumSet<RelativeSide> allowedOutputs = EnumSet.noneOf(RelativeSide.class);
 
@@ -284,18 +289,22 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         // 2. Hazard Area
         double heatRatio = (double) this.temperature / Math.max(1, this.maxTemperature);
         if (heatRatio >= 0.5) { // Threshold reduced to 50%
-            // Emit rotating flame particles
-            if (this.level instanceof ServerLevel sLevel) {
+            // Emit a persistent rotating warning without broadcasting one packet
+            // per particle on every server tick. Position staggering avoids all
+            // hot DMAs emitting on the same tick.
+            if (this.level instanceof ServerLevel sLevel
+                    && DmaHazardCadence.shouldEmitParticles(
+                    sLevel.getGameTime(), this.worldPosition.asLong())) {
                 // Creates a spinning ring effect using GameTime
                 double baseTime = sLevel.getGameTime() / 10.0;
                 double[] radii = { 6.0, 7.0, 8.0 };
                 double[] speeds = { 1.5, 1.0, 0.5 };
 
-                for (int ring = 0; ring < 3; ring++) {
+                for (int ring = 0; ring < DmaHazardCadence.RING_COUNT; ring++) {
                     double time = baseTime * speeds[ring];
                     double r = radii[ring];
-                    for (int i = 0; i < 12; i++) { // 6 particles per ring (total 18)
-                        double angle = time + (i * ((Math.PI * 2) / 6));
+                    for (int i = 0; i < DmaHazardCadence.POINTS_PER_RING; i++) {
+                        double angle = time + DmaHazardCadence.angleOffset(i);
                         double px = this.worldPosition.getX() + 0.5 + r * Math.cos(angle);
                         double py = this.worldPosition.getY() + 0.5;
                         double pz = this.worldPosition.getZ() + 0.5 + r * Math.sin(angle);
@@ -305,11 +314,13 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                 }
             }
 
-            // Damage players without proper armor
-            net.minecraft.world.phys.AABB hazardArea = new net.minecraft.world.phys.AABB(this.worldPosition).inflate(7);
-            List<Player> players = this.level.getEntitiesOfClass(Player.class, hazardArea);
-            for (Player player : players) {
-                if (this.level.getGameTime() % 20 == 0) {
+            // Damage players without proper armor. The old placement of this
+            // cadence check performed the AABB query every tick even though damage
+            // was only possible once per second.
+            if (DmaHazardCadence.shouldCheckDamage(this.level.getGameTime())) {
+                net.minecraft.world.phys.AABB hazardArea = new net.minecraft.world.phys.AABB(this.worldPosition)
+                        .inflate(7);
+                for (Player player : this.level.getEntitiesOfClass(Player.class, hazardArea)) {
                     if (!com.raishxn.ufo.event.HazardHandler.hasThermalProtection(player)) {
                         player.hurt(this.level.damageSources().onFire(), 4.0f);
                         player.setRemainingFireTicks(60);
@@ -714,31 +725,40 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             if (!matches)
                 continue;
 
-            // Match recipe fluid inputs against slot 3 (base fluid input).
-            // Slot 2 (coolant) is player-managed and NOT part of recipes.
-            for (int i = 0; i < recipe.getFluidInputs().size(); i++) {
-                var fluidInSlot = this.fluidInv.getStack(3); // Always use slot 3 (base fluid input)
-                if (recipe.getFluidInputs().get(i) != null && !recipe.getFluidInputs().get(i).isEmpty()) {
-                    if (fluidInSlot == null || fluidInSlot.amount() < recipe.getFluidInputs().get(i).getAmount()) {
-                        matches = false;
-                        break;
-                    }
-                    if (!(fluidInSlot.what() instanceof AEFluidKey fluidKey)) {
-                        matches = false;
-                        break;
-                    }
-                    FluidStack fluidStack = fluidKey.toStack((int) fluidInSlot.amount());
-                    if (!recipe.getFluidInputs().get(i).getIngredient().test(fluidStack)) {
-                        matches = false;
-                        break;
-                    }
-                }
-            }
+            // Slot 3 is the only recipe-fluid tank. Reserve the aggregate amount so
+            // multiple requirements cannot all reuse the same uncommitted volume.
+            matches = getFluidInputReservation(recipe).isPresent();
 
             if (matches)
                 return recipe;
         }
         return null;
+    }
+
+    private OptionalLong getFluidInputReservation(DimensionalMatterAssemblerRecipe recipe) {
+        List<SingleTankFluidReservation.Demand> demands = new ArrayList<>();
+        var fluidInSlot = this.fluidInv.getStack(3);
+
+        boolean hasRequirements = recipe.getFluidInputs().stream()
+                .anyMatch(requirement -> requirement != null && !requirement.isEmpty());
+        if (!hasRequirements) {
+            return OptionalLong.of(0);
+        }
+        if (fluidInSlot == null || !(fluidInSlot.what() instanceof AEFluidKey fluidKey)) {
+            return OptionalLong.empty();
+        }
+
+        FluidStack candidate = fluidKey.toStack(1);
+        for (var requirement : recipe.getFluidInputs()) {
+            if (requirement == null || requirement.isEmpty()) {
+                continue;
+            }
+            demands.add(new SingleTankFluidReservation.Demand(
+                    requirement.getIngredient().test(candidate),
+                    requirement.getAmount()));
+        }
+
+        return SingleTankFluidReservation.reserve(fluidInSlot.amount(), demands);
     }
 
     @Override
@@ -748,6 +768,8 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
     @Override
     public TickRateModulation tickingRequest(IGridNode iGridNode, int ticksSinceLastCall) {
+        long startedAt = System.nanoTime();
+        try {
         if (this.dirty) {
             // Check if running recipe is still valid
             if (level != null) {
@@ -857,7 +879,10 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             if (this.getProcessingTime() >= this.getMaxProcessingTime()) {
                 this.setProcessingTime(0);
                 final DimensionalMatterAssemblerRecipe out = this.getTask();
-                if (out != null) {
+                OptionalLong fluidReservation = out == null
+                        ? OptionalLong.empty()
+                        : getFluidInputReservation(out);
+                if (out != null && fluidReservation.isPresent()) {
                     // [DEBUG] Craft Done => decrease fluid & consume items
 
                     // Insert out items
@@ -895,20 +920,13 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                         }
                     }
 
-                    // Consume fluids (always from slot 3 = base fluid input)
-                    for (int i = 0; i < out.getFluidInputs().size(); i++) {
-                        if (out.getFluidInputs().get(i) != null && !out.getFluidInputs().get(i).isEmpty()) {
-                            var currentStack = this.fluidInv.getStack(3); // Always slot 3 (base fluid)
-                            if (currentStack != null) {
-                                var key = currentStack.what();
-                                long remaining = currentStack.amount() - out.getFluidInputs().get(i).getAmount();
-                                if (remaining > 0) {
-                                    this.fluidInv.setStack(3, new GenericStack(key, remaining));
-                                } else {
-                                    this.fluidInv.setStack(3, null);
-                                }
-                            }
-                        }
+                    // Commit the previously revalidated reservation exactly once.
+                    long reservedFluid = fluidReservation.getAsLong();
+                    if (reservedFluid > 0) {
+                        var currentStack = this.fluidInv.getStack(3);
+                        var key = Objects.requireNonNull(currentStack).what();
+                        long remaining = currentStack.amount() - reservedFluid;
+                        this.fluidInv.setStack(3, remaining > 0 ? new GenericStack(key, remaining) : null);
                     }
                 }
                 this.persistChangesQuietly();
@@ -926,6 +944,12 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         return this.hasCraftWork()
                 ? TickRateModulation.URGENT
                 : this.hasAutoExportWork() ? TickRateModulation.SLOWER : TickRateModulation.SLEEP;
+        } finally {
+            if (this.level != null && !this.level.isClientSide()) {
+                MachinePerformanceRegistry.INSTANCE.recordTick(
+                        performanceMetricKey(), System.nanoTime() - startedAt, this.level.getGameTime());
+            }
+        }
     }
 
     private boolean pushOutResult() {
@@ -950,6 +974,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                         var extractedStack = this.outputInv.extractItem(i, 64, false);
                         var inserted = target.insert(genStack.what(), extractedStack.getCount(), Actionable.MODULATE,
                                 source);
+                        recordStorageOperation();
                         extractedStack.setCount(extractedStack.getCount() - (int) inserted);
                         this.outputInv.insertItem(i, extractedStack, false);
                         movedStacks |= inserted > 0;
@@ -963,6 +988,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                         var extracted = this.fluidInv.extract(i, outFluid.what(), outFluid.amount(),
                                 Actionable.MODULATE);
                         var inserted = target.insert(outFluid.what(), extracted, Actionable.MODULATE, source);
+                        recordStorageOperation();
                         this.fluidInv.add(i, ((AEFluidKey) outFluid.what()), (int) (extracted - inserted));
 
                         if (this.fluidInv.getAmount(i) == 0)
@@ -1094,6 +1120,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
     @Override
     protected void writeToStream(RegistryFriendlyByteBuf data) {
+        int startIndex = data.writerIndex();
         super.writeToStream(data);
 
         data.writeBoolean(isWorking());
@@ -1110,6 +1137,26 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         data.writeInt(this.temperature);
         data.writeInt(this.maxTemperature);
         data.writeInt(this.overloadTimer);
+        if (this.level != null && !this.level.isClientSide()) {
+            MachinePerformanceRegistry.INSTANCE.recordSync(
+                    performanceMetricKey(), data.writerIndex() - startIndex, this.level.getGameTime());
+        }
+    }
+
+    private MachineMetricKey performanceMetricKey() {
+        if (this.performanceMetricKey == null && this.level != null) {
+            this.performanceMetricKey = new MachineMetricKey(
+                    this.level.dimension().location().toString(),
+                    this.worldPosition.asLong(),
+                    this.getClass().getSimpleName());
+        }
+        return this.performanceMetricKey;
+    }
+
+    private void recordStorageOperation() {
+        if (this.level != null && !this.level.isClientSide()) {
+            MachinePerformanceRegistry.INSTANCE.recordStorageOperation(performanceMetricKey(), this.level.getGameTime());
+        }
     }
 
     @Override

@@ -1,6 +1,6 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/equipment.md
   title: UFO Tools
   position: 60
 ---

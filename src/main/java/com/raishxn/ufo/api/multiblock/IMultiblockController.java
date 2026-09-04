@@ -12,8 +12,8 @@ import java.util.List;
  * tracks which parts belong to the structure, and exposes the assembled state.
  * <p>
  * <b>Implementation note:</b> concrete controllers should call
- * {@link #scanStructure(Level)} periodically (e.g. on neighbour-changed or via
- * a tick throttle) to keep the assembled state up-to-date.
+ * {@link #scanStructure(Level)} after structural invalidation or an explicit
+ * player request to keep the assembled state up-to-date.
  */
 public interface IMultiblockController {
 

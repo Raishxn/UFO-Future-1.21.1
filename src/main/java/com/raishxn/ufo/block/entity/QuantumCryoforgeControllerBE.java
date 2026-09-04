@@ -1,5 +1,6 @@
 package com.raishxn.ufo.block.entity;
 
+import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
 import com.raishxn.ufo.block.entity.pattern.QuantumCryoforgePatternFactory;
 import com.raishxn.ufo.block.entity.processing.MultiblockProcessingRecipe;
@@ -19,18 +20,18 @@ import java.util.List;
 
 public class QuantumCryoforgeControllerBE extends AbstractParallelMultiblockControllerBE {
 
-    private static MultiblockPattern PATTERN;
-
     public QuantumCryoforgeControllerBE(BlockPos pos, BlockState state) {
         super(ModBlockEntities.QUANTUM_CRYOFORGE_CONTROLLER_BE.get(), pos, state);
     }
 
     @Override
     protected MultiblockPattern getControllerPattern() {
-        if (PATTERN == null) {
-            PATTERN = QuantumCryoforgePatternFactory.getPattern();
-        }
-        return PATTERN;
+        return getMultiblockDefinition().pattern();
+    }
+
+    @Override
+    protected MultiblockDefinition getMultiblockDefinition() {
+        return QuantumCryoforgePatternFactory.getDefinition();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.raishxn.ufo.item.custom.cell;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
+import com.raishxn.ufo.datagen.ModDataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +27,7 @@ public class AEBigIntegerCellHandler implements ICellHandler
         if(!(itemStack.getItem() instanceof IAEBigIntegerCell cellItem)) return null;
         if(itemStack.getCount() != 1) return null;
 
-        boolean hadCellId = itemStack.has(com.raishxn.ufo.init.OCDataComponents.CELL_UUID.get());
+        boolean hadCellId = itemStack.has(ModDataComponents.CELL_UUID.get());
         AEBigIntegerCellData cellData = AEBigIntegerCellData.computeIfAbsentCellDataForItemStack(itemStack);
         if(cellData == null) return null;
         if(!hadCellId && iSaveProvider != null)

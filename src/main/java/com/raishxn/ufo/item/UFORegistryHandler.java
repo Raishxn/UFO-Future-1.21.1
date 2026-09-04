@@ -2,10 +2,15 @@ package com.raishxn.ufo.item;
 
 import appeng.api.client.StorageCellModels;
 import appeng.api.storage.StorageCells;
+import appeng.api.upgrades.Upgrades;
+import appeng.core.definitions.AEItems;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.item.custom.cell.AEBigIntegerCellHandler;
 import com.raishxn.ufo.item.custom.cell.InfinityGenesisCellInventory;
 import com.raishxn.ufo.item.custom.cell.InfinityCellInventory;
+import net.minecraft.world.item.Item;
+
+import java.util.List;
 
 public class UFORegistryHandler {
 
@@ -22,7 +27,7 @@ public class UFORegistryHandler {
 
     private void registerUpgrades() {
         // Use the block's asItem() to ensure the same Item instance as UpgradeInventories.forMachine() in the BE constructor
-        java.util.List<net.minecraft.world.item.Item> machineItems = java.util.List.of(
+        List<Item> machineItems = List.of(
                 com.raishxn.ufo.block.ModBlocks.DIMENSIONAL_MATTER_ASSEMBLER_BLOCK.get().asItem(),
                 com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().asItem(),
                 com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get().asItem(),
@@ -43,6 +48,28 @@ public class UFORegistryHandler {
             appeng.api.upgrades.Upgrades.add(ModItems.QUANTUM_CATALYST_T2.get(), machineItem, 4);
             appeng.api.upgrades.Upgrades.add(ModItems.QUANTUM_CATALYST_T3.get(), machineItem, 4);
             appeng.api.upgrades.Upgrades.add(ModItems.DIMENSIONAL_CATALYST.get(), machineItem, 4);
+        }
+
+        List<Item> bigIntegerCells = List.of(
+                ModCellItems.ITEM_CELL_40M.get(),
+                ModCellItems.ITEM_CELL_100M.get(),
+                ModCellItems.ITEM_CELL_250M.get(),
+                ModCellItems.ITEM_CELL_750M.get(),
+                ModCellItems.ITEM_CELL_SINGULARITY.get(),
+                ModCellItems.FLUID_CELL_40M.get(),
+                ModCellItems.FLUID_CELL_100M.get(),
+                ModCellItems.FLUID_CELL_250M.get(),
+                ModCellItems.FLUID_CELL_750M.get(),
+                ModCellItems.FLUID_CELL_SINGULARITY.get(),
+                ModCellItems.CHEMICAL_CELL_40M.get(),
+                ModCellItems.CHEMICAL_CELL_100M.get(),
+                ModCellItems.CHEMICAL_CELL_250M.get(),
+                ModCellItems.CHEMICAL_CELL_750M.get(),
+                ModCellItems.CHEMICAL_CELL_SINGULARITY.get());
+
+        for (Item cell : bigIntegerCells) {
+            Upgrades.add(AEItems.INVERTER_CARD, cell, 1);
+            Upgrades.add(AEItems.FUZZY_CARD, cell, 1);
         }
     }
 

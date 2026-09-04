@@ -1,62 +1,63 @@
 package com.raishxn.ufo.block.entity.pattern;
 
+import com.raishxn.ufo.api.multiblock.MultiblockCellRole;
+import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
+import com.raishxn.ufo.api.multiblock.topology.QmfTopologySchema;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Map;
 
 public class QmfPatternFactory {
 
+    private static MultiblockDefinition definition;
+
+    public static synchronized MultiblockDefinition getDefinition() {
+        if (definition == null) {
+            definition = new MultiblockDefinition(
+                    ResourceLocation.fromNamespaceAndPath("ufo", "quantum_matter_fabricator"),
+                    QmfTopologySchema.schemaVersion(),
+                    Component.translatable("block.ufo.quantum_matter_fabricator_controller"),
+                    createPattern(),
+                    getDefaultCreativeStates(),
+                    MultiblockDefinition.horizontalFacings(),
+                    Map.of(
+                            'H', MultiblockCellRole.CONTROLLER,
+                            'C', MultiblockCellRole.STRUCTURE,
+                            'F', MultiblockCellRole.STRUCTURE,
+                            'G', MultiblockCellRole.STRUCTURE,
+                            'Q', MultiblockCellRole.STRUCTURE,
+                            'X', MultiblockCellRole.STRUCTURE,
+                            'A', MultiblockCellRole.AIR));
+        }
+        return definition;
+    }
+
     public static Map<Character, BlockState> getDefaultCreativeStates() {
         return QuantumPatternPredicates.getDefaultCreativeStates();
     }
 
     public static MultiblockPattern getPattern() {
-        return new MultiblockPattern.Builder()
+        return getDefinition().pattern();
+    }
+
+    private static MultiblockPattern createPattern() {
+        MultiblockPattern.Builder builder = new MultiblockPattern.Builder()
+                .strict()
                 .controllerChar('H')
-                .layer(new String[]{
-                        "ACCCA",
-                        "CCCCC",
-                        "CCCCC",
-                        "CCCCC",
-                        "ACCCA"
-                })
-                .layer(new String[]{
-                        "CGGGC",
-                        "GFFFG",
-                        "GFFFG",
-                        "GFFFG",
-                        "CGGGC"
-                })
-                .layer(new String[]{
-                        "CPHGC",
-                        "GFFFG",
-                        "GFFFG",
-                        "GFFFG",
-                        "CGGGC"
-                })
-                .layer(new String[]{
-                        "CGGGC",
-                        "GFFFG",
-                        "GFFFG",
-                        "GFFFG",
-                        "CGGGC"
-                })
-                .layer(new String[]{
-                        "ACCCA",
-                        "CGGGC",
-                        "CGGGC",
-                        "CGGGC",
-                        "ACCCA"
-                })
                 .where('H', (state, level, pos) -> state.is(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get()))
-                .where('P', (state, level, pos) -> state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()), QuantumPatternPredicates.patternHatchName())
-                .where('C', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasing(state), QuantumPatternPredicates.casingName())
+                .where('C', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasingOrMovableHatch(state), QuantumPatternPredicates.casingOrMovableHatchName())
+                .candidates('C', QuantumPatternPredicates.casingAndMovableHatchCandidates())
                 .where('F', (state, level, pos) -> QuantumPatternPredicates.isAnyFieldGenerator(state), QuantumPatternPredicates.fieldName())
-                .candidates('F', QuantumPatternPredicates.fieldCandidates())
+                .candidates('F', QuantumPatternPredicates.allFieldCandidates())
                 .where('G', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state), QuantumPatternPredicates.glassName())
-                .where('A', (state, level, pos) -> state.isAir())
-                .build();
+                .where('Q', (state, level, pos) -> QuantumPatternPredicates.isQuartzBlock(state), QuantumPatternPredicates.quartzBlockName())
+                .where('X', (state, level, pos) -> QuantumPatternPredicates.isFluixBlock(state), QuantumPatternPredicates.fluixBlockName())
+                .where('A', (state, level, pos) -> state.isAir());
+        QmfTopologySchema.layers().forEach(builder::layer);
+        return builder.build();
     }
 }

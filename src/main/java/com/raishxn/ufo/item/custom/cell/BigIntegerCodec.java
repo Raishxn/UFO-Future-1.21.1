@@ -12,16 +12,18 @@ public class BigIntegerCodec {
     public static final Codec<BigInteger> INSTANCE = Codec.STRING.comapFlatMap(
             s -> {
                 try {
-                    return DataResult.success(new BigInteger(s));
-                } catch (NumberFormatException e) {
-                    return DataResult.error(() -> "Not a valid BigInteger: " + s);
+                    return DataResult.success(BigIntegerLimits.parseNonNegativeDecimal(s));
+                } catch (IllegalArgumentException e) {
+                    return DataResult.error(e::getMessage);
                 }
             },
-            BigInteger::toString
+            value -> BigIntegerLimits.requireNonNegativeAndBounded(value).toString()
     );
 
-    public static final StreamCodec<ByteBuf, BigInteger> STREAM_CODEC = ByteBufCodecs.STRING_UTF8.map(
-            BigInteger::new,
-            BigInteger::toString
+    public static final StreamCodec<ByteBuf, BigInteger> STREAM_CODEC = ByteBufCodecs
+            .stringUtf8(BigIntegerLimits.MAX_DECIMAL_CHARS)
+            .map(
+            BigIntegerLimits::parseNonNegativeDecimal,
+            value -> BigIntegerLimits.requireNonNegativeAndBounded(value).toString()
     );
 }

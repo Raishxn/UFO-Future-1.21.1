@@ -1,7 +1,8 @@
 package com.raishxn.ufo.item.custom.cell;
 
 import appeng.api.stacks.AEKey;
-import com.raishxn.ufo.init.OCDataComponents;
+import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.datagen.ModDataComponents;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -36,6 +37,7 @@ public class AEBigIntegerCellData extends SavedData
     private static final String ENTRY_KEY_TAG = "key";
     private static final String ENTRY_AMOUNT_TAG = "amount";
     private static final String SAVED_FOLDER_NAME = "ae_universal_cell_data";
+    private static final int MAX_PENDING_READ_ERRORS = 256;
     private final Object2ObjectMap<AEKey, BigInteger> storage;
     private final ObjectArrayList<CompoundTag> pendingReadErrors;
 
@@ -82,7 +84,7 @@ public class AEBigIntegerCellData extends SavedData
         ensureSaveDirExists(server);
 
         final var dataStorage = server.overworld().getDataStorage();
-        UUID existing = itemStack.get(OCDataComponents.CELL_UUID.get());
+        UUID existing = itemStack.get(ModDataComponents.CELL_UUID.get());
         if (existing != null) {
             AEBigIntegerCellData data = getCellDataByUUID(existing);
             if (data != null) {
@@ -94,7 +96,7 @@ public class AEBigIntegerCellData extends SavedData
             fresh = UUID.randomUUID();
         } while (getCellDataByUUID(fresh) != null);
 
-        itemStack.set(OCDataComponents.CELL_UUID.get(), fresh);
+        itemStack.set(ModDataComponents.CELL_UUID.get(), fresh);
         Object2ObjectOpenHashMap<AEKey, BigInteger> s = new Object2ObjectOpenHashMap<>();
         s.defaultReturnValue(BigInteger.ZERO);
         AEBigIntegerCellData newData = new AEBigIntegerCellData(s);
@@ -114,23 +116,23 @@ public class AEBigIntegerCellData extends SavedData
             AEKey key = e.getKey();
             BigInteger amount = e.getValue();
 
-            if (key == null)
+            if (key == null || amount == null || amount.signum() <= 0)
             {
-                System.err.println("[AEUniversalCellData] Skip null key during serialization.");
+                UfoMod.LOGGER.warn("Skipping invalid BigInteger cell entry: key={}, amount={}", key, amount);
                 continue;
             }
 
             try
             {
+                BigIntegerLimits.requireNonNegativeAndBounded(amount);
                 CompoundTag entry = new CompoundTag();
                 entry.put(ENTRY_KEY_TAG, key.toTagGeneric(registries));
                 entry.putByteArray(ENTRY_AMOUNT_TAG, amount.toByteArray());
                 entriesList.add(entry);
             }
-            catch(Throwable ex)
+            catch(Exception ex)
             {
-                System.err.println("[AEUniversalCellData] Failed to serialize entry: key=" + key
-                        + ", amount=" + amount + " ; cause=" + ex);
+                UfoMod.LOGGER.error("Failed to serialize BigInteger cell entry: key={}, amount={}", key, amount, ex);
             }
         }
         invTag.put(ENTRIES_TAG, entriesList);
@@ -138,6 +140,7 @@ public class AEBigIntegerCellData extends SavedData
         ListTag errorList = new ListTag();
         for (CompoundTag bad : pendingReadErrors)
         {
+            if (errorList.size() >= MAX_PENDING_READ_ERRORS) break;
             errorList.add(bad.copy());
         }
         invTag.put(ERROR_ENTRIES_TAG, errorList);
@@ -162,17 +165,17 @@ public class AEBigIntegerCellData extends SavedData
                 AEKey key = AEKey.fromTagGeneric(registries, keyTag);
                 if(key == null)
                 {
-                    errorQueue.add(entry.copy());
-                    System.err.println("[AEUniversalCellData] Failed to deserialize entry (null key). Entry=" + entry);
+                    retainRecoverableEntry(errorQueue, entry);
+                    UfoMod.LOGGER.warn("Failed to deserialize BigInteger cell entry with null key");
                     continue;
                 }
-                BigInteger amount = new BigInteger(entry.getByteArray(ENTRY_AMOUNT_TAG));
+                BigInteger amount = decodeAmount(entry);
                 addTo(storage, key, amount);
             }
-            catch(Throwable ex)
+            catch(Exception ex)
             {
-                errorQueue.add(entry.copy());
-                System.err.println("[AEUniversalCellData] Failed to deserialize entry: " + entry + " ; cause=" + ex);
+                retainRecoverableEntry(errorQueue, entry);
+                UfoMod.LOGGER.warn("Failed to deserialize BigInteger cell entry", ex);
             }
         }
         ListTag oldErrors = invTag.getList(ERROR_ENTRIES_TAG, Tag.TAG_COMPOUND);
@@ -186,23 +189,23 @@ public class AEBigIntegerCellData extends SavedData
                 AEKey key = AEKey.fromTagGeneric(registries, keyTag);
                 if(key != null)
                 {
-                    BigInteger amount = new BigInteger(badEntry.getByteArray(ENTRY_AMOUNT_TAG));
+                    BigInteger amount = decodeAmount(badEntry);
                     addTo(storage, key, amount);
                     recovered = true;
                 }
             }
-            catch(Throwable ignored)
+            catch(Exception ignored)
             {
                 recovered = false;
             }
 
             if (recovered)
             {
-                System.err.println("[AEUniversalCellData] Recovered previously failed entry: " + badEntry);
+                UfoMod.LOGGER.info("Recovered a previously unreadable BigInteger cell entry");
             }
             else
             {
-                errorQueue.add(badEntry.copy());
+                retainRecoverableEntry(errorQueue, badEntry);
             }
         }
         return new AEBigIntegerCellData(storage, errorQueue);
@@ -224,8 +227,19 @@ public class AEBigIntegerCellData extends SavedData
         }
         catch(IOException e)
         {
-            System.err.println("[AEUniversalCellData] Failed to create save directory: " + dir + " : " + e);
+            UfoMod.LOGGER.error("Failed to create BigInteger cell save directory: {}", dir, e);
         }
+    }
+    private static BigInteger decodeAmount(CompoundTag entry)
+    {
+        return BigIntegerLimits.fromSignedBytes(entry.getByteArray(ENTRY_AMOUNT_TAG));
+    }
+    private static void retainRecoverableEntry(ObjectArrayList<CompoundTag> errorQueue, CompoundTag entry)
+    {
+        if (errorQueue.size() >= MAX_PENDING_READ_ERRORS) return;
+        byte[] encodedAmount = entry.getByteArray(ENTRY_AMOUNT_TAG);
+        if (encodedAmount.length == 0 || encodedAmount.length > BigIntegerLimits.MAX_ENCODED_BYTES) return;
+        errorQueue.add(entry.copy());
     }
     private static void addTo(Object2ObjectMap<AEKey, BigInteger> map, AEKey key, BigInteger delta)
     {

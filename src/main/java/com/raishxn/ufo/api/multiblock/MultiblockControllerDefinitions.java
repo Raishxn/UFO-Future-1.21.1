@@ -38,31 +38,19 @@ public final class MultiblockControllerDefinitions {
             new PreviewEntry(
                     ResourceLocation.fromNamespaceAndPath("ufo", "quantum_matter_fabricator"),
                     MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get().asItem().getDefaultInstance(),
-                    new MultiblockControllerDefinition(
-                            Component.translatable("block.ufo.quantum_matter_fabricator_controller"),
-                            QmfPatternFactory.getPattern(),
-                            QmfPatternFactory.getDefaultCreativeStates())),
+                    MultiblockControllerDefinition.fromCompiled(QmfPatternFactory.getDefinition())),
             new PreviewEntry(
                     ResourceLocation.fromNamespaceAndPath("ufo", "quantum_slicer"),
                     MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get().asItem().getDefaultInstance(),
-                    new MultiblockControllerDefinition(
-                            Component.translatable("block.ufo.quantum_slicer_controller"),
-                            QuantumSlicerPatternFactory.getPattern(),
-                            QuantumSlicerPatternFactory.getDefaultCreativeStates())),
+                    MultiblockControllerDefinition.fromCompiled(QuantumSlicerPatternFactory.getDefinition())),
             new PreviewEntry(
                     ResourceLocation.fromNamespaceAndPath("ufo", "quantum_processor_assembler"),
                     MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem().getDefaultInstance(),
-                    new MultiblockControllerDefinition(
-                            Component.translatable("block.ufo.quantum_processor_assembler_controller"),
-                            QpaPatternFactory.getPattern(),
-                            QpaPatternFactory.getDefaultCreativeStates())),
+                    MultiblockControllerDefinition.fromCompiled(QpaPatternFactory.getDefinition())),
             new PreviewEntry(
                     ResourceLocation.fromNamespaceAndPath("ufo", "quantum_cryoforge"),
                     MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get().asItem().getDefaultInstance(),
-                    new MultiblockControllerDefinition(
-                            Component.translatable("block.ufo.quantum_cryoforge_controller"),
-                            QuantumCryoforgePatternFactory.getPattern(),
-                            QuantumCryoforgePatternFactory.getDefaultCreativeStates()))
+                    MultiblockControllerDefinition.fromCompiled(QuantumCryoforgePatternFactory.getDefinition()))
     );
 
     private MultiblockControllerDefinitions() {

@@ -1,6 +1,6 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/materials.md
   title: Containment Concepts (ACC & SCM)
   position: 80
 item_ids:
@@ -10,23 +10,30 @@ item_ids:
 
 # Safe Containment & Aether Capsules
 
-The advanced manipulation of spatial and temporal anomalies requires specialized shielding to prevent catastrophic destabilization of spacetime.
+These are functional one-slot containers for resources tagged as hazardous.
 
 <div style="display: flex; gap: 10px; margin-bottom: 20px;">
   <ItemImage id="ufo:safe_containment_matter" scale="2" />
   <ItemImage id="ufo:aether_containment_capsule" scale="2" />
 </div>
 
-## SCM - Safe Containment Matter
-Safe Containment Matter (SCM) is an ultra-dense, stable form of matter forged inside the DMA using Obsidian Matrices and Netherite bound together with UU-Matter.
+## SCM — Hazardous Item Container
 
-**Usage:** 
-SCM is the foundational tier for containing unstable energies. Its primary role is to serve as the building block for the Aether Containment Capsule, allowing players to manipulate volatile elements safely without immediately triggering localized explosions or radiation leaks.
+1. Hold the SCM in one hand and a hazardous item stack in the other.
+2. Use the SCM to store that stack in its single internal slot.
+3. To retrieve it, leave the other hand empty and use the SCM again.
 
-## ACC - Aether Containment Capsule
-The Aether Containment Capsule (ACC) builds upon SCM technology. By applying a Phase Shift Matrix and huge quantities of Spatial Fluid, the safe matter is upgraded into an absolute void pocket.
+The tooltip shows the contained item. Non-hazardous items are rejected.
 
-**Usage:**
-- The ACC acts as an inventory or buffer item for transporting extremely lethal radioactive materials or unstable singularities.
-- Without ACCs, holding certain endgame components might cause devastating effects to the player or the environment around them.
-- Often required in recipes involving the creation of singularities or true Infinity Cells to guarantee that the machine does not destroy itself during assembly.
+## ACC — Hazardous Fluid Container
+
+The ACC stores up to **4,000 mB** of a fluid in UFO's hazardous-fluid tag.
+
+1. Hold the ACC and another fluid container in opposite hands.
+2. Use normally to transfer hazardous fluid from the other container into the
+   ACC.
+3. Sneak-use to transfer up to 1,000 mB from the ACC into the other container.
+
+The ACC rejects untagged fluids and never mixes a different fluid into an
+occupied capsule. Recipe ingredients and tags remain pack-configurable; use JEI
+to find the current crafting path.

@@ -7,7 +7,6 @@ import com.raishxn.ufo.client.render.ModCoProcessorModelProvider; // <<-- NOVO I
 import com.raishxn.ufo.client.render.ModCraftingStorageModelProvider;
 import com.raishxn.ufo.client.render.layer.AstralNexusWingsLayer;
 import com.raishxn.ufo.client.renderer.ApocalypseTypeARenderer;
-import com.raishxn.ufo.client.tutorial.UfoTutorials;
 import com.raishxn.ufo.core.MegaCoProcessorTier; // <<-- NOVO IMPORT
 import com.raishxn.ufo.core.MegaCraftingStorageTier;
 import com.raishxn.ufo.event.ModKeyBindings;
@@ -59,7 +58,6 @@ public class UfoModClient {
         event.register(ModKeyBindings.CYCLE_TOOL_BACKWARD);
         event.register(ModKeyBindings.CYCLE_MODE);
         event.register(ModKeyBindings.TOGGLE_AUTO_SMELT);
-        event.register(ModKeyBindings.OPEN_UFO_TUTORIAL);
     }
 
 
@@ -94,7 +92,6 @@ public class UfoModClient {
 
     private void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            UfoTutorials.registerDefaults();
             registerEnergyCellFillProperty(ModBlocks.UFO_ENERGY_CELL.get().asItem());
 
             ItemBlockRenderTypes.setRenderLayer(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(), RenderType.cutout());

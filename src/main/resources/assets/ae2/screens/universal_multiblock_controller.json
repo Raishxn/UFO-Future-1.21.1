@@ -2,11 +2,24 @@
   "$schema": "schema.json",
   "includes": [
     "common/common.json",
+    "common/player_inventory.json",
     "common/toolbox.json"
   ],
   "background": {
-    "texture": "guis/universal_new_gui.png",
-    "srcRect": [0, 0, 175, 182]
+    "texture": "guis/universalgui2.png",
+    "srcRect": [40, 0, 176, 256]
+  },
+  "slots": {
+    "PLAYER_INVENTORY": {
+      "left": 8,
+      "top": 172,
+      "grid": "BREAK_AFTER_9COLS"
+    },
+    "PLAYER_HOTBAR": {
+      "left": 8,
+      "top": 230,
+      "grid": "HORIZONTAL"
+    }
   },
   "text": {
     "dialog_title": {

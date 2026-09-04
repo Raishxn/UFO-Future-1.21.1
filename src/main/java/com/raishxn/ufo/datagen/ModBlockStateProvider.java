@@ -2,6 +2,7 @@ package com.raishxn.ufo.datagen;
 
 import appeng.block.crafting.AbstractCraftingUnitBlock;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.MultiblockBlocks; // Importa a nova classe
 import com.raishxn.ufo.core.MegaCoProcessorTier;
@@ -36,14 +37,14 @@ public class ModBlockStateProvider extends BlockStateProvider {
         // --- Registro dos Novos Blocos Multiblock ---
         // Blocos que são um cubo simples
         multiblockCube(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING);
-        multiblockCube(MultiblockBlocks.ENTROPY_SINGULARITY_CASING);
+        connectedTextureCube(MultiblockBlocks.ENTROPY_SINGULARITY_CASING, "entropy_singularity_casing");
         craftingLikeCube(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX, "entropy_computer_condensation_matrix");
         multiblockCubeWithTexture(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX, "entropy_assembler_core_casing");
         craftingLikeCube(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE, "entropy_computer_condensation_matrix");
         entropicMachineCube(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING, "entropic_assembler_casing");
         entropicMachineCube(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING, "entropic_convergence_casing");
         multiblockCubeWithTexture(MultiblockBlocks.QUANTUM_ENTROPY_CASING, "quantum_hyper_mechanical_casing");
-        multiblockCube(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING);
+        connectedTextureCube(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING, "quantum_hyper_mechanical_casing");
         qmfControllerBlock(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER);
         controllerWithBase(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER, "quantum_hyper_mechanical_casing");
         controllerWithBase(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER, "quantum_hyper_mechanical_casing");
@@ -116,6 +117,23 @@ public class ModBlockStateProvider extends BlockStateProvider {
         ResourceLocation texture = modLoc("block/multiblock/" + textureName);
         simpleBlock(block.get(), models().cubeAll(name, texture));
         simpleBlockItem(block.get(), models().getExistingFile(modLoc("block/" + name)));
+    }
+
+    private void connectedTextureCube(DeferredBlock<? extends Block> block, String textureName) {
+        String name = block.getId().getPath();
+        ResourceLocation baseTexture = modLoc("block/multiblock/" + textureName);
+        ResourceLocation ctmTexture = modLoc("block/multiblock/" + textureName + "_ctm");
+        ModelFile model = models().getBuilder(name)
+                .renderType("solid")
+                .texture("base", baseTexture)
+                .texture("ctm", ctmTexture)
+                .texture("particle", baseTexture)
+                .customLoader(ConnectedTextureModelBuilder::new)
+                .connection(modLoc("same_block"))
+                .end();
+        simpleBlock(block.get(), model);
+        ModelFile inventoryModel = models().cubeAll(name + "_inventory", baseTexture);
+        simpleBlockItem(block.get(), inventoryModel);
     }
 
     private void craftingLikeCube(DeferredBlock<? extends Block> block, String textureName) {
@@ -349,10 +367,32 @@ public class ModBlockStateProvider extends BlockStateProvider {
      */
     private void hatchWithOverlay(DeferredBlock<? extends Block> block, String overlayName) {
         String name = block.getId().getPath();
-        ResourceLocation baseTexture = modLoc("block/multiblock/entropy_singularity_casing");
         ResourceLocation overlayTexture = modLoc("block/multiblock/" + overlayName);
 
-        ModelFile modelFile = models().withExistingParent(name, "block/block")
+        ModelFile defaultModel = hatchModel(name, modLoc("block/multiblock/entropy_singularity_casing"), overlayTexture);
+        ModelFile quantumModel = hatchModel(name + "_quantum", modLoc("block/multiblock/quantum_hyper_mechanical_casing"), overlayTexture);
+        ModelFile entropyModel = hatchModel(name + "_entropy", modLoc("block/multiblock/entropy_singularity_casing"), overlayTexture);
+
+        getVariantBuilder(block.get()).forAllStates(state -> {
+            Direction dir = state.getValue(DirectionalBlock.FACING);
+            MultiblockCasingStyle style = state.getValue(com.raishxn.ufo.block.MassiveOutputHatchBlock.CASING_STYLE);
+            ModelFile model = switch (style) {
+                case QUANTUM -> quantumModel;
+                case ENTROPY -> entropyModel;
+                case DEFAULT -> defaultModel;
+            };
+            return ConfiguredModel.builder()
+                    .modelFile(model)
+                    .rotationX(dir == Direction.DOWN ? 90 : dir == Direction.UP ? -90 : 0)
+                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + 180) % 360)
+                    .build();
+        });
+
+        simpleBlockItem(block.get(), defaultModel);
+    }
+
+    private ModelFile hatchModel(String name, ResourceLocation baseTexture, ResourceLocation overlayTexture) {
+        return models().withExistingParent(name, "block/block")
                 .renderType("cutout")
                 .texture("particle", baseTexture)
                 .texture("base", baseTexture)
@@ -365,16 +405,5 @@ public class ModBlockStateProvider extends BlockStateProvider {
                     .from(0, 0, 0).to(16, 16, 16)
                     .face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end()
                 .end();
-
-        getVariantBuilder(block.get()).forAllStates(state -> {
-            Direction dir = state.getValue(DirectionalBlock.FACING);
-            return ConfiguredModel.builder()
-                    .modelFile(modelFile)
-                    .rotationX(dir == Direction.DOWN ? 90 : dir == Direction.UP ? -90 : 0)
-                    .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + 180) % 360)
-                    .build();
-        });
-
-        simpleBlockItem(block.get(), modelFile);
     }
 }

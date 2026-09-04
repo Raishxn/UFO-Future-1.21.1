@@ -42,6 +42,11 @@ public class ModCapabilityEvents {
                 (be, context) -> (appeng.api.networking.IInWorldGridNodeHost) be
         );
         event.registerBlockEntity(
+                Capabilities.FluidHandler.BLOCK,
+                ModBlockEntities.ME_MASSIVE_OUTPUT_HATCH_BE.get(),
+                (be, side) -> be.getExternalCoolantHandler(side)
+        );
+        event.registerBlockEntity(
                 appeng.api.AECapabilities.CRAFTING_MACHINE,
                 ModBlockEntities.QMF_CONTROLLER.get(),
                 (be, context) -> be
@@ -175,4 +180,3 @@ public class ModCapabilityEvents {
         }
     }
 }
-

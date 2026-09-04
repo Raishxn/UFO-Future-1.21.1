@@ -1,6 +1,6 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/infrastructure.md
   title: Stellar Fields
   position: 47
 item_ids:

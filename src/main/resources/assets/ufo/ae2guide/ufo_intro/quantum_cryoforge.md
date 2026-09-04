@@ -1,6 +1,6 @@
 ---
 navigation:
-  parent: ufo_intro/index.md
+  parent: ufo_intro/machines.md
   title: Quantum Cryoforge
   position: 44
 item_ids:
@@ -12,6 +12,8 @@ item_ids:
 <BlockImage id="ufo:quantum_cryoforge_controller" scale="4"></BlockImage>
 
 The **Quantum Cryoforge** is the universal multiblock dedicated to large-scale coolant production.
+
+<SubPages />
 
 - Shares the same controller flow as the other universal multiblocks.
 - Accepts universal hatches in valid casing positions.
@@ -36,3 +38,7 @@ The **Quantum Cryoforge** is the universal multiblock dedicated to large-scale c
 Stable Coolant is a **MK3 Quantum Cryoforge** recipe.
 
 Replace every field generator position with **MK3 Stellar Field Generators** before expecting the Stable Coolant recipe to run. Gelid Cryotheum remains the early coolant path.
+
+Use JEI Alternatives when placing hatches and fields. The structure scanner can
+identify a single lower-tier or invalid field that silently reduces/blocks the
+expected recipe tier.

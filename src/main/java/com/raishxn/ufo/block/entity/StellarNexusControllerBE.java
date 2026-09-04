@@ -2,22 +2,38 @@ package com.raishxn.ufo.block.entity;
 
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
+import com.raishxn.ufo.api.multiblock.Ae2NodeAvailability;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
+import com.raishxn.ufocore.api.port.EnergyInputPort;
+import com.raishxn.ufocore.api.port.EnergyPortGroup;
+import com.raishxn.ufocore.api.port.FluidInputPort;
+import com.raishxn.ufocore.api.port.FluidPortGroup;
+import com.raishxn.ufocore.api.port.ItemPort;
+import com.raishxn.ufocore.api.port.ItemPortGroup;
+import com.raishxn.ufo.UFOConfig;
+import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.entity.pattern.StellarNexusPatternFactory;
 import com.raishxn.ufo.block.StellarNexusControllerBlock;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.fluid.ModFluids;
+import com.raishxn.ufo.diagnostic.MachineMetricKey;
+import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
+import com.raishxn.ufo.block.entity.processing.PendingOutputBuffer;
+import com.raishxn.ufo.block.entity.processing.StellarCoolantMath;
+import com.raishxn.ufo.block.entity.processing.StellarEnergyMath;
+import com.raishxn.ufo.block.entity.processing.StellarExplosionPolicy;
+import com.raishxn.ufo.block.entity.processing.ThermalSystem;
+import com.raishxn.ufo.block.entity.processing.TransactionalAmountLedger;
 import com.raishxn.ufo.recipe.StellarSimulationRecipe;
 import net.pedroksl.ae2addonlib.recipes.IngredientStack;
 
 import appeng.api.config.Actionable;
-import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.MEStorage;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
@@ -31,6 +47,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -48,10 +65,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.LongSupplier;
 
 /**
  * Block Entity for the Stellar Nexus Controller.
@@ -75,19 +97,40 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private boolean structureDirty = true;
     private int scanCooldown = 0;
     private final List<BlockPos> parts = new ArrayList<>();
+    private List<BlockPos> networkNodeCandidates = List.of();
+    private MachineMetricKey performanceMetricKey;
 
     // Processing state
     private ResourceLocation activeRecipeId = null;
     private int progress = 0;
     private int maxProgress = 0; // Cached total time
     private boolean running = false;
+    /** A player-requested pause preserves the paid inputs and current progress. */
+    private boolean paused = false;
+    private final PendingOutputBuffer<AEKey> pendingOutputs = new PendingOutputBuffer<>();
     private final ContainerData data;
+    private static final int DISPLAYED_REQUIREMENT_ROWS = 7;
+    private static final int REQUIREMENT_DATA_START = 24;
+    private static final int REQUIREMENT_DATA_PARTS = 4;
+    private static final int CONTAINER_DATA_COUNT = REQUIREMENT_DATA_START
+            + DISPLAYED_REQUIREMENT_ROWS * REQUIREMENT_DATA_PARTS;
+    private final long[] displayedRequirementAvailability = new long[DISPLAYED_REQUIREMENT_ROWS];
+    private long requirementAvailabilityRefreshBucket = Long.MIN_VALUE;
 
     // Energy buffer — AE power charged passively from AE2 network via Energy Input
     // Hatch
     private long energyBuffer = 0;
     private static final long GLOBAL_ENERGY_CAPACITY = 200_000_000_000L; // 200 Billion AE global buffer
     private long energyCapacity = GLOBAL_ENERGY_CAPACITY;
+    private EnergyPortGroup energyPorts = EnergyPortGroup.empty();
+    private FluidPortGroup<AEFluidKey> coolantPorts = FluidPortGroup.empty();
+    private List<MassiveOutputHatchBE> coolantHatches = List.of();
+    private ItemPortGroup<AEItemKey> itemInputPorts = ItemPortGroup.empty();
+    private ItemPortGroup<AEItemKey> itemOutputPorts = ItemPortGroup.empty();
+    private long lastEnergyRequested = 0L;
+    private long lastEnergyAccepted = 0L;
+    private long lastCoolantRequested = 0L;
+    private long lastCoolantAccepted = 0L;
 
     // Thermal system
     private int heatLevel = 0; // 0-1000 (displayed as 0.0% - 100.0%)
@@ -99,7 +142,6 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
     // Safe mode penalty — consumes 2.5x more resources
     private static final double SAFE_MODE_MULTIPLIER = 2.5;
-
     // UI Toggles
     private boolean autoStart = false;
     private boolean simulationLocked = false;
@@ -113,10 +155,13 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private int explosionCursorX = 0;
     private int explosionCursorY = 0;
     private int explosionCursorZ = 0;
-    private static final int EXPLOSION_BLOCKS_PER_TICK = 4096;
+    private int explosionBlockChanges = 0;
+    private StellarExplosionPolicy explosionPolicy = StellarExplosionPolicy.resolve(
+            false, false, 1, 1, 1, 1, 100_000L, false, false);
 
     // Cached field tier
     private int fieldLevel = 0;
+    private CoolantDefinition[] coolantDefinitions;
 
     // The multiblock pattern will be initialized lazily
     private static MultiblockPattern PATTERN;
@@ -138,6 +183,10 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         // 8 = cooldownTimer (ticks remaining)
         // 9-12 = energyBuffer as 4 shorts
         // 13-16 = energyCapacity as 4 shorts
+        // 20 = paused (0 or 1)
+        // 21 = buffered coolant kind (0 empty, 1 gelid, 2 stable, 3 temporal)
+        // 22-23 = buffered coolant amount as 2 unsigned shorts
+        // 24-51 = available ME amount for 7 displayed requirements, 4 shorts each
         this.data = new ContainerData() {
             @Override
             public int get(int pIndex) {
@@ -165,7 +214,22 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                     case 17 -> StellarNexusControllerBE.this.autoStart ? 1 : 0;
                     case 18 -> StellarNexusControllerBE.this.simulationLocked ? 1 : 0;
                     case 19 -> StellarNexusControllerBE.this.isOverclocked ? 1 : 0;
-                    default -> 0;
+                    case 20 -> StellarNexusControllerBE.this.paused ? 1 : 0;
+                    case 21 -> StellarNexusControllerBE.this.getDisplayedCoolantKind();
+                    case 22 -> StellarNexusControllerBE.this.getDisplayedCoolantAmount() & 0xFFFF;
+                    case 23 -> (StellarNexusControllerBE.this.getDisplayedCoolantAmount() >> 16) & 0xFFFF;
+                    default -> {
+                        int relativeIndex = pIndex - REQUIREMENT_DATA_START;
+                        if (relativeIndex >= 0
+                                && relativeIndex < DISPLAYED_REQUIREMENT_ROWS * REQUIREMENT_DATA_PARTS) {
+                            StellarNexusControllerBE.this.ensureDisplayedRequirementAvailabilityFresh();
+                            int row = relativeIndex / REQUIREMENT_DATA_PARTS;
+                            int part = relativeIndex % REQUIREMENT_DATA_PARTS;
+                            yield (int) ((StellarNexusControllerBE.this.displayedRequirementAvailability[row]
+                                    >>> (part * 16)) & 0xFFFFL);
+                        }
+                        yield 0;
+                    }
                 };
             }
 
@@ -183,12 +247,13 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                     case 17 -> StellarNexusControllerBE.this.autoStart = pValue == 1;
                     case 18 -> StellarNexusControllerBE.this.simulationLocked = pValue == 1;
                     case 19 -> StellarNexusControllerBE.this.isOverclocked = pValue == 1;
+                    case 20 -> StellarNexusControllerBE.this.paused = pValue == 1;
                 }
             }
 
             @Override
             public int getCount() {
-                return 20;
+                return CONTAINER_DATA_COUNT;
             }
         };
     }
@@ -207,6 +272,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
     public void scanStructure(Level level, @Nullable Player player) {
         MultiblockPattern pattern = getPattern();
+        long startedAt = System.nanoTime();
+        try {
         BlockState currentState = level.getBlockState(this.worldPosition);
         net.minecraft.core.Direction facing = net.minecraft.core.Direction.NORTH;
         if (currentState.hasProperty(net.minecraft.world.level.block.DirectionalBlock.FACING)) {
@@ -236,6 +303,11 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         if (waitingForChunks && player == null) {
             this.scanCooldown = 0;
             this.structureDirty = true;
+            this.energyPorts = EnergyPortGroup.empty();
+            this.coolantPorts = FluidPortGroup.empty();
+            this.itemInputPorts = ItemPortGroup.empty();
+            this.itemOutputPorts = ItemPortGroup.empty();
+            this.networkNodeCandidates = List.of();
             return;
         }
 
@@ -322,16 +394,72 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         this.parts.clear();
         if (this.assembled) {
             this.parts.addAll(result.partPositions());
+            List<EnergyInputPort> detectedEnergyPorts = new ArrayList<>();
+            List<FluidInputPort<AEFluidKey>> detectedCoolantPorts = new ArrayList<>();
+            List<MassiveOutputHatchBE> detectedCoolantHatches = new ArrayList<>();
+            List<ItemPort<AEItemKey>> detectedItemInputPorts = new ArrayList<>();
+            List<ItemPort<AEItemKey>> detectedItemOutputPorts = new ArrayList<>();
+            BlockPos itemInputNode = null;
+            BlockPos fluidNode = null;
+            BlockPos energyNode = null;
+            BlockPos outputNode = null;
 
             // Link all parts to this controller
             for (BlockPos partPos : this.parts) {
+                BlockState partState = level.getBlockState(partPos);
                 if (level.getBlockEntity(partPos) instanceof IMultiblockPart part) {
                     part.linkToController(this.worldPosition);
                     if (part instanceof MassiveOutputHatchBE hatch) {
                         hatch.refreshGridConnection();
                     }
                 }
+                if (partState.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
+                        && level.getBlockEntity(partPos) instanceof EnergyInputPort energyPort) {
+                    detectedEnergyPorts.add(energyPort);
+                }
+                if (partState.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
+                    && level.getBlockEntity(partPos) instanceof MassiveOutputHatchBE fluidPort
+                    && fluidPort.supportsFluidInput()) {
+                    detectedCoolantPorts.add(fluidPort);
+                    detectedCoolantHatches.add(fluidPort);
+                }
+                if (level.getBlockEntity(partPos) instanceof MassiveOutputHatchBE itemPort) {
+                    if (partState.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
+                            && itemPort.supportsItemInput()) {
+                        detectedItemInputPorts.add(itemPort);
+                    } else if (partState.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())
+                            && itemPort.supportsItemOutput()) {
+                        detectedItemOutputPorts.add(itemPort);
+                    }
+                }
+                if (partState.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())) {
+                    itemInputNode = partPos.immutable();
+                } else if (partState.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())) {
+                    fluidNode = partPos.immutable();
+                } else if (partState.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())) {
+                    energyNode = partPos.immutable();
+                } else if (partState.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())) {
+                    outputNode = partPos.immutable();
+                }
             }
+            this.energyPorts = new EnergyPortGroup(detectedEnergyPorts);
+            this.coolantPorts = new FluidPortGroup<>(detectedCoolantPorts);
+            this.coolantHatches = List.copyOf(detectedCoolantHatches);
+            this.itemInputPorts = new ItemPortGroup<>(detectedItemInputPorts);
+            this.itemOutputPorts = new ItemPortGroup<>(detectedItemOutputPorts);
+            List<BlockPos> candidates = new ArrayList<>(4);
+            addCandidate(candidates, itemInputNode);
+            addCandidate(candidates, fluidNode);
+            addCandidate(candidates, energyNode);
+            addCandidate(candidates, outputNode);
+            this.networkNodeCandidates = List.copyOf(candidates);
+        } else {
+            this.energyPorts = EnergyPortGroup.empty();
+            this.coolantPorts = FluidPortGroup.empty();
+            this.coolantHatches = List.of();
+            this.itemInputPorts = ItemPortGroup.empty();
+            this.itemOutputPorts = ItemPortGroup.empty();
+            this.networkNodeCandidates = List.of();
         }
 
         // Update block state visual
@@ -343,6 +471,11 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                         Block.UPDATE_CLIENTS);
             }
             this.setChanged();
+        }
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordScan(
+                    performanceMetricKey(), System.nanoTime() - startedAt,
+                    pattern.getTestedPositionCount(), level.getGameTime());
         }
     }
 
@@ -356,6 +489,12 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     @Override
     public void removePart(BlockPos partPos) {
         this.parts.remove(partPos);
+        this.energyPorts = EnergyPortGroup.empty();
+        this.coolantPorts = FluidPortGroup.empty();
+        this.coolantHatches = List.of();
+        this.itemInputPorts = ItemPortGroup.empty();
+        this.itemOutputPorts = ItemPortGroup.empty();
+        this.networkNodeCandidates = List.of();
         this.structureDirty = true;
     }
 
@@ -375,6 +514,9 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         if (this.level == null || this.level.isClientSide())
             return;
 
+        long startedAt = System.nanoTime();
+        try {
+
         // Handle ongoing catastrophic explosion (spread across ticks)
         if (this.exploding) {
             processExplosionTick();
@@ -391,6 +533,10 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
         // Cached field level is now updated inside scanStructure()
 
+        if (this.assembled && refillCoolantBuffers()) {
+            this.setChanged();
+        }
+
         // Handle cooldown after overheat
         if (this.cooldownTimer > 0) {
             this.cooldownTimer--;
@@ -403,11 +549,21 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             return;
         }
 
+        if ((!this.running || this.paused) && this.heatLevel > 0 && this.level.getGameTime() % 20L == 0L) {
+            int passiveRate = UFOConfig.STELLAR_PASSIVE_DISSIPATION_PER_SECOND.get();
+            int remainingHeat = (int) ThermalSystem.dissipate(this.heatLevel, passiveRate);
+            if (remainingHeat != this.heatLevel) {
+                this.heatLevel = remainingHeat;
+                this.setChanged();
+            }
+        }
+
         if (this.assembled) {
             processMachineTick();
 
             // Auto-Restart logic
-            if (!this.running && this.activeRecipeId != null && this.cooldownTimer == 0) {
+            if (!this.running && !this.pendingOutputs.hasPending()
+                    && this.activeRecipeId != null && this.cooldownTimer == 0) {
                 if (this.autoStart) {
                     startOperation();
                 }
@@ -415,13 +571,44 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         } else {
             this.progress = 0;
             this.running = false;
+            this.paused = false;
         }
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordTick(
+                    performanceMetricKey(), System.nanoTime() - startedAt, this.level.getGameTime());
+        }
+    }
+
+    private MachineMetricKey performanceMetricKey() {
+        if (this.performanceMetricKey == null && this.level != null) {
+            this.performanceMetricKey = new MachineMetricKey(
+                    this.level.dimension().location().toString(),
+                    this.worldPosition.asLong(),
+                    this.getClass().getSimpleName());
+        }
+        return this.performanceMetricKey;
+    }
+
+    private long instrumentedExtract(MEStorage storage, appeng.api.stacks.AEKey key, long amount,
+                                     Actionable mode, IActionSource source) {
+        MachinePerformanceRegistry.INSTANCE.recordStorageOperation(performanceMetricKey(), this.level.getGameTime());
+        return storage.extract(key, amount, mode, source);
+    }
+
+    private long instrumentedInsert(MEStorage storage, appeng.api.stacks.AEKey key, long amount,
+                                    IActionSource source) {
+        MachinePerformanceRegistry.INSTANCE.recordStorageOperation(performanceMetricKey(), this.level.getGameTime());
+        return storage.insert(key, amount, Actionable.MODULATE, source);
     }
 
     // ──────────────────── Start Operation ────────────────────
 
     public boolean isActive() {
         return this.running;
+    }
+
+    public boolean isPaused() {
+        return this.paused;
     }
 
     /**
@@ -436,6 +623,9 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
         if (this.running) {
             errors.add(Component.literal("§c✗ Already in operation"));
+        }
+        if (this.pendingOutputs.hasPending()) {
+            errors.add(Component.literal("§c✗ Output storage blocked"));
         }
         if (this.cooldownTimer > 0) {
             int secLeft = this.cooldownTimer / 20;
@@ -462,9 +652,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
 
         // Compute effective costs (safe mode = 2.5x)
-        double multiplier = this.safeMode ? SAFE_MODE_MULTIPLIER : 1.0;
-        if (this.isOverclocked) multiplier *= 10.0;
-        long effectiveEnergyCost = (long) (recipe.getEnergyCost() * multiplier);
+        long effectiveEnergyCost = StellarEnergyMath.effectiveCost(
+                recipe.getEnergyCost(), this.safeMode, this.isOverclocked);
 
         double fuelMultiplier = this.safeMode ? SAFE_MODE_MULTIPLIER : 1.0;
         if (this.isOverclocked) fuelMultiplier *= 5.0;
@@ -492,7 +681,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                     AEFluidKey fuelKey = AEFluidKey.of(fuelFluid);
                     MEStorage storage = nodeBE.getActionableNode().getGrid().getStorageService().getInventory();
                     IActionSource src = IActionSource.ofMachine(nodeBE);
-                    long available = storage.extract(fuelKey, effectiveFuelAmount, Actionable.SIMULATE, src);
+                    long available = instrumentedExtract(storage, fuelKey, effectiveFuelAmount, Actionable.SIMULATE, src);
                     if (available < effectiveFuelAmount) {
                         String fluidName = formatFluidName(fuelRL.getPath());
                         String safeNote = this.safeMode ? " §7(2.5x Safe Mode)" : "";
@@ -511,7 +700,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
             for (var req : recipe.getItemInputs()) {
                 if (!req.isEmpty()) {
-                    long available = simulateExtractItem(req, storage, src);
+                    long available = simulateExtractItem(req);
                     if (available < req.getAmount()) {
                         // Get the display name of the first matching item
                         String itemName = "Unknown Item";
@@ -574,9 +763,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         MEStorage storage = grid.getStorageService().getInventory();
 
         // Compute effective costs (safe mode = 2.5x)
-        double multiplier = this.safeMode ? SAFE_MODE_MULTIPLIER : 1.0;
-        if (this.isOverclocked) multiplier *= 10.0;
-        long effectiveEnergyCost = (long) (recipe.getEnergyCost() * multiplier);
+        long effectiveEnergyCost = StellarEnergyMath.effectiveCost(
+                recipe.getEnergyCost(), this.safeMode, this.isOverclocked);
 
         double fuelMultiplier = this.safeMode ? SAFE_MODE_MULTIPLIER : 1.0;
         if (this.isOverclocked) fuelMultiplier *= 5.0;
@@ -586,13 +774,16 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         if (reservation == null) {
             return List.of(Component.literal("§c✗ Failed to extract inputs"));
         }
-        extractReservation(reservation, storage, src);
+        if (!extractReservation(reservation, storage, src)) {
+            return List.of(Component.literal("§c✗ Item input changed during reservation; committed items were refunded"));
+        }
 
         // Consume AE energy (with safe mode multiplier)
         this.energyBuffer -= effectiveEnergyCost;
         this.maxProgress = recipe.getTime();
         this.progress = 0;
         this.running = true;
+        this.paused = false;
         this.setChanged();
         if (this.level != null) {
             BlockState state = this.level.getBlockState(this.worldPosition);
@@ -604,6 +795,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     public void toggleSafeMode() {
         if (!this.running) {
             this.safeMode = !this.safeMode;
+            invalidateDisplayedRequirementAvailability();
             this.setChanged();
         }
     }
@@ -621,7 +813,21 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     public void toggleOverclock() {
         if (!this.running) {
             this.isOverclocked = !this.isOverclocked;
+            invalidateDisplayedRequirementAvailability();
             this.setChanged();
+        }
+    }
+
+    /** Pauses or resumes a running simulation without discarding its paid inputs or progress. */
+    public void togglePause() {
+        if (!this.running) {
+            return;
+        }
+        this.paused = !this.paused;
+        this.setChanged();
+        if (this.level != null) {
+            BlockState state = this.level.getBlockState(this.worldPosition);
+            this.level.sendBlockUpdated(this.worldPosition, state, state, 3);
         }
     }
 
@@ -633,7 +839,16 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
 
         AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
-        changed |= chargeEnergyFromNetwork(nodeBE);
+        changed |= chargeEnergyFromPorts();
+        changed |= coolWhileIdle();
+
+        if (this.pendingOutputs.hasPending()) {
+            changed |= flushPendingOutputs(nodeBE);
+            if (changed) {
+                this.setChanged();
+            }
+            return;
+        }
 
         if (this.activeRecipeId == null) {
             if (changed) {
@@ -652,7 +867,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
         // Cache the time for UI
         this.maxProgress = recipe.getTime();
-        if (!this.running) {
+        if (!this.running || this.paused) {
             if (changed) {
                 this.setChanged();
             }
@@ -675,14 +890,15 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         if (this.isOverclocked) heatPerTick *= 5;
         this.heatLevel = Math.min(MAX_HEAT, this.heatLevel + heatPerTick);
 
-        // Coolant consumption from ME network — reduces heat (2.5x in safe mode)
-        int coolingApplied = consumeCoolant(recipe, grid);
+        // Coolant consumption through the explicit fluid-port snapshot.
+        int coolingApplied = consumeCoolant(true);
         this.heatLevel = Math.max(0, this.heatLevel - coolingApplied);
 
         // Overheat check
         if (this.heatLevel >= MAX_HEAT) {
             if (this.safeMode) {
                 this.running = false;
+                this.paused = false;
                 this.progress = 0;
                 this.cooldownTimer = this.isOverclocked ? 144000 : COOLDOWN_DURATION;
                 this.setChanged();
@@ -707,9 +923,11 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         // Progress and completion
         this.progress += this.isOverclocked ? 5 : 1;
         if (this.progress >= recipe.getTime()) {
-            injectOutputs(recipe, storage, src);
+            prepareOutputs(recipe);
+            flushPendingOutputs(storage, src);
             this.progress = 0;
             this.running = false;
+            this.paused = false;
 
             if (this.level != null) {
                 BlockState state = this.level.getBlockState(this.worldPosition);
@@ -719,34 +937,27 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         this.setChanged();
     }
 
-    private boolean chargeEnergyFromNetwork(@Nullable AENetworkedBlockEntity nodeBE) {
-        if (nodeBE == null || nodeBE.getActionableNode() == null || this.fieldLevel < 1 || this.fieldLevel > 3) {
+    private boolean chargeEnergyFromPorts() {
+        if (this.fieldLevel < 1 || this.fieldLevel > 3 || this.energyPorts.size() == 0) {
             return false;
         }
 
-        IGridNode node = nodeBE.getActionableNode();
-        if (node.getGrid() == null) {
-            return false;
-        }
-
-        long spaceLeft = this.energyCapacity - this.energyBuffer;
-        if (spaceLeft <= 0L) {
-            return false;
-        }
-
-        long toCharge = Math.min(ENERGY_RATE_BY_TIER[this.fieldLevel], spaceLeft);
+        long toCharge = StellarEnergyMath.chargeRequest(
+                this.energyBuffer, this.energyCapacity, ENERGY_RATE_BY_TIER[this.fieldLevel]);
         if (toCharge <= 0L) {
             return false;
         }
 
-        IEnergyService energy = node.getGrid().getEnergyService();
-        double extracted = energy.extractAEPower(toCharge, Actionable.MODULATE, PowerMultiplier.CONFIG);
-        long accepted = Math.min(spaceLeft, (long) extracted);
+        long accepted = this.energyPorts.extract(toCharge, false);
+        this.lastEnergyRequested = toCharge;
+        this.lastEnergyAccepted = accepted;
+        MachinePerformanceRegistry.INSTANCE.recordEnergyTransfer(
+                performanceMetricKey(), toCharge, accepted, this.level.getGameTime());
         if (accepted <= 0L) {
             return false;
         }
 
-        this.energyBuffer += accepted;
+        this.energyBuffer = Math.min(this.energyCapacity, this.energyBuffer + accepted);
         return true;
     }
 
@@ -755,23 +966,45 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             return;
         BlockPos pos = this.worldPosition;
 
-        this.explosionRadius = this.fieldLevel == 3 ? 100 : (this.fieldLevel == 2 ? 50 : 30);
+        int requestedRadius = this.fieldLevel == 3 ? 100 : (this.fieldLevel == 2 ? 50 : 30);
+        boolean dimensionAllowed = UFOConfig.STELLAR_EXPLOSION_ALLOWED_DIMENSIONS.get().stream()
+                .anyMatch(this.level.dimension().location().toString()::equals);
+        this.explosionPolicy = StellarExplosionPolicy.resolve(
+                UFOConfig.STELLAR_EXPLOSION_BLOCK_GRIEF.get(),
+                dimensionAllowed,
+                requestedRadius,
+                UFOConfig.STELLAR_EXPLOSION_MAX_RADIUS.get(),
+                UFOConfig.STELLAR_EXPLOSION_MAX_BLOCKS_PER_TICK.get(),
+                UFOConfig.STELLAR_EXPLOSION_MAX_TOTAL_BLOCKS.get(),
+                UFOConfig.STELLAR_EXPLOSION_MAX_NANOS_PER_TICK.get(),
+                UFOConfig.STELLAR_EXPLOSION_CREATE_LAVA.get(),
+                UFOConfig.STELLAR_EXPLOSION_SECONDARY_EXPLOSIONS.get());
+        this.explosionRadius = this.explosionPolicy.radius();
+        UfoMod.LOGGER.warn(
+                "Stellar Nexus thermal failure at {} in {} resolved to {} radius={} perTick={} total={} nanos={}",
+                pos, this.level.dimension().location(), this.explosionPolicy.mode(),
+                this.explosionPolicy.radius(), this.explosionPolicy.maxBlockChangesPerTick(),
+                this.explosionPolicy.maxTotalBlockChanges(), this.explosionPolicy.maxNanosPerTick());
 
         this.level.players().forEach(p -> p.displayClientMessage(
                 Component.literal("§4§l[STELLAR NEXUS] §c§lCRITICAL THERMAL FAILURE at " + pos.toShortString()
-                        + "! CATASTROPHIC EXPLOSION!"),
+                        + (this.explosionPolicy.allowsBlockGrief()
+                        ? "! BOUNDED DESTRUCTIVE WAVE!"
+                        : "! LOCAL CONTAINMENT FAILURE!")),
                 false));
 
-        // Initial core detonation kicks off the larger wave processor.
+        // The initial blast damages locally but never bypasses the configured block budget.
         this.level.explode(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                Math.max(12.0f, this.explosionRadius * 0.18f), Level.ExplosionInteraction.BLOCK);
+                8.0F, Level.ExplosionInteraction.NONE);
 
-        this.exploding = true;
+        this.exploding = this.explosionPolicy.allowsBlockGrief();
         this.explosionTick = 0;
         this.explosionShellRadius = 0;
+        this.explosionBlockChanges = 0;
         resetExplosionCursor();
 
         this.running = false;
+        this.paused = false;
         this.progress = 0;
         this.heatLevel = 0;
         this.energyBuffer = 0;
@@ -783,6 +1016,9 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
 
         onControllerBroken();
+        if (!this.exploding) {
+            removeControllerBlockAfterExplosion();
+        }
     }
 
     private void processExplosionTick() {
@@ -792,36 +1028,46 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
 
         this.explosionTick++;
-        int processed = 0;
-        while (processed < EXPLOSION_BLOCKS_PER_TICK && this.exploding) {
+        int changedThisTick = 0;
+        long deadline = System.nanoTime() + this.explosionPolicy.maxNanosPerTick();
+        while (changedThisTick < this.explosionPolicy.maxBlockChangesPerTick()
+                && this.explosionBlockChanges < this.explosionPolicy.maxTotalBlockChanges()
+                && this.exploding
+                && System.nanoTime() < deadline) {
             if (this.explosionShellRadius > this.explosionRadius) {
                 finishExplosionWave();
                 break;
             }
 
             int radius = this.explosionShellRadius;
-            int stepResult = processExplosionCursor(radius);
-            if (stepResult > 0) {
-                processed++;
-            } else if (stepResult == 0) {
-                damageEntitiesForShell(radius);
+            int remainingChanges = Math.min(
+                    this.explosionPolicy.maxBlockChangesPerTick() - changedThisTick,
+                    this.explosionPolicy.maxTotalBlockChanges() - this.explosionBlockChanges);
+            int stepResult = processExplosionCursor(radius, remainingChanges);
+            if (stepResult >= 0) {
+                changedThisTick += stepResult;
+                this.explosionBlockChanges += stepResult;
+            } else if (stepResult == -2) {
                 spawnExplosionPulse(radius);
                 this.explosionShellRadius++;
                 resetExplosionCursor();
             }
         }
 
+        if (this.explosionBlockChanges >= this.explosionPolicy.maxTotalBlockChanges()) {
+            finishExplosionWave();
+        }
+
         this.setChanged();
     }
 
-    private int processExplosionCursor(int radius) {
+    private int processExplosionCursor(int radius, int remainingChanges) {
         if (radius == 0) {
-            processExplosionBlock(this.worldPosition, 0);
-            return 0;
+            return -2;
         }
 
         if (this.explosionCursorY > radius) {
-            return 0;
+            return -2;
         }
 
         int dx = this.explosionCursorX;
@@ -837,8 +1083,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             return -1;
         }
 
-        processExplosionBlock(this.worldPosition.offset(dx, dy, dz), radius);
-        return 1;
+        return processExplosionBlock(this.worldPosition.offset(dx, dy, dz), radius, remainingChanges);
     }
 
     private void advanceExplosionCursor(int radius) {
@@ -859,52 +1104,32 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         this.explosionCursorZ = -this.explosionShellRadius;
     }
 
-    private void processExplosionBlock(BlockPos target, int radius) {
+    private int processExplosionBlock(BlockPos target, int radius, int remainingChanges) {
+        if (remainingChanges <= 0 || target.equals(this.worldPosition)) {
+            return 0;
+        }
         if (this.level == null || !this.level.isLoaded(target) || !this.level.isInWorldBounds(target)) {
-            return;
+            return 0;
         }
 
         BlockState targetState = this.level.getBlockState(target);
         if (targetState.isAir() || targetState.getDestroySpeed(this.level, target) < 0) {
-            return;
+            return 0;
         }
 
         int lavaRadius = Math.max(3, (int) (this.explosionRadius * 0.28));
-        if (radius <= lavaRadius) {
-            this.level.setBlock(target, net.minecraft.world.level.block.Blocks.LAVA.defaultBlockState(), Block.UPDATE_ALL);
-            return;
-        }
-
-        this.level.setBlock(target, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+        BlockState replacement = this.explosionPolicy.createLava() && radius <= lavaRadius
+                ? net.minecraft.world.level.block.Blocks.LAVA.defaultBlockState()
+                : net.minecraft.world.level.block.Blocks.AIR.defaultBlockState();
+        int changes = this.level.setBlock(target, replacement, Block.UPDATE_CLIENTS) ? 1 : 0;
 
         BlockPos above = target.above();
-        if (this.level.isLoaded(above) && this.level.getBlockState(above).isAir()) {
-            this.level.setBlock(above, net.minecraft.world.level.block.Blocks.FIRE.defaultBlockState(), Block.UPDATE_ALL);
+        if (changes < remainingChanges && replacement.isAir()
+                && this.level.isLoaded(above) && this.level.getBlockState(above).isAir()
+                && this.level.setBlock(above, net.minecraft.world.level.block.Blocks.FIRE.defaultBlockState(), Block.UPDATE_CLIENTS)) {
+            changes++;
         }
-    }
-
-    private void damageEntitiesForShell(int radius) {
-        if (this.level == null || radius <= 0) {
-            return;
-        }
-
-        double shell = Math.min(radius + 2.0, this.explosionRadius);
-        var entities = this.level.getEntitiesOfClass(
-                net.minecraft.world.entity.LivingEntity.class,
-                new net.minecraft.world.phys.AABB(
-                        this.worldPosition.getX() - shell, this.worldPosition.getY() - shell, this.worldPosition.getZ() - shell,
-                        this.worldPosition.getX() + shell, this.worldPosition.getY() + shell, this.worldPosition.getZ() + shell));
-
-        for (var entity : entities) {
-            double dist = Math.sqrt(entity.distanceToSqr(this.worldPosition.getCenter()));
-            if (dist > shell) {
-                continue;
-            }
-
-            float damage = (float) Math.max(6.0, (this.explosionRadius - dist) * 1.8);
-            entity.hurt(this.level.damageSources().explosion(null), damage);
-            entity.setRemainingFireTicks(Math.max(entity.getRemainingFireTicks(), 200));
-        }
+        return changes;
     }
 
     private void spawnExplosionPulse(int radius) {
@@ -912,14 +1137,15 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             return;
         }
 
-        if (radius == 1 || radius == this.explosionRadius || radius % 4 == 0) {
+        if (this.explosionPolicy.secondaryExplosions()
+                && (radius == 1 || radius == this.explosionRadius || radius % 4 == 0)) {
             var random = this.level.getRandom();
             double offsetScale = Math.max(2.0, radius * 0.35);
             double ox = this.worldPosition.getX() + 0.5 + (random.nextDouble() - 0.5) * offsetScale;
             double oy = this.worldPosition.getY() + 0.5 + (random.nextDouble() - 0.5) * offsetScale;
             double oz = this.worldPosition.getZ() + 0.5 + (random.nextDouble() - 0.5) * offsetScale;
             float power = Math.min(18.0f, 4.0f + radius * 0.12f);
-            this.level.explode(null, ox, oy, oz, power, Level.ExplosionInteraction.BLOCK);
+            this.level.explode(null, ox, oy, oz, power, Level.ExplosionInteraction.NONE);
         }
     }
 
@@ -927,6 +1153,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         this.exploding = false;
         this.explosionTick = 0;
         this.explosionShellRadius = 0;
+        this.explosionBlockChanges = 0;
         resetExplosionCursor();
         removeControllerBlockAfterExplosion();
     }
@@ -942,34 +1169,26 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private AENetworkedBlockEntity getConnectedNetworkNode() {
         if (this.level == null)
             return null;
-        AENetworkedBlockEntity fallback = null;
 
-        for (BlockPos p : this.parts) {
-            if (!(this.level.getBlockEntity(p) instanceof AENetworkedBlockEntity nodeBE)) {
-                continue;
-            }
-            if (nodeBE.getActionableNode() == null || nodeBE.getActionableNode().getGrid() == null) {
-                continue;
-            }
-
-            BlockState state = this.level.getBlockState(p);
-            if (state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())) {
-                return nodeBE;
-            }
-            if (fallback == null && state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())) {
-                fallback = nodeBE;
-                continue;
-            }
-            if (fallback == null && state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())) {
-                fallback = nodeBE;
-                continue;
-            }
-            if (fallback == null && state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())) {
-                fallback = nodeBE;
+        for (BlockPos position : this.networkNodeCandidates) {
+            if (this.level.getBlockEntity(position) instanceof AENetworkedBlockEntity nodeBE) {
+                IGridNode node = nodeBE.getActionableNode();
+                if (Ae2NodeAvailability.isUsable(
+                        node != null,
+                        node != null && node.getGrid() != null,
+                        node != null && node.isActive(),
+                        node != null && node.isPowered())) {
+                    return nodeBE;
+                }
             }
         }
+        return null;
+    }
 
-        return fallback;
+    private static void addCandidate(List<BlockPos> candidates, @Nullable BlockPos position) {
+        if (position != null) {
+            candidates.add(position);
+        }
     }
 
 
@@ -980,7 +1199,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private static final long COOLANT_CONSUMPTION_PER_TICK = 100;
 
     /**
-     * Tries to extract the recipe's specific coolant fluid from the ME network.
+     * Tries to extract coolant fluid from the ME network.
      * Returns the cooling power applied this tick (heat units to subtract).
      * <p>
      * Prioritizes the intended coolant ladder without falling back to water.
@@ -992,62 +1211,178 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
      * <li>Temporal Fluid (T3): 8 cooling/mB</li>
      * </ul>
      */
-    private int consumeCoolant(StellarSimulationRecipe recipe, IGrid grid) {
-        AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
-        if (nodeBE == null)
-            return 0;
-
-        IActionSource src = IActionSource.ofMachine(nodeBE);
-        MEStorage storage = grid.getStorageService().getInventory();
-
-        // Try getting fluids based on tier
-        AEFluidKey t3 = AEFluidKey.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("ufo:source_temporal_fluid")));
-        AEFluidKey t2 = AEFluidKey.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("ufo:source_stable_coolant")));
-        AEFluidKey t1 = AEFluidKey.of(BuiltInRegistries.FLUID.get(ResourceLocation.parse("ufo:source_gelid_cryotheum")));
-        AEFluidKey[] toTry;
-        if (this.fieldLevel == 3) {
-            toTry = new AEFluidKey[]{t3, t2, t1};
-        } else if (this.fieldLevel == 2) {
-            toTry = new AEFluidKey[]{t2, t3, t1};
-        } else if (this.fieldLevel == 1) {
-            toTry = new AEFluidKey[]{t1, t2, t3};
-        } else {
-            toTry = new AEFluidKey[0];
+    private boolean coolWhileIdle() {
+        if ((this.running && !this.paused) || this.heatLevel <= 0) {
+            return false;
         }
 
-        // Safe mode consumes 2.5x more coolant per tick
-        double multiplier = this.safeMode ? SAFE_MODE_MULTIPLIER : 1.0;
-        if (this.isOverclocked) multiplier *= 5.0;
-        long effectiveCoolantPerTick = (long) (COOLANT_CONSUMPTION_PER_TICK * multiplier);
+        int interval = UFOConfig.STELLAR_IDLE_COOLANT_INTERVAL_TICKS.get();
+        if (interval <= 0 || this.level.getGameTime() % interval != 0L) {
+            return false;
+        }
 
-        for (AEFluidKey coolantKey : toTry) {
-            if (coolantKey == null || coolantKey.getFluid() == net.minecraft.world.level.material.Fluids.EMPTY) continue;
-            long extracted = storage.extract(coolantKey, effectiveCoolantPerTick, Actionable.MODULATE, src);
-            if (extracted > 0) {
-                int efficiency = getCoolantEfficiency(coolantKey.getFluid());
+        int coolingApplied = consumeCoolant(false);
+        if (coolingApplied <= 0) {
+            return false;
+        }
+        this.heatLevel = Math.max(0, this.heatLevel - coolingApplied);
+        return true;
+    }
 
-                return (int) (extracted * efficiency / effectiveCoolantPerTick) * (coolingTierBonus() + 1);
+    private int consumeCoolant(boolean activeOperation) {
+        if (this.coolantPorts.size() == 0 || this.heatLevel <= 0
+                || this.fieldLevel < 1 || this.fieldLevel > 3)
+            return 0;
+
+        long effectiveCoolantPerTick = StellarCoolantMath.targetFlow(
+                COOLANT_CONSUMPTION_PER_TICK,
+                activeOperation,
+                this.safeMode,
+                this.isOverclocked);
+
+        int tierMultiplier = this.fieldLevel + 1;
+        CoolantDefinition[] definitions = getCoolantDefinitions();
+        int[] priority = coolantPriority(definitions);
+        for (int definitionIndex : priority) {
+            CoolantDefinition coolant = definitions[definitionIndex];
+            long required = StellarCoolantMath.amountRequiredForHeat(
+                    this.heatLevel, coolant.efficiency(), tierMultiplier, effectiveCoolantPerTick);
+            this.lastCoolantRequested = required;
+            this.lastCoolantAccepted = 0L;
+            long available = extractCoolantFromPorts(coolant.key(), required, true);
+            long amountToExtract = Math.min(required, available);
+            if (StellarCoolantMath.coolingFromExtracted(
+                    amountToExtract, coolant.efficiency(), tierMultiplier, effectiveCoolantPerTick) <= 0L) {
+                continue;
             }
+
+            long extracted = extractCoolantFromPorts(coolant.key(), amountToExtract, false);
+            this.lastCoolantRequested = amountToExtract;
+            this.lastCoolantAccepted = extracted;
+            long cooling = StellarCoolantMath.coolingFromExtracted(
+                    extracted, coolant.efficiency(), tierMultiplier, effectiveCoolantPerTick);
+            return (int) Math.min(this.heatLevel, cooling);
         }
 
         return 0; // No coolant available — heat will continue to rise!
     }
 
-    /**
-     * Bonus cooling multiplier based on field generator tier.
-     */
-    private int coolingTierBonus() {
-        return this.fieldLevel;
+    private long extractCoolantFromPorts(AEFluidKey coolant, long amount, boolean simulate) {
+        if (amount <= 0L) {
+            return 0L;
+        }
+        long extracted = 0L;
+        for (MassiveOutputHatchBE hatch : this.coolantHatches) {
+            long remaining = amount - extracted;
+            if (remaining <= 0L) {
+                break;
+            }
+            long accepted = hatch.extractBufferedCoolant(coolant, remaining, simulate);
+            extracted += Math.max(0L, Math.min(remaining, accepted));
+        }
+        return extracted;
     }
 
-    private int getCoolantEfficiency(Fluid fluid) {
-        if (fluid == ModFluids.SOURCE_TEMPORAL_FLUID.get() || fluid == ModFluids.FLOWING_TEMPORAL_FLUID.get()) {
-            return 8;
+    /** Keeps every linked hatch supplied from ME storage, best coolant first. */
+    private boolean refillCoolantBuffers() {
+        if (this.coolantHatches.isEmpty()) {
+            return false;
         }
-        if (fluid == ModFluids.SOURCE_STABLE_COOLANT.get() || fluid == ModFluids.FLOWING_STABLE_COOLANT.get()) {
-            return 4;
+        long intakePerHatch = UFOConfig.STELLAR_COOLANT_BUFFER_INTAKE_PER_TICK.get();
+        if (intakePerHatch <= 0L) {
+            return false;
         }
-        return 1;
+
+        CoolantDefinition[] definitions = getCoolantDefinitions();
+        int[] priority = coolantPriority(definitions);
+        boolean changed = false;
+        for (MassiveOutputHatchBE hatch : this.coolantHatches) {
+            FluidStack stored = hatch.getStoredCoolant();
+            if (!stored.isEmpty()) {
+                for (int definitionIndex : priority) {
+                    CoolantDefinition definition = definitions[definitionIndex];
+                    if (definition.efficiency() > 0L && definition.key().getFluid() == stored.getFluid()) {
+                        long moved = hatch.bufferCoolantFromGrid(definition.key(), intakePerHatch);
+                        if (moved > 0L) {
+                            MachinePerformanceRegistry.INSTANCE.recordStorageOperation(
+                                    performanceMetricKey(), this.level.getGameTime());
+                            changed = true;
+                        }
+                        break;
+                    }
+                }
+                continue;
+            }
+
+            for (int definitionIndex : priority) {
+                CoolantDefinition definition = definitions[definitionIndex];
+                if (definition.efficiency() <= 0L) {
+                    continue;
+                }
+                long moved = hatch.bufferCoolantFromGrid(definition.key(), intakePerHatch);
+                if (moved > 0L) {
+                    MachinePerformanceRegistry.INSTANCE.recordStorageOperation(
+                            performanceMetricKey(), this.level.getGameTime());
+                    changed = true;
+                    break;
+                }
+            }
+        }
+        return changed;
+    }
+
+    private static int[] coolantPriority(CoolantDefinition[] definitions) {
+        long[] efficiencies = new long[definitions.length];
+        for (int index = 0; index < definitions.length; index++) {
+            efficiencies[index] = definitions[index].efficiency();
+        }
+        return StellarCoolantMath.priorityByEfficiency(efficiencies);
+    }
+
+    private int getDisplayedCoolantKind() {
+        FluidStack coolant = getDisplayedCoolant();
+        if (coolant.isEmpty()) return 0;
+        if (coolant.getFluid() == ModFluids.SOURCE_GELID_CRYOTHEUM.get()) return 1;
+        if (coolant.getFluid() == ModFluids.SOURCE_STABLE_COOLANT.get()) return 2;
+        if (coolant.getFluid() == ModFluids.SOURCE_TEMPORAL_FLUID.get()) return 3;
+        return 0;
+    }
+
+    private int getDisplayedCoolantAmount() {
+        return getDisplayedCoolant().getAmount();
+    }
+
+    private FluidStack getDisplayedCoolant() {
+        for (MassiveOutputHatchBE hatch : this.coolantHatches) {
+            FluidStack coolant = hatch.getStoredCoolant();
+            if (!coolant.isEmpty()) {
+                return coolant;
+            }
+        }
+        return FluidStack.EMPTY;
+    }
+
+    private CoolantDefinition[] getCoolantDefinitions() {
+        if (this.coolantDefinitions == null) {
+            this.coolantDefinitions = new CoolantDefinition[]{
+                    new CoolantDefinition(
+                            AEFluidKey.of(ModFluids.SOURCE_TEMPORAL_FLUID.get()),
+                            UFOConfig.STELLAR_COOLANT_TEMPORAL_EFFICIENCY::get),
+                    new CoolantDefinition(
+                            AEFluidKey.of(ModFluids.SOURCE_STABLE_COOLANT.get()),
+                            UFOConfig.STELLAR_COOLANT_STABLE_EFFICIENCY::get),
+                    new CoolantDefinition(
+                            AEFluidKey.of(ModFluids.SOURCE_GELID_CRYOTHEUM.get()),
+                            UFOConfig.STELLAR_COOLANT_GELID_EFFICIENCY::get)
+            };
+        }
+        return this.coolantDefinitions;
+    }
+
+    private record CoolantDefinition(AEFluidKey key, LongSupplier efficiencySupplier) {
+        private long efficiency() {
+            return Math.max(0L, this.efficiencySupplier.getAsLong());
+        }
     }
 
     public ResourceLocation getActiveRecipeId() {
@@ -1057,6 +1392,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     public void setActiveRecipe(ResourceLocation activeRecipeId) {
         this.activeRecipeId = activeRecipeId;
         this.progress = 0;
+        invalidateDisplayedRequirementAvailability();
         this.setChanged();
 
         if (this.level != null) {
@@ -1067,27 +1403,85 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
     // ──────────────────── Inventory Operations ────────────────────
 
-    private boolean extractInputs(StellarSimulationRecipe recipe, MEStorage storage, IActionSource src) {
-        // SIMULATE pass guarantees all inputs exist
-        for (var req : recipe.getItemInputs()) {
-            if (!req.isEmpty() && simulateExtractItem(req, storage, src) < req.getAmount())
-                return false;
+    private void ensureDisplayedRequirementAvailabilityFresh() {
+        if (this.level == null || this.level.isClientSide()) {
+            return;
         }
-        for (var req : recipe.getFluidInputs()) {
-            if (!req.isEmpty() && simulateExtractFluid(req, storage, src) < req.getAmount())
-                return false;
+        long refreshBucket = this.level.getGameTime() / 10L;
+        if (this.requirementAvailabilityRefreshBucket == refreshBucket) {
+            return;
+        }
+        this.requirementAvailabilityRefreshBucket = refreshBucket;
+        refreshDisplayedRequirementAvailability();
+    }
+
+    private void invalidateDisplayedRequirementAvailability() {
+        this.requirementAvailabilityRefreshBucket = Long.MIN_VALUE;
+    }
+
+    /** Refreshes the seven quantities shown by the attached resource widget. */
+    private void refreshDisplayedRequirementAvailability() {
+        Arrays.fill(this.displayedRequirementAvailability, 0L);
+        if (this.level == null || this.level.isClientSide() || this.activeRecipeId == null) {
+            return;
         }
 
-        // MODULATE pass actually consumes them
-        for (var req : recipe.getItemInputs()) {
-            if (!req.isEmpty())
-                modulateExtractItem(req, storage, src);
+        var recipeHolder = this.level.getRecipeManager().byKey(this.activeRecipeId);
+        if (recipeHolder.isEmpty() || !(recipeHolder.get().value() instanceof StellarSimulationRecipe recipe)) {
+            return;
         }
-        for (var req : recipe.getFluidInputs()) {
-            if (!req.isEmpty())
-                modulateExtractFluid(req, storage, src);
+
+        AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
+        if (nodeBE == null || nodeBE.getActionableNode() == null
+                || nodeBE.getActionableNode().getGrid() == null) {
+            return;
         }
-        return true;
+
+        var availableStacks = nodeBE.getActionableNode().getGrid()
+                .getStorageService().getInventory().getAvailableStacks();
+        Map<String, Set<AEKey>> rows = new LinkedHashMap<>();
+
+        for (var input : recipe.getItemInputs()) {
+            if (input.isEmpty()) continue;
+            ItemStack[] matches = input.getIngredient().getItems();
+            if (matches.length == 0 || matches[0].isEmpty()) continue;
+            String rowKey = "item:" + BuiltInRegistries.ITEM.getKey(matches[0].getItem());
+            Set<AEKey> acceptedKeys = rows.computeIfAbsent(rowKey, ignored -> new LinkedHashSet<>());
+            for (ItemStack match : matches) {
+                if (!match.isEmpty()) acceptedKeys.add(AEItemKey.of(match));
+            }
+        }
+
+        for (var input : recipe.getFluidInputs()) {
+            if (input.isEmpty()) continue;
+            FluidStack[] matches = input.getIngredient().getStacks();
+            if (matches.length == 0 || matches[0].isEmpty()) continue;
+            String rowKey = "fluid:" + BuiltInRegistries.FLUID.getKey(matches[0].getFluid());
+            Set<AEKey> acceptedKeys = rows.computeIfAbsent(rowKey, ignored -> new LinkedHashSet<>());
+            for (FluidStack match : matches) {
+                if (!match.isEmpty()) acceptedKeys.add(AEFluidKey.of(match.getFluid()));
+            }
+        }
+
+        recipe.getFuelFluidRL().ifPresent(id -> {
+            Fluid fuel = BuiltInRegistries.FLUID.get(id);
+            if (fuel != null && fuel != net.minecraft.world.level.material.Fluids.EMPTY
+                    && recipe.getFuelAmount() > 0L) {
+                rows.computeIfAbsent("fluid:" + id, ignored -> new LinkedHashSet<>())
+                        .add(AEFluidKey.of(fuel));
+            }
+        });
+
+        int rowIndex = 0;
+        for (Set<AEKey> acceptedKeys : rows.values()) {
+            if (rowIndex >= DISPLAYED_REQUIREMENT_ROWS) break;
+            long available = 0L;
+            for (AEKey key : acceptedKeys) {
+                long amount = Math.max(0L, availableStacks.get(key));
+                available = saturatedAdd(available, amount);
+            }
+            this.displayedRequirementAvailability[rowIndex++] = available;
+        }
     }
 
     @Nullable
@@ -1107,7 +1501,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
 
         for (var req : recipe.getItemInputs()) {
-            if (!req.isEmpty() && !reserveItem(req, itemReservations, storage, src)) {
+            if (!req.isEmpty() && !reserveItem(req, itemReservations)) {
                 return null;
             }
         }
@@ -1120,13 +1514,13 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         return new ResourceReservation(itemReservations, fluidReservations);
     }
 
-    private boolean reserveItem(IngredientStack.Item req, Map<AEItemKey, Long> reservations, MEStorage storage, IActionSource src) {
+    private boolean reserveItem(IngredientStack.Item req, Map<AEItemKey, Long> reservations) {
         long amount = req.getAmount();
         for (ItemStack match : req.getIngredient().getItems()) {
             AEItemKey key = AEItemKey.of(match);
             long reserved = reservations.getOrDefault(key, 0L);
             long neededWithReservation = saturatedAdd(reserved, amount);
-            long available = storage.extract(key, neededWithReservation, Actionable.SIMULATE, src);
+            long available = this.itemInputPorts.extract(key, neededWithReservation, true);
             if (available >= neededWithReservation) {
                 reservations.put(key, neededWithReservation);
                 return true;
@@ -1151,7 +1545,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
         long reserved = reservations.getOrDefault(key, 0L);
         long neededWithReservation = saturatedAdd(reserved, amount);
-        long available = storage.extract(key, neededWithReservation, Actionable.SIMULATE, src);
+        long available = instrumentedExtract(storage, key, neededWithReservation, Actionable.SIMULATE, src);
         if (available < neededWithReservation) {
             return false;
         }
@@ -1159,12 +1553,43 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         return true;
     }
 
-    private void extractReservation(ResourceReservation reservation, MEStorage storage, IActionSource src) {
+    private boolean extractReservation(ResourceReservation reservation, MEStorage storage, IActionSource src) {
+        Map<AEItemKey, Long> committedItems = new HashMap<>();
         for (var entry : reservation.itemReservations().entrySet()) {
-            storage.extract(entry.getKey(), entry.getValue(), Actionable.MODULATE, src);
+            long extracted = this.itemInputPorts.extractTransactional(entry.getKey(), entry.getValue());
+            if (extracted > 0L) {
+                committedItems.put(entry.getKey(), extracted);
+            }
+            if (extracted < entry.getValue()) {
+                refundCommittedItems(committedItems, storage, src);
+                return false;
+            }
         }
         for (var entry : reservation.fluidReservations().entrySet()) {
-            storage.extract(entry.getKey(), entry.getValue(), Actionable.MODULATE, src);
+            instrumentedExtract(storage, entry.getKey(), entry.getValue(), Actionable.MODULATE, src);
+        }
+        return true;
+    }
+
+    private void refundCommittedItems(Map<AEItemKey, Long> committedItems, MEStorage fallbackStorage, IActionSource src) {
+        for (var entry : committedItems.entrySet()) {
+            long refunded = this.itemInputPorts.insertTransactional(entry.getKey(), entry.getValue());
+            if (refunded < entry.getValue()) {
+                long remaining = entry.getValue() - refunded;
+                long inserted = instrumentedInsert(fallbackStorage, entry.getKey(), remaining, src);
+                remaining -= Math.max(0L, Math.min(remaining, inserted));
+                if (remaining > 0L && this.level != null) {
+                    UfoMod.LOGGER.warn(
+                            "Item-input rollback at {} could not return {} x {}; ejecting a recovery package",
+                            this.worldPosition, remaining, entry.getKey());
+                    Containers.dropItemStack(
+                            this.level,
+                            this.worldPosition.getX() + 0.5D,
+                            this.worldPosition.getY() + 0.5D,
+                            this.worldPosition.getZ() + 0.5D,
+                            GenericStack.wrapInItemStack(new GenericStack(entry.getKey(), remaining)));
+                }
+            }
         }
     }
 
@@ -1175,11 +1600,11 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         return a + b;
     }
 
-    private long simulateExtractItem(IngredientStack.Item req, MEStorage storage, IActionSource src) {
+    private long simulateExtractItem(IngredientStack.Item req) {
         long extracted = 0;
         long needed = req.getAmount();
         for (ItemStack match : req.getIngredient().getItems()) {
-            long ext = storage.extract(AEItemKey.of(match), needed, Actionable.SIMULATE, src);
+            long ext = this.itemInputPorts.extract(AEItemKey.of(match), needed, true);
             extracted += ext;
             needed -= ext;
             if (needed <= 0)
@@ -1188,21 +1613,11 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         return extracted;
     }
 
-    private void modulateExtractItem(IngredientStack.Item req, MEStorage storage, IActionSource src) {
-        long needed = req.getAmount();
-        for (ItemStack match : req.getIngredient().getItems()) {
-            long ext = storage.extract(AEItemKey.of(match), needed, Actionable.MODULATE, src);
-            needed -= ext;
-            if (needed <= 0)
-                break;
-        }
-    }
-
     private long simulateExtractFluid(IngredientStack.Fluid req, MEStorage storage, IActionSource src) {
         long extracted = 0;
         long needed = req.getAmount();
         for (FluidStack match : req.getIngredient().getStacks()) {
-            long ext = storage.extract(AEFluidKey.of(match.getFluid()), needed, Actionable.SIMULATE, src);
+            long ext = instrumentedExtract(storage, AEFluidKey.of(match.getFluid()), needed, Actionable.SIMULATE, src);
             extracted += ext;
             needed -= ext;
             if (needed <= 0)
@@ -1214,20 +1629,122 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private void modulateExtractFluid(IngredientStack.Fluid req, MEStorage storage, IActionSource src) {
         long needed = req.getAmount();
         for (FluidStack match : req.getIngredient().getStacks()) {
-            long ext = storage.extract(AEFluidKey.of(match.getFluid()), needed, Actionable.MODULATE, src);
+            long ext = instrumentedExtract(storage, AEFluidKey.of(match.getFluid()), needed, Actionable.MODULATE, src);
             needed -= ext;
             if (needed <= 0)
                 break;
         }
     }
 
-    private void injectOutputs(StellarSimulationRecipe recipe, MEStorage storage, IActionSource src) {
+    private void prepareOutputs(StellarSimulationRecipe recipe) {
+        List<TransactionalAmountLedger.Entry<AEKey>> outputs = new ArrayList<>();
         for (GenericStack out : recipe.getItemOutputs()) {
-            storage.insert(out.what(), out.amount(), Actionable.MODULATE, src);
+            if (out != null) {
+                outputs.add(new TransactionalAmountLedger.Entry<>(out.what(), out.amount()));
+            }
         }
         for (GenericStack out : recipe.getFluidOutputs()) {
-            storage.insert(out.what(), out.amount(), Actionable.MODULATE, src);
+            if (out != null) {
+                outputs.add(new TransactionalAmountLedger.Entry<>(out.what(), out.amount()));
+            }
         }
+        this.pendingOutputs.prepare(outputs);
+    }
+
+    private boolean flushPendingOutputs(@Nullable AENetworkedBlockEntity nodeBE) {
+        MEStorage storage = null;
+        IActionSource src = IActionSource.empty();
+        if (nodeBE != null && nodeBE.getActionableNode() != null) {
+            IGridNode node = nodeBE.getActionableNode();
+            if (node.getGrid() != null && node.isActive() && node.isPowered()) {
+                storage = node.getGrid().getStorageService().getInventory();
+                src = IActionSource.ofMachine(nodeBE);
+            }
+        }
+        return flushPendingOutputs(storage, src);
+    }
+
+    private boolean flushPendingOutputs(@Nullable MEStorage storage, IActionSource src) {
+        return this.pendingOutputs.drain((key, requested) -> {
+            if (key instanceof AEItemKey itemKey) {
+                return this.itemOutputPorts.insertTransactional(itemKey, requested);
+            }
+            return storage != null ? instrumentedInsert(storage, key, requested, src) : 0L;
+        }) > 0L;
+    }
+
+    public int getItemInputPortCount() {
+        return this.itemInputPorts.size();
+    }
+
+    public int getItemOutputPortCount() {
+        return this.itemOutputPorts.size();
+    }
+
+    public boolean hasPendingOutputs() {
+        return this.pendingOutputs.hasPending();
+    }
+
+    public long getPendingOutputAmount() {
+        long total = 0L;
+        for (var output : this.pendingOutputs.snapshot()) {
+            total = total > Long.MAX_VALUE - output.amount() ? Long.MAX_VALUE : total + output.amount();
+        }
+        return total;
+    }
+
+    public EnergyDebugSnapshot getEnergyDebugSnapshot() {
+        long configuredRate = this.fieldLevel >= 1 && this.fieldLevel <= 3
+                ? ENERGY_RATE_BY_TIER[this.fieldLevel]
+                : 0L;
+        long activeRecipeCost = 0L;
+        if (this.level != null && this.activeRecipeId != null) {
+            var recipe = this.level.getRecipeManager().byKey(this.activeRecipeId);
+            if (recipe.isPresent() && recipe.get().value() instanceof StellarSimulationRecipe stellarRecipe) {
+                activeRecipeCost = StellarEnergyMath.effectiveCost(
+                        stellarRecipe.getEnergyCost(), this.safeMode, this.isOverclocked);
+            }
+        }
+
+        return new EnergyDebugSnapshot(
+                this.energyBuffer,
+                this.energyCapacity,
+                configuredRate,
+                this.lastEnergyRequested,
+                this.lastEnergyAccepted,
+                this.energyPorts.size(),
+                activeRecipeCost,
+                StellarEnergyMath.ticksToReach(this.energyBuffer, activeRecipeCost, configuredRate),
+                StellarEnergyMath.ticksToReach(this.energyBuffer, activeRecipeCost, this.lastEnergyAccepted));
+    }
+
+    public CoolantDebugSnapshot getCoolantDebugSnapshot() {
+        return new CoolantDebugSnapshot(
+                this.heatLevel,
+                MAX_HEAT,
+                this.coolantPorts.size(),
+                this.lastCoolantRequested,
+                this.lastCoolantAccepted);
+    }
+
+    public record CoolantDebugSnapshot(
+            int heat,
+            int maxHeat,
+            int portCount,
+            long lastRequested,
+            long lastAccepted) {
+    }
+
+    public record EnergyDebugSnapshot(
+            long stored,
+            long capacity,
+            long configuredRate,
+            long lastRequested,
+            long lastAccepted,
+            int portCount,
+            long activeRecipeCost,
+            long configuredTicksToRecipe,
+            long observedTicksToRecipe) {
     }
 
     private record ResourceReservation(Map<AEItemKey, Long> itemReservations, Map<AEFluidKey, Long> fluidReservations) {
@@ -1236,18 +1753,48 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     public void markStructureDirty() {
         this.structureDirty = true;
         this.scanCooldown = 0;
+        this.energyPorts = EnergyPortGroup.empty();
+        this.coolantPorts = FluidPortGroup.empty();
+        this.coolantHatches = List.of();
+        this.itemInputPorts = ItemPortGroup.empty();
+        this.itemOutputPorts = ItemPortGroup.empty();
+        this.networkNodeCandidates = List.of();
     }
 
     public void onControllerBroken() {
         if (this.level == null)
             return;
+        recoverPendingOutputsBeforeRemoval();
         for (BlockPos partPos : this.parts) {
             if (this.level.getBlockEntity(partPos) instanceof IMultiblockPart part) {
                 part.unlinkFromController();
             }
         }
         this.parts.clear();
+        this.energyPorts = EnergyPortGroup.empty();
+        this.coolantPorts = FluidPortGroup.empty();
+        this.coolantHatches = List.of();
+        this.itemInputPorts = ItemPortGroup.empty();
+        this.itemOutputPorts = ItemPortGroup.empty();
+        this.networkNodeCandidates = List.of();
         this.assembled = false;
+    }
+
+    private void recoverPendingOutputsBeforeRemoval() {
+        if (this.level == null || this.level.isClientSide() || !this.pendingOutputs.hasPending()) {
+            return;
+        }
+
+        flushPendingOutputs(getConnectedNetworkNode());
+        for (var output : this.pendingOutputs.snapshot()) {
+            Containers.dropItemStack(
+                    this.level,
+                    this.worldPosition.getX() + 0.5D,
+                    this.worldPosition.getY() + 0.5D,
+                    this.worldPosition.getZ() + 0.5D,
+                    GenericStack.wrapInItemStack(new GenericStack(output.key(), output.amount())));
+        }
+        this.pendingOutputs.clear();
     }
 
     // ──────────────────── Utility ────────────────────
@@ -1319,6 +1866,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         super.saveAdditional(tag, registries);
         tag.putBoolean("assembled", this.assembled);
         tag.putBoolean("running", this.running);
+        tag.putBoolean("paused", this.paused);
         tag.putBoolean("safeMode", this.safeMode);
 
         tag.putInt("progress", this.progress);
@@ -1329,6 +1877,14 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         
         tag.putBoolean("autoStart", this.autoStart);
         tag.putBoolean("simulationLocked", this.simulationLocked);
+
+        ListTag pendingOutputTags = new ListTag();
+        for (var output : this.pendingOutputs.snapshot()) {
+            pendingOutputTags.add(GenericStack.writeTag(
+                    registries, new GenericStack(output.key(), output.amount())));
+        }
+        tag.put("pendingOutputs", pendingOutputTags);
+        tag.putBoolean("outputsPrepared", this.pendingOutputs.isPrepared());
 
         if (this.activeRecipeId != null) {
             tag.putString("activeRecipeId", this.activeRecipeId.toString());
@@ -1346,6 +1902,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         super.loadAdditional(tag, registries);
         this.assembled = tag.getBoolean("assembled");
         this.running = tag.getBoolean("running");
+        this.paused = this.running && tag.getBoolean("paused");
         this.safeMode = tag.getBoolean("safeMode");
 
         this.progress = tag.getInt("progress");
@@ -1354,6 +1911,18 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         
         this.autoStart = tag.getBoolean("autoStart");
         this.simulationLocked = tag.getBoolean("simulationLocked");
+
+        List<TransactionalAmountLedger.Entry<AEKey>> restoredOutputs = new ArrayList<>();
+        if (tag.contains("pendingOutputs", Tag.TAG_LIST)) {
+            ListTag pendingOutputTags = tag.getList("pendingOutputs", Tag.TAG_COMPOUND);
+            for (int i = 0; i < pendingOutputTags.size(); i++) {
+                GenericStack output = GenericStack.readTag(registries, pendingOutputTags.getCompound(i));
+                if (output != null && output.amount() > 0L) {
+                    restoredOutputs.add(new TransactionalAmountLedger.Entry<>(output.what(), output.amount()));
+                }
+            }
+        }
+        this.pendingOutputs.restore(restoredOutputs, tag.getBoolean("outputsPrepared"));
 
         // Backward compat: read old "fuelBuffer"/"fuelCapacity" tags as energy
         if (tag.contains("energyBuffer")) {
@@ -1382,12 +1951,21 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
 
         this.structureDirty = true;
+        this.energyPorts = EnergyPortGroup.empty();
+        this.coolantPorts = FluidPortGroup.empty();
+        this.coolantHatches = List.of();
+        this.itemInputPorts = ItemPortGroup.empty();
+        this.itemOutputPorts = ItemPortGroup.empty();
+        this.networkNodeCandidates = List.of();
     }
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
         CompoundTag tag = super.getUpdateTag(registries);
         saveAdditional(tag, registries);
+        if (this.level != null && !this.level.isClientSide()) {
+            MachinePerformanceRegistry.INSTANCE.recordSync(performanceMetricKey(), tag.sizeInBytes(), this.level.getGameTime());
+        }
         return tag;
     }
 

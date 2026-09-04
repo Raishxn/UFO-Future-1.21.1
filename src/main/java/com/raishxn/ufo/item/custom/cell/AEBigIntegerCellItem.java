@@ -162,7 +162,7 @@ public class AEBigIntegerCellItem extends Item implements IAEBigIntegerCell, ICe
     @Override
     public int getBytesPerType(ItemStack stack) {
         if (this.tier == null || this.tier.bytes() == Integer.MAX_VALUE) return 0;
-        return 0; // We define overhead as 0 for all our custom cells so items cost 1 byte exactly.
+        return 8; // AE2-compatible per-type bookkeeping; capacities remain intentionally enormous.
     }
 
     @Override

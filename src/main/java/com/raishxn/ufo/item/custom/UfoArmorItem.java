@@ -2,6 +2,7 @@ package com.raishxn.ufo.item.custom;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.datagen.ModDataComponents;
+import com.raishxn.ufo.event.ArmorEffectRefreshPolicy;
 import com.raishxn.ufo.util.EnergyToolHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -26,6 +27,8 @@ public class UfoArmorItem extends ArmorItem implements IEnergyTool {
 
     private static final int ENERGY_COST_PER_SECOND = 400; // 20 RF/tick * 20 ticks
     private static final int DRAIN_INTERVAL = 20; // Drain every 20 ticks (1 second) to avoid triggering equip sound
+    private static final int EFFECT_DURATION = 200;
+    private static final int EFFECT_REFRESH_THRESHOLD = 180;
     private static final ResourceLocation ARMOR_HEALTH_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "armor_health_boost");
 
     public UfoArmorItem(Holder<ArmorMaterial> pMaterial, Type pType, Properties pProperties) {
@@ -45,7 +48,7 @@ public class UfoArmorItem extends ArmorItem implements IEnergyTool {
                 ItemStack equippedChestplate = player.getInventory().getArmor(Type.CHESTPLATE.getSlot().getIndex());
 
                 if (equippedChestplate.getItem() instanceof UfoArmorItem) {
-                    if (hasFullSuitOfArmorOn(player) && hasEnoughEnergy(player)) {
+                    if (hasActiveFlightSet(player)) {
                         applyAllEffects(player);
                         // Only drain energy every DRAIN_INTERVAL ticks to avoid constant component changes
                         // which trigger the Minecraft equip sound detection
@@ -75,26 +78,22 @@ public class UfoArmorItem extends ArmorItem implements IEnergyTool {
         }
     }
 
-    private boolean hasEnoughEnergy(Player player) {
+    public static boolean hasActiveFlightSet(Player player) {
         for (ItemStack armorStack : player.getInventory().armor) {
-            if (armorStack.getItem() instanceof UfoArmorItem) {
-                int currentEnergy = armorStack.getOrDefault(ModDataComponents.ENERGY.get(), 0);
-                if (currentEnergy < ENERGY_COST_PER_SECOND) {
-                    return false;
-                }
+            if (!(armorStack.getItem() instanceof UfoArmorItem)) {
+                return false;
+            }
+            int currentEnergy = armorStack.getOrDefault(ModDataComponents.ENERGY.get(), 0);
+            if (currentEnergy < ENERGY_COST_PER_SECOND) {
+                return false;
             }
         }
         return true;
     }
 
     private void applyAllEffects(Player player) {
-        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 9, false, false, true));
-        player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 200, 0, false, false, true));
-
-        if (!player.getAbilities().mayfly) {
-            player.getAbilities().mayfly = true;
-            player.onUpdateAbilities();
-        }
+        refreshEffect(player, MobEffects.DAMAGE_RESISTANCE, 9);
+        refreshEffect(player, MobEffects.NIGHT_VISION, 0);
 
         net.minecraft.world.entity.ai.attributes.AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
         if (healthAttribute != null && healthAttribute.getModifier(ARMOR_HEALTH_MODIFIER_ID) == null) {
@@ -107,6 +106,15 @@ public class UfoArmorItem extends ArmorItem implements IEnergyTool {
         }
     }
 
+    private static void refreshEffect(Player player, Holder<net.minecraft.world.effect.MobEffect> effect,
+                                      int amplifier) {
+        if (ArmorEffectRefreshPolicy.shouldRefresh(
+                player.getEffect(effect), amplifier, EFFECT_REFRESH_THRESHOLD)) {
+            player.addEffect(new MobEffectInstance(
+                    effect, EFFECT_DURATION, amplifier, false, false, true));
+        }
+    }
+
     private void removeAllEffects(Player player) {
         net.minecraft.world.entity.ai.attributes.AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
         if (healthAttribute != null && healthAttribute.getModifier(ARMOR_HEALTH_MODIFIER_ID) != null) {
@@ -116,20 +124,6 @@ public class UfoArmorItem extends ArmorItem implements IEnergyTool {
             }
         }
 
-        if (!player.getAbilities().instabuild && !player.isSpectator()) {
-            player.getAbilities().mayfly = false;
-            player.getAbilities().flying = false;
-            player.onUpdateAbilities();
-        }
-    }
-
-    private boolean hasFullSuitOfArmorOn(Player player) {
-        for (ItemStack armorStack : player.getInventory().armor) {
-            if (!(armorStack.getItem() instanceof UfoArmorItem)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     // --- MÉTODOS VISUAIS E DA INTERFACE ---

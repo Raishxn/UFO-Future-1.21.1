@@ -1,33 +1,25 @@
 {
   "variants": {
-    "push_direction=all": {
-      "model": "ufo:block/quantum_pattern_hatch"
-    },
-    "push_direction=down": {
-      "model": "ufo:block/quantum_pattern_hatch_oriented",
-      "x": 180
-    },
-    "push_direction=east": {
-      "model": "ufo:block/quantum_pattern_hatch_oriented",
-      "x": 90,
-      "y": 90
-    },
-    "push_direction=north": {
-      "model": "ufo:block/quantum_pattern_hatch_oriented",
-      "x": 90
-    },
-    "push_direction=south": {
-      "model": "ufo:block/quantum_pattern_hatch_oriented",
-      "x": 90,
-      "y": 180
-    },
-    "push_direction=up": {
-      "model": "ufo:block/quantum_pattern_hatch_oriented"
-    },
-    "push_direction=west": {
-      "model": "ufo:block/quantum_pattern_hatch_oriented",
-      "x": 90,
-      "y": 270
-    }
+    "casing_style=default,push_direction=all": {"model": "ufo:block/quantum_pattern_hatch"},
+    "casing_style=default,push_direction=down": {"model": "ufo:block/quantum_pattern_hatch_oriented", "x": 180},
+    "casing_style=default,push_direction=east": {"model": "ufo:block/quantum_pattern_hatch_oriented", "x": 90, "y": 90},
+    "casing_style=default,push_direction=north": {"model": "ufo:block/quantum_pattern_hatch_oriented", "x": 90},
+    "casing_style=default,push_direction=south": {"model": "ufo:block/quantum_pattern_hatch_oriented", "x": 90, "y": 180},
+    "casing_style=default,push_direction=up": {"model": "ufo:block/quantum_pattern_hatch_oriented"},
+    "casing_style=default,push_direction=west": {"model": "ufo:block/quantum_pattern_hatch_oriented", "x": 90, "y": 270},
+    "casing_style=quantum,push_direction=all": {"model": "ufo:block/quantum_pattern_hatch_quantum"},
+    "casing_style=quantum,push_direction=down": {"model": "ufo:block/quantum_pattern_hatch_quantum", "x": 180},
+    "casing_style=quantum,push_direction=east": {"model": "ufo:block/quantum_pattern_hatch_quantum", "x": 90, "y": 90},
+    "casing_style=quantum,push_direction=north": {"model": "ufo:block/quantum_pattern_hatch_quantum", "x": 90},
+    "casing_style=quantum,push_direction=south": {"model": "ufo:block/quantum_pattern_hatch_quantum", "x": 90, "y": 180},
+    "casing_style=quantum,push_direction=up": {"model": "ufo:block/quantum_pattern_hatch_quantum"},
+    "casing_style=quantum,push_direction=west": {"model": "ufo:block/quantum_pattern_hatch_quantum", "x": 90, "y": 270},
+    "casing_style=entropy,push_direction=all": {"model": "ufo:block/quantum_pattern_hatch_entropy"},
+    "casing_style=entropy,push_direction=down": {"model": "ufo:block/quantum_pattern_hatch_entropy", "x": 180},
+    "casing_style=entropy,push_direction=east": {"model": "ufo:block/quantum_pattern_hatch_entropy", "x": 90, "y": 90},
+    "casing_style=entropy,push_direction=north": {"model": "ufo:block/quantum_pattern_hatch_entropy", "x": 90},
+    "casing_style=entropy,push_direction=south": {"model": "ufo:block/quantum_pattern_hatch_entropy", "x": 90, "y": 180},
+    "casing_style=entropy,push_direction=up": {"model": "ufo:block/quantum_pattern_hatch_entropy"},
+    "casing_style=entropy,push_direction=west": {"model": "ufo:block/quantum_pattern_hatch_entropy", "x": 90, "y": 270}
   }
 }

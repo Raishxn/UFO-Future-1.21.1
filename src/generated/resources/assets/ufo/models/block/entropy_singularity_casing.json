@@ -1,6 +1,10 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "connection": "ufo:same_block",
+  "loader": "ufo:connected_texture",
+  "render_type": "minecraft:solid",
   "textures": {
-    "all": "ufo:block/multiblock/entropy_singularity_casing"
+    "base": "ufo:block/multiblock/entropy_singularity_casing",
+    "ctm": "ufo:block/multiblock/entropy_singularity_casing_ctm",
+    "particle": "ufo:block/multiblock/entropy_singularity_casing"
   }
 }

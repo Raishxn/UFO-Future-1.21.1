@@ -2,6 +2,7 @@ package com.raishxn.ufo.screen;
 
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.init.ModMenus;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,16 +14,23 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 
 public class StellarNexusControllerMenu extends AbstractContainerMenu {
+
+    private static final int DISPLAYED_REQUIREMENT_ROWS = 7;
+    private static final int REQUIREMENT_DATA_START = 24;
+    private static final int REQUIREMENT_DATA_PARTS = 4;
+    private static final int DATA_COUNT = REQUIREMENT_DATA_START
+            + DISPLAYED_REQUIREMENT_ROWS * REQUIREMENT_DATA_PARTS;
 
     private final StellarNexusControllerBE blockEntity;
     private final ContainerLevelAccess levelAccess;
     private final ContainerData data;
 
     public StellarNexusControllerMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(20));
+        this(id, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(DATA_COUNT));
     }
 
     public StellarNexusControllerMenu(int id, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -37,7 +45,9 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
         // 3 = fieldLevel, 4 = energyPercent, 5 = running
         // 6 = heatLevel (0-1000), 7 = safeMode, 8 = cooldownTimer
         // 9-12: energyBuffer (4 shorts for 64-bit long)
-        // 13-16: energyCapacity (4 shorts for 64-bit long)
+        // 13-16: energyCapacity (4 shorts for 64-bit long), 20: paused
+        // 21: coolant kind, 22-23: buffered coolant amount
+        // 24-51: available amount for each of the 7 visible resource rows
         addDataSlots(this.data);
     }
 
@@ -109,6 +119,35 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
 
     public boolean isOverclocked() {
         return this.data.get(19) == 1;
+    }
+
+    public boolean isPaused() {
+        return this.data.get(20) == 1;
+    }
+
+    public FluidStack getBufferedCoolant() {
+        int amount = (this.data.get(22) & 0xFFFF) | ((this.data.get(23) & 0xFFFF) << 16);
+        if (amount <= 0) {
+            return FluidStack.EMPTY;
+        }
+        return switch (this.data.get(21)) {
+            case 1 -> new FluidStack(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), amount);
+            case 2 -> new FluidStack(ModFluids.SOURCE_STABLE_COOLANT.get(), amount);
+            case 3 -> new FluidStack(ModFluids.SOURCE_TEMPORAL_FLUID.get(), amount);
+            default -> FluidStack.EMPTY;
+        };
+    }
+
+    /** Current amount in the connected ME system for one displayed resource row. */
+    public long getRequirementAvailable(int row) {
+        if (row < 0 || row >= DISPLAYED_REQUIREMENT_ROWS) {
+            return 0L;
+        }
+        int start = REQUIREMENT_DATA_START + row * REQUIREMENT_DATA_PARTS;
+        return (this.data.get(start) & 0xFFFFL)
+                | ((this.data.get(start + 1) & 0xFFFFL) << 16)
+                | ((this.data.get(start + 2) & 0xFFFFL) << 32)
+                | ((this.data.get(start + 3) & 0xFFFFL) << 48);
     }
 
     @Override
