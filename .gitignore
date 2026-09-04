@@ -61,3 +61,4 @@ __pycache__/
 
 # Local project audits, human test scripts and internal control notes
 /.project-control/
+/CONTINUITY_LEDGER.md
