@@ -2,6 +2,7 @@ package com.raishxn.ufo.block.entity;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
+import appeng.api.config.PowerUnit;
 import appeng.block.networking.EnergyCellBlock;
 import appeng.blockentity.networking.EnergyCellBlockEntity;
 import com.raishxn.ufo.util.AdjacentEnergyExporter;
@@ -14,7 +15,15 @@ public class UfoEnergyCellBlockEntity extends EnergyCellBlockEntity {
     private final IEnergyStorage exposedEnergy = new IEnergyStorage() {
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
-            return 0;
+            if (maxReceive <= 0) {
+                return 0;
+            }
+            int offered = Math.min(maxReceive, getForgeExportRate());
+            double offeredAE = PowerUnit.FE.convertTo(PowerUnit.AE, offered);
+            double overflow = UfoEnergyCellBlockEntity.this.injectAEPower(offeredAE,
+                    simulate ? Actionable.SIMULATE : Actionable.MODULATE);
+            return (int) Math.max(0, Math.min(offered,
+                    Math.floor(PowerUnit.AE.convertTo(PowerUnit.FE, offeredAE - overflow))));
         }
 
         @Override
@@ -24,21 +33,22 @@ public class UfoEnergyCellBlockEntity extends EnergyCellBlockEntity {
             }
 
             return (int) Math.min(Integer.MAX_VALUE,
-                    UfoEnergyCellBlockEntity.this.extractAEPower(maxExtract,
+                    PowerUnit.AE.convertTo(PowerUnit.FE, UfoEnergyCellBlockEntity.this.extractAEPower(
+                            PowerUnit.FE.convertTo(PowerUnit.AE, maxExtract),
                             simulate ? Actionable.SIMULATE : Actionable.MODULATE,
-                            PowerMultiplier.CONFIG));
+                            PowerMultiplier.ONE)));
         }
 
         @Override
         public int getEnergyStored() {
             return (int) Math.min(Integer.MAX_VALUE,
-                    Math.floor(PowerMultiplier.CONFIG.divide(UfoEnergyCellBlockEntity.this.getAECurrentPower())));
+                    Math.floor(PowerUnit.AE.convertTo(PowerUnit.FE, UfoEnergyCellBlockEntity.this.getAECurrentPower())));
         }
 
         @Override
         public int getMaxEnergyStored() {
             return (int) Math.min(Integer.MAX_VALUE,
-                    Math.floor(PowerMultiplier.CONFIG.divide(UfoEnergyCellBlockEntity.this.getAEMaxPower())));
+                    Math.floor(PowerUnit.AE.convertTo(PowerUnit.FE, UfoEnergyCellBlockEntity.this.getAEMaxPower())));
         }
 
         @Override
@@ -48,7 +58,7 @@ public class UfoEnergyCellBlockEntity extends EnergyCellBlockEntity {
 
         @Override
         public boolean canReceive() {
-            return false;
+            return true;
         }
     };
 
@@ -75,6 +85,6 @@ public class UfoEnergyCellBlockEntity extends EnergyCellBlockEntity {
         }
 
         return (int) Math.max(1,
-                Math.min(Integer.MAX_VALUE, Math.floor(PowerMultiplier.CONFIG.divide(energyCellBlock.getChargeRate()))));
+                Math.min(Integer.MAX_VALUE, Math.floor(PowerUnit.AE.convertTo(PowerUnit.FE, energyCellBlock.getChargeRate()))));
     }
 }
