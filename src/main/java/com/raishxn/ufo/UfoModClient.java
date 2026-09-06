@@ -1,14 +1,8 @@
 package com.raishxn.ufo;
 
-import appeng.client.render.crafting.CraftingCubeModel;
-import appeng.hooks.BuiltInModelHooks;
 import com.raishxn.ufo.block.MultiblockBlocks;
-import com.raishxn.ufo.client.render.ModCoProcessorModelProvider; // <<-- NOVO IMPORT
-import com.raishxn.ufo.client.render.ModCraftingStorageModelProvider;
 import com.raishxn.ufo.client.render.layer.AstralNexusWingsLayer;
 import com.raishxn.ufo.client.renderer.ApocalypseTypeARenderer;
-import com.raishxn.ufo.core.MegaCoProcessorTier; // <<-- NOVO IMPORT
-import com.raishxn.ufo.core.MegaCraftingStorageTier;
 import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.event.ModTooltipEventHandler;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -95,22 +89,6 @@ public class UfoModClient {
             registerEnergyCellFillProperty(ModBlocks.UFO_ENERGY_CELL.get().asItem());
 
             ItemBlockRenderTypes.setRenderLayer(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(), RenderType.cutout());
-            for (var tier : MegaCraftingStorageTier.values()) {
-                String modelName = tier.getRegistryId() + "_mega_crafting_storage_formed";
-                BuiltInModelHooks.addBuiltInModel(
-                        UfoMod.id("block/" + modelName),
-                        new CraftingCubeModel(new ModCraftingStorageModelProvider(tier))
-                );
-            }
-
-            // --- NOVO LOOP PARA OS CO-PROCESSORS ---
-            for (var tier : MegaCoProcessorTier.values()) {
-                String modelName = tier.getRegistryId() + "_mega_co_processor_formed";
-                BuiltInModelHooks.addBuiltInModel(
-                        UfoMod.id("block/" + modelName),
-                        new CraftingCubeModel(new ModCoProcessorModelProvider(tier))
-                );
-            }
         });
     }
 

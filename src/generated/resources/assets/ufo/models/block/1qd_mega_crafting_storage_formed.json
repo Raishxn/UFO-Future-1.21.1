@@ -1,1 +1,5 @@
-{}
+{
+  "coprocessor": false,
+  "loader": "ufo:crafting_cube",
+  "tier": "STORAGE_1QD"
+}

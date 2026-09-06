@@ -125,6 +125,35 @@ public final class MultiblockSupplyWidget {
         graphics.pose().popPose();
     }
 
+    /** DMA has an internal tank and no multiblock operating modes. */
+    public static List<Component> dmaTooltip(MultiblockSupplyStatus status, int localY) {
+        var lines = new ArrayList<Component>();
+        lines.add(Component.translatable("gui.ufo.supply.title"));
+        int row = (localY - 3) / ROW_HEIGHT;
+        if (localY >= 3 && row < coolantRows(status)) {
+            if (status.coolants().isEmpty()) {
+                lines.add(Component.translatable("gui.ufo.supply.no_coolant_detail"));
+            } else {
+                var coolant = status.coolants().get(row);
+                var fluid = BuiltInRegistries.FLUID.get(ResourceLocation.parse(coolant.fluidId()));
+                lines.add(new FluidStack(fluid, 1).getHoverName());
+                lines.add(Component.translatable("gui.ufo.supply.stored", coolant.storedMillibuckets()));
+                lines.add(Component.translatable("gui.ufo.supply.efficiency",
+                        number((double) coolant.heatNumerator() / coolant.millibucketDenominator())));
+                lines.add(Component.translatable("gui.ufo.supply.flow", coolant.maxMillibucketsPerTick()));
+            }
+            lines.add(Component.translatable("gui.ufo.supply.dma_tank", status.capacity()));
+        } else {
+            lines.add(Component.translatable("gui.ufo.supply.effective"));
+            lines.add(Component.translatable("gui.ufo.supply.speed_detail", number(status.speed())));
+            lines.add(Component.translatable("gui.ufo.supply.energy_detail", number(status.energy())));
+            lines.add(Component.translatable("gui.ufo.supply.heat_detail", number(status.heat())));
+            lines.add(Component.translatable("gui.ufo.supply.bonus_detail", number(status.bonus() * 100)));
+            if (status.creative()) lines.add(Component.translatable("gui.ufo.supply.creative"));
+        }
+        return lines;
+    }
+
     private static String number(double value) { return String.format(Locale.ROOT, "%.2f", value); }
     private static String compact(long value) {
         if (value >= 1_000_000_000L) return String.format(Locale.ROOT, "%.1fB", value / 1_000_000_000D);

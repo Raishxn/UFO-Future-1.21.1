@@ -1,1 +1,5 @@
-{}
+{
+  "coprocessor": true,
+  "loader": "ufo:crafting_cube",
+  "tier": "COPROCESSOR_2B"
+}

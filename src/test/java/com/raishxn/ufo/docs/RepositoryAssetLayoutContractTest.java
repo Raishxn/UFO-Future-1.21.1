@@ -17,6 +17,26 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RepositoryAssetLayoutContractTest {
+    @Test
+    void formedCraftingCubesHaveGeometryForEveryTier() throws IOException {
+        Path models = Path.of("src/generated/resources/assets/ufo/models/block");
+        for (String name : List.of("1b", "50b", "1t", "250t", "1qd")) {
+            assertCraftingGeometry(models.resolve(name + "_mega_crafting_storage_formed.json"),
+                    "STORAGE_" + name.toUpperCase(java.util.Locale.ROOT), false);
+        }
+        for (String name : List.of("50m", "150m", "300m", "750m", "2b")) {
+            assertCraftingGeometry(models.resolve(name + "_mega_co_processor_formed.json"),
+                    "COPROCESSOR_" + name.toUpperCase(java.util.Locale.ROOT), true);
+        }
+    }
+
+    private static void assertCraftingGeometry(Path path, String tier, boolean coprocessor) throws IOException {
+        var json = com.google.gson.JsonParser.parseString(Files.readString(path)).getAsJsonObject();
+        org.junit.jupiter.api.Assertions.assertEquals("ufo:crafting_cube", json.get("loader").getAsString(), path.toString());
+        org.junit.jupiter.api.Assertions.assertEquals(tier, json.get("tier").getAsString(), path.toString());
+        org.junit.jupiter.api.Assertions.assertEquals(coprocessor, json.get("coprocessor").getAsBoolean(), path.toString());
+    }
+
     private static final Path MAIN_RESOURCES = Path.of("src/main/resources");
     private static final Path GENERATED_RESOURCES = Path.of("src/generated/resources");
     private static final Path UFO_TEXTURES = MAIN_RESOURCES.resolve("assets/ufo/textures");

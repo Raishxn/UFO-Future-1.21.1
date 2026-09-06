@@ -428,6 +428,22 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     private double currentBonusDropChance = 0.0;
     private boolean hasCreativeCatalyst = false;
 
+    public com.raishxn.ufo.screen.MultiblockSupplyStatus getSupplyStatus() {
+        var coolants = new java.util.ArrayList<com.raishxn.ufo.diagnostic.CoolantStatus>();
+        var stack = this.fluidInv.getStack(2);
+        long capacity = this.fluidInv.getMaxAmount(AEFluidKey.of(net.minecraft.world.level.material.Fluids.WATER));
+        if (stack != null && stack.what() instanceof AEFluidKey key && stack.amount() > 0) {
+            var profile = CoolantTuning.dmaProfile(CoolantRegistry.kindOf(key.getFluid()));
+            coolants.add(new com.raishxn.ufo.diagnostic.CoolantStatus(0,
+                    net.minecraft.core.registries.BuiltInRegistries.FLUID.getKey(key.getFluid()).toString(),
+                    stack.amount(), capacity, profile.heatNumerator(), profile.millibucketDenominator(),
+                    profile.maxFlowPerTick()));
+        }
+        return new com.raishxn.ufo.screen.MultiblockSupplyStatus(coolants, capacity, 0,
+                this.currentSpeedMultiplier, this.currentPowerMultiplier, this.currentHeatMultiplier,
+                this.currentBonusDropChance, this.hasCreativeCatalyst);
+    }
+
     private void recalculateUpgrades() {
         long newMaxPower = MAX_POWER_STORAGE;
         double heatMult = 1.0;

@@ -240,6 +240,7 @@
     "item.ufo.astral_nexus_leggings":  "Astral Nexus Leggings",
     "item.ufo.astral_nexus_boots":  "Astral Nexus Boots",
   "gui.ufo.supply.title": "Coolant & upgrades",
+  "gui.ufo.supply.dma_tank": "Internal coolant tank capacity: %s mB",
   "gui.ufo.supply.coolant": "Coolant",
   "gui.ufo.supply.no_coolant": "none stored",
   "gui.ufo.supply.no_coolant_detail": "No coolant stored: fill a coolant hatch to cool the machine.",

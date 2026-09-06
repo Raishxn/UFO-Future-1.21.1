@@ -58,6 +58,10 @@ public class DimensionalMatterAssemblerMenu extends UpgradeableMenu<DimensionalM
     @GuiSync(12)
     public int overloadTimer = -1;
 
+    @GuiSync(13)
+    public com.raishxn.ufo.screen.MultiblockSupplyStatus supplyStatus =
+            com.raishxn.ufo.screen.MultiblockSupplyStatus.EMPTY;
+
     public final int INPUT_FLUID_SIZE = 16;
     public final int OUTPUT_FLUID_SIZE = 16;
 
@@ -103,6 +107,7 @@ public class DimensionalMatterAssemblerMenu extends UpgradeableMenu<DimensionalM
             this.temperature = getHost().getTemperature();
             this.maxTemperature = getHost().getMaxTemperature();
             this.overloadTimer = getHost().getOverloadTimer();
+            this.supplyStatus = getHost().getSupplyStatus();
 
             // Sincronizar tanques 0, 1 (Outputs) e 2, 3 (Inputs)
             for (int i = 0; i < 4; i++) {

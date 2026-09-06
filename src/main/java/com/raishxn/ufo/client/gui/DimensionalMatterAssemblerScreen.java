@@ -1,6 +1,8 @@
 package com.raishxn.ufo.client.gui;
 
 import java.util.List;
+import com.raishxn.ufo.client.gui.widget.MultiblockSupplyWidget;
+import net.minecraft.client.renderer.Rect2i;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -192,6 +194,9 @@ public class DimensionalMatterAssemblerScreen extends UpgradeableScreen<Dimensio
     @Override
     public void drawBG(GuiGraphics guiGraphics, int offsetX, int offsetY, int mouseX, int mouseY, float partialTicks) {
         super.drawBG(guiGraphics, offsetX, offsetY, mouseX, mouseY, partialTicks);
+        var supplyArea = getSupplyExclusionArea();
+        MultiblockSupplyWidget.render(guiGraphics, this.font, supplyArea.getX(), supplyArea.getY(),
+                this.menu.supplyStatus);
 
         // --- Energy Bar ---
         double stored = this.menu.currentPower;
@@ -278,6 +283,13 @@ public class DimensionalMatterAssemblerScreen extends UpgradeableScreen<Dimensio
 
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        var supplyArea = getSupplyExclusionArea();
+        if (supplyArea.contains(mouseX, mouseY)) {
+            guiGraphics.renderTooltip(this.font, MultiblockSupplyWidget.dmaTooltip(
+                    this.menu.supplyStatus, mouseY - supplyArea.getY()),
+                    java.util.Optional.empty(), mouseX, mouseY);
+            return;
+        }
         // Check if mouse is over the energy bar area
         int barLeft = this.leftPos + ENERGY_X;
         int barTop = this.topPos + ENERGY_Y;
@@ -331,6 +343,11 @@ public class DimensionalMatterAssemblerScreen extends UpgradeableScreen<Dimensio
      * Formats energy values into human-readable strings.
      * K = thousands, M = millions, G = billions
      */
+    public Rect2i getSupplyExclusionArea() {
+        return new Rect2i(this.leftPos + this.imageWidth - 1, this.topPos + 86,
+                MultiblockSupplyWidget.WIDTH, MultiblockSupplyWidget.HEIGHT);
+    }
+
     private static String formatEnergy(double energy) {
         if (energy >= 1_000_000_000) {
             return String.format("%.1fG AE", energy / 1_000_000_000.0);

@@ -66,7 +66,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
             var block = ModBlocks.CRAFTING_STORAGE_BLOCKS.get(tier);
             String registryName = block.getId().getPath();
             ModelFile unformedModel = models().cubeAll(registryName, modLoc("block/" + registryName));
-            ModelFile formedModel = models().getBuilder(registryName + "_formed");
+            ModelFile formedModel = models().getBuilder(registryName + "_formed")
+                    .customLoader(CraftingModelBuilder::new).tier(tier, false).end();
 
             getVariantBuilder(block.get())
                     .partialState().with(AbstractCraftingUnitBlock.FORMED, false)
@@ -81,7 +82,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
             var block = ModBlocks.CO_PROCESSOR_BLOCKS.get(tier);
             String registryName = block.getId().getPath();
             ModelFile unformedModel = models().cubeAll(registryName, modLoc("block/" + registryName));
-            ModelFile formedModel = models().getBuilder(registryName + "_formed");
+            ModelFile formedModel = models().getBuilder(registryName + "_formed")
+                    .customLoader(CraftingModelBuilder::new).tier(tier, true).end();
 
             getVariantBuilder(block.get())
                     .partialState().with(AbstractCraftingUnitBlock.FORMED, false)

@@ -161,6 +161,14 @@ public class UfoJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGuiContainerHandler(com.raishxn.ufo.client.gui.DimensionalMatterAssemblerScreen.class,
+                new IGuiContainerHandler<com.raishxn.ufo.client.gui.DimensionalMatterAssemblerScreen>() {
+                    @Override
+                    public List<net.minecraft.client.renderer.Rect2i> getGuiExtraAreas(
+                            com.raishxn.ufo.client.gui.DimensionalMatterAssemblerScreen screen) {
+                        return List.of(screen.getSupplyExclusionArea());
+                    }
+                });
         // JEMI forwards these areas to EMI as well. A native @EmiEntrypoint
         // would make EMI skip this entire JEI plugin, including all recipes.
         registerSupplyPanel(registration, com.raishxn.ufo.screen.QmfControllerScreen.class);
