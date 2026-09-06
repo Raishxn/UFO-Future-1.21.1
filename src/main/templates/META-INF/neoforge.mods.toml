@@ -97,10 +97,10 @@ config = "ufo.mixins.json"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
-    modId="ufocore"
+    modId="raishxcore"
     type="required"
     reason="UFO FUTURE uses RaishxCore multiblock, exact amount and GUI infrastructure."
-    versionRange="${ufocore_version_range}"
+    versionRange="${raishxcore_version_range}"
     ordering="AFTER"
     side="BOTH"
 

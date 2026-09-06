@@ -10,6 +10,6 @@ plugins {
 
 includeBuild('../UFO-Core-1.21.1') {
     dependencySubstitution {
-        substitute module('com.raishxn.ufocore:ufocore') using project(':')
+        substitute module('com.raishxn.ufocore:raishxcore') using project(':')
     }
 }

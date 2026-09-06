@@ -135,7 +135,7 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
 | **Minecraft** | required | 1.21.1 | — |
 | **NeoForge** | required | 21.1.216+ | — |
 | **[Applied Energistics 2](https://github.com/AppliedEnergistics/Applied-Energistics-2)** | required | `[19.2.17, 20)` | The network, storage and autocrafting UFO builds on |
-| **[RaishxCore](https://github.com/Raishxn/UFO-Core)** | required | `[0.1.0-alpha.1, 0.2)` | Multiblock, exact-amount and GUI foundations |
+| **[RaishxCore](https://github.com/Raishxn/RaishxCore)** | required | `[0.1.0-alpha.1, 0.2)` | Multiblock, exact-amount and GUI foundations |
 | **[AE2 Addon Lib](https://github.com/pedroksl/AE2AddonLib)** | required | `[1.0.3-1.21.1, 2)` | Recipes, registries, menus and widgets |
 | **[GeckoLib](https://github.com/bernie-g/geckolib)** | required | `[4.8.2, 5)` | Apocalypse Type-A entity and renderer |
 | **[Mekanism](https://github.com/mekanism/Mekanism)** | required | `[10.7.18, 11)` | Mekanism-backed cells and chemical integration |
@@ -147,7 +147,7 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
 ### Installation
 
 1. Download the latest build from the [Releases page](https://github.com/Raishxn/UFO-Future-1.21.1/releases)
-2. Drop `ufo-<version>.jar` **and** `ufocore-<version>.jar` into your `mods/` folder
+2. Drop `ufo-<version>.jar` **and** `raishxcore-<version>.jar` into your `mods/` folder
 3. Make sure AE2, AE2 Addon Lib, GeckoLib and Mekanism are installed too
 4. Launch the game
 
@@ -255,7 +255,7 @@ UFO Future is a Gradle composite build: it pulls **RaishxCore** from a sibling
 directory instead of a published artifact.
 
 ```bash
-git clone https://github.com/Raishxn/UFO-Core.git         UFO-Core-1.21.1
+git clone https://github.com/Raishxn/RaishxCore.git         UFO-Core-1.21.1
 git clone https://github.com/Raishxn/UFO-Future-1.21.1.git UFO-Future-1.21.1
 cd UFO-Future-1.21.1
 ./gradlew build      # compiles, runs datagen and the unit test suite
@@ -263,7 +263,7 @@ cd UFO-Future-1.21.1
 ```
 
 Both checkouts must sit side by side — `settings.gradle` includes
-`../UFO-Core-1.21.1` and substitutes the `com.raishxn.ufocore:ufocore`
+`../UFO-Core-1.21.1` and substitutes the `com.raishxn.ufocore:raishxcore`
 dependency with it.
 
 ---
@@ -292,7 +292,7 @@ incorrectly or is missing, please open an issue and it will be fixed.
 | **[AE2 Addon Lib](https://github.com/pedroksl/AE2AddonLib)** — pedroksl and contributors | Recipes, registries, menus and GUI widgets |
 | **[GeckoLib](https://github.com/bernie-g/geckolib)** — bernie-g and contributors | Animated entity and renderer support |
 | **[Mekanism](https://github.com/mekanism/Mekanism)** — Mekanism team | Chemical integration and Mekanism-backed cells |
-| **[RaishxCore](https://github.com/Raishxn/UFO-Core)** | Companion library: multiblock, exact-amount and GUI foundations |
+| **[RaishxCore](https://github.com/Raishxn/RaishxCore)** | Companion library: multiblock, exact-amount and GUI foundations |
 
 ### Optional integrations
 

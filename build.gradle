@@ -116,7 +116,7 @@ dependencies {
     // Implementation - Maven (version by name)
     // ===========================================
     implementation "org.appliedenergistics:appliedenergistics2:${ae2_version}"
-    implementation "com.raishxn.ufocore:ufocore:${ufocore_version}"
+    implementation "com.raishxn.ufocore:raishxcore:${raishxcore_version}"
     implementation "io.github.pedroksl:ae2addonlib:${ae2addonlib_version}-${minecraft_version}"
     implementation "org.appliedenergistics:guideme:${guideme_version}"
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
@@ -190,7 +190,7 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             ae2addonlib_version_range: ae2addonlib_version_range,
             geckolib_version_range : geckolib_version_range,
             mekanism_version_range : mekanism_version_range,
-            ufocore_version_range  : ufocore_version_range,
+            raishxcore_version_range  : raishxcore_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
             mod_license            : mod_license,
