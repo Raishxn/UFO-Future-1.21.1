@@ -31,15 +31,15 @@ Mezclar tiers invalida la estructura.
 
 El Safe Mode es la opcion segura para automatizacion.
 
-- **2.5x** costo de AE
-- **2.5x** consumo de combustible
+- **2x** costo de AE
+- **2x** consumo de combustible
 - **2.5x** consumo de coolant
 - Apagado automatico en vez de explosion
 
 ## Overclock
 
 - **5x** mas velocidad
-- **10x** costo de AE
+- **8x** costo de AE
 - **5x** combustible
 - **5x** calor
 - **5x** coolant

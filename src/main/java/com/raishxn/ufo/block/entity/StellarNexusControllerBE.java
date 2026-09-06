@@ -140,8 +140,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private static final int COOLDOWN_DURATION = 36000; // 30 minutes = 36000 ticks
     private static final int COOLDOWN_SAVE_INTERVAL = 20;
 
-    // Safe mode penalty — consumes 2.5x more resources
-    private static final double SAFE_MODE_MULTIPLIER = 2.5;
+    // Safe mode penalty — consumes 2x more resources
+    private static final double SAFE_MODE_MULTIPLIER = 2.0;
     // UI Toggles
     private boolean autoStart = false;
     private boolean simulationLocked = false;
@@ -663,7 +663,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                     + toRoman(recipe.getFieldTier()) + ")"));
         }
 
-        // Compute effective costs (safe mode = 2.5x)
+        // Compute effective costs (safe mode = 2x, overclock = 8x)
         long effectiveEnergyCost = StellarEnergyMath.effectiveCost(
                 recipe.getEnergyCost(), this.safeMode, this.isOverclocked);
 
@@ -674,7 +674,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         // Energy check
         if (this.energyBuffer < effectiveEnergyCost) {
             int pct = this.energyCapacity > 0 ? (int) (this.energyBuffer * 100 / this.energyCapacity) : 0;
-            String safeNote = this.safeMode ? " §7(2.5x Safe Mode)" : "";
+            String safeNote = this.safeMode ? " §7(2x Safe Mode)" : "";
             errors.add(Component.literal("§c✗ Energy: " + formatAmount(this.energyBuffer) + " / "
                     + formatAmount(effectiveEnergyCost) + " AE" + safeNote));
         }
@@ -696,7 +696,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                     long available = instrumentedExtract(storage, fuelKey, effectiveFuelAmount, Actionable.SIMULATE, src);
                     if (available < effectiveFuelAmount) {
                         String fluidName = formatFluidName(fuelRL.getPath());
-                        String safeNote = this.safeMode ? " §7(2.5x Safe Mode)" : "";
+                        String safeNote = this.safeMode ? " §7(2x Safe Mode)" : "";
                         errors.add(Component.literal("§c✗ Fuel: " + formatAmount(available) + " / "
                                 + formatAmount(effectiveFuelAmount) + " mB §f" + fluidName + safeNote));
                     }
@@ -774,7 +774,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         IActionSource src = IActionSource.ofMachine(nodeBE);
         MEStorage storage = grid.getStorageService().getInventory();
 
-        // Compute effective costs (safe mode = 2.5x)
+        // Compute effective costs (safe mode = 2x, overclock = 8x)
         long effectiveEnergyCost = StellarEnergyMath.effectiveCost(
                 recipe.getEnergyCost(), this.safeMode, this.isOverclocked);
 

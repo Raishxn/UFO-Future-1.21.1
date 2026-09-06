@@ -15,9 +15,9 @@ class StellarEnergyMathTest {
     @Test
     void effectiveCostUsesExactIntegerRatios() {
         assertEquals(6_500_000_000L, StellarEnergyMath.effectiveCost(6_500_000_000L, false, false));
-        assertEquals(16_250_000_000L, StellarEnergyMath.effectiveCost(6_500_000_000L, true, false));
-        assertEquals(65_000_000_000L, StellarEnergyMath.effectiveCost(6_500_000_000L, false, true));
-        assertEquals(162_500_000_000L, StellarEnergyMath.effectiveCost(6_500_000_000L, true, true));
+        assertEquals(13_000_000_000L, StellarEnergyMath.effectiveCost(6_500_000_000L, true, false));
+        assertEquals(52_000_000_000L, StellarEnergyMath.effectiveCost(6_500_000_000L, false, true));
+        assertEquals(104_000_000_000L, StellarEnergyMath.effectiveCost(6_500_000_000L, true, true));
         assertEquals(Long.MAX_VALUE, StellarEnergyMath.effectiveCost(Long.MAX_VALUE, true, true));
     }
 

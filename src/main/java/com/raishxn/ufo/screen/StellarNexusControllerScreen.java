@@ -300,7 +300,7 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         boolean overclocked = this.menu.isOverclocked();
         this.overclockButton.setAtlasSprite(UNIVERSAL_WIDGETS, 256, 256, 0, 33, 14, 14);
         this.overclockButton.setTooltip(Tooltip.create(Component.literal(overclocked
-                ? "§aOverclock: ON\n§710x energy, 5x heat/fuel/speed" : "§cOverclock: OFF")));
+                ? "§aOverclock: ON\n§78x energy, 5x heat/fuel/speed" : "§cOverclock: OFF")));
     }
 
     private void cycleRecipe(int delta) {

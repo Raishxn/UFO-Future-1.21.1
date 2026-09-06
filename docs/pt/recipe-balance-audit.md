@@ -43,8 +43,8 @@ Os maiores problemas não são "falta de endgame". Eles são:
 
 Fatos importantes confirmados durante a auditoria:
 
-- o Safe Mode do Stellar Nexus multiplica energia, combustível e coolant por `2.5x`
-- o overclock do Stellar Nexus multiplica energia inicial por `10x`, combustível e coolant por `5x`, calor por `5x` e progresso por `5x`
+- o Safe Mode do Stellar Nexus multiplica energia e combustível por `2x` e coolant por `2.5x` (rebalance de 2026-09-06; antes `2.5x` para os três)
+- o overclock do Stellar Nexus multiplica energia inicial por `8x`, combustível, coolant, calor e progresso por `5x` (rebalance de 2026-09-06; antes `10x` energia)
 - a capacidade global de energia do Stellar Nexus é `20.000.000.000 AE`
 - o buffer interno base do DMA é `500.000 AE`
 - o empilhamento de catalisadores do DMA já tem tradeoffs térmicos fortes e sinergia de 4 slots

@@ -29,15 +29,15 @@ Mixed tiers invalidate the structure.
 
 ## Safe Mode
 
-- **2.5x** AE cost
-- **2.5x** fuel use
+- **2x** AE cost
+- **2x** fuel use
 - **2.5x** coolant use
 - Automatic shutdown instead of explosion
 
 ## Overclock
 
 - **5x** speed
-- **10x** AE cost
+- **8x** AE cost
 - **5x** fuel
 - **5x** heat
 - **5x** coolant

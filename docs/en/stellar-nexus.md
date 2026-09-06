@@ -33,15 +33,15 @@ The intended setup is to climb this ladder instead of brute-forcing the machine 
 
 Safe Mode is the reliable automation option.
 
-- **2.5x** AE cost
-- **2.5x** fuel use
+- **2x** AE cost
+- **2x** fuel use
 - **2.5x** coolant use
 - Automatic shutdown instead of detonation at maximum heat
 
 ## Overclock Mode
 
 - **5x faster** recipe completion
-- **10x** AE cost
+- **8x** AE cost
 - **5x** fuel use
 - **5x** heat generation
 - **5x** coolant use

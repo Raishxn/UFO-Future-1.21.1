@@ -19,14 +19,11 @@ public final class StellarEnergyMath {
             return 0L;
         }
 
-        long numerator = safeMode ? 5L : 1L;
-        long denominator = safeMode ? 2L : 1L;
+        long multiplier = safeMode ? 2L : 1L;
         if (overclocked) {
-            numerator = saturatedMultiply(numerator, 10L);
+            multiplier = saturatedMultiply(multiplier, 8L);
         }
-        long whole = saturatedMultiply(baseCost / denominator, numerator);
-        long fraction = saturatedMultiply(baseCost % denominator, numerator) / denominator;
-        return saturatedAdd(whole, fraction);
+        return saturatedMultiply(baseCost, multiplier);
     }
 
     /** Returns the number of ticks needed to reach {@code target}, or -1 if impossible. */
@@ -51,12 +48,5 @@ public final class StellarEnergyMath {
             return Long.MAX_VALUE;
         }
         return left * right;
-    }
-
-    private static long saturatedAdd(long left, long right) {
-        if (left > Long.MAX_VALUE - right) {
-            return Long.MAX_VALUE;
-        }
-        return left + right;
     }
 }
