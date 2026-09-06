@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 100000,
+  "energy": 500000,
   "fluid_inputs": [
     {
       "amount": 750,
@@ -12,7 +12,7 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
-      "amount": 4,
+      "amount": 2,
       "ingredient": {
         "item": "ufo:white_dwarf_fragment_ingot"
       }
@@ -30,10 +30,10 @@
   ],
   "item_outputs": [
     {
-      "#": 3,
+      "#": 2,
       "#t": "ae2:i",
       "id": "ufo:neutron_star_fragment_ingot"
     }
   ],
-  "time": 420
+  "time": 600
 }

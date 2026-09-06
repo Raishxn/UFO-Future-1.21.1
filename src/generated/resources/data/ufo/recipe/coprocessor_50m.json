@@ -16,9 +16,9 @@
     }
   },
   "pattern": [
-    "PEP",
+    " PE",
     "FMF",
-    "PEP"
+    "P  "
   ],
   "result": {
     "count": 1,

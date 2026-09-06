@@ -230,8 +230,9 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
             this.minecraft.player.displayClientMessage(
                     Component.translatable("message.ufo.structure_formed").withStyle(ChatFormatting.GREEN), true);
         } else if (!result.isValid()) {
-            this.minecraft.player.displayClientMessage(Component.literal(
-                    "§e[Stellar Nexus] §c" + result.allErrors().size() + " block(s) missing or misplaced."), false);
+            for (var error : result.allErrors().stream().limit(50).toList()) {
+                com.raishxn.ufo.client.render.StructureHighlightRenderer.highlight(error.pos(), 5000);
+            }
         } else {
             this.minecraft.player.displayClientMessage(Component.literal(
                     "§e[Stellar Nexus] §cStructure shape is valid, but hatch requirements are not met."), false);
@@ -282,7 +283,11 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
     private void updateSideButtonTooltips() {
         boolean safe = this.menu.isSafeMode();
-        this.safeModeButton.setAtlasSprite(UNIVERSAL_WIDGETS, 256, 256, 0, 47, 14, 12);
+        if (safe) {
+            this.safeModeButton.setAtlasSprite(UNIVERSAL_WIDGETS, 256, 256, 0, 47, 14, 12);
+        } else {
+            this.safeModeButton.setAe2Icon(Icon.INVALID);
+        }
         this.safeModeButton.setTooltip(Tooltip.create(Component.literal(safe
                 ? "§aSafe Mode: ON\n§7Auto-shutdown on overheat"
                 : "§cSafe Mode: OFF\n§4Local containment blast on overheat")));

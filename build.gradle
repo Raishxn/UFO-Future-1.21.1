@@ -133,7 +133,6 @@ dependencies {
     compileOnly "mekanism:Mekanism:${mekanism_version}:generators"
     compileOnly "curse.maven:applied-mekanistics-574300:${applied_mekanistics_file_id}"
     compileOnly "curse.maven:jei-238222:${jei_file_id}"
-    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     compileOnly "curse.maven:kubejs-238086:${kubejs_file_id}"
     compileOnly "curse.maven:rhino-416294:${rhino_file_id}"
     compileOnly "curse.maven:applied-flux-965012:${applied_flux_file_id}"
@@ -159,6 +158,7 @@ dependencies {
     localRuntime "mekanism:Mekanism:${mekanism_version}:generators"
     localRuntime "curse.maven:ex-pattern-provider-892005:${ex_pattern_file_id}"
     localRuntime "curse.maven:jei-238222:${jei_file_id}"
+    compileOnly "dev.emi:emi-neoforge:${emi_version}"
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
     localRuntime "curse.maven:ae2-jei-integration-1074338:${ae2_jei_integration_file_id}"
     localRuntime "curse.maven:mmmmmmmmmmmm-225738:${mmmmmmmmmmmm_file_id}"
@@ -170,6 +170,7 @@ dependencies {
     // Pure unit tests for infrastructure that does not require a running game.
     testImplementation platform("org.junit:junit-bom:5.10.2")
     testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation "com.google.code.gson:gson:2.10.1"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }
 

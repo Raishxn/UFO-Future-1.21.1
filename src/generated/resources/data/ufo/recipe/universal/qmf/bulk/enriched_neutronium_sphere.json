@@ -36,5 +36,5 @@
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/bulk/enriched_neutronium_sphere",
-  "time": 7200
+  "time": 3600
 }

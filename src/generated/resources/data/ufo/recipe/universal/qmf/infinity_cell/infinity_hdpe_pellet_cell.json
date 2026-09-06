@@ -6,7 +6,7 @@
     }
   ],
   "type": "ufo:universal_multiblock",
-  "energy": 650000000,
+  "energy": 1000000000,
   "fluid_inputs": [
     {
       "amount": 8000,
@@ -48,5 +48,5 @@
   "machine": "qmf",
   "recipe_name": "universal/qmf/infinity_cell/infinity_hdpe_pellet_cell",
   "required_tier": 2,
-  "time": 22000
+  "time": 10000
 }

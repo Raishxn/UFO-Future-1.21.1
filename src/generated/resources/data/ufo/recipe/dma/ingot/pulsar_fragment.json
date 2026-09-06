@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 200000,
+  "energy": 1000000,
   "fluid_inputs": [
     {
       "amount": 1200,
@@ -22,12 +22,6 @@
       "ingredient": {
         "item": "minecraft:lodestone"
       }
-    },
-    {
-      "amount": 4,
-      "ingredient": {
-        "item": "minecraft:lightning_rod"
-      }
     }
   ],
   "item_outputs": [
@@ -37,5 +31,5 @@
       "id": "ufo:pulsar_fragment_ingot"
     }
   ],
-  "time": 640
+  "time": 800
 }

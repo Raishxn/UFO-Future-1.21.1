@@ -8,8 +8,9 @@ navigation:
 
 # Assembler Controls and Thermal Budget
 
-An ME Massive Fluid Hatch may replace any casing to receive coolant from external
-fluid pipes. Its local tank is consumed before the existing ME storage fallback.
+The required ME Massive Fluid Hatch receives coolant from external fluid pipes.
+Place it in any casing position; the assembly preview is an example. Only its local tank is consumed;
+there is no automatic ME storage fallback.
 The single Quantum Pattern Hatch may also move between casing positions; neither
 hatch may replace Vibrant Glass.
 

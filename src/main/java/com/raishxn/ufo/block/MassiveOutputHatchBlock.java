@@ -78,17 +78,25 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
                     ? net.minecraft.network.chat.Component.literal(
                             be.isLinked() ? "Online — Linked to Controller" : "Online — Standalone")
                             .withStyle(net.minecraft.ChatFormatting.GREEN)
-                    : net.minecraft.network.chat.Component.literal("Offline — No ME Network")
+                    : net.minecraft.network.chat.Component.literal("ME disconnected")
                             .withStyle(net.minecraft.ChatFormatting.RED);
             player.displayClientMessage(
                     state.getBlock().getName().copy()
                             .append(net.minecraft.network.chat.Component.literal(": "))
                             .append(status)
-                            .append(coolantStatus(be)),
+                            .append(coolantStatus(be))
+                            .append(energyStatus(be)),
                     true);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    private static net.minecraft.network.chat.Component energyStatus(MassiveOutputHatchBE be) {
+        if (!be.supportsEnergyInput()) return net.minecraft.network.chat.Component.empty();
+        return net.minecraft.network.chat.Component.literal(" — External energy: "
+                + be.getStoredExternalEnergyAE() + "/" + be.getExternalEnergyCapacityAE() + " AE")
+                .withStyle(net.minecraft.ChatFormatting.AQUA);
     }
 
     private static net.minecraft.network.chat.Component coolantStatus(MassiveOutputHatchBE be) {
@@ -116,9 +124,12 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
                 BlockPos controllerPos = hatch.getControllerPos();
                 if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
                     controller.removePart(pos);
-                    controller.scanStructure(level);
+                    // Defer the re-scan: scanning here relinks/unlinks parts and
+                    // writes block states while this removal is still in flight.
+                    markControllerDirty(level, controllerPos);
                 }
-                hatch.unlinkFromController();
+                // Must not touch this position's block state — see unlinkForRemoval.
+                hatch.unlinkForRemoval();
             }
         }
         super.onRemove(state, level, pos, newState, moved);

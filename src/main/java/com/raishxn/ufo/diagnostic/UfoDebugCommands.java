@@ -1,6 +1,9 @@
 package com.raishxn.ufo.diagnostic;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.raishxn.ufo.UfoMod;
+import net.neoforged.fml.loading.FMLPaths;
 import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
 import com.raishxn.ufo.block.entity.AbstractParallelMultiblockControllerBE;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
@@ -11,6 +14,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 
 import java.util.TreeMap;
+import java.nio.file.Files;
+import java.io.IOException;
+import java.time.Instant;
 
 public final class UfoDebugCommands {
     private UfoDebugCommands() {
@@ -22,7 +28,11 @@ public final class UfoDebugCommands {
                 .then(Commands.literal("debug")
                         .then(Commands.literal("perf")
                                 .executes(context -> showPerformance(context.getSource()))
-                                .then(Commands.literal("reset").executes(context -> resetPerformance(context.getSource()))))
+                                .then(Commands.literal("reset").executes(context -> resetPerformance(context.getSource())))
+                                .then(Commands.literal("export")
+                                        .then(Commands.argument("scenario", StringArgumentType.word())
+                                                .executes(context -> exportPerformance(context.getSource(),
+                                                        StringArgumentType.getString(context, "scenario"))))))
                         .then(Commands.literal("machine")
                                 .then(Commands.argument("pos", BlockPosArgument.blockPos())
                                         .executes(context -> showMachine(
@@ -135,6 +145,27 @@ public final class UfoDebugCommands {
         MachinePerformanceRegistry.INSTANCE.reset();
         source.sendSuccess(() -> Component.literal("Métricas de performance UFO zeradas."), true);
         return 1;
+    }
+
+    private static int exportPerformance(CommandSourceStack source, String scenario) {
+        var snapshots = MachinePerformanceRegistry.INSTANCE.snapshots();
+        if (snapshots.isEmpty()) {
+            source.sendFailure(Component.literal("Nenhuma amostra UFO para exportar."));
+            return 0;
+        }
+        try {
+            var directory = FMLPaths.GAMEDIR.get().resolve("ufo-diagnostics");
+            Files.createDirectories(directory);
+            // User labels are metadata only, never part of a filesystem path.
+            var output = Files.createTempFile(directory, "perf-", ".json");
+            Files.writeString(output, MachinePerformanceReport.toJson(scenario, Instant.now().toString(), snapshots));
+            source.sendSuccess(() -> Component.literal("Diagnóstico UFO exportado: " + output.toAbsolutePath()), false);
+            return snapshots.size();
+        } catch (IOException exception) {
+            UfoMod.LOGGER.error("Could not export UFO performance report", exception);
+            source.sendFailure(Component.literal("Falha ao exportar diagnóstico UFO; consulte o log do servidor."));
+            return 0;
+        }
     }
 
     private static String formatTicks(long ticks) {

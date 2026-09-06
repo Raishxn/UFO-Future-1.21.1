@@ -14,14 +14,14 @@
     "P": {
       "item": "ufo:phase_shift_component_matrix"
     },
-    "Q": {
-      "item": "ufo:neutronium_sphere"
+    "W": {
+      "item": "ufo:white_dwarf_fragment_ingot"
     }
   },
   "pattern": [
-    "PEP",
-    "FCF",
-    "PQP"
+    "PFP",
+    "WCE",
+    " W "
   ],
   "result": {
     "count": 1,

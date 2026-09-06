@@ -102,12 +102,36 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
     public @Nullable FieldTieredCubeValidator.ValidationResult findStructure(Level level) {
         long startedAt = System.nanoTime();
         try {
-            return FieldTieredCubeValidator.findMatchingCube(level, this.worldPosition, getShellPredicate()).orElse(null);
+            return FieldTieredCubeValidator.findMatchingCube(
+                    level, this.worldPosition, getShellPredicate(), this.anchorPos).orElse(null);
         } finally {
             MachinePerformanceRegistry.INSTANCE.recordScan(
                     performanceMetricKey(), System.nanoTime() - startedAt,
                     FieldTieredCubeValidator.BLOCK_TESTS_PER_FULL_SEARCH, level.getGameTime());
         }
+    }
+
+    @Nullable
+    public BlockPos getAnchorPos() {
+        return this.anchorPos;
+    }
+
+    /**
+     * Revalidates the cached anchor cube in place. Returns the full validation result
+     * when the cube is still intact and contains this machine, otherwise null — the
+     * caller must then fall back to a structural search.
+     */
+    @Nullable
+    public FieldTieredCubeValidator.ValidationResult validateCurrentAnchor(Level level) {
+        if (this.anchorPos == null || !FieldTieredCubeValidator.contains(this.anchorPos, this.worldPosition)) {
+            return null;
+        }
+        FieldTieredCubeValidator.ValidationResult result =
+                FieldTieredCubeValidator.validateAt(level, this.anchorPos, this.worldPosition, getShellPredicate());
+        if (!result.valid() || !result.shellPositions().contains(this.worldPosition)) {
+            return null;
+        }
+        return result;
     }
 
     protected final MachineMetricKey performanceMetricKey() {

@@ -29,6 +29,8 @@ import com.raishxn.ufocore.api.port.FluidInputPort;
 import com.raishxn.ufocore.api.port.FluidPortGroup;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.entity.processing.AutocraftingOutputPolicy;
+import com.raishxn.ufo.block.entity.processing.CoolantRegistry;
+import com.raishxn.ufo.block.entity.processing.CoolantTuning;
 import com.raishxn.ufo.block.entity.processing.KeyedTransferBatch;
 import com.raishxn.ufo.block.entity.processing.MultiblockProcessingRecipe;
 import com.raishxn.ufo.block.entity.processing.ParallelProcessState;
@@ -60,6 +62,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import com.raishxn.ufocore.api.port.EnergyPortGroup;
+import com.raishxn.ufocore.api.port.EnergyInputPort;
+import com.raishxn.ufo.diagnostic.CoolantStatus;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -74,14 +79,6 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     private static final int OVERLOAD_TICKS = 100;
     private static final float THERMAL_EXPLOSION_POWER = 30.0F;
     private static final long LEGACY_MAXIMUM_BONUS_ROLLS = 3L;
-    private static final ThermalSystem.CoolantProfile TEMPORAL_COOLANT_PROFILE =
-            new ThermalSystem.CoolantProfile(100L, 1L, 10L);
-    private static final ThermalSystem.CoolantProfile STABLE_COOLANT_PROFILE =
-            new ThermalSystem.CoolantProfile(50L, 1L, 10L);
-    private static final ThermalSystem.CoolantProfile GELID_COOLANT_PROFILE =
-            new ThermalSystem.CoolantProfile(1L, 120L, 1_000L);
-    private static final ThermalSystem.CoolantProfile FALLBACK_COOLANT_PROFILE =
-            new ThermalSystem.CoolantProfile(15L, 1L, 10L);
     protected final List<ParallelProcessState> processStates = new ArrayList<>();
     private AEFluidKey[][] coolantPriorityByTier;
     private long lastClientSyncEvaluationTick = Long.MIN_VALUE;
@@ -97,7 +94,9 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     private Map<ResourceLocation, MultiblockProcessingRecipe> cachedRecipeIndex;
     private long lastRecipeCacheRefreshTick = Long.MIN_VALUE;
     private ChemicalPortGroup<ResourceLocation> chemicalPorts = ChemicalPortGroup.empty();
+    private EnergyPortGroup energyPorts = EnergyPortGroup.empty();
     private FluidPortGroup<AEFluidKey> coolantPorts = FluidPortGroup.empty();
+    private List<MassiveOutputHatchBE> coolantHatches = List.of();
     private List<AENetworkedBlockEntity> networkNodeCandidates = List.of();
     @Nullable
     private CatalystProfile cachedCatalystProfile;
@@ -121,25 +120,82 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     @Override
     public void markStructureDirty() {
         this.chemicalPorts = ChemicalPortGroup.empty();
+        this.energyPorts = EnergyPortGroup.empty();
         this.coolantPorts = FluidPortGroup.empty();
+        this.coolantHatches = List.of();
         this.networkNodeCandidates = List.of();
         super.markStructureDirty();
     }
 
     private void rebuildCoolantPorts(Level level) {
         if (!this.assembled) {
+            this.energyPorts = EnergyPortGroup.empty();
             this.coolantPorts = FluidPortGroup.empty();
+            this.coolantHatches = List.of();
             return;
         }
+        List<EnergyInputPort> energyInputs = new ArrayList<>();
         List<FluidInputPort<AEFluidKey>> detectedPorts = new ArrayList<>();
+        List<MassiveOutputHatchBE> detectedHatches = new ArrayList<>();
         for (BlockPos partPos : this.parts) {
-            if (level.getBlockEntity(partPos) instanceof MassiveOutputHatchBE hatch
-                    && hatch.supportsFluidInput()) {
-                detectedPorts.add(hatch);
+            if (level.getBlockEntity(partPos) instanceof MassiveOutputHatchBE hatch) {
+                if (hatch.supportsEnergyInput()) energyInputs.add(hatch);
+                if (hatch.supportsFluidInput()) {
+                    detectedPorts.add(hatch);
+                    detectedHatches.add(hatch);
+                }
             }
         }
         this.coolantPorts = new FluidPortGroup<>(detectedPorts);
+        this.coolantHatches = List.copyOf(detectedHatches);
+        this.energyPorts = new EnergyPortGroup(energyInputs);
     }
+
+    public List<CoolantStatus> getCoolantStatus() {
+        List<CoolantStatus> result = new ArrayList<>();
+        if (this.level == null || !this.assembled) return List.of();
+        for (MassiveOutputHatchBE hatch : this.coolantHatches) {
+            if (!hatch.isRemoved() && this.level.hasChunkAt(hatch.getBlockPos())) {
+                var fluid = hatch.getStoredCoolant();
+                var profile = fluid.isEmpty() ? new ThermalSystem.CoolantProfile(0, 1, 0) : getCoolantProfile(fluid.getFluid());
+                result.add(new CoolantStatus(hatch.getBlockPos().asLong(),
+                        fluid.isEmpty() ? "minecraft:empty" : net.minecraft.core.registries.BuiltInRegistries.FLUID.getKey(fluid.getFluid()).toString(),
+                        fluid.getAmount(), MassiveOutputHatchBE.COOLANT_CAPACITY,
+                        profile.heatNumerator(), profile.millibucketDenominator(), profile.maxFlowPerTick()));
+            }
+        }
+        return List.copyOf(result);
+    }
+
+    /** One display entry per coolant actually stored in the hatches, in consumption order. */
+    public List<CoolantStatus> getCoolantDisplayStatus() {
+        var tanks = getCoolantStatus();
+        List<CoolantStatus> result = new ArrayList<>(3);
+        for (var key : getCoolantPriority()) {
+            String id = net.minecraft.core.registries.BuiltInRegistries.FLUID.getKey(key.getFluid()).toString();
+            long stored = tanks.stream().filter(tank -> tank.fluidId().equals(id))
+                    .mapToLong(CoolantStatus::storedMillibuckets).sum();
+            if (stored <= 0L) {
+                continue;
+            }
+            var profile = getCoolantProfile(key.getFluid());
+            result.add(new CoolantStatus(0, id, stored, 0, profile.heatNumerator(),
+                    profile.millibucketDenominator(), profile.maxFlowPerTick()));
+        }
+        return List.copyOf(result);
+    }
+
+    public UpgradeStatus getUpgradeStatus() {
+        var profile = getCatalystProfile();
+        return new UpgradeStatus(profile.creative(), profile.speedMultiplier(), profile.energyMultiplier(),
+                profile.heatMultiplier() * getHeatGenerationMultiplier(), profile.bonusDropChance(),
+                this.safeMode, this.overclocked, getProgressPerTick(), getParallelThreadLimit(), this.machineTier);
+    }
+
+    /** Catalyst multipliers are after stacking/clamps; recipe tier scaling is separate. */
+    public record UpgradeStatus(boolean creative, double catalystSpeedMultiplier, double catalystEnergyMultiplier,
+                                double heatMultiplier, double bonusDropChance, boolean safeMode, boolean overclocked,
+                                int progressPerTick, int parallelLimit, int machineTier) {}
 
     public int getCoolantPortCount() {
         return this.coolantPorts.size();
@@ -147,16 +203,15 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
     @Override
     protected boolean validateMatchedStructure(Level level, MultiblockPattern.MatchResult result, Direction facing) {
-        if (this instanceof QuantumCryoforgeControllerBE) {
-            return true;
-        }
-        int patternHatches = 0;
+        int patternHatches = 0, coolantHatches = 0, energyHatches = 0;
         for (BlockPos partPos : result.partPositions()) {
-            if (level.getBlockState(partPos).is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())) {
-                patternHatches++;
-            }
+            var state = level.getBlockState(partPos);
+            if (state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())) patternHatches++;
+            if (state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())) coolantHatches++;
+            if (state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())) energyHatches++;
         }
-        return patternHatches == 1;
+        return coolantHatches >= 1 && energyHatches >= 1
+                && (this instanceof QuantumCryoforgeControllerBE || patternHatches == 1);
     }
 
     private void rebuildChemicalPorts(Level level) {
@@ -223,7 +278,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
             this.displayedRecipes.clear();
-            updateTemperature(0, null, null, CatalystProfile.DEFAULT);
+            updateTemperature(0, CatalystProfile.DEFAULT);
             syncClientState(false);
             return;
         }
@@ -240,7 +295,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.maxProgress = 0;
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
-            updateTemperature(0, null, null, CatalystProfile.DEFAULT);
+            updateTemperature(0, CatalystProfile.DEFAULT);
             if (shouldEvaluateClientState(true)) {
                 rebuildDisplayedRecipes(recipeIndex);
                 syncClientState(false);
@@ -257,7 +312,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.maxProgress = 0;
             this.storedEnergy = 0L;
             this.maxStoredEnergy = 0L;
-            updateTemperature(0, null, null, CatalystProfile.DEFAULT);
+            updateTemperature(0, CatalystProfile.DEFAULT);
             if (shouldEvaluateClientState(true)) {
                 rebuildDisplayedRecipes(recipeIndex);
                 syncClientState(false);
@@ -327,7 +382,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             ParallelProcessState processState = prepared.state();
             MultiblockProcessingRecipe recipe = prepared.recipe();
             processState.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size(), recipe.chemicalInputs().size());
-            chargeEnergy(processState, energyService, prepared.scaledEnergy());
+            chargeEnergy(processState, prepared.scaledEnergy());
             boolean materialsPlanned = planIngredientPulls(
                     processState, recipe, inventory, src, simulatedAvailability, inputBatch);
             if (materialsPlanned && processState.getEnergyBuffer() >= prepared.scaledEnergy()) {
@@ -362,7 +417,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.progress = hottestProgress;
         updateRuntimeState(true, true, getActiveProcessCount(), runningThreads,
                 countBlockedOutputs(), countInvalidRecipes(recipeIndex), thermalLocked);
-        updateTemperature(runningThreads, inventory, src, catalystProfile);
+        updateTemperature(runningThreads, catalystProfile);
         if (persistentActivityBefore || hasPersistentRuntimeActivity()) {
             this.setChanged();
         }
@@ -473,13 +528,13 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         return 1.0D;
     }
 
-    private void chargeEnergy(ParallelProcessState state, IEnergyService energyService, long targetEnergy) {
+    private void chargeEnergy(ParallelProcessState state, long targetEnergy) {
         if (state.getEnergyBuffer() >= targetEnergy) {
             return;
         }
         long needed = targetEnergy - state.getEnergyBuffer();
         long chargeRate = 5_000_000L;
-        double extracted = energyService.extractAEPower(Math.min(needed, chargeRate), Actionable.MODULATE, PowerMultiplier.CONFIG);
+        long extracted = this.energyPorts.extract(Math.min(needed, chargeRate), false);
         state.setEnergyBuffer(state.getEnergyBuffer() + (long) extracted);
     }
 
@@ -747,8 +802,10 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         if (buffered <= 0L) {
             return;
         }
-        double overflow = energyService.injectPower(buffered, Actionable.MODULATE);
-        long remaining = overflow <= 0.0D ? 0L : Math.min(buffered, (long) Math.ceil(overflow));
+        double multiplier = PowerMultiplier.CONFIG.multiply(1D);
+        if (!Double.isFinite(multiplier) || multiplier <= 0D) return;
+        double overflow = energyService.injectPower(buffered * multiplier, Actionable.MODULATE);
+        long remaining = overflow <= 0.0D ? 0L : Math.min(buffered, (long) Math.ceil(overflow / multiplier));
         state.setEnergyBuffer(remaining);
     }
 
@@ -836,12 +893,12 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.maxStoredEnergy = targetEnergy;
     }
 
-    private void updateTemperature(int activeThreads, @Nullable MEStorage inventory, @Nullable IActionSource src, CatalystProfile catalystProfile) {
+    private void updateTemperature(int activeThreads, CatalystProfile catalystProfile) {
         this.thermalTicker++;
 
         if (catalystProfile.creative()) {
-            if (this.temperature > 0 && inventory != null && src != null) {
-                this.temperature -= consumeCoolant(inventory, src);
+            if (this.temperature > 0) {
+                this.temperature -= consumeCoolant();
             }
         } else if (activeThreads > 0) {
             if (this.thermalTicker % 2 == 0) {
@@ -853,8 +910,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.temperature -= 1;
         }
 
-        if (this.temperature > 0 && inventory != null && src != null) {
-            this.temperature -= consumeCoolant(inventory, src);
+        if (this.temperature > 0) {
+            this.temperature -= consumeCoolant();
         }
 
         if (this.temperature < 0) {
@@ -887,7 +944,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         }
     }
 
-    private int consumeCoolant(MEStorage inventory, IActionSource src) {
+    private int consumeCoolant() {
         for (AEFluidKey coolantKey : getCoolantPriority()) {
             if (coolantKey == null || coolantKey.getFluid() == Fluids.EMPTY) {
                 continue;
@@ -895,12 +952,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
             ThermalSystem.CoolantProfile profile = getCoolantProfile(coolantKey.getFluid());
             long simulatedAvailable = this.coolantPorts.extract(coolantKey, profile.maxFlowPerTick(), true);
-            if (simulatedAvailable < profile.maxFlowPerTick()) {
-                long fallback = inventory.extract(coolantKey,
-                        profile.maxFlowPerTick() - simulatedAvailable, Actionable.SIMULATE, src);
-                recordStorageOperation();
-                simulatedAvailable = saturatedAdd(simulatedAvailable, Math.max(0L, fallback));
-            }
+
             if (simulatedAvailable <= 0L) {
                 continue;
             }
@@ -912,12 +964,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
 
             long extracted = this.coolantPorts.extract(coolantKey, plan.requestedMillibuckets(), false);
-            if (extracted < plan.requestedMillibuckets()) {
-                long fallback = inventory.extract(coolantKey,
-                        plan.requestedMillibuckets() - extracted, Actionable.MODULATE, src);
-                recordStorageOperation();
-                extracted = saturatedAdd(extracted, Math.max(0L, fallback));
-            }
+
             if (extracted <= 0L) {
                 continue;
             }
@@ -945,16 +992,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     }
 
     private ThermalSystem.CoolantProfile getCoolantProfile(Fluid fluid) {
-        if (fluid == ModFluids.SOURCE_TEMPORAL_FLUID.get() || fluid == ModFluids.FLOWING_TEMPORAL_FLUID.get()) {
-            return TEMPORAL_COOLANT_PROFILE;
-        }
-        if (fluid == ModFluids.SOURCE_STABLE_COOLANT.get() || fluid == ModFluids.FLOWING_STABLE_COOLANT.get()) {
-            return STABLE_COOLANT_PROFILE;
-        }
-        if (fluid == ModFluids.SOURCE_GELID_CRYOTHEUM.get() || fluid == ModFluids.FLOWING_GELID_CRYOTHEUM.get()) {
-            return GELID_COOLANT_PROFILE;
-        }
-        return FALLBACK_COOLANT_PROFILE;
+        return CoolantTuning.parallelProfile(CoolantRegistry.kindOf(fluid));
     }
 
     private void triggerThermalExplosion() {
@@ -1457,7 +1495,9 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         recoverProcessesBeforeRemoval();
         super.onControllerBroken();
         this.chemicalPorts = ChemicalPortGroup.empty();
+        this.energyPorts = EnergyPortGroup.empty();
         this.coolantPorts = FluidPortGroup.empty();
+        this.coolantHatches = List.of();
         this.networkNodeCandidates = List.of();
         this.cachedCatalystProfile = null;
         invalidateRecipeCache();

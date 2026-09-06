@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 80000000,
+  "energy": 120000000,
   "fluid_inputs": [
     {
       "amount": 16000,
@@ -43,5 +43,5 @@
       "id": "ufo:charged_enriched_neutronium_sphere"
     }
   ],
-  "time": 12000
+  "time": 9600
 }

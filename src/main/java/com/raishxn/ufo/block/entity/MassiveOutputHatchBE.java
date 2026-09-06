@@ -84,6 +84,26 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
     private long storedChemicalAmount = 0L;
     private final CoolantTankState<Fluid> coolantTank = new CoolantTankState<>(
             COOLANT_CAPACITY, MassiveOutputHatchBE::isSupportedCoolant);
+    private final com.raishxn.ufo.block.entity.processing.ExternalEnergyBuffer externalEnergy =
+            new com.raishxn.ufo.block.entity.processing.ExternalEnergyBuffer(1_000_000_000L);
+    private final net.neoforged.neoforge.energy.IEnergyStorage externalEnergyHandler = new net.neoforged.neoforge.energy.IEnergyStorage() {
+        public int receiveEnergy(int amount, boolean simulate) {
+            if (!supportsEnergyInput()) return 0;
+            int accepted = externalEnergy.receiveFe(amount, appeng.api.config.PowerUnit.FE.convertTo(appeng.api.config.PowerUnit.AE, 1D), simulate);
+            if (!simulate && accepted > 0) setChanged();
+            return accepted;
+        }
+        public int extractEnergy(int amount, boolean simulate) { return 0; }
+        public int getEnergyStored() { return (int) Math.min(Integer.MAX_VALUE, appeng.api.config.PowerUnit.AE.convertTo(appeng.api.config.PowerUnit.FE, externalEnergy.stored())); }
+        public int getMaxEnergyStored() { return (int) Math.min(Integer.MAX_VALUE, appeng.api.config.PowerUnit.AE.convertTo(appeng.api.config.PowerUnit.FE, externalEnergy.capacity())); }
+        public boolean canExtract() { return false; }
+        public boolean canReceive() { return supportsEnergyInput(); }
+    };
+
+    public net.neoforged.neoforge.energy.IEnergyStorage getExternalEnergyHandler(@Nullable Direction side) {
+        return supportsEnergyInput() ? externalEnergyHandler : null;
+    }
+
     private final IFluidHandler externalCoolantHandler = new ExternalCoolantFillHandler();
 
     public MassiveOutputHatchBE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -194,30 +214,43 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
     //  EnergyInputPort — explicit AE Energy Input Hatch role
     // ═══════════════════════════════════════════════════════════
 
+    public double getStoredExternalEnergyAE() {
+        return this.externalEnergy.stored();
+    }
+
+    public long getExternalEnergyCapacityAE() {
+        return this.externalEnergy.capacity();
+    }
+
     public boolean supportsEnergyInput() {
         return this.getBlockState().is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get());
     }
 
     @Override
     public long extract(long maxAmount, boolean simulate) {
-        if (maxAmount <= 0L || !supportsEnergyInput() || !isNetworkReady()) {
+        if (maxAmount <= 0L || !supportsEnergyInput()) {
             return 0L;
         }
 
+        long buffered = this.externalEnergy.extract(maxAmount, PowerMultiplier.CONFIG.multiply(1D), simulate);
+        if (!simulate && buffered > 0) setChanged();
+        long remaining = maxAmount - buffered;
+        if (remaining <= 0L || !isNetworkReady()) return buffered;
+
         IGridNode node = this.getMainNode().getNode();
         if (node == null || node.getGrid() == null) {
-            return 0L;
+            return buffered;
         }
 
         IEnergyService energy = node.getGrid().getEnergyService();
         double extracted = energy.extractAEPower(
-                maxAmount,
+                remaining,
                 simulate ? Actionable.SIMULATE : Actionable.MODULATE,
                 PowerMultiplier.CONFIG);
         if (!Double.isFinite(extracted) || extracted <= 0.0D) {
-            return 0L;
+            return buffered;
         }
-        return Math.min(maxAmount, (long) extracted);
+        return buffered + Math.min(remaining, (long) extracted);
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -262,51 +295,7 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
         return Math.max(0, COOLANT_CAPACITY - this.coolantTank.amount());
     }
 
-    /**
-     * Moves coolant from this hatch's ME grid into its visible local tank.
-     * Simulation precedes mutation so the grid is never charged for fluid that
-     * the single-fluid tank cannot accept.
-     */
-    public long bufferCoolantFromGrid(AEFluidKey fluid, long maxAmount) {
-        if (fluid == null || maxAmount <= 0L || !supportsFluidInput() || !isNetworkReady()) {
-            return 0L;
-        }
-
-        Fluid canonical = canonicalCoolant(fluid.getFluid());
-        if (canonical == Fluids.EMPTY) {
-            return 0L;
-        }
-        int requested = (int) Math.min(Math.min(maxAmount, Integer.MAX_VALUE), getCoolantSpace());
-        int tankAcceptance = this.coolantTank.fill(canonical, requested, true);
-        if (tankAcceptance <= 0) {
-            return 0L;
-        }
-
-        IGridNode node = this.getMainNode().getNode();
-        if (node == null || node.getGrid() == null) {
-            return 0L;
-        }
-        var inventory = node.getGrid().getStorageService().getInventory();
-        var source = IActionSource.ofMachine(this);
-        AEFluidKey canonicalKey = AEFluidKey.of(canonical);
-        long available = inventory.extract(canonicalKey, tankAcceptance, Actionable.SIMULATE, source);
-        long planned = Math.min(tankAcceptance, Math.max(0L, available));
-        if (planned <= 0L) {
-            return 0L;
-        }
-
-        long extracted = inventory.extract(canonicalKey, planned, Actionable.MODULATE, source);
-        int filled = this.coolantTank.fill(canonical, (int) Math.min(extracted, Integer.MAX_VALUE), false);
-        if (filled > 0) {
-            coolantContentsChanged();
-        }
-        if (filled < extracted) {
-            inventory.insert(canonicalKey, extracted - filled, Actionable.MODULATE, source);
-        }
-        return filled;
-    }
-
-    /** Extracts exclusively from the visible local tank, never directly from ME storage. */
+    /** Consumes only player-supplied coolant from the physical tank. */
     public long extractBufferedCoolant(AEFluidKey fluid, long maxAmount, boolean simulate) {
         if (fluid == null || maxAmount <= 0L || !supportsFluidInput()) {
             return 0L;
@@ -328,27 +317,7 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
             return 0L;
         }
 
-        Fluid canonical = canonicalCoolant(fluid.getFluid());
-        if (canonical == Fluids.EMPTY) {
-            return 0L;
-        }
-        long fromTank = extractBufferedCoolant(fluid, maxAmount, simulate);
-        long remaining = maxAmount - fromTank;
-        if (remaining <= 0L || !isNetworkReady()) {
-            return fromTank;
-        }
-
-        IGridNode node = this.getMainNode().getNode();
-        if (node == null || node.getGrid() == null) {
-            return fromTank;
-        }
-
-        long extracted = node.getGrid().getStorageService().getInventory().extract(
-                AEFluidKey.of(canonical),
-                remaining,
-                simulate ? Actionable.SIMULATE : Actionable.MODULATE,
-                IActionSource.ofMachine(this));
-        return fromTank + Math.max(0L, Math.min(remaining, extracted));
+        return extractBufferedCoolant(fluid, maxAmount, simulate);
     }
 
     private void coolantContentsChanged() {
@@ -375,6 +344,20 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
         this.controllerPos = null;
         updateCasingStyle(MultiblockCasingStyle.DEFAULT);
         refreshGridConnection();
+        this.setChanged();
+    }
+
+    /**
+     * Detaches during physical removal without changing the block state.
+     * {@code LevelChunk#setBlockState} aborts the removal when {@code onRemove}
+     * writes another state at the same position, so resetting CASING_STYLE from
+     * that hook restores the hatch instead of letting the break complete.
+     */
+    public void unlinkForRemoval() {
+        if (this.controllerPos == null) {
+            return;
+        }
+        this.controllerPos = null;
         this.setChanged();
     }
 
@@ -543,6 +526,7 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
         if (this.controllerPos != null) {
             tag.put("controllerPos", NbtUtils.writeBlockPos(this.controllerPos));
         }
+        tag.putDouble("externalEnergyAE", this.externalEnergy.stored());
         tag.putLong("totalInjected", this.totalInjected);
         tag.putLong("lastInjection", this.lastInjectionAmount);
         if (this.storedChemicalId != null && this.storedChemicalAmount > 0L) {
@@ -564,6 +548,7 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
         } else {
             this.controllerPos = null;
         }
+        this.externalEnergy.restore(tag.getDouble("externalEnergyAE"));
         this.totalInjected = tag.getLong("totalInjected");
         this.lastInjectionAmount = tag.getLong("lastInjection");
         this.storedChemicalId = tag.contains("storedChemicalId") ? net.minecraft.resources.ResourceLocation.parse(tag.getString("storedChemicalId")) : null;

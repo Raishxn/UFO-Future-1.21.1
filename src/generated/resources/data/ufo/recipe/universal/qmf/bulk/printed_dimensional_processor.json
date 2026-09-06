@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 12800000,
+  "energy": 19200000,
   "fluid_inputs": [
     {
       "amount": 16000,
@@ -36,5 +36,5 @@
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/bulk/printed_dimensional_processor",
-  "time": 240
+  "time": 300
 }

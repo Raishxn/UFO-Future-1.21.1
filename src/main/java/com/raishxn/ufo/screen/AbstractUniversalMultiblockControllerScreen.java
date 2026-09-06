@@ -1,6 +1,8 @@
 package com.raishxn.ufo.screen;
 
 import appeng.client.gui.Icon;
+import com.raishxn.ufo.client.gui.widget.MultiblockSupplyWidget;
+import net.minecraft.client.renderer.Rect2i;
 import appeng.client.gui.implementations.UpgradeableScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.menu.SlotSemantics;
@@ -131,6 +133,17 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         renderTemperatureBar(guiGraphics);
         renderProcessPage(guiGraphics);
         renderPageCounter(guiGraphics);
+        var supplyArea = getSupplyExclusionArea();
+        if (this.menu.hasSupplyWidget()) {
+            MultiblockSupplyWidget.render(guiGraphics, this.font, supplyArea.getX(), supplyArea.getY(),
+                    this.menu.getSupplyStatus());
+        }
+    }
+
+    /** Dock below the four upgrade slots to keep both panels accessible. */
+    public Rect2i getSupplyExclusionArea() {
+        return new Rect2i(this.leftPos + this.imageWidth - 1, this.topPos + 86,
+                MultiblockSupplyWidget.WIDTH, MultiblockSupplyWidget.HEIGHT);
     }
 
     private void renderInformationBar(GuiGraphics guiGraphics) {
@@ -313,6 +326,14 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
 
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        var supplyArea = getSupplyExclusionArea();
+        if (this.menu.hasSupplyWidget() && supplyArea.contains(mouseX, mouseY)) {
+            guiGraphics.renderTooltip(this.font, MultiblockSupplyWidget.tooltip(
+                    this.menu.getSupplyStatus(), mouseY - supplyArea.getY(), this.menu.isSafeMode(),
+                    this.menu.isOverclocked(), this.menu.getMaxParallels()).stream()
+                    .map(Component::getVisualOrderText).toList(), mouseX, mouseY);
+            return;
+        }
         if (isHovering(15, 19, 147, 11, mouseX, mouseY)) {
             guiGraphics.renderTooltip(this.font,
                     Component.literal("Temperature: " + this.menu.getTemperature()

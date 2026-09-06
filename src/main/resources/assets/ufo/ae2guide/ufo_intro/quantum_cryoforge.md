@@ -42,3 +42,20 @@ Replace every field generator position with **MK3 Stellar Field Generators** bef
 Use JEI Alternatives when placing hatches and fields. The structure scanner can
 identify a single lower-tier or invalid field that silently reduces/blocks the
 expected recipe tier.
+
+## Dedicated supply hatches
+
+The assembly requires an **ME Massive Fluid Hatch** and an **AE Energy Input
+Hatch** in any compatible casing positions. The preview shows one example
+layout, not mandatory hatch locations. At least one of each is required.
+
+Coolant is consumed **only from the fluid hatch's local tank** (16,000,000 mB).
+Supply Gelid Cryotheum, Stable Coolant or Temporal Fluid using external fluid
+pipes or an explicitly configured export device. Controllers never fetch coolant
+from ME storage automatically.
+
+The energy hatch accepts **external FE and AE2 grid power**. FE enters a persistent
+1,000,000,000 AE-equivalent buffer using AE2's configured conversion ratio.
+Buffered external energy is used first; the connected AE2 grid supplies any
+remainder. Both paths respect AE2's configured consumption multiplier.
+ME connections are still needed for recipe automation.

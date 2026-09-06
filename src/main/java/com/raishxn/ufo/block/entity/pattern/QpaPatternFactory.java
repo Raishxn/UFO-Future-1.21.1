@@ -25,13 +25,15 @@ public class QpaPatternFactory {
                     getDefaultCreativeStates(),
                     MultiblockDefinition.horizontalFacings(),
                     Map.of(
+                            'J', MultiblockCellRole.PORT,
+                            'K', MultiblockCellRole.PORT,
                             'H', MultiblockCellRole.CONTROLLER,
                             'C', MultiblockCellRole.STRUCTURE,
                             'F', MultiblockCellRole.STRUCTURE,
                             'G', MultiblockCellRole.STRUCTURE,
                             'Q', MultiblockCellRole.STRUCTURE,
                             'X', MultiblockCellRole.STRUCTURE,
-                            'A', MultiblockCellRole.AIR));
+                            'A', MultiblockCellRole.IGNORED));
         }
         return definition;
     }
@@ -56,8 +58,9 @@ public class QpaPatternFactory {
                 .where('G', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state), QuantumPatternPredicates.glassName())
                 .where('Q', (state, level, pos) -> QuantumPatternPredicates.isQuartzBlock(state), QuantumPatternPredicates.quartzBlockName())
                 .where('X', (state, level, pos) -> QuantumPatternPredicates.isFluixBlock(state), QuantumPatternPredicates.fluixBlockName())
-                .where('A', (state, level, pos) -> state.isAir());
+                .where('A', MultiblockPattern.ANY, Component.literal("Any"));
         QpaTopologySchema.layers().forEach(builder::layer);
-        return builder.build();
+        return builder.serviceHatches('C', MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get(),
+                MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()).build();
     }
 }

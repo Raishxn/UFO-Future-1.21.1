@@ -60,5 +60,5 @@
   "machine": "qmf",
   "recipe_name": "universal/qmf/ufo_staff",
   "required_tier": 3,
-  "time": 12000
+  "time": 1000
 }

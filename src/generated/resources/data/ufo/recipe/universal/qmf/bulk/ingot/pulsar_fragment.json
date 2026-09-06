@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 12800000,
+  "energy": 64000000,
   "fluid_inputs": [
     {
       "amount": 76800,
@@ -22,12 +22,6 @@
       "ingredient": {
         "item": "minecraft:lodestone"
       }
-    },
-    {
-      "amount": 256,
-      "ingredient": {
-        "item": "minecraft:lightning_rod"
-      }
     }
   ],
   "item_output": {
@@ -36,5 +30,5 @@
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/bulk/ingot/pulsar_fragment",
-  "time": 640
+  "time": 800
 }

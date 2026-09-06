@@ -53,9 +53,6 @@ public class UFOConfig {
     public static final ModConfigSpec.LongValue STELLAR_COOLANT_TEMPORAL_EFFICIENCY = SERVER_BUILDER
             .comment("Temporal Fluid efficiency in the Stellar Nexus coolant formula. Zero disables this coolant for the Nexus.")
             .defineInRange("stellar.coolant.temporalFluidEfficiency", 8L, 0L, 1_000_000L);
-    public static final ModConfigSpec.IntValue STELLAR_COOLANT_BUFFER_INTAKE_PER_TICK = SERVER_BUILDER
-            .comment("Maximum coolant transferred from the ME grid into each Stellar fluid-hatch tank per tick.")
-            .defineInRange("stellar.coolant.bufferIntakePerTick", 100_000, 1, 16_000_000);
     public static final ModConfigSpec.IntValue STELLAR_PASSIVE_DISSIPATION_PER_SECOND = SERVER_BUILDER
             .comment("Heat units passively dissipated by an idle Stellar Nexus each second. Zero disables passive dissipation.")
             .defineInRange("stellar.thermal.passiveDissipationPerSecond", 1, 0, 1_000);

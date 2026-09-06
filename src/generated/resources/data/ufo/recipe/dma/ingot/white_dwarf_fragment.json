@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 20000,
+  "energy": 100000,
   "fluid_inputs": [
     {
       "amount": 500,
@@ -32,10 +32,10 @@
   ],
   "item_outputs": [
     {
-      "#": 4,
+      "#": 2,
       "#t": "ae2:i",
       "id": "ufo:white_dwarf_fragment_ingot"
     }
   ],
-  "time": 220
+  "time": 400
 }

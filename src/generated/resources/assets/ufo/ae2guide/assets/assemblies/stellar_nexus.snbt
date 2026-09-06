@@ -568,7 +568,7 @@
         {pos: [15, 15, 1], state: "ufo:entropy_singularity_casing"},
         {pos: [16, 15, 1], state: "ufo:entropy_singularity_casing"},
         {pos: [17, 15, 1], state: "ufo:entropy_singularity_casing"},
-        {pos: [18, 15, 1], state: "ufo:entropy_singularity_casing"},
+        {pos: [18, 15, 1], state: "ufo:me_massive_fluid_hatch"},
         {pos: [19, 15, 1], state: "ufo:entropy_singularity_casing"},
         {pos: [20, 15, 1], state: "ufo:entropy_singularity_casing"},
         {pos: [21, 15, 1], state: "ufo:entropy_singularity_casing"},
@@ -837,7 +837,7 @@
         {pos: [22, 16, 33], state: "ufo:entropy_singularity_casing"},
         {pos: [14, 17, 1], state: "ufo:entropy_singularity_casing"},
         {pos: [15, 17, 1], state: "ufo:entropy_singularity_casing"},
-        {pos: [16, 17, 1], state: "ufo:entropy_singularity_casing"},
+        {pos: [16, 17, 1], state: "ufo:ae_energy_input_hatch"},
         {pos: [17, 17, 1], state: "ufo:entropy_singularity_casing"},
         {pos: [18, 17, 1], state: "ufo:stellar_nexus_controller"},
         {pos: [19, 17, 1], state: "ufo:entropy_singularity_casing"},
@@ -1830,6 +1830,8 @@
         "ufo:entropy_assembler_core_casing",
         "ufo:entropy_computer_condensation_matrix",
         "ufo:stellar_field_generator_t1",
+        "ufo:me_massive_fluid_hatch",
+        "ufo:ae_energy_input_hatch",
         "ufo:stellar_nexus_controller"
     ]
 }

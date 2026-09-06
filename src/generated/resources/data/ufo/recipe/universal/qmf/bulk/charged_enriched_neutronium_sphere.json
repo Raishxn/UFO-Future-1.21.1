@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 5120000000,
+  "energy": 7680000000,
   "fluid_inputs": [
     {
       "amount": 1024000,
@@ -42,5 +42,5 @@
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/bulk/charged_enriched_neutronium_sphere",
-  "time": 12000
+  "time": 9600
 }

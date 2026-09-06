@@ -73,3 +73,11 @@ The values **1/4/8** are server-configurable under `stellar.coolant`; zero disab
 
 If output storage fills, the promised result remains buffered. If the AE grid is
 disconnected, the controller pauses instead of discarding the active operation.
+
+## Dedicated supply hatches
+
+Install at least one **ME Massive Fluid Hatch** and one **AE Energy Input Hatch** in any Singularity Casing position. Item input and item output hatches are also required. The preview shows an example layout; hatch positions are interchangeable. Core casings, matrices and field generators retain their own requirements.
+
+Supply coolant to the fluid hatch using pipes or a player-configured ME Export Bus. The machine consumes only coolant already in that tank; it never searches ME storage for coolant. The tank holds 16,000,000 mB of one coolant. Recipe fluids and chemicals remain separate.
+
+The energy hatch accepts external **FE** cables and **AE2 grid energy**. FE is converted using the AE2 server conversion setting and stored locally (up to 1,000,000,000 AE equivalent); the local buffer is consumed first, then the hatch requests any remainder from its AE2 grid. Adding hatches does not multiply the controller's charging limit. The recipe network still needs power for item/fluid automation.

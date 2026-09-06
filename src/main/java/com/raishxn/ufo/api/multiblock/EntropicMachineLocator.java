@@ -58,33 +58,59 @@ public final class EntropicMachineLocator {
             return;
         }
 
+        // Machines whose cached anchor still validates are left untouched:
+        // no clear, no re-apply, no NBT/visual churn, no progress loss.
+        // Machines of the same class sharing an anchor validate once.
+        record AnchorKey(Class<?> machineClass, BlockPos anchor) {
+        }
+        Map<AnchorKey, Boolean> anchorValidity = new LinkedHashMap<>();
+        List<AbstractEntropicMachineBE> brokenMachines = new ArrayList<>();
         for (AbstractEntropicMachineBE machine : nearbyMachines) {
+            boolean intact = false;
+            if (machine.isAssembled() && machine.getAnchorPos() != null) {
+                intact = anchorValidity.computeIfAbsent(
+                        new AnchorKey(machine.getClass(), machine.getAnchorPos()),
+                        key -> machine.validateCurrentAnchor(level) != null);
+            }
+            if (!intact) {
+                brokenMachines.add(machine);
+            }
+        }
+
+        if (brokenMachines.isEmpty()) {
+            return;
+        }
+
+        for (AbstractEntropicMachineBE machine : brokenMachines) {
             machine.clearStructureState();
         }
 
-        Map<StructureKey, FieldTieredCubeValidator.ValidationResult> matches = new LinkedHashMap<>();
-        for (AbstractEntropicMachineBE machine : nearbyMachines) {
-            var result = machine.findStructure(level);
-            if (result != null && result.valid()) {
-                matches.putIfAbsent(new StructureKey(machine.getClass(), result.origin()), result);
-            }
+        // Valid cubes are searched once per machine class and shared with every
+        // broken machine of that class contained in the result.
+        record ClassResult(Class<?> machineClass, FieldTieredCubeValidator.ValidationResult result) {
         }
-
-        for (var entry : matches.entrySet()) {
-            StructureKey key = entry.getKey();
-            var result = entry.getValue();
-
-            for (BlockPos shellPos : result.shellPositions()) {
-                BlockEntity be = level.getBlockEntity(shellPos);
-                if (be instanceof AbstractEntropicMachineBE machine
-                        && machine.getClass() == key.machineClass()) {
-                    machine.applyStructure(result);
+        List<ClassResult> foundResults = new ArrayList<>();
+        for (AbstractEntropicMachineBE machine : brokenMachines) {
+            FieldTieredCubeValidator.ValidationResult result = null;
+            for (ClassResult candidate : foundResults) {
+                if (candidate.machineClass() == machine.getClass()
+                        && candidate.result().shellPositions().contains(machine.getBlockPos())) {
+                    result = candidate.result();
+                    break;
                 }
             }
-        }
-    }
 
-    private record StructureKey(Class<?> machineClass, BlockPos origin) {
+            if (result == null) {
+                result = machine.findStructure(level);
+                if (result != null && result.valid()) {
+                    foundResults.add(new ClassResult(machine.getClass(), result));
+                }
+            }
+
+            if (result != null && result.valid()) {
+                machine.applyStructure(result);
+            }
+        }
     }
 
     private static int compare(@Nullable BlockPos a, @Nullable BlockPos b) {

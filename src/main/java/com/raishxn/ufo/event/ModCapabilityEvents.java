@@ -25,6 +25,10 @@ public class ModCapabilityEvents {
         // Registra as capabilities dos Itens (suas ferramentas e armaduras)
         registerItemCapabilities(event);
 
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK,
+                ModBlockEntities.ME_MASSIVE_OUTPUT_HATCH_BE.get(),
+                (be, side) -> be.getExternalEnergyHandler(side));
+
         // Registra as capabilities dos Blocos (suas máquinas)
         event.registerBlockEntity(
                 appeng.api.AECapabilities.IN_WORLD_GRID_NODE_HOST,

@@ -31,6 +31,9 @@ import com.raishxn.ufo.block.DimensionalMatterAssemblerBlock;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.block.entity.processing.SingleTankFluidReservation;
 import com.raishxn.ufo.block.entity.processing.DmaHazardCadence;
+import com.raishxn.ufo.block.entity.processing.CoolantRegistry;
+import com.raishxn.ufo.block.entity.processing.CoolantTuning;
+import com.raishxn.ufo.block.entity.processing.ThermalSystem;
 import com.raishxn.ufo.diagnostic.MachineMetricKey;
 import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
@@ -235,44 +238,16 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             GenericStack coolantStack = this.fluidInv.getStack(2); // Input Coolant tank
             if (coolantStack != null && coolantStack.what() instanceof AEFluidKey fluidKey
                     && coolantStack.amount() > 0) {
-                // Determine coolant strength
-                String fluidId = net.minecraft.core.registries.BuiltInRegistries.FLUID.getKey(fluidKey.getFluid())
-                        .toString();
-                int mBPerHeat = 0;
-                int heatPerMB = 0;
+                // Exact identity match via CoolantRegistry; unknown fluids keep the
+                // generic fallback. The DMA keeps its own balance table.
+                var plan = ThermalSystem.planCooling(
+                        this.temperature,
+                        coolantStack.amount(),
+                        CoolantTuning.dmaProfile(CoolantRegistry.kindOf(fluidKey.getFluid())));
 
-                if (fluidId.contains("temporal")) {
-                    heatPerMB = 100; // extreme endgame coolant
-                } else if (fluidId.contains("stable_coolant")) {
-                    heatPerMB = 50; // intended mid-tier progression coolant
-                } else if (fluidId.contains("starlight")) {
-                    heatPerMB = 30; // good utility coolant, but below stable coolant
-                } else if (fluidId.contains("gelid_cryotheum")) {
-                    mBPerHeat = 24; // starter coolant should sustain a single basic DMA
-                } else {
-                    heatPerMB = 15; // default fallback for generic fluids
-                }
-
-                long amountToConsume = 0;
-                long heatCooled = 0;
-
-                if (mBPerHeat > 0) {
-                    amountToConsume = Math.min(coolantStack.amount(), 1000); // max 1 bucket per tick
-                    long possibleHeat = amountToConsume / mBPerHeat;
-                    heatCooled = Math.min(this.temperature, possibleHeat);
-                    amountToConsume = heatCooled * mBPerHeat;
-                } else if (heatPerMB > 0) {
-                    amountToConsume = Math.min(10, coolantStack.amount());
-                    long possibleHeat = amountToConsume * heatPerMB;
-                    if (this.temperature < possibleHeat) {
-                        amountToConsume = Math.max(1, (this.temperature / heatPerMB));
-                    }
-                    heatCooled = amountToConsume * heatPerMB;
-                }
-
-                if (amountToConsume > 0) {
-                    this.fluidInv.extractInternal(2, fluidKey, amountToConsume, Actionable.MODULATE);
-                    this.temperature -= (int) heatCooled;
+                if (plan.requestedMillibuckets() > 0) {
+                    this.fluidInv.extractInternal(2, fluidKey, plan.requestedMillibuckets(), Actionable.MODULATE);
+                    this.temperature -= (int) plan.heatRemoved();
                 }
             }
         }
@@ -823,17 +798,14 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                     return;
                 }
 
-                // Try to recharge from AppFlux FE cells in the AE2 network
-                try {
-                    if (net.neoforged.fml.ModList.get().isLoaded("appflux")) {
-                        com.raishxn.ufo.compat.appflux.AppliedFluxPlugin.rechargeEnergyStorage(
-                                grid,
-                                Integer.MAX_VALUE,
-                                IActionSource.ofMachine(this),
-                                this.getEnergyStorage(Direction.UP));
-                    }
-                } catch (Throwable ignored) {
-                    // NO-OP if AppFlux is not available
+                // Recharge from AppFlux FE cells in the AE2 network. The plugin guards
+                // availability, logs a failure once and disables itself; it never throws.
+                if (net.neoforged.fml.ModList.get().isLoaded("appflux")) {
+                    com.raishxn.ufo.compat.appflux.AppliedFluxPlugin.rechargeEnergyStorage(
+                            grid,
+                            Integer.MAX_VALUE,
+                            IActionSource.ofMachine(this),
+                            this.getEnergyStorage(Direction.UP));
                 }
 
                 double powerReq = this.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);

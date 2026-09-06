@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 256000000,
+  "energy": 384000000,
   "fluid_inputs": [
     {
       "amount": 128000,

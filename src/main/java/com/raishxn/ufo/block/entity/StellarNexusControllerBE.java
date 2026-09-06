@@ -280,6 +280,15 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             facing = currentState.getValue(net.minecraft.world.level.block.DirectionalBlock.FACING);
         }
         MultiblockPattern.MatchResult result = pattern.match(level, this.worldPosition, facing);
+        if (player != null && !result.isValid()) {
+            for (var error : result.allErrors().stream().limit(10).toList()) {
+                BlockPos missing = error.pos();
+                player.displayClientMessage(Component.literal("[" + missing.getX() + ", " + missing.getY()
+                        + ", " + missing.getZ() + "] Expected: ").append(error.expected()), false);
+            }
+            if (result.allErrors().size() > 10) player.displayClientMessage(
+                    Component.literal("... and " + (result.allErrors().size() - 10) + " more blocks."), false);
+        }
         List<BlockPos> expectedE = pattern.getExpectedPositions(this.worldPosition, facing, 'E');
         boolean hasUnloadedFieldPositions = false;
         int tier1 = 0, tier2 = 0, tier3 = 0;
@@ -335,9 +344,14 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                     energyInputs++;
             }
 
-            // Require exactly 1 of each hatch (no fuel hatch anymore)
-            if (itemOutputs != 1 || fluidOutputs != 1 || itemInputs != 1 || energyInputs != 1) {
+            // Require at least one of each service hatch; locations are interchangeable.
+            if (itemOutputs < 1 || fluidOutputs < 1 || itemInputs < 1 || energyInputs < 1) {
                 this.assembled = false;
+                if (player != null) {
+                    player.displayClientMessage(Component.literal("[Stellar Nexus] Hatches (minimum 1 each): item input="
+                            + itemInputs + ", item output=" + itemOutputs + ", coolant=" + fluidOutputs
+                            + ", energy=" + energyInputs), false);
+                }
             }
         }
 
@@ -533,9 +547,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
         // Cached field level is now updated inside scanStructure()
 
-        if (this.assembled && refillCoolantBuffers()) {
-            this.setChanged();
-        }
+
 
         // Handle cooldown after overheat
         if (this.cooldownTimer > 0) {
@@ -1284,53 +1296,6 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     }
 
     /** Keeps every linked hatch supplied from ME storage, best coolant first. */
-    private boolean refillCoolantBuffers() {
-        if (this.coolantHatches.isEmpty()) {
-            return false;
-        }
-        long intakePerHatch = UFOConfig.STELLAR_COOLANT_BUFFER_INTAKE_PER_TICK.get();
-        if (intakePerHatch <= 0L) {
-            return false;
-        }
-
-        CoolantDefinition[] definitions = getCoolantDefinitions();
-        int[] priority = coolantPriority(definitions);
-        boolean changed = false;
-        for (MassiveOutputHatchBE hatch : this.coolantHatches) {
-            FluidStack stored = hatch.getStoredCoolant();
-            if (!stored.isEmpty()) {
-                for (int definitionIndex : priority) {
-                    CoolantDefinition definition = definitions[definitionIndex];
-                    if (definition.efficiency() > 0L && definition.key().getFluid() == stored.getFluid()) {
-                        long moved = hatch.bufferCoolantFromGrid(definition.key(), intakePerHatch);
-                        if (moved > 0L) {
-                            MachinePerformanceRegistry.INSTANCE.recordStorageOperation(
-                                    performanceMetricKey(), this.level.getGameTime());
-                            changed = true;
-                        }
-                        break;
-                    }
-                }
-                continue;
-            }
-
-            for (int definitionIndex : priority) {
-                CoolantDefinition definition = definitions[definitionIndex];
-                if (definition.efficiency() <= 0L) {
-                    continue;
-                }
-                long moved = hatch.bufferCoolantFromGrid(definition.key(), intakePerHatch);
-                if (moved > 0L) {
-                    MachinePerformanceRegistry.INSTANCE.recordStorageOperation(
-                            performanceMetricKey(), this.level.getGameTime());
-                    changed = true;
-                    break;
-                }
-            }
-        }
-        return changed;
-    }
-
     private static int[] coolantPriority(CoolantDefinition[] definitions) {
         long[] efficiencies = new long[definitions.length];
         for (int index = 0; index < definitions.length; index++) {
@@ -1718,6 +1683,26 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                 StellarEnergyMath.ticksToReach(this.energyBuffer, activeRecipeCost, this.lastEnergyAccepted));
     }
 
+    public List<com.raishxn.ufo.diagnostic.CoolantStatus> getCoolantStatus() {
+        List<com.raishxn.ufo.diagnostic.CoolantStatus> result = new ArrayList<>();
+        long flow = StellarCoolantMath.targetFlow(COOLANT_CONSUMPTION_PER_TICK,
+                this.running && !this.paused, this.safeMode, this.isOverclocked);
+        for (MassiveOutputHatchBE hatch : this.coolantHatches) {
+            if (hatch.isRemoved() || this.level == null || !this.level.hasChunkAt(hatch.getBlockPos())) continue;
+            var fluid = hatch.getStoredCoolant();
+            long efficiency = 0;
+            if (!fluid.isEmpty()) for (var definition : getCoolantDefinitions()) {
+                if (definition.key().getFluid() == fluid.getFluid()) efficiency = definition.efficiency();
+            }
+            var profile = StellarCoolantMath.profile(efficiency, this.fieldLevel + 1L, flow);
+            result.add(new com.raishxn.ufo.diagnostic.CoolantStatus(hatch.getBlockPos().asLong(),
+                    fluid.isEmpty() ? "minecraft:empty" : BuiltInRegistries.FLUID.getKey(fluid.getFluid()).toString(),
+                    fluid.getAmount(), MassiveOutputHatchBE.COOLANT_CAPACITY,
+                    profile.heatNumerator(), profile.millibucketDenominator(), profile.maxFlowPerTick()));
+        }
+        return List.copyOf(result);
+    }
+
     public CoolantDebugSnapshot getCoolantDebugSnapshot() {
         return new CoolantDebugSnapshot(
                 this.heatLevel,
@@ -1864,6 +1849,25 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(tag, registries);
+        writeClientState(tag);
+
+        ListTag pendingOutputTags = new ListTag();
+        for (var output : this.pendingOutputs.snapshot()) {
+            pendingOutputTags.add(GenericStack.writeTag(
+                    registries, new GenericStack(output.key(), output.amount())));
+        }
+        tag.put("pendingOutputs", pendingOutputTags);
+        tag.putBoolean("outputsPrepared", this.pendingOutputs.isPrepared());
+
+        ListTag partsList = new ListTag();
+        for (BlockPos pos : this.parts) {
+            partsList.add(NbtUtils.writeBlockPos(pos));
+        }
+        tag.put("parts", partsList);
+    }
+
+    /** Bounded visual state; structure membership and resource ledgers stay server-side. */
+    private void writeClientState(CompoundTag tag) {
         tag.putBoolean("assembled", this.assembled);
         tag.putBoolean("running", this.running);
         tag.putBoolean("paused", this.paused);
@@ -1878,23 +1882,10 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         tag.putBoolean("autoStart", this.autoStart);
         tag.putBoolean("simulationLocked", this.simulationLocked);
 
-        ListTag pendingOutputTags = new ListTag();
-        for (var output : this.pendingOutputs.snapshot()) {
-            pendingOutputTags.add(GenericStack.writeTag(
-                    registries, new GenericStack(output.key(), output.amount())));
-        }
-        tag.put("pendingOutputs", pendingOutputTags);
-        tag.putBoolean("outputsPrepared", this.pendingOutputs.isPrepared());
-
         if (this.activeRecipeId != null) {
             tag.putString("activeRecipeId", this.activeRecipeId.toString());
         }
 
-        ListTag partsList = new ListTag();
-        for (BlockPos pos : this.parts) {
-            partsList.add(NbtUtils.writeBlockPos(pos));
-        }
-        tag.put("parts", partsList);
     }
 
     @Override
@@ -1961,8 +1952,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
-        CompoundTag tag = super.getUpdateTag(registries);
-        saveAdditional(tag, registries);
+        CompoundTag tag = new CompoundTag();
+        writeClientState(tag);
         if (this.level != null && !this.level.isClientSide()) {
             MachinePerformanceRegistry.INSTANCE.recordSync(performanceMetricKey(), tag.sizeInBytes(), this.level.getGameTime());
         }

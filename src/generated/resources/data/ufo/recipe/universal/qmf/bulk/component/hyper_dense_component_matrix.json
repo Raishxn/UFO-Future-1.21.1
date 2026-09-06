@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 256000000,
+  "energy": 512000000,
   "fluid_inputs": [
     {
       "amount": 128000,
@@ -12,13 +12,13 @@
   ],
   "item_inputs": [
     {
-      "amount": 1536,
+      "amount": 512,
       "ingredient": {
         "item": "ufo:phase_shift_component_matrix"
       }
     },
     {
-      "amount": 512,
+      "amount": 256,
       "ingredient": {
         "item": "ufo:white_dwarf_matter"
       }
@@ -36,5 +36,5 @@
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/bulk/component/hyper_dense_component_matrix",
-  "time": 1200
+  "time": 800
 }

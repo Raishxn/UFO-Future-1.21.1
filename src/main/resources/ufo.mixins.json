@@ -13,7 +13,9 @@
   "client": [
     "AccessorAbstractContainerScreen",
     "MixinMEStorageScreen",
-    "MixinModelBakery"
+    "MixinModelBakery",
+    "MixinJemiStructureRecipe",
+    "MixinEmiStructureInput"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -31,8 +31,12 @@ public final class EntropicConvergenceCalculator {
             return;
         }
 
+        // The live cluster bounds are the cached anchor of this cube; confirming them
+        // first avoids a full 343-origin search on every neighbor update.
+        BlockPos preferredOrigin = currentCluster != null ? currentCluster.getBoundsMin() : null;
         var result = FieldTieredCubeValidator.findMatchingCube(level, loc,
-                (state, testLevel, pos) -> state.is(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get()));
+                (state, testLevel, pos) -> state.is(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get()),
+                preferredOrigin);
 
         if (result.isEmpty() || !result.get().valid() || !result.get().shellPositions().contains(loc)) {
             this.target.clearCalculatedStructure();

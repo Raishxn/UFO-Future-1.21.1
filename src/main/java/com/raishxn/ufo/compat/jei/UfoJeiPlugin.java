@@ -29,6 +29,8 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.IModIngredientRegistration;
+import mekanism.client.recipe_viewer.jei.MekanismJEI;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import mezz.jei.api.runtime.IJeiRuntime;
@@ -39,6 +41,15 @@ public class UfoJeiPlugin implements IModPlugin {
     private static IJeiRuntime runtime;
 
     public UfoJeiPlugin() {}
+
+    @Override
+    public void registerIngredients(IModIngredientRegistration registration) {
+        // Mekanism uses its native EMI plugin when EMI is installed, so its JEI
+        // chemical type is otherwise missing for recipes bridged through JEMI.
+        if (!MekanismJEI.shouldLoad()) {
+            new MekanismJEI().registerIngredients(registration);
+        }
+    }
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -150,6 +161,12 @@ public class UfoJeiPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        // JEMI forwards these areas to EMI as well. A native @EmiEntrypoint
+        // would make EMI skip this entire JEI plugin, including all recipes.
+        registerSupplyPanel(registration, com.raishxn.ufo.screen.QmfControllerScreen.class);
+        registerSupplyPanel(registration, com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerScreen.class);
+        registerSupplyPanel(registration, com.raishxn.ufo.screen.QuantumSlicerControllerScreen.class);
+        registerSupplyPanel(registration, com.raishxn.ufo.screen.QuantumCryoforgeControllerScreen.class);
         registration.addGuiContainerHandler(StellarNexusControllerScreen.class,
                 new IGuiContainerHandler<>() {
                     @Override
@@ -158,6 +175,16 @@ public class UfoJeiPlugin implements IModPlugin {
                         return List.of(screen.getRequirementsExclusionArea());
                     }
                 });
+    }
+
+    private static <S extends com.raishxn.ufo.screen.AbstractUniversalMultiblockControllerScreen<?>>
+    void registerSupplyPanel(IGuiHandlerRegistration registration, Class<S> screenClass) {
+        registration.addGuiContainerHandler(screenClass, new IGuiContainerHandler<S>() {
+            @Override
+            public List<net.minecraft.client.renderer.Rect2i> getGuiExtraAreas(S screen) {
+                return List.of(screen.getSupplyExclusionArea());
+            }
+        });
     }
 
     public static ItemStack getHoveredItemStack() {

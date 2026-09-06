@@ -38,9 +38,9 @@
         {pos: [4, 0, 10], state: "ae2:quartz_block"},
         {pos: [2, 1, 0], state: "ae2:fluix_block"},
         {pos: [0, 1, 1], state: "ufo:quantum_hyper_mechanical_casing"},
-        {pos: [1, 1, 1], state: "ufo:quantum_hyper_mechanical_casing"},
+        {pos: [1, 1, 1], state: "ufo:me_massive_fluid_hatch"},
         {pos: [2, 1, 1], state: "ufo:stellar_field_generator_t1"},
-        {pos: [3, 1, 1], state: "ufo:quantum_hyper_mechanical_casing"},
+        {pos: [3, 1, 1], state: "ufo:ae_energy_input_hatch"},
         {pos: [4, 1, 1], state: "ufo:quantum_hyper_mechanical_casing"},
         {pos: [0, 1, 2], state: "ufo:quantum_hyper_mechanical_casing"},
         {pos: [1, 1, 2], state: "ae2:quartz_vibrant_glass"},
@@ -262,7 +262,9 @@
         "ae2:quartz_block",
         "ae2:fluix_block",
         "ufo:quantum_hyper_mechanical_casing",
+        "ufo:me_massive_fluid_hatch",
         "ufo:stellar_field_generator_t1",
+        "ufo:ae_energy_input_hatch",
         "ae2:quartz_vibrant_glass",
         "ufo:quantum_processor_assembler_controller"
     ]

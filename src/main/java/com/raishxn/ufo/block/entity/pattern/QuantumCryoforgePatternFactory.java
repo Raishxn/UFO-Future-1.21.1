@@ -32,12 +32,14 @@ public final class QuantumCryoforgePatternFactory {
                     getDefaultCreativeStates(),
                     MultiblockDefinition.horizontalFacings(),
                     Map.of(
+                            'J', MultiblockCellRole.PORT,
+                            'K', MultiblockCellRole.PORT,
                             'C', MultiblockCellRole.CONTROLLER,
                             'B', MultiblockCellRole.STRUCTURE,
                             'D', MultiblockCellRole.STRUCTURE,
                             'F', MultiblockCellRole.STRUCTURE,
                             'E', MultiblockCellRole.STRUCTURE,
-                            'A', MultiblockCellRole.AIR));
+                            'A', MultiblockCellRole.IGNORED));
         }
         return definition;
     }
@@ -53,6 +55,8 @@ public final class QuantumCryoforgePatternFactory {
             map.put('E', vibrantGlass.defaultBlockState());
         }
 
+        map.put('J', MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get().defaultBlockState());
+        map.put('K', MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get().defaultBlockState());
         return map;
     }
 
@@ -77,8 +81,9 @@ public final class QuantumCryoforgePatternFactory {
                 .where('E', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state),
                         QuantumPatternPredicates.glassName())
                 .candidates('E', QuantumPatternPredicates.glassCandidates())
-                .where('A', (state, level, pos) -> state.isAir());
+                .where('A', MultiblockPattern.ANY, Component.literal("Any"));
         QuantumCryoforgeTopologySchema.layers().forEach(builder::layer);
-        return builder.build();
+        return builder.serviceHatches('B', MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get(),
+                MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()).build();
     }
 }

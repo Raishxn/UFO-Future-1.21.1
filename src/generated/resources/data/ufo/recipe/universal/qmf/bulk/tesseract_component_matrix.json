@@ -1,12 +1,12 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 120000000,
+  "energy": 25600000000,
   "fluid_inputs": [
     {
-      "amount": 64000,
+      "amount": 2048000,
       "fluid": {
         "amount": 1,
-        "id": "ufo:source_pulsar_fragment_fluid"
+        "id": "ufo:source_spatial_fluid"
       }
     }
   ],
@@ -14,17 +14,17 @@
     {
       "amount": 512,
       "ingredient": {
-        "item": "ufo:pulsar_fragment_dust"
+        "item": "ufo:hyper_dense_component_matrix"
       }
     },
     {
-      "amount": 64,
+      "amount": 2048,
       "ingredient": {
-        "item": "ufo:obsidian_matrix"
+        "item": "ufo:neutron_star_matter"
       }
     },
     {
-      "amount": 64,
+      "amount": 6144,
       "ingredient": {
         "item": "ufo:dimensional_processor"
       }
@@ -32,9 +32,9 @@
   ],
   "item_output": {
     "count": 64,
-    "id": "ufo:quantum_anomaly"
+    "id": "ufo:tesseract_component_matrix"
   },
   "machine": "qmf",
-  "recipe_name": "universal/qmf/quantum_anomaly_batch",
-  "time": 1200
+  "recipe_name": "universal/qmf/bulk/tesseract_component_matrix",
+  "time": 1600
 }

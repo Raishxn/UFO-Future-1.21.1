@@ -46,6 +46,14 @@ public class MultiblockPattern {
         boolean test(BlockState state, Level level, BlockPos pos);
     }
 
+    /**
+     * Marker predicate for cells that accept whatever the player puts there.
+     * Symbols bound to it satisfy {@code strict()} validation but are never
+     * scanned and never reported as structure parts, so the surrounding world
+     * (cables, batteries, decoration) cannot unform the machine.
+     */
+    public static final BlockPredicate ANY = (state, level, pos) -> true;
+
     private final char[][][] pattern;      // [layer][row][col]
     private final Map<Character, BlockPredicate> legend;
     private final Map<Character, Component> legendNames;
@@ -116,7 +124,7 @@ public class MultiblockPattern {
                     LocalOffset offset = new LocalOffset(x - cCol, y - cLayer, z - cRow);
                     compiledOffsets.computeIfAbsent(symbol, ignored -> new ArrayList<>()).add(offset);
                     BlockPredicate predicate = this.legend.get(symbol);
-                    if (symbol != controllerChar && predicate != null) {
+                    if (symbol != controllerChar && predicate != null && predicate != ANY) {
                         compiledCells.add(new PatternCell(
                                 offset, predicate,
                                 this.legendNames.getOrDefault(symbol, Component.literal("Expected part"))));
@@ -375,6 +383,18 @@ public class MultiblockPattern {
         public Builder strict() {
             this.strict = true;
             return this;
+        }
+
+        public Builder serviceHatches(char casing, Block coolant, Block energy) {
+            List<String[]> updated = ServiceHatchLayout.apply(this.layers, this.controllerChar, casing);
+            this.layers.clear();
+            this.layers.addAll(updated);
+            // J/K select illustrative auto-build positions, not mandatory hatch locations.
+            BlockPredicate casingRule = Objects.requireNonNull(this.legend.get(casing));
+            Component name = this.legendNames.get(casing);
+            List<BlockState> alternatives = this.displayCandidates.getOrDefault(casing, List.of());
+            return where('J', casingRule, name).candidates('J', alternatives)
+                    .where('K', casingRule, name).candidates('K', alternatives);
         }
 
         public MultiblockPattern build() {

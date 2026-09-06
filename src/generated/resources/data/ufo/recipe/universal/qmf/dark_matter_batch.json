@@ -30,13 +30,13 @@
       }
     },
     {
-      "amount": 16,
+      "amount": 64,
       "ingredient": {
         "item": "ufo:event_horizon_component_matrix"
       }
     },
     {
-      "amount": 8,
+      "amount": 64,
       "ingredient": {
         "item": "ufo:charged_enriched_neutronium_sphere"
       }
@@ -55,5 +55,5 @@
   "machine": "qmf",
   "recipe_name": "universal/qmf/dark_matter_batch",
   "required_tier": 2,
-  "time": 2400
+  "time": 600
 }

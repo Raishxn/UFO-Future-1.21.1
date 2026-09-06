@@ -35,6 +35,6 @@
     "id": "ufo:ufo_energy_cell"
   },
   "machine": "qmf",
-  "recipe_name": "universal/qmf/bulk/event_horizon_energy_cell",
+  "recipe_name": "universal/qmf/bulk/ufo_energy_cell",
   "time": 3600
 }

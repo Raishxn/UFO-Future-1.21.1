@@ -13,9 +13,9 @@
     }
   },
   "pattern": [
-    "NHN",
-    "HCH",
-    "NHN"
+    "HNH",
+    "NCN",
+    " N "
   ],
   "result": {
     "count": 4,

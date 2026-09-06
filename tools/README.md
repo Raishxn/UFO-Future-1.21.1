@@ -5,6 +5,9 @@ packaged in the UFO Future mod JAR.
 
 - `multiblock/`: maintained converters and source exports used while authoring
   multiblock definitions.
+- `diagnostics/stellar_balance_baseline.py`: prints theoretical Stellar energy
+  and processing timings from generated recipes; run from any directory with
+  Python 3. These estimates are not in-game measurements.
 - `legacy/`: one-off migration scripts and old source snapshots kept only for
   reference. They must not be compiled or copied into `src/main`.
 

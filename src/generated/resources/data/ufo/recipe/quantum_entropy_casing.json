@@ -16,9 +16,9 @@
     }
   },
   "pattern": [
-    "ECE",
-    "NQN",
-    "ECE"
+    "ECN",
+    " Q ",
+    "NCE"
   ],
   "result": {
     "count": 2,

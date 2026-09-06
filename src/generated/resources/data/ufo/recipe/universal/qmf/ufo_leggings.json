@@ -66,5 +66,5 @@
   "machine": "qmf",
   "recipe_name": "universal/qmf/ufo_leggings",
   "required_tier": 2,
-  "time": 19000
+  "time": 12000
 }

@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 1200000,
+  "energy": 2000000,
   "fluid_inputs": [
     {
       "amount": 1000,
@@ -18,7 +18,7 @@
       }
     },
     {
-      "amount": 256,
+      "amount": 2,
       "ingredient": {
         "item": "ae2:cell_component_256k"
       }
@@ -43,5 +43,5 @@
       "id": "ufo:phase_shift_component_matrix"
     }
   ],
-  "time": 600
+  "time": 400
 }

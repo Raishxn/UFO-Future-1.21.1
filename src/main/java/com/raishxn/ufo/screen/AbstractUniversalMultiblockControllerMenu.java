@@ -15,6 +15,16 @@ import java.util.List;
 public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockEntity & IUniversalMultiblockController & IUpgradeableObject> extends UpgradeableMenu<T> {
     protected final ContainerLevelAccess levelAccess;
 
+    @GuiSync(39)
+    public MultiblockSupplyStatus supplyStatus = MultiblockSupplyStatus.EMPTY;
+    private long lastSupplyUpdate = Long.MIN_VALUE;
+
+    public boolean hasSupplyWidget() {
+        return this.getHost() instanceof com.raishxn.ufo.block.entity.AbstractParallelMultiblockControllerBE;
+    }
+
+    public MultiblockSupplyStatus getSupplyStatus() { return this.supplyStatus; }
+
     @GuiSync(20)
     protected int assembled = 0;
     @GuiSync(21)
@@ -67,6 +77,13 @@ public abstract class AbstractUniversalMultiblockControllerMenu<T extends BlockE
     @Override
     protected void standardDetectAndSendChanges() {
         if (isServerSide()) {
+            long tick = this.getHost().getLevel().getGameTime();
+            if (lastSupplyUpdate == Long.MIN_VALUE || tick - lastSupplyUpdate >= 5) {
+                if (this.getHost() instanceof com.raishxn.ufo.block.entity.AbstractParallelMultiblockControllerBE controller) {
+                    this.supplyStatus = MultiblockSupplyStatus.from(controller);
+                }
+                lastSupplyUpdate = tick;
+            }
             this.assembled = this.getHost().isGuiAssembled() ? 1 : 0;
             this.running = this.getHost().isGuiRunning() ? 1 : 0;
             this.progress = this.getHost().getGuiProgress();

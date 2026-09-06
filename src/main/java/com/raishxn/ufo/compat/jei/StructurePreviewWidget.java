@@ -40,7 +40,7 @@ import appeng.client.render.overlay.OverlayRenderType;
 import java.util.List;
 
 /** JEI adapter for UFO's LGPL-compatible AE2LT-style interactive structure viewer. */
-final class StructurePreviewWidget implements IRecipeWidget, IJeiInputHandler {
+public final class StructurePreviewWidget implements IRecipeWidget, IJeiInputHandler {
     private static final int NAME_Y = 1, TOOLBAR_Y = 14, TOOLBAR_H = 16;
     private static final int VIEW_X = 2, VIEW_Y = 31, PANEL_W = 105, FOOTER_H = 17, TAB_H = 15, ROW_H = 26;
     private static final float DEFAULT_YAW = 225, DEFAULT_PITCH = 30, DEPTH_SCALE = .1F;
@@ -59,7 +59,7 @@ final class StructurePreviewWidget implements IRecipeWidget, IJeiInputHandler {
     private int layer, materialScroll;
     private StructurePreviewModel.Cell selectedCell, hoveredCell;
 
-    StructurePreviewWidget(StructurePreviewModel model, int width, int height) {
+    public StructurePreviewWidget(StructurePreviewModel model, int width, int height) {
         this.model = model;
         this.width = width;
         this.height = height;
@@ -258,6 +258,16 @@ final class StructurePreviewWidget implements IRecipeWidget, IJeiInputHandler {
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, double mx, double my) {
+        getTooltipLines(mx, my).forEach(tooltip::add);
+    }
+
+    public List<Component> getTooltipLines(double mx, double my) {
+        List<Component> tooltip = new java.util.ArrayList<>();
+        collectTooltip(tooltip, mx, my);
+        return tooltip;
+    }
+
+    private void collectTooltip(List<Component> tooltip, double mx, double my) {
         String control = controlTooltip(mx, my);
         if (control != null) { tooltip.add(Component.literal(control)); return; }
         if (panelTab == PanelTab.DETAILS && selectedCell != null) {
@@ -289,10 +299,13 @@ final class StructurePreviewWidget implements IRecipeWidget, IJeiInputHandler {
 
     @Override
     public boolean handleInput(double mx, double my, IJeiUserInput input) {
-        InputConstants.Key key = input.getKey();
+        return handleClick(mx, my, input.getKey(), input.isSimulate());
+    }
+
+    public boolean handleClick(double mx, double my, InputConstants.Key key, boolean simulate) {
         if (key.getType() != InputConstants.Type.MOUSE || (key.getValue() != 0 && key.getValue() != 2)) return false;
         boolean handled = clickable(mx, my, key.getValue());
-        if (!handled || input.isSimulate()) return handled;
+        if (!handled || simulate) return handled;
         if (key.getValue() == 0 && handleToolbar(mx, my)) return true;
         if (key.getValue() == 0 && inside(panelX + 1, VIEW_Y + 1, 51, TAB_H, mx, my)) {
             panelTab = PanelTab.BLOCKS; clickSound(); return true;

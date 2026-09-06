@@ -72,7 +72,7 @@ public final class StellarCoolantMath {
         return Arrays.stream(indexes).mapToInt(Integer::intValue).toArray();
     }
 
-    private static ThermalSystem.CoolantProfile profile(
+    public static ThermalSystem.CoolantProfile profile(
             long efficiency, long tierMultiplier, long targetFlow) {
         if (efficiency <= 0L || tierMultiplier <= 0L || targetFlow <= 0L) {
             return new ThermalSystem.CoolantProfile(0L, 0L, 0L);

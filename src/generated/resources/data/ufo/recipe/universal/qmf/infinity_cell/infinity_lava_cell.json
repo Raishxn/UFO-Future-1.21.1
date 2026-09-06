@@ -1,6 +1,6 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 450000000,
+  "energy": 1000000000,
   "fluid_inputs": [
     {
       "amount": 5000,
@@ -42,5 +42,5 @@
   "machine": "qmf",
   "recipe_name": "universal/qmf/infinity_cell/infinity_lava_cell",
   "required_tier": 2,
-  "time": 16000
+  "time": 10000
 }

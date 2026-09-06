@@ -45,3 +45,20 @@ until a process completes and its output is accepted.
 - Gelid Cryotheum removes **1 HU per 120 mB**, up to **1000 mB/tick**.
 - Stable Coolant removes **50 HU per mB**, up to **10 mB/tick**.
 - Temporal Fluid removes **100 HU per mB**, up to **10 mB/tick**.
+
+## Dedicated supply hatches
+
+The assembly requires an **ME Massive Fluid Hatch** and an **AE Energy Input
+Hatch** in any compatible casing positions. The preview shows one example
+layout, not mandatory hatch locations. At least one of each is required.
+
+Coolant is consumed **only from the fluid hatch's local tank** (16,000,000 mB).
+Supply Gelid Cryotheum, Stable Coolant or Temporal Fluid using external fluid
+pipes or an explicitly configured export device. Controllers never fetch coolant
+from ME storage automatically.
+
+The energy hatch accepts **external FE and AE2 grid power**. FE enters a persistent
+1,000,000,000 AE-equivalent buffer using AE2's configured conversion ratio.
+Buffered external energy is used first; the connected AE2 grid supplies any
+remainder. Both paths respect AE2's configured consumption multiplier.
+ME connections are still needed for recipe automation.

@@ -1,6 +1,6 @@
 {
   "type": "ufo:dimensional_assembly",
-  "energy": 4000000,
+  "energy": 8000000,
   "fluid_inputs": [
     {
       "amount": 2000,
@@ -12,13 +12,13 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
-      "amount": 24,
+      "amount": 8,
       "ingredient": {
         "item": "ufo:phase_shift_component_matrix"
       }
     },
     {
-      "amount": 8,
+      "amount": 4,
       "ingredient": {
         "item": "ufo:white_dwarf_matter"
       }
@@ -37,5 +37,5 @@
       "id": "ufo:hyper_dense_component_matrix"
     }
   ],
-  "time": 1200
+  "time": 800
 }

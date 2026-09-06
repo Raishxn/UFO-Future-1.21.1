@@ -58,7 +58,9 @@ public class StellarNexusPartBlock extends Block implements net.minecraft.world.
                 BlockPos controllerPos = part.getControllerPos();
                 if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
                     controller.removePart(pos);
-                    controller.scanStructure(level);
+                    // Deferred: a scan inside the removal transaction relinks other
+                    // parts and writes their block states mid-removal.
+                    markControllerDirty(level, controllerPos);
                 }
                 part.unlinkFromController();
             }

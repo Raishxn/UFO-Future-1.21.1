@@ -18,6 +18,8 @@ public class StellarNexusPatternFactory {
         map.put('E', MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().defaultBlockState());
         map.put('F', MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get().defaultBlockState());
         map.put('G', MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get().defaultBlockState());
+        map.put('J', MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get().defaultBlockState());
+        map.put('K', MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get().defaultBlockState());
         return map;
     }
 
@@ -1338,7 +1340,13 @@ public class StellarNexusPatternFactory {
                    state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get()),
                    Component.literal("Stellar Field Generator"))
                .candidates('E', QuantumPatternPredicates.allFieldCandidates())
-               .where('F', MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get())
+                .where('F', (state, level, pos) ->
+                   state.is(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()) ||
+                   state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()) ||
+                   state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get()) ||
+                   state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get()) ||
+                   state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()),
+                   Component.literal("Singularity Casing or Hatch"))
                .where('G', (state, level, pos) -> 
                    state.is(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()) ||
                    state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()) ||
@@ -1348,6 +1356,15 @@ public class StellarNexusPatternFactory {
                    Component.literal("Singularity Casing or Hatch"))
                .where('H', MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get());
 
-        return builder.build();
+        var casingCandidates = java.util.List.of(
+                MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get().defaultBlockState(),
+                MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get().defaultBlockState(),
+                MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get().defaultBlockState(),
+                MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get().defaultBlockState(),
+                MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get().defaultBlockState());
+        builder.candidates('B', casingCandidates).candidates('F', casingCandidates).candidates('G', casingCandidates);
+
+        return builder.serviceHatches('G', MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get(),
+                MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()).build();
     }
 }
