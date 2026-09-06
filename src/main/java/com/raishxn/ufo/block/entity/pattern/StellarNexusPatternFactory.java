@@ -1322,9 +1322,11 @@ public class StellarNexusPatternFactory {
 
 
         // Configure the mapping
-        builder.where(' ', (state, level, pos) -> true, Component.literal("Any"))
-               .where('A', (state, level, pos) -> true, Component.literal("Any"))
-               .where('^', (state, level, pos) -> true, Component.literal("Any"))
+        // ANY marks free space: the sentinel keeps these cells out of the compiled
+        // list, so a scan tests the 1.8k real cells instead of all 41.6k.
+        builder.where(' ', MultiblockPattern.ANY, Component.literal("Any"))
+               .where('A', MultiblockPattern.ANY, Component.literal("Any"))
+               .where('^', MultiblockPattern.ANY, Component.literal("Any"))
                .where('B', (state, level, pos) -> 
                    state.is(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()) ||
                    state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()) ||

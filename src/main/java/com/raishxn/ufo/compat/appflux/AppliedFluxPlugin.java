@@ -4,6 +4,8 @@ import com.glodblock.github.appflux.common.AFSingletons;
 import com.glodblock.github.appflux.common.me.key.FluxKey;
 import com.glodblock.github.appflux.common.me.key.type.EnergyType;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.block.MultiblockBlocks;
+import com.raishxn.ufo.item.ModItems;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +38,26 @@ public class AppliedFluxPlugin {
         UfoMod.LOGGER.error(
                 "[UFO Mod] Applied Flux integration disabled after a failure in {}. Subsequent calls are skipped.",
                 action, failure);
+    }
+
+    /**
+     * AppFlux only associates its induction card with AE2's own pattern providers, but its
+     * mixin gives every PatternProviderLogic an upgrade inventory keyed by the host's
+     * terminal icon item. Register the (card, machine) association for the Quantum Pattern
+     * Hatch hosts so the card can be installed there too.
+     */
+    public static void registerInductionCardUpgrades() {
+        if (unavailable()) {
+            return;
+        }
+        try {
+            Upgrades.add(AFSingletons.INDUCTION_CARD, MultiblockBlocks.QUANTUM_PATTERN_HATCH.get(), 1,
+                    "group.pattern_provider.name");
+            Upgrades.add(AFSingletons.INDUCTION_CARD, ModItems.QUANTUM_PATTERN_PROVIDER_PART.get(), 1,
+                    "group.pattern_provider.name");
+        } catch (Throwable failure) {
+            disableAfterFailure("registerInductionCardUpgrades", failure);
+        }
     }
 
     public static double rechargeAeStorageItem(

@@ -4,6 +4,8 @@ import appeng.api.config.LockCraftingMode;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.api.stacks.GenericStack;
+import appeng.api.upgrades.IUpgradeableObject;
+import appeng.api.upgrades.IUpgradeInventory;
 import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
@@ -38,6 +40,9 @@ public class QuantumPatternHatchMenu extends AEBaseMenu {
         this.toolbox = new ToolboxMenu(this);
         this.createPlayerInventorySlots(playerInventory);
         this.logic = host.getLogic();
+        if (logic instanceof IUpgradeableObject upgradeable) {
+            setupUpgrades(upgradeable.getUpgrades());
+        }
 
         var patternInv = logic.getPatternInv();
         for (int slot = 0; slot < patternInv.size(); slot++) {
@@ -92,6 +97,11 @@ public class QuantumPatternHatchMenu extends AEBaseMenu {
 
     public YesNo getShowInAccessTerminal() {
         return showInAccessTerminal;
+    }
+
+    public IUpgradeInventory getUpgrades() {
+        return logic instanceof IUpgradeableObject upgradeable ? upgradeable.getUpgrades()
+                : appeng.api.upgrades.UpgradeInventories.empty();
     }
 
     public ToolboxMenu getToolbox() {

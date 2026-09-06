@@ -71,6 +71,10 @@ public class UFORegistryHandler {
             Upgrades.add(AEItems.INVERTER_CARD, cell, 1);
             Upgrades.add(AEItems.FUZZY_CARD, cell, 1);
         }
+
+        // AppFlux's induction card needs an explicit (card, machine) association for the
+        // Quantum Pattern Hatch block and part; its mixin already provides the inventory.
+        com.raishxn.ufo.compat.appflux.AppliedFluxPlugin.registerInductionCardUpgrades();
     }
 
     private void registerStorageHandler() {
