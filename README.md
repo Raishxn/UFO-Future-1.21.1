@@ -135,7 +135,7 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
 | **Minecraft** | required | 1.21.1 | — |
 | **NeoForge** | required | 21.1.216+ | — |
 | **[Applied Energistics 2](https://github.com/AppliedEnergistics/Applied-Energistics-2)** | required | `[19.2.17, 20)` | The network, storage and autocrafting UFO builds on |
-| **[UFO Core](https://github.com/Raishxn/UFO-Core)** | required | `[0.1.0-alpha.1, 0.2)` | Multiblock, exact-amount and GUI foundations |
+| **[RaishxCore](https://github.com/Raishxn/UFO-Core)** | required | `[0.1.0-alpha.1, 0.2)` | Multiblock, exact-amount and GUI foundations |
 | **[AE2 Addon Lib](https://github.com/pedroksl/AE2AddonLib)** | required | `[1.0.3-1.21.1, 2)` | Recipes, registries, menus and widgets |
 | **[GeckoLib](https://github.com/bernie-g/geckolib)** | required | `[4.8.2, 5)` | Apocalypse Type-A entity and renderer |
 | **[Mekanism](https://github.com/mekanism/Mekanism)** | required | `[10.7.18, 11)` | Mekanism-backed cells and chemical integration |
@@ -251,7 +251,7 @@ Machine behaviour, energy values and thermal thresholds are tunable through
 
 ## 🛠️ Building From Source
 
-UFO Future is a Gradle composite build: it pulls **UFO Core** from a sibling
+UFO Future is a Gradle composite build: it pulls **RaishxCore** from a sibling
 directory instead of a published artifact.
 
 ```bash
@@ -292,7 +292,7 @@ incorrectly or is missing, please open an issue and it will be fixed.
 | **[AE2 Addon Lib](https://github.com/pedroksl/AE2AddonLib)** — pedroksl and contributors | Recipes, registries, menus and GUI widgets |
 | **[GeckoLib](https://github.com/bernie-g/geckolib)** — bernie-g and contributors | Animated entity and renderer support |
 | **[Mekanism](https://github.com/mekanism/Mekanism)** — Mekanism team | Chemical integration and Mekanism-backed cells |
-| **[UFO Core](https://github.com/Raishxn/UFO-Core)** | Companion library: multiblock, exact-amount and GUI foundations |
+| **[RaishxCore](https://github.com/Raishxn/UFO-Core)** | Companion library: multiblock, exact-amount and GUI foundations |
 
 ### Optional integrations
 
