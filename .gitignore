@@ -56,8 +56,14 @@ __pycache__/
 # Local assistant/editor state
 /.gemini/
 /.agent/
+/.zcode/
 /.antigravityignore
 /discord-architect/
+
+# Local visual concepts and mockups
+/mockups/
+/docs/art/
+/docs/mockups/
 
 # Local project audits, human test scripts and internal control notes
 /.project-control/

@@ -1,9 +1,0 @@
-# Quantum Wireless Tool — mockup
-
-Gerado com a ferramenta integrada de imagens. É um conceito para redesenho manual da textura, não um sprite final do jogo. Nenhuma textura da ferramenta AE2 Lightning foi utilizada como referência.
-
-Arquivo: `quantum-wireless-tool-mockup.png`.
-
-## Prompt utilizado
-
-Use case: stylized-concept. Asset type: concept mockup for an original Minecraft mod inventory item, Quantum Wireless Tool, UFO Future. Create one polished square concept sheet on a quiet dark charcoal background, with the title 'QUANTUM WIRELESS TOOL' and small subtitle 'UFO FUTURE • CONCEITO'. Main subject: a compact handheld quantum linking instrument, original distinctive silhouette: a short dark graphite grip supporting a hollow angular hexagonal tuning ring, with a small suspended luminous violet diamond core and two asymmetrical silver emitter prongs. Restrained violet glow with a few cyan status pixels, brushed silver bevels and dark casing. It should read as a precision device for connecting industrial machines, not a weapon or a conventional wrench. Main depiction must be crisp enlarged pixel art with visible square pixels, compatible with eventual manual 32x32 Minecraft inventory texture, rotated diagonally in classic inventory-item framing. Beside the enlarged design include one smaller simplified inventory-scale pixel sprite of the SAME design and a tidy strip of 6 palette swatches. Keep silhouette simple enough to redraw at 16x16 or 32x32, limited palette, no tiny mechanical greebles, no photorealism, no hands, no machinery background, no other mods' logos, no lightning bolt motif, do not reproduce or reference any existing AE2 Lightning tool texture. This is an original visual brainstorming mockup, not a claimed final game-ready texture. Only the two requested title lines as text; generous margins.
