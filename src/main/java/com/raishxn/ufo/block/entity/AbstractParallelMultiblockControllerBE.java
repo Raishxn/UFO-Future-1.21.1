@@ -187,12 +187,32 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
     public UpgradeStatus getUpgradeStatus() {
         var profile = getCatalystProfile();
-        return new UpgradeStatus(profile.creative(), profile.speedMultiplier(), profile.energyMultiplier(),
-                profile.heatMultiplier() * getHeatGenerationMultiplier(), profile.bonusDropChance(),
+        var bonus = getWirelessBonus();
+        return new UpgradeStatus(profile.creative(), profile.speedMultiplier() * bonus.speed(), profile.energyMultiplier() * bonus.energy(),
+                profile.heatMultiplier() * getHeatGenerationMultiplier() * bonus.speed() * bonus.heat(), profile.bonusDropChance(),
                 this.safeMode, this.overclocked, getProgressPerTick(), getParallelThreadLimit(), this.machineTier);
     }
 
-    /** Catalyst multipliers are after stacking/clamps; recipe tier scaling is separate. */
+    public com.raishxn.ufo.wireless.WirelessBonus getWirelessBonus() {
+        if (getCatalystProfile().creative()) return com.raishxn.ufo.wireless.WirelessBonus.NONE;
+        double speed = 0, energy = 0, heat = 0; int count = 0;
+        for (var state : processStates) {
+            if (!state.isActive() || state.isOutputsPrepared() || state.isPaused()) continue;
+            if (state.getProgress() == 0 && state.getEnergyBuffer() == 0) continue;
+            speed += state.wirelessBonus.speed(); energy += state.wirelessBonus.energy(); heat += state.wirelessBonus.heat(); count++;
+        }
+        var applied = count == 0 ? com.raishxn.ufo.wireless.WirelessBonus.NONE
+                : new com.raishxn.ufo.wireless.WirelessBonus(speed / count, energy / count, heat / count);
+        return com.raishxn.ufo.wireless.WirelessBonus.display(count > 0, applied,
+                () -> com.raishxn.ufo.wireless.QuantumWirelessActivity.bonusFor(this));
+    }
+
+    public boolean hasWirelessBonusSnapshot() {
+        return processStates.stream().anyMatch(state -> state.isActive() && !state.isOutputsPrepared() && !state.isPaused()
+                && (state.getProgress() > 0 || state.getEnergyBuffer() > 0));
+    }
+
+    /** Combined catalyst and mean active wireless factors; recipe tier scaling is separate. */
     public record UpgradeStatus(boolean creative, double catalystSpeedMultiplier, double catalystEnergyMultiplier,
                                 double heatMultiplier, double bonusDropChance, boolean safeMode, boolean overclocked,
                                 int progressPerTick, int parallelLimit, int machineTier) {}
@@ -332,6 +352,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         int hottestMaxProgress = 0;
         int hottestProgress = 0;
         int runningThreads = 0;
+        double wirelessHeatWeight = 0;
         boolean thermalLocked = this.safeMode && this.temperature >= this.maxTemperature;
         int parallelLimit = getParallelThreadLimit();
         List<PreparedProcess> preparedProcesses = new ArrayList<>();
@@ -352,7 +373,12 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
 
-            int scaledMaxProgress = getAdjustedProcessingTime(recipe, catalystProfile);
+            // Lock factors before reserving energy; never reprice a partially charged job.
+            if (processState.getProgress() == 0 && processState.getEnergyBuffer() == 0) {
+                processState.wirelessBonus = catalystProfile.creative() ? com.raishxn.ufo.wireless.WirelessBonus.NONE
+                        : com.raishxn.ufo.wireless.QuantumWirelessActivity.bonusFor(this);
+            }
+            int scaledMaxProgress = processState.wirelessBonus.duration(getAdjustedProcessingTime(recipe, catalystProfile));
             if (scaledMaxProgress > hottestMaxProgress) {
                 hottestMaxProgress = scaledMaxProgress;
                 hottestProgress = processState.getProgress();
@@ -366,7 +392,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
 
-            long scaledEnergy = getAdjustedEnergyCost(recipe, catalystProfile);
+            long scaledEnergy = processState.wirelessBonus.energyCost(getAdjustedEnergyCost(recipe, catalystProfile));
             preparedProcesses.add(new PreparedProcess(processState, recipe, scaledEnergy, scaledMaxProgress));
         }
 
@@ -402,7 +428,10 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
 
             runningThreads++;
+            wirelessHeatWeight += processState.wirelessBonus.heatPerTick(
+                    getAdjustedProcessingTime(prepared.recipe(), catalystProfile), prepared.scaledMaxProgress());
             anyRunning = true;
+            if (!catalystProfile.creative()) com.raishxn.ufo.wireless.QuantumWirelessActivity.markProgress(this);
             processState.setProgress(processState.getProgress() + getProgressPerTick());
             if (processState.getProgress() >= prepared.scaledMaxProgress()) {
                 finishRecipe(processState, prepared.recipe());
@@ -417,7 +446,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.progress = hottestProgress;
         updateRuntimeState(true, true, getActiveProcessCount(), runningThreads,
                 countBlockedOutputs(), countInvalidRecipes(recipeIndex), thermalLocked);
-        updateTemperature(runningThreads, catalystProfile);
+        updateTemperature(wirelessHeatWeight, catalystProfile);
         if (persistentActivityBefore || hasPersistentRuntimeActivity()) {
             this.setChanged();
         }
@@ -833,7 +862,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 continue;
             }
             var primaryOutput = recipe.primaryOutput();
-            int scaledMaxProgress = getAdjustedProcessingTime(recipe, catalystProfile);
+            int scaledMaxProgress = processState.wirelessBonus.duration(getAdjustedProcessingTime(recipe, catalystProfile));
             int displayedMaxProgress = getDisplayedTicks(scaledMaxProgress);
             int displayedProgress = Math.min(displayedMaxProgress, getDisplayedTicks(processState.getProgress()));
             Component label = primaryOutput.item().isEmpty()
@@ -885,7 +914,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             bufferedEnergy += Math.max(0L, processState.getEnergyBuffer());
             MultiblockProcessingRecipe recipe = recipeIndex.get(processState.getRecipeId());
             if (recipe != null) {
-                targetEnergy += Math.max(0L, getAdjustedEnergyCost(recipe, catalystProfile));
+                targetEnergy += Math.max(0L, processState.wirelessBonus.energyCost(getAdjustedEnergyCost(recipe, catalystProfile)));
             }
         }
 
@@ -893,7 +922,9 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.maxStoredEnergy = targetEnergy;
     }
 
-    private void updateTemperature(int activeThreads, CatalystProfile catalystProfile) {
+    private double wirelessHeatRemainder;
+
+    private void updateTemperature(double activeThreads, CatalystProfile catalystProfile) {
         this.thermalTicker++;
 
         if (catalystProfile.creative()) {
@@ -902,8 +933,10 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             }
         } else if (activeThreads > 0) {
             if (this.thermalTicker % 2 == 0) {
-                int baseHeat = Math.max(1, activeThreads) * (this.overclocked ? 5 : 1);
-                int heatToAdd = Math.max(0, (int) Math.ceil(baseHeat * getHeatGenerationMultiplier() * catalystProfile.heatMultiplier()));
+                double baseHeat = activeThreads * (this.overclocked ? 5 : 1);
+                double accumulated = wirelessHeatRemainder + Math.max(0, baseHeat * getHeatGenerationMultiplier() * catalystProfile.heatMultiplier());
+                int heatToAdd = (int) Math.floor(accumulated);
+                wirelessHeatRemainder = accumulated - heatToAdd;
                 this.temperature = Math.min(this.maxTemperature, this.temperature + heatToAdd);
             }
         } else if (this.temperature > 0 && this.thermalTicker % 40 == 0) {
@@ -1196,6 +1229,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
         state.clear();
         state.setRecipeId(recipe.id());
+        state.wirelessBonus = com.raishxn.ufo.wireless.WirelessBonus.NONE;
         state.setPatternPushed(true);
         state.setOutputPolicyVersion(AutocraftingOutputPolicy.DETERMINISTIC_BASE);
         state.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size(), recipe.chemicalInputs().size());
@@ -1228,6 +1262,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                 && getActiveProcessCount() < getParallelThreadLimit()
                 && findInactiveState() != null;
     }
+
+    public boolean acceptsPlansForWirelessBonus() { return assembled && !getCatalystProfile().creative(); }
 
     private ParallelProcessState findInactiveState() {
         for (ParallelProcessState state : this.processStates) {
@@ -1468,6 +1504,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(tag, registries);
+        tag.putDouble("wirelessHeatRemainder", wirelessHeatRemainder);
         ListTag processTags = new ListTag();
         for (ParallelProcessState state : this.processStates) {
             processTags.add(state.save(registries));
@@ -1480,6 +1517,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     @Override
     protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.loadAdditional(tag, registries);
+        wirelessHeatRemainder = Math.clamp(tag.getDouble("wirelessHeatRemainder"), 0, .999999);
         if (tag.contains("processStates", Tag.TAG_LIST)) {
             ListTag processTags = tag.getList("processStates", Tag.TAG_COMPOUND);
             for (int i = 0; i < Math.min(processTags.size(), this.processStates.size()); i++) {

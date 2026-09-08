@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-23T21:25:43.9720007	Item Models: ufo
+// 1.21.1	2026-09-08T16:54:58.592146394	Item Models: ufo
 65bffe38993ea67d3302816b93f2d718431de59b assets/ufo/models/item/aether_containment_capsule.json
 d37e20c86896b1b87b1b885afa9094da5be12df5 assets/ufo/models/item/astral_nexus_helmet.json
 5b7661e3ed5dba7c93228705294756443e065fb3 assets/ufo/models/item/bismuth.json
@@ -56,7 +56,6 @@ f036495a7f5263bce8b5ef02e301c2b936904ffa assets/ufo/models/item/infinity_water_c
 30d301869d993eae726b73602b97040f38971e26 assets/ufo/models/item/matterflow_catalyst_t1.json
 70d35da6d0096cfbe6bfd8deff955c7c48432a01 assets/ufo/models/item/matterflow_catalyst_t2.json
 5e570a403a9c85476f688a4bc63bf7afed0c2c9c assets/ufo/models/item/matterflow_catalyst_t3.json
-de3d4bc5646f02fca3e4d320ebca6acbf3166a03 assets/ufo/models/item/neutronium_sphere.json
 b17f6d9797d31d38617409394711e054d4ec4949 assets/ufo/models/item/neutron_fluid_cell_housing.json
 c5cc48f94dd3fb449cd709959ac598fe2f5bf42b assets/ufo/models/item/neutron_star_fragment_bucket.json
 72a471f184f85062616274b6bb1311f04db05bfe assets/ufo/models/item/neutron_star_fragment_dust.json
@@ -69,6 +68,7 @@ c72d19f3499381071d483fddb689d1a4b2f51473 assets/ufo/models/item/neutron_star_mat
 ad9fbbf64622accf1ffef0529ea3744107e35c3e assets/ufo/models/item/neutron_star_reservoir_echo.json
 5a00fc688966f408edef93b576d0d2eae3672bf2 assets/ufo/models/item/neutron_star_reservoir_nexus.json
 561e470c30617a387cae03196d7e077823fb6566 assets/ufo/models/item/neutron_star_reservoir_singularity.json
+de3d4bc5646f02fca3e4d320ebca6acbf3166a03 assets/ufo/models/item/neutronium_sphere.json
 4ec2a1e78fc47c1afa5eb7d315703fa3e3550798 assets/ufo/models/item/nuclear_star.json
 493222f6d19bd550ad58d1a6956450bc7c006ef1 assets/ufo/models/item/obsidian_matrix.json
 f7f20338a997986d4b5a15158852dd299321d53e assets/ufo/models/item/overflux_catalyst_t1.json
@@ -113,18 +113,35 @@ c0e172f4ac0f3c8d47abeaa49634e3cebbd99995 assets/ufo/models/item/storage_cell_sid
 5559f6843b53edaff7b0efff13f4cd8da80ed8e5 assets/ufo/models/item/thermal_resistor_pants.json
 6e8ae9be7632fe9d776ee9d6169616950b0c8ff0 assets/ufo/models/item/thermal_resistor_plating.json
 f78bada06e511643006f4834cff38cf35f58dfc7 assets/ufo/models/item/transcending_matter_bucket.json
+85a62274507fb53916037b19a053df786f9b9d44 assets/ufo/models/item/ufo_abyssal_sight_card.json
+f5d3e8ef2fc169b738665217fa2c2ae79c1e7d17 assets/ufo/models/item/ufo_adaptive_biosphere_card.json
+dba069af22faba4922183d822f1fd791ab9939f0 assets/ufo/models/item/ufo_aegis_singularity_card.json
+d494006c54ecf12f03dc44422a17a29eb0d8f3c0 assets/ufo/models/item/ufo_astral_wings_card.json
 46afa4a987a943cb6fe40bb3f9a7cb8ba83c9a06 assets/ufo/models/item/ufo_axe.json
 55ba6b14f4484470e976d9a5dc7c79cad484994f assets/ufo/models/item/ufo_boots.json
 3b1260b5a9a27b24c6613849b596ecb78fa81d5a assets/ufo/models/item/ufo_chestplate.json
+f212dedc6db25105fdc9f35ff6436e09e16edf55 assets/ufo/models/item/ufo_chrono_regenerator_card.json
+1ac9aa19ae946c48d7ee35bc14895037d692cb3b assets/ufo/models/item/ufo_cloaking_field_card.json
+09c3fd89785903ddf84e0cbdddc5b46ee42dd7ce assets/ufo/models/item/ufo_entropy_magnet_card.json
 efcbe332ffdf76698cca2a3deab7cc43534e2599 assets/ufo/models/item/ufo_greatsword.json
 4607c09655628411c92c199e3e4d6c94097dbacc assets/ufo/models/item/ufo_hammer.json
 3a97dfab42aa7ca978dc66bfc8268f850e96f2ff assets/ufo/models/item/ufo_helmet.json
 f79e03b1781b51f42528ad63a6964ffb46c2169c assets/ufo/models/item/ufo_hoe.json
+5a5da5c50389f36e0501eaeb70dbe1d7978ccb47 assets/ufo/models/item/ufo_kinetic_overdrive_card.json
 9075a0ebabedab83f6eb3c8cffbc326cbf384598 assets/ufo/models/item/ufo_leggings.json
+20f0159e29617b8f8a1a688b79804ea0b99c28f9 assets/ufo/models/item/ufo_loot_singularity_card.json
+0ad00fa1ff4e7c87b9588e4d7af086cecff3e7e8 assets/ufo/models/item/ufo_matter_translocator_card.json
+5f28fd58c202469793ca1780d6534b5b9b960102 assets/ufo/models/item/ufo_phase_step_card.json
 8313ac51c162e08cfa7ef6d242b9ee3e26d6596d assets/ufo/models/item/ufo_pickaxe.json
+6703289317c44a05ec5b61da5c9c88b385fcdbca assets/ufo/models/item/ufo_quantum_relay_card.json
+e523fc3572c1f8bd919dc128c94c26ad0b3a2746 assets/ufo/models/item/ufo_reality_anchor_card.json
+309e9941ae53841ec54f628b60aba924c0b96566 assets/ufo/models/item/ufo_reprisal_matrix_card.json
 ba1f8c5a90183b2e7090479799aedef851052f13 assets/ufo/models/item/ufo_shovel.json
+3e2da0be93f782eb33e15e9682338134a1e5d864 assets/ufo/models/item/ufo_singularity_strike_card.json
 28a4f41965a0c6785e8d221425c02c3b360b8de6 assets/ufo/models/item/ufo_staff.json
 3758a0d934caef82fd417f705766a814dc3cdc1d assets/ufo/models/item/ufo_sword.json
+79e324797a920667bd43d828cb9bc240beb0bf24 assets/ufo/models/item/ufo_upgrade_card.json
+2cfcd48a836d6413d8d4684c3c1ee403f31a3b66 assets/ufo/models/item/ufo_void_flight_card.json
 5fced6ea53bf3b6737793af756220fd2cc0e9f50 assets/ufo/models/item/unstable_white_hole_matter.json
 18cc4565fb2d0cb67a559ecd8fb5a71b507bb821 assets/ufo/models/item/uu_amplifier_bucket.json
 22b40fd1110ad101991f352342b3a4d52a0a6aac assets/ufo/models/item/uu_matter_bucket.json

@@ -34,12 +34,11 @@ public class ModCreativeModeTabs {
                         output.accept(ModArmor.UFO_CHESTPLATE.get());
                         output.accept(ModArmor.UFO_LEGGINGS.get());
                         output.accept(ModArmor.UFO_BOOTS.get());
-                        output.accept(ModArmor.ASTRAL_NEXUS_HELMET.get());
-                        output.accept(ModArmor.ASTRAL_NEXUS_CHESTPLATE.get());
-                        output.accept(ModArmor.ASTRAL_NEXUS_LEGGINGS.get());
-                        output.accept(ModArmor.ASTRAL_NEXUS_BOOTS.get());
+                        output.accept(ModItems.UFO_UPGRADE_CARD.get());
+                        ModItems.UFO_ARMOR_MODULE_CARDS.forEach(card -> output.accept(card.get()));
                         output.accept(ModTools.REALITY_RIPPER.get());
                         output.accept(ModTools.UFO_STAFF);
+                        output.accept(ModItems.QUANTUM_WIRELESS_TOOL.get());
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR_PRESS.get());
                         output.accept(ModItems.DIMENSIONAL_PROCESSOR.get());
                         output.accept(ModItems.PRINTED_DIMENSIONAL_PROCESSOR.get());
@@ -206,6 +205,7 @@ public class ModCreativeModeTabs {
                         output.accept(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
+                        output.accept(ModItems.QUANTUM_INTERFACE.get());
                         output.accept(ModItems.QUANTUM_PATTERN_PROVIDER_PART.get());
                         output.accept(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get());
                         output.accept(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get());

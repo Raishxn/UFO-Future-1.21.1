@@ -1,19 +1,15 @@
 package com.raishxn.ufo.item.custom;
 
-import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.armor.UfoArmorModule;
+import com.raishxn.ufo.armor.UfoArmorSetting;
 import com.raishxn.ufo.datagen.ModDataComponents;
-import com.raishxn.ufo.event.ArmorEffectRefreshPolicy;
+import com.raishxn.ufo.item.ModArmor;
 import com.raishxn.ufo.util.EnergyToolHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -21,15 +17,11 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.EnumSet;
 
 // --- MUDANÇA 1: Implementar a interface IEnergyTool ---
 public class UfoArmorItem extends ArmorItem implements IEnergyTool {
-
-    private static final int ENERGY_COST_PER_SECOND = 400; // 20 RF/tick * 20 ticks
-    private static final int DRAIN_INTERVAL = 20; // Drain every 20 ticks (1 second) to avoid triggering equip sound
-    private static final int EFFECT_DURATION = 200;
-    private static final int EFFECT_REFRESH_THRESHOLD = 180;
-    private static final ResourceLocation ARMOR_HEALTH_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "armor_health_boost");
 
     public UfoArmorItem(Holder<ArmorMaterial> pMaterial, Type pType, Properties pProperties) {
         super(pMaterial, pType, pProperties);
@@ -43,87 +35,99 @@ public class UfoArmorItem extends ArmorItem implements IEnergyTool {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        if (!level.isClientSide && entity instanceof Player player) {
-            if (this.getType() == Type.CHESTPLATE) {
-                ItemStack equippedChestplate = player.getInventory().getArmor(Type.CHESTPLATE.getSlot().getIndex());
-
-                if (equippedChestplate.getItem() instanceof UfoArmorItem) {
-                    if (hasActiveFlightSet(player)) {
-                        applyAllEffects(player);
-                        // Only drain energy every DRAIN_INTERVAL ticks to avoid constant component changes
-                        // which trigger the Minecraft equip sound detection
-                        if (level.getGameTime() % DRAIN_INTERVAL == 0) {
-                            drainEnergy(player);
-                        }
-                    } else {
-                        removeAllEffects(player);
-                    }
-                } else {
-                    removeAllEffects(player);
-                }
-            }
-        }
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
-    private void drainEnergy(Player player) {
-        for (ItemStack armorStack : player.getInventory().armor) {
-            if (armorStack.getItem() instanceof UfoArmorItem) {
-                int currentEnergy = armorStack.getOrDefault(ModDataComponents.ENERGY.get(), 0);
-                int newEnergy = Math.max(0, currentEnergy - ENERGY_COST_PER_SECOND);
-                if (newEnergy != currentEnergy) {
-                    armorStack.set(ModDataComponents.ENERGY.get(), newEnergy);
-                }
-            }
-        }
+    public static boolean hasActiveFlightSet(Player player) {
+        if (!hasFullUfoSet(player)) return false;
+        ItemStack chest = player.getItemBySlot(Type.CHESTPLATE.getSlot());
+        return isModuleEnabled(chest, UfoArmorModule.VOID_FLIGHT)
+                && chest.getOrDefault(ModDataComponents.ENERGY.get(), 0) >= UfoArmorModule.VOID_FLIGHT.energyCost();
     }
 
-    public static boolean hasActiveFlightSet(Player player) {
-        for (ItemStack armorStack : player.getInventory().armor) {
-            if (!(armorStack.getItem() instanceof UfoArmorItem)) {
-                return false;
-            }
-            int currentEnergy = armorStack.getOrDefault(ModDataComponents.ENERGY.get(), 0);
-            if (currentEnergy < ENERGY_COST_PER_SECOND) {
-                return false;
-            }
+    public static boolean hasFullUfoSet(Player player) {
+        return player.getItemBySlot(Type.HELMET.getSlot()).is(ModArmor.UFO_HELMET.get())
+                && player.getItemBySlot(Type.CHESTPLATE.getSlot()).is(ModArmor.UFO_CHESTPLATE.get())
+                && player.getItemBySlot(Type.LEGGINGS.getSlot()).is(ModArmor.UFO_LEGGINGS.get())
+                && player.getItemBySlot(Type.BOOTS.getSlot()).is(ModArmor.UFO_BOOTS.get());
+    }
+
+    public static boolean isUfoArmorPiece(ItemStack stack) {
+        return stack.is(ModArmor.UFO_HELMET.get()) || stack.is(ModArmor.UFO_CHESTPLATE.get())
+                || stack.is(ModArmor.UFO_LEGGINGS.get()) || stack.is(ModArmor.UFO_BOOTS.get());
+    }
+
+    public static EnumSet<UfoArmorModule> installedModules(ItemStack stack) {
+        EnumSet<UfoArmorModule> modules = EnumSet.noneOf(UfoArmorModule.class);
+        for (String id : stack.getOrDefault(ModDataComponents.ARMOR_MODULES.get(), List.<String>of())) {
+            UfoArmorModule module = UfoArmorModule.byId(id);
+            if (module != null) modules.add(module);
         }
+        return modules;
+    }
+
+    public static boolean isModuleEnabled(ItemStack stack, UfoArmorModule module) {
+        return installedModules(stack).contains(module)
+                && !stack.getOrDefault(ModDataComponents.DISABLED_ARMOR_MODULES.get(), List.<String>of()).contains(module.id());
+    }
+
+    public static boolean installModule(ItemStack stack, UfoArmorModule module) {
+        if (!isUfoArmorPiece(stack) || !(stack.getItem() instanceof UfoArmorItem armor)
+                || armor.getType() != module.armorType()) return false;
+        EnumSet<UfoArmorModule> installed = installedModules(stack);
+        if (installed.contains(module) || installed.size() >= UfoArmorModule.capacity(armor.getType())) return false;
+        List<String> ids = new ArrayList<>(stack.getOrDefault(ModDataComponents.ARMOR_MODULES.get(), List.<String>of()));
+        ids.add(module.id());
+        stack.set(ModDataComponents.ARMOR_MODULES.get(), List.copyOf(ids));
         return true;
     }
 
-    private void applyAllEffects(Player player) {
-        refreshEffect(player, MobEffects.DAMAGE_RESISTANCE, 9);
-        refreshEffect(player, MobEffects.NIGHT_VISION, 0);
-
-        net.minecraft.world.entity.ai.attributes.AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
-        if (healthAttribute != null && healthAttribute.getModifier(ARMOR_HEALTH_MODIFIER_ID) == null) {
-            AttributeModifier modifier = new AttributeModifier(
-                    ARMOR_HEALTH_MODIFIER_ID,
-                    40.0,
-                    AttributeModifier.Operation.ADD_VALUE
-            );
-            healthAttribute.addPermanentModifier(modifier);
+    public static boolean removeModule(ItemStack stack, UfoArmorModule module) {
+        List<String> ids = new ArrayList<>(stack.getOrDefault(ModDataComponents.ARMOR_MODULES.get(), List.<String>of()));
+        if (!ids.remove(module.id())) return false;
+        stack.set(ModDataComponents.ARMOR_MODULES.get(), List.copyOf(ids));
+        List<String> disabled = new ArrayList<>(stack.getOrDefault(ModDataComponents.DISABLED_ARMOR_MODULES.get(), List.<String>of()));
+        disabled.remove(module.id());
+        stack.set(ModDataComponents.DISABLED_ARMOR_MODULES.get(), List.copyOf(disabled));
+        List<String> settings = new ArrayList<>(stack.getOrDefault(
+                ModDataComponents.ARMOR_MODULE_SETTINGS.get(), List.<String>of()));
+        for (UfoArmorSetting setting : UfoArmorSetting.forModule(module)) {
+            settings.removeIf(entry -> entry.startsWith(setting.id() + "="));
         }
+        stack.set(ModDataComponents.ARMOR_MODULE_SETTINGS.get(), List.copyOf(settings));
+        return true;
     }
 
-    private static void refreshEffect(Player player, Holder<net.minecraft.world.effect.MobEffect> effect,
-                                      int amplifier) {
-        if (ArmorEffectRefreshPolicy.shouldRefresh(
-                player.getEffect(effect), amplifier, EFFECT_REFRESH_THRESHOLD)) {
-            player.addEffect(new MobEffectInstance(
-                    effect, EFFECT_DURATION, amplifier, false, false, true));
-        }
+    public static boolean toggleModule(ItemStack stack, UfoArmorModule module) {
+        if (!installedModules(stack).contains(module)) return false;
+        List<String> disabled = new ArrayList<>(stack.getOrDefault(ModDataComponents.DISABLED_ARMOR_MODULES.get(), List.<String>of()));
+        if (!disabled.remove(module.id())) disabled.add(module.id());
+        stack.set(ModDataComponents.DISABLED_ARMOR_MODULES.get(), List.copyOf(disabled));
+        return true;
     }
 
-    private void removeAllEffects(Player player) {
-        net.minecraft.world.entity.ai.attributes.AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
-        if (healthAttribute != null && healthAttribute.getModifier(ARMOR_HEALTH_MODIFIER_ID) != null) {
-            healthAttribute.removeModifier(ARMOR_HEALTH_MODIFIER_ID);
-            if (player.getHealth() > player.getMaxHealth()) {
-                player.setHealth(player.getMaxHealth());
+    public static int moduleSetting(ItemStack stack, UfoArmorSetting setting) {
+        String prefix = setting.id() + "=";
+        for (String entry : stack.getOrDefault(ModDataComponents.ARMOR_MODULE_SETTINGS.get(), List.<String>of())) {
+            if (!entry.startsWith(prefix)) continue;
+            try {
+                return setting.clamp(Integer.parseInt(entry.substring(prefix.length())));
+            } catch (NumberFormatException ignored) {
+                break;
             }
         }
+        return setting.defaultValue();
+    }
 
+    public static boolean setModuleSetting(ItemStack stack, UfoArmorSetting setting, int value) {
+        if (!isModuleEnabled(stack, setting.module())) return false;
+        String prefix = setting.id() + "=";
+        List<String> entries = new ArrayList<>(stack.getOrDefault(
+                ModDataComponents.ARMOR_MODULE_SETTINGS.get(), List.<String>of()));
+        entries.removeIf(entry -> entry.startsWith(prefix));
+        entries.add(prefix + setting.clamp(value));
+        stack.set(ModDataComponents.ARMOR_MODULE_SETTINGS.get(), List.copyOf(entries));
+        return true;
     }
 
     // --- MÉTODOS VISUAIS E DA INTERFACE ---
@@ -156,8 +160,17 @@ public class UfoArmorItem extends ArmorItem implements IEnergyTool {
                 String energyText = String.format("%,d / %,d RF", energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
                 pTooltipComponents.add(Component.literal(energyText).withStyle(ChatFormatting.GRAY));
             }
+            EnumSet<UfoArmorModule> modules = installedModules(pStack);
+            pTooltipComponents.add(Component.translatable("tooltip.ufo.armor.modules", modules.size(),
+                    UfoArmorModule.capacity(getType())).withStyle(ChatFormatting.AQUA));
+            for (UfoArmorModule module : modules) {
+                ChatFormatting color = isModuleEnabled(pStack, module) ? ChatFormatting.GREEN : ChatFormatting.DARK_GRAY;
+                pTooltipComponents.add(Component.literal(" • ")
+                        .append(Component.translatable(module.translationKey())).withStyle(color));
+            }
         } else {
             pTooltipComponents.add(Component.translatable("tooltip.ufo.press_shift").withStyle(ChatFormatting.AQUA));
+            pTooltipComponents.add(Component.translatable("tooltip.ufo.armor.open_config").withStyle(ChatFormatting.DARK_GRAY));
         }
         super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
     }

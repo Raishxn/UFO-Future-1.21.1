@@ -6,6 +6,8 @@
   "mixins": [
     "AccessorBuiltInModelHooks",
     "InvokerCraftingCPUCluster",
+    "InvokerPatternProviderLogic",
+    "MixinQuantumPatternDelivery",
     "MixinCPUSelectionList",
     "MixinCraftingCPUCluster",
     "MixinKeyTypeSelection"

@@ -12,6 +12,7 @@ import java.util.List;
 
 public class ParallelProcessState {
     private ResourceLocation recipeId;
+    public com.raishxn.ufo.wireless.WirelessBonus wirelessBonus = com.raishxn.ufo.wireless.WirelessBonus.NONE;
     private long energyBuffer;
     private long[] itemBuffers = new long[0];
     private long[] fluidBuffers = new long[0];
@@ -38,6 +39,7 @@ public class ParallelProcessState {
     }
 
     public void clear() {
+        wirelessBonus = com.raishxn.ufo.wireless.WirelessBonus.NONE;
         this.recipeId = null;
         this.energyBuffer = 0L;
         this.itemBuffers = new long[0];
@@ -229,6 +231,7 @@ public class ParallelProcessState {
 
     public CompoundTag save(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
+        tag.put("wirelessBonus", com.raishxn.ufo.wireless.WirelessBonusNbt.save(wirelessBonus));
         if (this.recipeId != null) {
             tag.putString("recipeId", this.recipeId.toString());
         }
@@ -248,6 +251,7 @@ public class ParallelProcessState {
     }
 
     public void load(CompoundTag tag, HolderLookup.Provider registries) {
+        wirelessBonus = com.raishxn.ufo.wireless.WirelessBonusNbt.load(tag.getCompound("wirelessBonus"));
         this.recipeId = tag.contains("recipeId") ? ResourceLocation.parse(tag.getString("recipeId")) : null;
         this.energyBuffer = tag.getLong("energyBuffer");
         this.itemBuffers = tag.getLongArray("itemBuffers");

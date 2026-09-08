@@ -1,4 +1,4 @@
-// 1.21.1	2026-09-05T23:52:57.226809186	Block States: ufo
+// 1.21.1	2026-09-08T18:52:41.01794718	Block States: ufo
 69293416073dbd99798343145db9756641321663 assets/ufo/blockstates/150m_mega_co_processor.json
 4a94fb489b7a997f738f10e05252f01c4bd984ab assets/ufo/blockstates/1b_mega_crafting_storage.json
 a6330df476a03cc6c616786ed69474c38443ddb7 assets/ufo/blockstates/1qd_mega_crafting_storage.json
@@ -78,7 +78,7 @@ f88f69881c0b4903744276f27e76d81af736bf4c assets/ufo/models/block/me_massive_inpu
 c49edbc310efd64637de7bcb857bc661a115dd0e assets/ufo/models/block/me_massive_output_hatch_quantum.json
 164b1c240c6fb0306380f5dc5a7db7b0cb630479 assets/ufo/models/block/neutron_star_fragment_block.json
 ebf1b020e1fa1f50484d23591ba7f8075aa8f890 assets/ufo/models/block/pulsar_fragment_block.json
-d191918d93bcf12c2d3359716e88ae8c5ee35548 assets/ufo/models/block/quantum_cryoforge_controller.json
+e72b55a1f9877595524e43d09217724f450e0343 assets/ufo/models/block/quantum_cryoforge_controller.json
 cb40c8813b7ad990e9954abaadd2313314a3ccee assets/ufo/models/block/quantum_entropy_casing.json
 c68b1888c95953cac1237b3db7ab2caf7fd93d22 assets/ufo/models/block/quantum_hyper_mechanical_casing.json
 cb40c8813b7ad990e9954abaadd2313314a3ccee assets/ufo/models/block/quantum_hyper_mechanical_casing_inventory.json

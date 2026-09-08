@@ -48,7 +48,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         qmfControllerBlock(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER);
         controllerWithBase(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER, "quantum_hyper_mechanical_casing");
         controllerWithBase(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER, "quantum_hyper_mechanical_casing");
-        controllerWithBase(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER, "quantum_hyper_mechanical_casing");
+        controllerWithBase(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER, "quantum_hyper_mechanical_casing", true);
 
         // ═══════════════════ STELLAR NEXUS ═══════════════════
         stellarNexusControllerBlock(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER);
@@ -269,6 +269,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
     }
 
     private void controllerWithBase(DeferredBlock<? extends Block> block, String baseTextureName) {
+        controllerWithBase(block, baseTextureName, false);
+    }
+
+    private void controllerWithBase(DeferredBlock<? extends Block> block, String baseTextureName, boolean reverseFront) {
         String name = block.getId().getPath();
         ResourceLocation baseTexture = modLoc("block/multiblock/" + baseTextureName);
         ResourceLocation overlayTexture = modLoc("block/multiblock/overlay_front");
@@ -279,7 +283,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .texture("base", baseTexture)
                 .texture("overlay", overlayTexture)
                 .element().from(0, 0, 0).to(16, 16, 16).allFaces((dir, face) -> face.texture("#base").cullface(dir)).end()
-                .element().from(0, 0, 0).to(16, 16, 16).face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end().end();
+                .element().from(0, 0, 0).to(16, 16, 16)
+                .face(reverseFront ? Direction.SOUTH : Direction.NORTH).texture("#overlay")
+                .cullface(reverseFront ? Direction.SOUTH : Direction.NORTH).end().end();
 
         getVariantBuilder(block.get()).forAllStates(state -> {
             Direction dir = state.getValue(DirectionalBlock.FACING);

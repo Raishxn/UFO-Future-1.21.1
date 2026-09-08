@@ -24,4 +24,8 @@ Some UFO Future textures are based on, adapted from, or inspired by work from th
 - GT New Horizons Modpack: https://github.com/GTNewHorizons/GT-New-Horizons-Modpack
 - AE2 Lightning Tech: its interactive multiblock preview, auto-build architecture, and compact connected-texture geometry were ported and adapted for UFO Future under LGPL-3.0. The `quick_build.png` toolbar icon is redistributed under CC BY-NC-SA 3.0 with attribution to the AE2 Lightning Tech contributors: https://github.com/ae2lt/AE2-Lightning-Tech
 
+The Quantum Wireless two-state toolbar widget adapts AE2 Lightning Tech's TextureToggleButton. Eight associated mode/import/export/speed icons are redistributed unchanged under CC BY-NC-SA 3.0. See [the provenance inventory](docs/credits/ae2-lightning-wireless.md) and the bundled `assets/ufo/AE2LT-WIRELESS-NOTICE.md` for the source revision, file list and licenses. Quantum Interface functional parity is still in progress.
+
+The UFO Armor configuration uses AE2's standard checkbox, cog, back and slider visuals and redistributes AdvancedAE's `states.png` for its clear/uninstall icon. See `assets/ufo/ADVANCEDAE-UI-NOTICE.md` in the packaged resources.
+
 The NeoForge MDK template files remain covered by their own MIT license notice in `TEMPLATE_LICENSE.txt`.

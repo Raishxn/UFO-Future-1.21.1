@@ -2,81 +2,36 @@ package com.raishxn.ufo.api.multiblock.topology;
 
 import java.util.List;
 
-/** Pure schema-one topology for the Quantum Cryoforge. */
+/** Canonical 9x14x9 topology exported from the redesigned Quantum Cryoforge. */
 public final class QuantumCryoforgeTopologySchema {
     private static final List<String[]> LAYERS = List.of(
-            new String[]{
-                    "BBBBAA",
-                    "BBBBBA",
-                    "BBBBBB",
-                    "BBBBBB",
-                    "ABBBBB",
-                    "AABBBA",
-                    "BBAAAA"
-            },
-            new String[]{
-                    "BEBBBA",
-                    "BEEEEB",
-                    "BEFFEB",
-                    "BEEEEC",
-                    "BBFFEB",
-                    "ABBBBB",
-                    "BBBBBA"
-            },
-            new String[]{
-                    "BEBBBA",
-                    "BFFFEB",
-                    "BEAAAD",
-                    "BFAAAD",
-                    "BAAAAD",
-                    "BBFFEB",
-                    "BBBBBA"
-            },
-            new String[]{
-                    "BEBBBA",
-                    "BEEEFB",
-                    "BFAAAD",
-                    "BEAAAD",
-                    "BAAAAD",
-                    "BBEEFB",
-                    "BBBBBA"
-            },
-            new String[]{
-                    "BEBBBA",
-                    "BFFFEB",
-                    "BEAAAD",
-                    "BFAAAD",
-                    "BAAAAD",
-                    "BBFFEB",
-                    "BBBBBA"
-            },
-            new String[]{
-                    "BEBBBA",
-                    "BEEEEB",
-                    "BEFFEB",
-                    "BEEEFB",
-                    "BBFFEB",
-                    "BBBBBB",
-                    "ABBBBA"
-            },
-            new String[]{
-                    "BBBBAA",
-                    "BBBBBA",
-                    "BBBBBA",
-                    "BBBBBA",
-                    "BBBBBA",
-                    "ABBBBA",
-                    "BABBAA"
-            });
+            layer("BBBBBBBBB", "BBBBBBBBB", "BBBBBBBBB", "BBBBBBBBB", "BBBBBBBBB", "BBBBBBBBB", "BBBBBBBBB", "BBBBBBBBB", "BBBBBBBBB"),
+            layer("AABBCBBAA", "ABDDDDDBA", "BDDDDDDDB", "BDDFDFDDB", "BDDDFDDDB", "BDDFDFDDB", "BDDDDDDDB", "ABDDDDDBA", "AABBBBBAA"),
+            layer("AABEBEBAA", "ABAAAAABA", "BAAAAAAAB", "EAAFAFAAE", "BAAAFAAAB", "EAAFAFAAE", "BAAAAAAAB", "ABAAAAABA", "AABEBEBAA"),
+            layer("AABEBEBAA", "ABAAAAABA", "BAAAAAAAB", "EAAFAFAAE", "BAAAFAAAB", "EAAFAFAAE", "BAAAAAAAB", "ABAAAAABA", "AABEBEBAA"),
+            layer("AABBBBBAA", "ABAAAAABA", "BAAAAAAAB", "BAAFAFAAB", "BAAAFAAAB", "BAAFAFAAB", "BAAAAAAAB", "ABAAAAABA", "AABBBBBAA"),
+            layer("AAQQQQQAA", "AQAAAAAQA", "QAAAAAAAQ", "QAAFAFAAQ", "QAAAFAAAQ", "QAAFAFAAQ", "QAAAAAAAQ", "AQAAAAAQA", "AAQQQQQAA"),
+            layer("AAQQQQQAA", "AQAAAAAQA", "QAAAAAAAQ", "QAAFAFAAQ", "QAAAFAAAQ", "QAAFAFAAQ", "QAAAAAAAQ", "AQAAAAAQA", "AAQQQQQAA"),
+            layer("AAAAQAAAA", "AALLLLLAA", "ALLAAALLA", "ALAFAFALA", "QLAAFAALQ", "ALAFAFALA", "ALLAAALLA", "AALLLLLAA", "AAAAQAAAA"),
+            layer("AAAAQAAAA", "AALLLLLAA", "ALLAAALLA", "ALAFAFALA", "QLAAFAALQ", "ALAFAFALA", "ALLAAALLA", "AALLLLLAA", "AAAAQAAAA"),
+            layer("AAQQQQQAA", "AQLLLLLQA", "QLLAAALLQ", "QLAFAFALQ", "QLAAFAALQ", "QLAFAFALQ", "QLLAAALLQ", "AQLLLLLQA", "AAQQQQQAA"),
+            layer("AAAAAAAAA", "AABBBBBAA", "ABBBBBBBA", "ABBBBBBBA", "ABBBBBBBA", "ABBBBBBBA", "ABBBBBBBA", "AABBBBBAA", "AAAAAAAAA"),
+            layer("AAAAAAAAA", "AAAAAAAAA", "AAABBBAAA", "AABBBBBAA", "AABBBBBAA", "AABBBBBAA", "AAABBBAAA", "AAAAAAAAA", "AAAAAAAAA"),
+            layer("AAAAAAAAA", "AAAAAAAAA", "AAAAAAAAA", "AAAAQAAAA", "AAAQQQAAA", "AAAAQAAAA", "AAAAAAAAA", "AAAAAAAAA", "AAAAAAAAA"),
+            layer("AAAAAAAAA", "AAAAAAAAA", "AAAAAAAAA", "AAAAAAAAA", "AAAAQAAAA", "AAAAAAAAA", "AAAAAAAAA", "AAAAAAAAA", "AAAAAAAAA")
+    );
 
     private QuantumCryoforgeTopologySchema() {
     }
 
-    public static int schemaVersion() {
-        return 1;
+    private static String[] layer(String... rows) {
+        return rows;
     }
 
-    /** Returns a defensive copy so callers cannot mutate the canonical schema. */
+    public static int schemaVersion() {
+        return 2;
+    }
+
     public static List<String[]> layers() {
         return LAYERS.stream().map(String[]::clone).toList();
     }

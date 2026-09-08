@@ -61,6 +61,19 @@ public class ModBlockEntities {
         }
     }
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumInterfaceBlockEntity>> QUANTUM_INTERFACE_BE =
+            BLOCK_ENTITIES.register("quantum_interface", () -> {
+                var holder = new AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.QuantumInterfaceBlockEntity>>();
+                var block = com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_INTERFACE.get();
+                var type = BlockEntityType.Builder.of((pos, state) ->
+                        new com.raishxn.ufo.block.entity.QuantumInterfaceBlockEntity(holder.get(), pos, state), block).build(null);
+                holder.set(type);
+                block.setBlockEntity(appeng.blockentity.misc.InterfaceBlockEntity.class, (BlockEntityType) type, null,
+                        (level, pos, state, be) -> ((com.raishxn.ufo.block.entity.QuantumInterfaceBlockEntity) be).serverTick());
+                AEBaseBlockEntity.registerBlockEntityItem(type, block.asItem());
+                return type;
+            });
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity>> DIMENSIONAL_MATTER_ASSEMBLER_BE =
             BLOCK_ENTITIES.register("dimensional_matter_assembler", () -> {
                 final java.util.concurrent.atomic.AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity>> typeHolder = new java.util.concurrent.atomic.AtomicReference<>();

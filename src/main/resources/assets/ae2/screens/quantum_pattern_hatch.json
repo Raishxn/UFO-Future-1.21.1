@@ -54,6 +54,7 @@
     }
   },
   "widgets": {
+    "verticalToolbar": { "left": 3, "top": 1 },
     "openPriority": {
       "left": 152,
       "top": -5,

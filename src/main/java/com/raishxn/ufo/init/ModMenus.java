@@ -5,6 +5,7 @@ import appeng.menu.implementations.MenuTypeBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.flag.FeatureFlags;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -50,7 +51,17 @@ public class ModMenus {
             MENUS.register("entropic_convergence_engine_menu",
                     () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.EntropicConvergenceEngineMenu::new));
 
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.UfoArmorConfigMenu>> UFO_ARMOR_CONFIG_MENU =
+            MENUS.register("ufo_armor_config",
+                    () -> new MenuType<>(com.raishxn.ufo.screen.UfoArmorConfigMenu::new, FeatureFlags.DEFAULT_FLAGS));
+
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);
     }
+
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumInterfaceMenu>> QUANTUM_INTERFACE_MENU =
+            MENUS.register("quantum_interface", () -> MenuTypeBuilder
+                    .create(com.raishxn.ufo.screen.QuantumInterfaceMenu::new,
+                            com.raishxn.ufo.block.entity.QuantumInterfaceBlockEntity.class)
+                    .build(UfoMod.id("quantum_interface")));
 }

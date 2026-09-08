@@ -46,6 +46,17 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> PROGRESSIVE_FORTUNE =
             register("progressive_fortune", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    /** Installed and disabled UFO armor module ids. Kept as ids to make saves forward-compatible. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<String>>> ARMOR_MODULES =
+            register("armor_modules", builder -> builder.persistent(Codec.STRING.listOf())
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list())));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<String>>> DISABLED_ARMOR_MODULES =
+            register("disabled_armor_modules", builder -> builder.persistent(Codec.STRING.listOf())
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list())));
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<String>>> ARMOR_MODULE_SETTINGS =
+            register("armor_module_settings", builder -> builder.persistent(Codec.STRING.listOf())
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list())));
+
     // Para a Espada
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> KILL_COUNT =
             register("kill_count", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));

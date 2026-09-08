@@ -39,6 +39,8 @@ public final class QuantumCryoforgePatternFactory {
                             'D', MultiblockCellRole.STRUCTURE,
                             'F', MultiblockCellRole.STRUCTURE,
                             'E', MultiblockCellRole.STRUCTURE,
+                            'Q', MultiblockCellRole.STRUCTURE,
+                            'L', MultiblockCellRole.STRUCTURE,
                             'A', MultiblockCellRole.IGNORED));
         }
         return definition;
@@ -54,6 +56,10 @@ public final class QuantumCryoforgePatternFactory {
         if (vibrantGlass != null && vibrantGlass != Blocks.AIR) {
             map.put('E', vibrantGlass.defaultBlockState());
         }
+        Block quartz = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("ae2", "quartz_block"));
+        if (quartz != null && quartz != Blocks.AIR) map.put('Q', quartz.defaultBlockState());
+        Block fluix = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("ae2", "fluix_block"));
+        if (fluix != null && fluix != Blocks.AIR) map.put('L', fluix.defaultBlockState());
 
         map.put('J', MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get().defaultBlockState());
         map.put('K', MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get().defaultBlockState());
@@ -81,6 +87,12 @@ public final class QuantumCryoforgePatternFactory {
                 .where('E', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state),
                         QuantumPatternPredicates.glassName())
                 .candidates('E', QuantumPatternPredicates.glassCandidates())
+                .where('Q', (state, level, pos) -> QuantumPatternPredicates.isQuartzBlock(state),
+                        QuantumPatternPredicates.quartzBlockName())
+                .candidates('Q', QuantumPatternPredicates.quartzBlockCandidates())
+                .where('L', (state, level, pos) -> QuantumPatternPredicates.isFluixBlock(state),
+                        QuantumPatternPredicates.fluixBlockName())
+                .candidates('L', QuantumPatternPredicates.fluixBlockCandidates())
                 .where('A', MultiblockPattern.ANY, Component.literal("Any"));
         QuantumCryoforgeTopologySchema.layers().forEach(builder::layer);
         return builder.serviceHatches('B', MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get(),

@@ -239,7 +239,27 @@ def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
 
 tasks.named('jar').configure {
     dependsOn syncReleaseResources
+    // SecureJarHandler/Java zipfs intermittently failed to inflate this large mod JAR
+    // after loading hundreds of resources. Stored entries avoid runtime inflater
+    // corruption while keeping the artifact a standard, verifiable ZIP/JAR.
+    entryCompression = ZipEntryCompression.STORED
 }
+
+def releaseJarFile = tasks.named('jar').flatMap { it.archiveFile }
+def verifyReleaseJar = tasks.register('verifyReleaseJar') {
+    dependsOn tasks.named('jar')
+    inputs.file(releaseJarFile)
+    doLast {
+        def artifact = inputs.files.singleFile
+        new java.util.zip.ZipFile(artifact).withCloseable { zip ->
+            zip.entries().each { entry ->
+                if (!entry.directory) zip.getInputStream(entry).withCloseable { it.transferTo(java.io.OutputStream.nullOutputStream()) }
+            }
+        }
+    }
+}
+
+tasks.named('build').configure { dependsOn verifyReleaseJar }
 
 idea {
     module {

@@ -20,6 +20,7 @@ import com.raishxn.ufo.network.ModPackets;
 import com.raishxn.ufo.network.packet.CycleModeKeyPacket;
 import com.raishxn.ufo.network.packet.CycleToolKeyPacket;
 import com.raishxn.ufo.network.packet.ToggleAutoSmeltPacket;
+import com.raishxn.ufo.network.packet.OpenUfoArmorConfigPacket;
 import com.raishxn.ufo.util.LazyInits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -66,6 +67,7 @@ public class UfoMod {
         com.raishxn.ufo.compat.mekanism.UfoMekanismStorageCompat.initialize(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, UFOConfig.SERVER_SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.WIRELESS_SPEC, "ufo/wireless.toml");
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::loadComplete);
         modEventBus.addListener(this::registerPackets);
@@ -124,6 +126,9 @@ public class UfoMod {
         if (ModKeyBindings.TOGGLE_AUTO_SMELT.consumeClick()) {
             ModPackets.sendToServer(new ToggleAutoSmeltPacket());
         }
+        if (ModKeyBindings.OPEN_ARMOR_CONFIG.consumeClick()) {
+            ModPackets.sendToServer(new OpenUfoArmorConfigPacket());
+        }
     }
 
     private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
@@ -139,6 +144,7 @@ public class UfoMod {
             event.register(ModKeyBindings.CYCLE_TOOL_BACKWARD);
             event.register(ModKeyBindings.CYCLE_MODE);
             event.register(ModKeyBindings.TOGGLE_AUTO_SMELT);
+            event.register(ModKeyBindings.OPEN_ARMOR_CONFIG);
         }
     }
 

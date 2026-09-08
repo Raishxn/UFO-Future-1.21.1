@@ -23,6 +23,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         // --- INÍCIO DA CORREÇÃO ---
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(MultiblockBlocks.QUANTUM_INTERFACE.get())
                 .add(ModBlocks.QUANTUM_LATTICE_FRAME.get())         // <<-- ADICIONE .get() AQUI
                 .add(ModBlocks.GRAVITON_PLATED_CASING.get())       // <<-- E AQUI
                 .add(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get())  // <<-- E AQUI

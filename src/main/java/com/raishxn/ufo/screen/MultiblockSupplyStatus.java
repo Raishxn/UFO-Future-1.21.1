@@ -10,9 +10,9 @@ import java.util.List;
 /** Bounded menu-only snapshot; never includes structure positions or process inventories. */
 public record MultiblockSupplyStatus(List<CoolantStatus> coolants, long capacity, int hatches,
                                     double speed, double energy, double heat, double bonus,
-                                    boolean creative) implements PacketWritable {
+                                    boolean creative, boolean recipeFactorsLocked) implements PacketWritable {
     public static final MultiblockSupplyStatus EMPTY = new MultiblockSupplyStatus(
-            List.of(), 0, 0, 1, 1, 1, 0, false);
+            List.of(), 0, 0, 1, 1, 1, 0, false, false);
 
     public MultiblockSupplyStatus {
         coolants = List.copyOf(coolants);
@@ -25,12 +25,12 @@ public record MultiblockSupplyStatus(List<CoolantStatus> coolants, long capacity
         return new MultiblockSupplyStatus(controller.getCoolantDisplayStatus(),
                 tanks.stream().mapToLong(CoolantStatus::capacityMillibuckets).sum(), tanks.size(),
                 upgrades.catalystSpeedMultiplier(), upgrades.catalystEnergyMultiplier(),
-                upgrades.heatMultiplier(), upgrades.bonusDropChance(), upgrades.creative());
+                upgrades.heatMultiplier(), upgrades.bonusDropChance(), upgrades.creative(), controller.hasWirelessBonusSnapshot());
     }
 
     public MultiblockSupplyStatus(RegistryFriendlyByteBuf buffer) {
         this(readCoolants(buffer), buffer.readLong(), buffer.readVarInt(), buffer.readDouble(),
-                buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readBoolean());
+                buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readBoolean(), buffer.readBoolean());
     }
 
     private static List<CoolantStatus> readCoolants(RegistryFriendlyByteBuf buffer) {
@@ -61,5 +61,6 @@ public record MultiblockSupplyStatus(List<CoolantStatus> coolants, long capacity
         buffer.writeDouble(heat);
         buffer.writeDouble(bonus);
         buffer.writeBoolean(creative);
+        buffer.writeBoolean(recipeFactorsLocked);
     }
 }

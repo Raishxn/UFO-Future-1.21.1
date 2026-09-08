@@ -28,8 +28,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements IMultiblockPart, MenuProvider {
+public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements IMultiblockPart, MenuProvider, com.raishxn.ufo.wireless.QuantumWirelessHost {
+    private final com.raishxn.ufo.wireless.QuantumWirelessLinks wirelessLinks = new com.raishxn.ufo.wireless.QuantumWirelessLinks();
+
+    @Override
+    public com.raishxn.ufo.wireless.QuantumWirelessLinks wirelessLinks() { return wirelessLinks; }
     public static final int PATTERN_CAPACITY = 72;
+    public final com.raishxn.ufo.wireless.QuantumBonusProfile bonusProfile = new com.raishxn.ufo.wireless.QuantumBonusProfile();
 
     @Nullable
     private BlockPos controllerPos;
@@ -41,6 +46,18 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     @Override
     protected PatternProviderLogic createLogic() {
         return new QuantumPatternProviderLogic(this, PATTERN_CAPACITY);
+    }
+
+    @Override
+    public void onReady() {
+        super.onReady();
+        com.raishxn.ufo.wireless.QuantumWirelessActivity.register(this);
+    }
+
+    @Override
+    public void setRemoved() {
+        com.raishxn.ufo.wireless.QuantumWirelessActivity.unregister(this);
+        super.setRemoved();
     }
 
     @Override
@@ -136,6 +153,7 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     @Override
     public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(tag, registries);
+        wirelessLinks.save(tag);
         if (this.controllerPos != null) {
             tag.put("controllerPos", NbtUtils.writeBlockPos(this.controllerPos));
         }
@@ -144,6 +162,7 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     @Override
     public void loadTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.loadTag(tag, registries);
+        wirelessLinks.load(tag);
         if (tag.contains("controllerPos")) {
             NbtUtils.readBlockPos(tag.getCompound("controllerPos"), "").ifPresent(pos -> this.controllerPos = pos);
         } else {

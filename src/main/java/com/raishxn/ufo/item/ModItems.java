@@ -14,6 +14,7 @@ import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.init.ModEntities;
 import com.raishxn.ufo.item.custom.*;
+import com.raishxn.ufo.armor.UfoArmorModule;
 import com.raishxn.ufo.item.InfinityCell;
 import com.raishxn.ufo.item.custom.ThermalArmorItem;
 import com.raishxn.ufo.part.QuantumPatternProviderPart;
@@ -33,9 +34,67 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
+import java.util.List;
 
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(UfoMod.MOD_ID);
+
+    public static final DeferredItem<Item> UFO_UPGRADE_CARD = ITEMS.register("ufo_upgrade_card",
+            () -> new UfoArmorUpgradeItem(new Item.Properties(), null));
+    public static final DeferredItem<Item> UFO_AEGIS_SINGULARITY_CARD = armorModule(UfoArmorModule.AEGIS_SINGULARITY);
+    public static final DeferredItem<Item> UFO_REALITY_ANCHOR_CARD = armorModule(UfoArmorModule.REALITY_ANCHOR);
+    public static final DeferredItem<Item> UFO_CHRONO_REGENERATOR_CARD = armorModule(UfoArmorModule.CHRONO_REGENERATOR);
+    public static final DeferredItem<Item> UFO_VOID_FLIGHT_CARD = armorModule(UfoArmorModule.VOID_FLIGHT);
+    public static final DeferredItem<Item> UFO_PHASE_STEP_CARD = armorModule(UfoArmorModule.PHASE_STEP);
+    public static final DeferredItem<Item> UFO_ENTROPY_MAGNET_CARD = armorModule(UfoArmorModule.ENTROPY_MAGNET);
+    public static final DeferredItem<Item> UFO_QUANTUM_RELAY_CARD = armorModule(UfoArmorModule.QUANTUM_RELAY);
+    public static final DeferredItem<Item> UFO_MATTER_TRANSLOCATOR_CARD = armorModule(UfoArmorModule.MATTER_TRANSLOCATOR);
+    public static final DeferredItem<Item> UFO_ABYSSAL_SIGHT_CARD = armorModule(UfoArmorModule.ABYSSAL_SIGHT);
+    public static final DeferredItem<Item> UFO_ADAPTIVE_BIOSPHERE_CARD = armorModule(UfoArmorModule.ADAPTIVE_BIOSPHERE);
+    public static final DeferredItem<Item> UFO_KINETIC_OVERDRIVE_CARD = armorModule(UfoArmorModule.KINETIC_OVERDRIVE);
+    public static final DeferredItem<Item> UFO_SINGULARITY_STRIKE_CARD = armorModule(UfoArmorModule.SINGULARITY_STRIKE);
+    public static final DeferredItem<Item> UFO_REPRISAL_MATRIX_CARD = armorModule(UfoArmorModule.REPRISAL_MATRIX);
+    public static final DeferredItem<Item> UFO_LOOT_SINGULARITY_CARD = armorModule(UfoArmorModule.LOOT_SINGULARITY);
+    public static final DeferredItem<Item> UFO_CLOAKING_FIELD_CARD = armorModule(UfoArmorModule.CLOAKING_FIELD);
+    public static final DeferredItem<Item> UFO_ASTRAL_WINGS_CARD = armorModule(UfoArmorModule.ASTRAL_WINGS);
+
+    public static final List<DeferredItem<Item>> UFO_ARMOR_MODULE_CARDS = List.of(
+            UFO_AEGIS_SINGULARITY_CARD, UFO_REALITY_ANCHOR_CARD, UFO_CHRONO_REGENERATOR_CARD,
+            UFO_VOID_FLIGHT_CARD, UFO_PHASE_STEP_CARD, UFO_ENTROPY_MAGNET_CARD,
+            UFO_QUANTUM_RELAY_CARD, UFO_MATTER_TRANSLOCATOR_CARD, UFO_ABYSSAL_SIGHT_CARD,
+            UFO_ADAPTIVE_BIOSPHERE_CARD, UFO_KINETIC_OVERDRIVE_CARD, UFO_SINGULARITY_STRIKE_CARD,
+            UFO_REPRISAL_MATRIX_CARD, UFO_LOOT_SINGULARITY_CARD, UFO_CLOAKING_FIELD_CARD,
+            UFO_ASTRAL_WINGS_CARD);
+
+    private static DeferredItem<Item> armorModule(UfoArmorModule module) {
+        return ITEMS.register(module.itemId(), () -> new UfoArmorUpgradeItem(new Item.Properties().rarity(Rarity.EPIC), module));
+    }
+
+    public static DeferredItem<Item> moduleCard(UfoArmorModule module) {
+        return switch (module) {
+            case AEGIS_SINGULARITY -> UFO_AEGIS_SINGULARITY_CARD;
+            case REALITY_ANCHOR -> UFO_REALITY_ANCHOR_CARD;
+            case CHRONO_REGENERATOR -> UFO_CHRONO_REGENERATOR_CARD;
+            case VOID_FLIGHT -> UFO_VOID_FLIGHT_CARD;
+            case PHASE_STEP -> UFO_PHASE_STEP_CARD;
+            case ENTROPY_MAGNET -> UFO_ENTROPY_MAGNET_CARD;
+            case QUANTUM_RELAY -> UFO_QUANTUM_RELAY_CARD;
+            case MATTER_TRANSLOCATOR -> UFO_MATTER_TRANSLOCATOR_CARD;
+            case ABYSSAL_SIGHT -> UFO_ABYSSAL_SIGHT_CARD;
+            case ADAPTIVE_BIOSPHERE -> UFO_ADAPTIVE_BIOSPHERE_CARD;
+            case KINETIC_OVERDRIVE -> UFO_KINETIC_OVERDRIVE_CARD;
+            case SINGULARITY_STRIKE -> UFO_SINGULARITY_STRIKE_CARD;
+            case REPRISAL_MATRIX -> UFO_REPRISAL_MATRIX_CARD;
+            case LOOT_SINGULARITY -> UFO_LOOT_SINGULARITY_CARD;
+            case CLOAKING_FIELD -> UFO_CLOAKING_FIELD_CARD;
+            case ASTRAL_WINGS -> UFO_ASTRAL_WINGS_CARD;
+        };
+    }
+
+    public static final DeferredItem<Item> QUANTUM_INTERFACE = ITEMS.register("quantum_interface",
+            () -> new BlockItem(MultiblockBlocks.QUANTUM_INTERFACE.get(), new Item.Properties()));
+    public static final DeferredItem<Item> QUANTUM_WIRELESS_TOOL = ITEMS.register("quantum_wireless_tool",
+            () -> new QuantumWirelessToolItem(new Item.Properties()));
 
     public static final DeferredItem<Item> BISMUTH = ITEMS.register("bismuth",
             () -> new Item(new Item.Properties()));

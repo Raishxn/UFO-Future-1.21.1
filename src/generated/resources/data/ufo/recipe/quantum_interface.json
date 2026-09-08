@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ufo:hyper_dense_component_matrix"
+    },
+    "F": {
+      "item": "ufo:quantum_lattice_frame"
+    },
+    "I": {
+      "item": "ae2:interface"
+    },
+    "P": {
+      "item": "ufo:dimensional_processor"
+    },
+    "Q": {
+      "item": "ufo:quantum_hyper_mechanical_casing"
+    }
+  },
+  "pattern": [
+    "QCQ",
+    "PIP",
+    "QFQ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:quantum_interface"
+  }
+}

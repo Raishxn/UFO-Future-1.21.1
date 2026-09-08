@@ -23,6 +23,21 @@ public final class MultiblockSupplyWidget {
 
     private MultiblockSupplyWidget() {}
 
+    /** Same panel and typography used by controllers, without coolant rows for a provider. */
+    public static void renderWireless(GuiGraphics graphics, Font font, int x, int y,
+            int links, int activeMachines, double speed, double energy, double heat,
+            int activeMultiblocks, double multiSpeed, double multiEnergy, double multiHeat) {
+        graphics.blit(TEXTURE, x, y, 0, 0, WIDTH, HEIGHT, 256, 256);
+        String[] labels = {"wireless.connected", "wireless.eligible", "supply.speed", "supply.energy", "supply.heat"};
+        String[] values = {Integer.toString(links), activeMachines + " / " + activeMultiblocks,
+                number(speed) + " / " + number(multiSpeed), number(energy) + " / " + number(multiEnergy), number(heat) + " / " + number(multiHeat)};
+        for (int i = 0; i < labels.length; i++) {
+            smallText(graphics, font, Component.translatable("gui.ufo." + labels[i]).getString(),
+                    x + 4, y + 4 + i * 20, 55, 0xFFAAAAAA);
+            smallText(graphics, font, values[i], x + 4, y + 11 + i * 20, 55, 0xFFE5F4FF);
+        }
+    }
+
     public static void render(GuiGraphics graphics, Font font, int x, int y, MultiblockSupplyStatus status) {
         graphics.blit(TEXTURE, x, y, 0, 0, WIDTH, HEIGHT, 256, 256);
         int coolantRows = coolantRows(status);
@@ -106,6 +121,8 @@ public final class MultiblockSupplyWidget {
             }
         } else {
             lines.add(Component.translatable("gui.ufo.supply.effective"));
+            lines.add(Component.translatable(status.recipeFactorsLocked()
+                    ? "gui.ufo.supply.factors_current" : "gui.ufo.supply.factors_next"));
             lines.add(Component.translatable("gui.ufo.supply.speed_detail", number(status.speed())));
             lines.add(Component.translatable("gui.ufo.supply.energy_detail", number(status.energy())));
             lines.add(Component.translatable("gui.ufo.supply.heat_detail", number(status.heat())));
@@ -145,6 +162,8 @@ public final class MultiblockSupplyWidget {
             lines.add(Component.translatable("gui.ufo.supply.dma_tank", status.capacity()));
         } else {
             lines.add(Component.translatable("gui.ufo.supply.effective"));
+            lines.add(Component.translatable(status.recipeFactorsLocked()
+                    ? "gui.ufo.supply.factors_current" : "gui.ufo.supply.factors_next"));
             lines.add(Component.translatable("gui.ufo.supply.speed_detail", number(status.speed())));
             lines.add(Component.translatable("gui.ufo.supply.energy_detail", number(status.energy())));
             lines.add(Component.translatable("gui.ufo.supply.heat_detail", number(status.heat())));

@@ -12,6 +12,7 @@
   "fluid_outputs": [],
   "item_inputs": [
     {
+      "amount": 2,
       "ingredient": {
         "item": "ufo:obsidian_matrix"
       }
@@ -19,7 +20,7 @@
   ],
   "item_outputs": [
     {
-      "#": 4,
+      "#": 18,
       "#t": "ae2:i",
       "id": "ufo:scrap"
     },
@@ -29,5 +30,5 @@
       "id": "ae2:matter_ball"
     }
   ],
-  "time": 200
+  "time": 160
 }

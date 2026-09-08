@@ -31,6 +31,7 @@ import com.raishxn.ufo.block.DimensionalMatterAssemblerBlock;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.block.entity.processing.SingleTankFluidReservation;
 import com.raishxn.ufo.block.entity.processing.DmaHazardCadence;
+import com.raishxn.ufo.block.entity.processing.GridPoweredEnergySource;
 import com.raishxn.ufo.block.entity.processing.CoolantRegistry;
 import com.raishxn.ufo.block.entity.processing.CoolantTuning;
 import com.raishxn.ufo.block.entity.processing.ThermalSystem;
@@ -106,6 +107,37 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
     private boolean working = false;
     private int processingTime = 0;
+    private com.raishxn.ufo.wireless.WirelessBonus wirelessBonus = com.raishxn.ufo.wireless.WirelessBonus.NONE;
+    private boolean wirelessJobStarted;
+    private double wirelessProgressFraction, wirelessHeatWork, wirelessHeatFraction;
+    private net.minecraft.resources.ResourceLocation wirelessResumeRecipe;
+    public boolean isWirelessCreative() { return hasCreativeCatalyst; }
+    /** Reserve the whole dispatch on detached inventories, including shared slot capacity. */
+    public boolean canAcceptWirelessInputs(appeng.api.stacks.KeyCounter[] inputs) {
+        var items = new AppEngInternalInventory(MAX_INPUT_SLOTS);
+        for (int i = 0; i < inputInv.size(); i++) items.setItemDirect(i, inputInv.getStackInSlot(i).copy());
+        var fluids = new CustomGenericInv(Set.of(AEKeyType.fluids()), null, GenericStackInv.Mode.STORAGE, 4);
+        fluids.setCapacity(AEKeyType.fluids(), MAX_TANK_CAPACITY);
+        for (int i = 0; i < 4; i++) fluids.setStack(i, fluidInv.getStack(i));
+        for (var counter : inputs) {
+            for (var entry : counter) {
+                long amount = entry.getLongValue();
+                if (amount <= 0) continue;
+                if (entry.getKey() instanceof appeng.api.stacks.AEItemKey item) {
+                    if (amount > (long) MAX_INPUT_SLOTS * 64
+                            || !items.addItems(item.toStack((int) amount)).isEmpty()) return false;
+                } else if (entry.getKey() instanceof AEFluidKey fluid) {
+                    if (fluids.insert(fluid, amount, Actionable.MODULATE, null) != amount) return false;
+                } else return false;
+            }
+        }
+        return true;
+    }
+    public com.raishxn.ufo.wireless.WirelessBonus getWirelessBonus() {
+        return hasCreativeCatalyst ? com.raishxn.ufo.wireless.WirelessBonus.NONE
+                : com.raishxn.ufo.wireless.WirelessBonus.display(wirelessJobStarted, wirelessBonus,
+                        () -> com.raishxn.ufo.wireless.QuantumWirelessActivity.bonusFor(this));
+    }
     private boolean dirty = false;
 
     private DimensionalMatterAssemblerRecipe cachedTask = null;
@@ -218,14 +250,12 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         // 1. Heat Generation: only productive crafting ticks create heat.
         // External block tick accelerators should not heat the DMA unless the AE2
         // crafting tick also advanced recipe progress.
-        if (this.productiveThermalTicks > 0) {
-            this.productiveHeatRemainder += this.productiveThermalTicks;
-            this.productiveThermalTicks = 0;
-            while (this.productiveHeatRemainder >= 4) {
-                int generationAmount = (int) Math.max(0, Math.round(this.currentHeatMultiplier));
-                this.temperature += generationAmount;
-                this.productiveHeatRemainder -= 4;
-            }
+        if (this.wirelessHeatWork > 0) {
+            double heat = wirelessHeatFraction + wirelessHeatWork * Math.max(0, this.currentHeatMultiplier) / 4;
+            int generated = (int) Math.floor(heat);
+            this.temperature += generated;
+            wirelessHeatFraction = heat - generated;
+            wirelessHeatWork = 0;
         } else {
             // 2. Passive Cooling: -1 HU every 40 ticks when idle (= -0.5 HU/s)
             if (!this.isWorking() && this.temperature > 0 && this.thermalTicker % 40 == 0) {
@@ -439,9 +469,12 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                     stack.amount(), capacity, profile.heatNumerator(), profile.millibucketDenominator(),
                     profile.maxFlowPerTick()));
         }
+        var displayedBonus = getWirelessBonus();
         return new com.raishxn.ufo.screen.MultiblockSupplyStatus(coolants, capacity, 0,
-                this.currentSpeedMultiplier, this.currentPowerMultiplier, this.currentHeatMultiplier,
-                this.currentBonusDropChance, this.hasCreativeCatalyst);
+                this.currentSpeedMultiplier * displayedBonus.speed(),
+                this.currentPowerMultiplier * displayedBonus.energy(),
+                this.currentHeatMultiplier * displayedBonus.speed() * displayedBonus.heat(),
+                this.currentBonusDropChance, this.hasCreativeCatalyst, wirelessJobStarted);
     }
 
     private void recalculateUpgrades() {
@@ -765,11 +798,18 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             // Check if running recipe is still valid
             if (level != null) {
                 var recipe = findRecipe(level);
+                if (wirelessResumeRecipe != null) {
+                    var resumed = level.getRecipeManager().byKey(wirelessResumeRecipe).orElse(null);
+                    if (resumed != null && resumed.value() == recipe) cachedTask = recipe;
+                    wirelessResumeRecipe = null;
+                }
                 if (recipe == null) {
+                    wirelessJobStarted = false; wirelessBonus = com.raishxn.ufo.wireless.WirelessBonus.NONE;
                     this.setProcessingTime(0);
                     this.setWorking(false);
                     this.cachedTask = null;
                 } else if (recipe != this.cachedTask) {
+                    wirelessJobStarted = false; wirelessProgressFraction = 0;
                     this.setProcessingTime(0);
                     this.cachedTask = recipe;
                 }
@@ -779,10 +819,21 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         }
 
         if (this.hasCraftWork()) {
+            if (!wirelessJobStarted) {
+                var claimed = com.raishxn.ufo.wireless.QuantumWirelessActivity.bonusFor(this);
+                wirelessBonus = hasCreativeCatalyst ? com.raishxn.ufo.wireless.WirelessBonus.NONE : claimed;
+                wirelessJobStarted = true;
+                setChanged();
+            }
+            int progressBefore = getProcessingTime();
+            double[] thermalBase = {1};
             boolean[] didWork = { false };
             getMainNode().ifPresent(grid -> {
                 IEnergyService eg = grid.getEnergyService();
-                IEnergySource src = this;
+                // The DMA buffer is private, so it is not included in the grid's energy supply.
+                IEnergySource src = (amount, mode, multiplier) -> new GridPoweredEnergySource(
+                        requested -> eg.extractAEPower(requested, mode, multiplier),
+                        requested -> this.extractAEPower(requested, mode, multiplier)).extract(amount);
 
                 int baseSpeedFactor = switch (this.upgrades.getInstalledUpgrades(AEItems.SPEED_CARD)) {
                     default -> 2; // 100 ticks
@@ -794,17 +845,18 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
                 int recipeTime = this.cachedTask != null ? this.cachedTask.getTime() : 200;
 
-                final int speedFactor = this.hasCreativeCatalyst
+                final int baseFactor = this.hasCreativeCatalyst
                         ? Math.max(1, recipeTime)
                         : Math.min(Math.max(1, recipeTime), Math.max(1, Mth.ceil((float) (baseSpeedFactor * this.currentSpeedMultiplier))));
+                thermalBase[0] = baseFactor;
+                double speedBudget = baseFactor * wirelessBonus.speed() + wirelessProgressFraction;
+                final int speedFactor = Math.min(recipeTime - getProcessingTime(), Math.max(1, (int) Math.floor(speedBudget)));
+                double nextFraction = speedBudget - Math.floor(speedBudget);
                 final int progressReq = recipeTime - this.getProcessingTime();
-                final float powerRatio = progressReq < speedFactor ? (float) progressReq / speedFactor : 1;
-                final int requiredTicks = Mth.ceil((float) recipeTime / speedFactor);
-
-                int basePowerConsumption = Mth.floor(((float) getTask().getEnergy() / requiredTicks) * powerRatio);
-                final int powerConsumption = this.hasCreativeCatalyst
+                final double powerConsumption = this.hasCreativeCatalyst
                         ? 0
-                        : Math.max(1, (int) (basePowerConsumption * this.currentPowerMultiplier));
+                        : Math.max(0, (double) getTask().getEnergy() * this.currentPowerMultiplier
+                                * wirelessBonus.energy() * speedFactor / Math.max(1, recipeTime));
                 final double powerThreshold = powerConsumption - 0.01;
 
                 if (this.hasCreativeCatalyst) {
@@ -824,47 +876,43 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                             this.getEnergyStorage(Direction.UP));
                 }
 
-                double powerReq = this.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);
-
-                if (powerReq <= powerThreshold) {
-                    src = eg;
-                    var oldPowerReq = powerReq;
-                    powerReq = eg.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);
-                    if (oldPowerReq > powerReq) {
-                        src = this;
-                        powerReq = oldPowerReq;
-                    }
-                }
+                double powerReq = src.extractAEPower(powerConsumption, Actionable.SIMULATE, PowerMultiplier.CONFIG);
 
                 if (powerReq > powerThreshold) {
-                    src.extractAEPower(powerConsumption, Actionable.MODULATE, PowerMultiplier.CONFIG);
-                    this.setProcessingTime(this.getProcessingTime() + speedFactor);
-                    setShowWarning(false);
-                    didWork[0] = true;
+                    double extracted = src.extractAEPower(powerConsumption, Actionable.MODULATE, PowerMultiplier.CONFIG);
+                    int actualFactor = extracted > powerThreshold ? speedFactor
+                            : Mth.floor(extracted / powerConsumption * speedFactor);
+                    this.setProcessingTime(this.getProcessingTime() + actualFactor);
+                    setShowWarning(actualFactor < speedFactor);
+                    didWork[0] = actualFactor > 0;
+                    if (actualFactor == speedFactor) wirelessProgressFraction = nextFraction;
                 } else if (powerReq != 0) {
-                    var progressRatio = src == this
-                            ? powerReq / powerConsumption
-                            : (powerReq - 10 * eg.getIdlePowerUsage()) / powerConsumption;
+                    var progressRatio = powerReq / powerConsumption;
                     var factor = Mth.floor(progressRatio * speedFactor);
 
                     if (factor >= 1) {
                         var extracted = src.extractAEPower(
-                                (double) (powerConsumption * factor) / speedFactor,
+                                (double) powerConsumption * factor / speedFactor,
                                 Actionable.MODULATE,
                                 PowerMultiplier.CONFIG);
                         var actualFactor = (int) Math.floor(extracted / powerConsumption * speedFactor);
                         this.setProcessingTime(this.getProcessingTime() + actualFactor);
-                        didWork[0] = true;
+                        didWork[0] = actualFactor > 0;
                     }
+                    setShowWarning(true);
+                } else {
                     setShowWarning(true);
                 }
             });
             this.setWorking(didWork[0]);
             if (didWork[0]) {
-                this.productiveThermalTicks++;
+                if (!hasCreativeCatalyst) com.raishxn.ufo.wireless.QuantumWirelessActivity.markProgress(this);
+                this.wirelessHeatWork += (getProcessingTime() - progressBefore) / thermalBase[0] * wirelessBonus.heat();
+                setChanged();
             }
 
             if (this.getProcessingTime() >= this.getMaxProcessingTime()) {
+                wirelessJobStarted = false; wirelessProgressFraction = 0;
                 this.setProcessingTime(0);
                 final DimensionalMatterAssemblerRecipe out = this.getTask();
                 OptionalLong fluidReservation = out == null
@@ -1031,6 +1079,17 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     @Override
     public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
         super.saveAdditional(data, registries);
+        data.put("wirelessBonus", com.raishxn.ufo.wireless.WirelessBonusNbt.save(wirelessBonus));
+        data.putBoolean("wirelessJobStarted", wirelessJobStarted);
+        data.putInt("wirelessProgress", processingTime);
+        data.putDouble("wirelessProgressFraction", wirelessProgressFraction);
+        data.putDouble("wirelessHeatFraction", wirelessHeatFraction);
+        data.putDouble("wirelessHeatWork", wirelessHeatWork);
+        if (level != null && cachedTask != null) {
+            level.getRecipeManager().getAllRecipesFor(ModRecipes.DMA_RECIPE_TYPE.get()).stream()
+                    .filter(holder -> holder.value() == cachedTask).findFirst()
+                    .ifPresent(holder -> data.putString("wirelessResumeRecipe", holder.id().toString()));
+        }
         this.fluidInv.writeToChildTag(data, "tank", registries);
 
         ListTag outputTags = new ListTag();
@@ -1051,6 +1110,14 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     @Override
     public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
         super.loadTag(data, registries);
+        wirelessBonus = com.raishxn.ufo.wireless.WirelessBonusNbt.load(data.getCompound("wirelessBonus"));
+        wirelessJobStarted = data.getBoolean("wirelessJobStarted");
+        processingTime = Math.max(0, data.getInt("wirelessProgress"));
+        wirelessProgressFraction = data.getDouble("wirelessProgressFraction");
+        wirelessHeatFraction = data.getDouble("wirelessHeatFraction");
+        wirelessHeatWork = data.getDouble("wirelessHeatWork");
+        wirelessResumeRecipe = net.minecraft.resources.ResourceLocation.tryParse(data.getString("wirelessResumeRecipe"));
+        this.dirty = true;
         this.fluidInv.readFromChildTag(data, "tank", registries);
 
         this.allowedOutputs.clear();

@@ -60,6 +60,28 @@ public class UFOConfig {
             .comment("Ticks between coolant attempts while the Stellar Nexus is idle. Zero disables idle coolant use.")
             .defineInRange("stellar.thermal.idleCoolantIntervalTicks", 20, 0, 1_200);
 
+    private static final ModConfigSpec.Builder WIRELESS_BUILDER = new ModConfigSpec.Builder();
+    public static final ModConfigSpec.IntValue WIRELESS_RANGE = WIRELESS_BUILDER
+            .comment("Quantum wireless range in blocks, same dimension. Zero disables the distance limit.")
+            .defineInRange("wireless.range", 128, 0, 30_000_000);
+    public static final ModConfigSpec.IntValue WIRELESS_MAX_LINKS = WIRELESS_BUILDER
+            .comment("Maximum face connections per Quantum wireless host.")
+            .defineInRange("wireless.maxLinks", 1024, 1, 1024);
+
+    public static final ModConfigSpec.BooleanValue WIRELESS_BUFFS = WIRELESS_BUILDER.define("wireless.buffs.enabled", true);
+    public static final ModConfigSpec.IntValue WIRELESS_DMA_SATURATION = WIRELESS_BUILDER
+            .comment("Distinct linked DMAs actively processing recipes needed for maximum bonuses.")
+            .defineInRange("wireless.buffs.dma.saturationMachines", 10, 2, 1024);
+    public static final ModConfigSpec.IntValue WIRELESS_MULTI_SATURATION = WIRELESS_BUILDER
+            .comment("Distinct linked formed multiblocks actively processing recipes needed for maximum bonuses.")
+            .defineInRange("wireless.buffs.multiblock.saturationMachines", 4, 2, 1024);
+    public static final ModConfigSpec.DoubleValue WIRELESS_DMA_SPEED = WIRELESS_BUILDER.defineInRange("wireless.buffs.dma.maxSpeedBonus", .20, 0, 10);
+    public static final ModConfigSpec.DoubleValue WIRELESS_DMA_ENERGY = WIRELESS_BUILDER.defineInRange("wireless.buffs.dma.maxEnergyDiscount", .10, 0, .95);
+    public static final ModConfigSpec.DoubleValue WIRELESS_DMA_HEAT = WIRELESS_BUILDER.defineInRange("wireless.buffs.dma.maxHeatDiscount", .15, 0, .95);
+    public static final ModConfigSpec.DoubleValue WIRELESS_MULTI_SPEED = WIRELESS_BUILDER.defineInRange("wireless.buffs.multiblock.maxSpeedBonus", .20, 0, 10);
+    public static final ModConfigSpec.DoubleValue WIRELESS_MULTI_ENERGY = WIRELESS_BUILDER.defineInRange("wireless.buffs.multiblock.maxEnergyDiscount", .10, 0, .95);
+    public static final ModConfigSpec.DoubleValue WIRELESS_MULTI_HEAT = WIRELESS_BUILDER.defineInRange("wireless.buffs.multiblock.maxHeatDiscount", .15, 0, .95);
+    public static final ModConfigSpec WIRELESS_SPEC = WIRELESS_BUILDER.build();
     public static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();
 
     // Variável que vamos usar no nosso código

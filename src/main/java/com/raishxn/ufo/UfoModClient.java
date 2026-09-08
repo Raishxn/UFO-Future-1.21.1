@@ -40,8 +40,10 @@ public class UfoModClient {
         eventBus.addListener(this::onClientSetup);
         com.raishxn.ufo.compat.mekanism.UfoMekanismStorageCompat.initializeClient(eventBus);
         NeoForge.EVENT_BUS.register(ModTooltipEventHandler.class);
+        NeoForge.EVENT_BUS.addListener(com.raishxn.ufo.client.render.QuantumWirelessRenderer::render);
         eventBus.addListener(this::onRegisterKeyMappings);
         eventBus.addListener(this::registerScreens);
+        eventBus.addListener(this::registerWirelessOverlay);
         eventBus.addListener(this::registerRenderers);
         eventBus.addListener(this::onAddLayers);
         eventBus.addListener(com.raishxn.ufo.client.render.StellarModelRegistry::registerAdditional);
@@ -52,6 +54,27 @@ public class UfoModClient {
         event.register(ModKeyBindings.CYCLE_TOOL_BACKWARD);
         event.register(ModKeyBindings.CYCLE_MODE);
         event.register(ModKeyBindings.TOGGLE_AUTO_SMELT);
+        event.register(ModKeyBindings.OPEN_ARMOR_CONFIG);
+    }
+
+    private void registerWirelessOverlay(net.neoforged.neoforge.client.event.RegisterGuiLayersEvent event) {
+        event.registerAboveAll(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("ufo", "wireless_selection"),
+                (graphics, delta) -> {
+                    var minecraft = net.minecraft.client.Minecraft.getInstance();
+                    if (minecraft.player == null || minecraft.options.hideGui || minecraft.screen != null) return;
+                    var stack = minecraft.player.getMainHandItem();
+                    if (!(stack.getItem() instanceof com.raishxn.ufo.item.custom.QuantumWirelessToolItem)) {
+                        stack = minecraft.player.getOffhandItem();
+                    }
+                    if (!(stack.getItem() instanceof com.raishxn.ufo.item.custom.QuantumWirelessToolItem)) return;
+                    var lines = com.raishxn.ufo.item.custom.QuantumWirelessToolItem.selectionTooltip(stack);
+                    int y = 8;
+                    for (var line : lines) {
+                        graphics.fill(6, y - 2, 12 + minecraft.font.width(line), y + 10, 0xB0101020);
+                        graphics.drawString(minecraft.font, line, 9, y, 0xFF99DDFF);
+                        y += 12;
+                    }
+                });
     }
 
 
@@ -63,6 +86,8 @@ public class UfoModClient {
         InitScreens.register(event, ModMenus.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU.get(), QuantumProcessorAssemblerControllerScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.QUANTUM_CRYOFORGE_CONTROLLER_MENU.get(), QuantumCryoforgeControllerScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), QuantumPatternHatchScreen::new, "/screens/quantum_pattern_hatch.json");
+        InitScreens.register(event, ModMenus.QUANTUM_INTERFACE_MENU.get(), com.raishxn.ufo.screen.QuantumInterfaceScreen::new, "/screens/quantum_interface.json");
+        event.register(ModMenus.UFO_ARMOR_CONFIG_MENU.get(), com.raishxn.ufo.screen.UfoArmorConfigScreen::new);
         InitScreens.register(event, ModMenus.ENTROPIC_ASSEMBLER_MATRIX_MENU.get(), EntropicAssemblerMatrixScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.ENTROPIC_CONVERGENCE_ENGINE_MENU.get(), EntropicConvergenceEngineScreen::new, "/screens/universal_multiblock_controller.json");
     }
@@ -86,6 +111,7 @@ public class UfoModClient {
 
     private void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
+            com.raishxn.ufo.util.ModItemProperties.addCustomItemProperties();
             registerEnergyCellFillProperty(ModBlocks.UFO_ENERGY_CELL.get().asItem());
 
             ItemBlockRenderTypes.setRenderLayer(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(), RenderType.cutout());

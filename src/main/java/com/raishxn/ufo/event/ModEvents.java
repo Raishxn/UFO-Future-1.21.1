@@ -176,44 +176,6 @@ public class ModEvents {
         }
     }
 
-    // --- ARMOR LOGIC (Protection) ---
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onPlayerDefend(LivingIncomingDamageEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            if (!isFullUfoArmor(player)) return;
-
-            // 1. Anti-Void
-            if (event.getSource().is(DamageTypes.FELL_OUT_OF_WORLD) && event.getAmount() < Float.MAX_VALUE) {
-                if (consumeArmorEnergyDirect(player, 50000)) {
-                    event.setCanceled(true);
-                    teleportToSafety(player);
-                    return;
-                }
-            }
-
-            // 2. Anti-Kill Command / Absolute Damage
-            if (isExtremeDamage(event.getSource(), event.getAmount())) {
-
-                if (consumeArmorEnergyDirect(player, 100000)) {
-                    event.setCanceled(true);
-                    player.setHealth(player.getMaxHealth());
-                    player.sendSystemMessage(Component.literal("Anti-Death Protocol Activated!").withStyle(ChatFormatting.GOLD));
-                    return;
-                }
-            }
-
-            // 3. Teleport on Low Health
-            if (player.getHealth() - event.getAmount() <= 4.0f) {
-                if (consumeArmorEnergyDirect(player, 10000)) {
-                    event.setCanceled(true);
-                    player.setHealth(player.getMaxHealth() / 2);
-                    teleportToSafety(player);
-                    player.sendSystemMessage(Component.literal("Emergency Evacuation!").withStyle(ChatFormatting.RED));
-                }
-            }
-        }
-    }
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingDeath(LivingDeathEvent event) {
         // Sword Logic
@@ -234,61 +196,9 @@ public class ModEvents {
             }
         }
 
-        // Armor Logic
-        if (event.getEntity() instanceof ServerPlayer player) {
-            if (isFullUfoArmor(player)) {
-                if (isExtremeDamage(event.getSource(), Float.MAX_VALUE) || consumeArmorEnergyDirect(player, 200000)) {
-                    event.setCanceled(true);
-                    player.setHealth(player.getMaxHealth());
-                    player.removeAllEffects();
-                    player.sendSystemMessage(Component.literal("Lazarus Protocol Activated: Death Cancelled.").withStyle(ChatFormatting.GOLD));
-                }
-            }
-        }
     }
 
     // --- HELPER METHODS ---
-
-    private static boolean isFullUfoArmor(Player player) {
-        for (ItemStack stack : player.getInventory().armor) {
-            if (!(stack.getItem() instanceof UfoArmorItem)) return false;
-        }
-        return true;
-    }
-
-    private static boolean isExtremeDamage(DamageSource source, float amount) {
-        String messageId = source.getMsgId();
-        return source.is(DamageTypes.GENERIC_KILL)
-                || amount >= Float.MAX_VALUE
-                || (source.is(DamageTypes.FELL_OUT_OF_WORLD) && amount > 10000f)
-                || messageId.contains("chaos")
-                || messageId.contains("guardian");
-    }
-
-    private static boolean consumeArmorEnergyDirect(Player player, int amountNeeded) {
-        int amountLeft = amountNeeded;
-        int totalAvailable = 0;
-
-        for (ItemStack stack : player.getInventory().armor) {
-            if (stack.getItem() instanceof UfoArmorItem) {
-                totalAvailable += stack.getOrDefault(ModDataComponents.ENERGY.get(), 0);
-            }
-        }
-
-        if (totalAvailable < amountNeeded) return false;
-
-        for (ItemStack stack : player.getInventory().armor) {
-            if (amountLeft <= 0) break;
-            if (stack.getItem() instanceof UfoArmorItem) {
-                int current = stack.getOrDefault(ModDataComponents.ENERGY.get(), 0);
-                int toExtract = Math.min(current, amountLeft);
-
-                stack.set(ModDataComponents.ENERGY.get(), current - toExtract);
-                amountLeft -= toExtract;
-            }
-        }
-        return true;
-    }
 
     private static void consumeEnergyDirect(ItemStack stack, int amount) {
         int current = stack.getOrDefault(ModDataComponents.ENERGY.get(), 0);
@@ -297,16 +207,4 @@ public class ModEvents {
         }
     }
 
-    private static void teleportToSafety(ServerPlayer player) {
-        BlockPos respawnPos = player.getRespawnPosition();
-        ServerLevel respawnLevel = player.server.getLevel(player.getRespawnDimension());
-
-        if (respawnPos != null && respawnLevel != null) {
-            player.teleportTo(respawnLevel, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
-        } else {
-            BlockPos worldSpawn = player.level().getSharedSpawnPos();
-            player.teleportTo(worldSpawn.getX(), 300, worldSpawn.getZ());
-            player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 1200));
-        }
-    }
 }

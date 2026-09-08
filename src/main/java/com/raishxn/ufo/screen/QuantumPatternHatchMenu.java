@@ -33,6 +33,23 @@ public class QuantumPatternHatchMenu extends AEBaseMenu {
     public LockCraftingMode craftingLockedReason = LockCraftingMode.NONE;
     @GuiSync(7)
     public GenericStack unlockStack = null;
+    @GuiSync(20)
+    public boolean quantumWireless;
+    @GuiSync(21)
+    public boolean hasQuantumWireless;
+    @GuiSync(22)
+    public int wirelessLinkCount;
+    @GuiSync(31) public int linkRange = 32;
+    @GuiSync(26) public double bonusSpeed = 1;
+    @GuiSync(27) public double bonusEnergy = 1;
+    @GuiSync(28) public double bonusHeat = 1;
+    @GuiSync(29) public int bonusMachines;
+    @GuiSync(32) public int connectedMachines;
+    @GuiSync(33) public int activeMultiblocks;
+    @GuiSync(34) public double multiSpeed = 1;
+    @GuiSync(35) public double multiEnergy = 1;
+    @GuiSync(36) public double multiHeat = 1;
+    private final com.raishxn.ufo.wireless.QuantumWirelessHost wirelessHost;
 
     public QuantumPatternHatchMenu(MenuType<? extends QuantumPatternHatchMenu> menuType, int id, Inventory playerInventory,
             PatternProviderLogicHost host) {
@@ -40,6 +57,9 @@ public class QuantumPatternHatchMenu extends AEBaseMenu {
         this.toolbox = new ToolboxMenu(this);
         this.createPlayerInventorySlots(playerInventory);
         this.logic = host.getLogic();
+        this.wirelessHost = host instanceof com.raishxn.ufo.wireless.QuantumWirelessHost wireless ? wireless : null;
+        registerClientAction("quantumWireless", this::toggleQuantumWireless);
+        registerClientAction("quantumRange", Integer.class, this::adjustRange);
         if (logic instanceof IUpgradeableObject upgradeable) {
             setupUpgrades(upgradeable.getUpgrades());
         }
@@ -65,6 +85,19 @@ public class QuantumPatternHatchMenu extends AEBaseMenu {
     @Override
     public void broadcastChanges() {
         if (isServerSide()) {
+            hasQuantumWireless = wirelessHost != null;
+            wirelessLinkCount = wirelessHost == null ? 0 : wirelessHost.wirelessLinks().size();
+            linkRange = wirelessHost == null ? 32 : wirelessHost.wirelessLinks().range();
+            connectedMachines = wirelessHost == null ? 0 : wirelessHost.wirelessLinks().connectedMachines(wirelessHost);
+            if (wirelessHost instanceof com.raishxn.ufo.block.entity.QuantumPatternHatchBE hatch) {
+                var profile = hatch.bonusProfile;
+                com.raishxn.ufo.wireless.QuantumWirelessActivity.refresh(hatch.getLevel());
+                bonusSpeed = profile.dmaBonus.speed(); bonusEnergy = profile.dmaBonus.energy(); bonusHeat = profile.dmaBonus.heat();
+                bonusMachines = profile.dmaMachines;
+                activeMultiblocks = profile.multiblockMachines;
+                multiSpeed = profile.multiblockBonus.speed(); multiEnergy = profile.multiblockBonus.energy(); multiHeat = profile.multiblockBonus.heat();
+            }
+            quantumWireless = wirelessHost != null && wirelessHost.wirelessLinks().enabled();
             blockingMode = logic.getConfigManager().getSetting(Settings.BLOCKING_MODE);
             showInAccessTerminal = logic.getConfigManager().getSetting(Settings.PATTERN_ACCESS_TERMINAL);
             lockCraftingMode = logic.getConfigManager().getSetting(Settings.LOCK_CRAFTING_MODE);
@@ -77,6 +110,22 @@ public class QuantumPatternHatchMenu extends AEBaseMenu {
 
     public GenericStackInv getReturnInv() {
         return logic.getReturnInv();
+    }
+
+    public void toggleQuantumWireless() {
+        if (isClientSide()) { sendClientAction("quantumWireless"); return; }
+        if (wirelessHost != null) {
+            wirelessHost.wirelessLinks().toggleMode();
+            wirelessHost.getBlockEntity().setChanged();
+        }
+    }
+    public void adjustRange(int delta) {
+        if (delta != 1 && delta != -1) return;
+        if (isClientSide()) { sendClientAction("quantumRange", delta); return; }
+        if (wirelessHost != null) {
+            wirelessHost.wirelessLinks().setRange(wirelessHost.wirelessLinks().range() + delta);
+            wirelessHost.getBlockEntity().setChanged();
+        }
     }
 
     public YesNo getBlockingMode() {

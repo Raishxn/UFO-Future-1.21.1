@@ -143,6 +143,14 @@ public final class QuantumPatternPredicates {
         return List.of(block.defaultBlockState());
     }
 
+    public static List<BlockState> quartzBlockCandidates() {
+        return defaultState(AE2_QUARTZ_BLOCK).map(List::of).orElseGet(List::of);
+    }
+
+    public static List<BlockState> fluixBlockCandidates() {
+        return defaultState(AE2_FLUIX_BLOCK).map(List::of).orElseGet(List::of);
+    }
+
     public static List<BlockState> casingAndHatchCandidates() {
         return List.of(
                 MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get().defaultBlockState(),

@@ -12,17 +12,17 @@
   ],
   "item_inputs": [
     {
-      "amount": 1024,
+      "amount": 2048,
       "ingredient": {
         "item": "ufo:obsidian_matrix"
       }
     }
   ],
   "item_output": {
-    "count": 4096,
+    "count": 18432,
     "id": "ufo:scrap"
   },
   "machine": "qmf",
   "recipe_name": "universal/qmf/scrap_massive",
-  "time": 200
+  "time": 160
 }

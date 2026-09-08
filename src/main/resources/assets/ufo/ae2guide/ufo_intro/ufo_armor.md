@@ -13,10 +13,11 @@ item_ids:
   - ufo:thermal_resistor_chest
   - ufo:thermal_resistor_pants
   - ufo:thermal_resistor_boots
-  - ufo:astral_nexus_helmet
-  - ufo:astral_nexus_chestplate
-  - ufo:astral_nexus_leggings
-  - ufo:astral_nexus_boots
+  - ufo:ufo_upgrade_card
+  - ufo:ufo_aegis_singularity_card
+  - ufo:ufo_reality_anchor_card
+  - ufo:ufo_chrono_regenerator_card
+  - ufo:ufo_void_flight_card
 ---
 
 # Armor Sets
@@ -34,35 +35,26 @@ Individual pieces alone do not satisfy the full protection contract.
 
 <ItemImage id="ufo:ufo_chestplate" scale="3" float="left" />
 
-All four pieces must be equipped and each piece must contain at least **400 RF**
-for the continuous set bonuses to remain active.
+The UFO set is now the final modular armor tier. Equip all four UFO pieces and
+press **N** to open its configuration screen. Insert a module card in the slot,
+select the compatible armor piece, then enable or remove installed modules from
+the list.
 
-- Resistance X and Night Vision are maintained while powered.
-- Maximum health increases by 40 points (20 hearts).
-- UFO-owned creative flight is granted without stealing flight supplied by
-  Creative, Spectator or another system.
-- Every piece consumes **400 RF per second** while the set is active.
+The helmet accepts vision, environmental and energy modules; the chestplate
+accepts defensive, survival and flight modules; the leggings accept utility,
+combat and loot modules; and the boots accept movement modules. Modules consume
+RF from the armor piece where they are installed. Hold Shift over a piece to
+inspect its energy and installed modules.
 
-Emergency protocols draw energy from the combined armor buffers:
+Modules with a cog expose live sliders. Void Flight controls speed and inertia;
+Phase Step controls step height and additional block/entity reach; Chrono
+Regenerator controls regeneration strength; Quantum Relay controls transfer
+rate; Matter Translocator controls its trigger and restored health; Entropy
+Magnet and Cloaking Field control their ranges; and the combat and loot modules
+expose their power multipliers. Abyssal Sight also prevents Darkness. Loot
+Singularity applies real Luck and multiplies mob drops and experience, so its
+configured level remains effective even for loot tables that ignore vanilla
+luck quality.
 
-| Protocol | Trigger | Energy |
-|---|---|---:|
-| Void recovery | Ordinary void damage | 50,000 RF |
-| Anti-death | `/kill`-class or extreme damage | 100,000 RF |
-| Emergency evacuation | Incoming damage would leave 2 hearts or less | 10,000 RF |
-| Lazarus | Death event not already prevented | 200,000 RF |
-
-When energy is unavailable, energy-dependent protection and flight do not
-activate. Hold Shift over a piece to inspect its stored RF.
-
-## Astral Nexus Armor
-
-<ItemImage id="ufo:astral_nexus_chestplate" scale="3" float="left" />
-
-The complete Astral Nexus set is the final armor tier. Its server-side contract
-includes damage/death cancellation, one-million-times damage reflection,
-creative flight, Night Vision, Water Breathing, Step Assist and full air supply.
-When Mekanism is installed it also clears accumulated player radiation.
-
-Astral protection requires the exact four Astral Nexus pieces. Mixing armor
-families does not activate a complete-set bonus.
+The former Astral Nexus armor has been retired from progression. Its signature
+flight visuals are now provided by the **Warp Thrusters** UFO module.

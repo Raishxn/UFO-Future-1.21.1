@@ -96,6 +96,9 @@ public class MultiblockBlocks {
     public static final DeferredBlock<QuantumPatternHatchBlock> QUANTUM_PATTERN_HATCH = BLOCKS.register("quantum_pattern_hatch",
             QuantumPatternHatchBlock::new);
 
+    public static final DeferredBlock<appeng.block.misc.InterfaceBlock> QUANTUM_INTERFACE = BLOCKS.register("quantum_interface",
+            appeng.block.misc.InterfaceBlock::new);
+
     // ═══════════════════════════════════════════════════════════
     //  STELLAR NEXUS — Multiblock Components
     // ═══════════════════════════════════════════════════════════

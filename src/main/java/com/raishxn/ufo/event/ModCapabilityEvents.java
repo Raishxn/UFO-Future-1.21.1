@@ -25,6 +25,13 @@ public class ModCapabilityEvents {
         // Registra as capabilities dos Itens (suas ferramentas e armaduras)
         registerItemCapabilities(event);
 
+        event.registerBlockEntity(appeng.api.AECapabilities.IN_WORLD_GRID_NODE_HOST,
+                ModBlockEntities.QUANTUM_INTERFACE_BE.get(), (be, context) -> be);
+        event.registerBlockEntity(appeng.api.AECapabilities.ME_STORAGE,
+                ModBlockEntities.QUANTUM_INTERFACE_BE.get(), (be, side) -> be.getInterfaceLogic().getInventory());
+        event.registerBlockEntity(appeng.api.AECapabilities.GENERIC_INTERNAL_INV,
+                ModBlockEntities.QUANTUM_INTERFACE_BE.get(), (be, side) -> be.getInterfaceLogic().getStorage());
+
         // Match AE2's provider return inventory; AE2 bridges this to item/fluid handlers.
         event.registerBlockEntity(
                 appeng.api.AECapabilities.GENERIC_INTERNAL_INV,

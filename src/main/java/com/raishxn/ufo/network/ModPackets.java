@@ -27,6 +27,10 @@ public class ModPackets {
                 ToggleAutoSmeltPacket.STREAM_CODEC,
                 ToggleAutoSmeltPacket::handle
         );
+        registrar.playToServer(OpenUfoArmorConfigPacket.TYPE, OpenUfoArmorConfigPacket.STREAM_CODEC,
+                OpenUfoArmorConfigPacket::handle);
+        registrar.playToServer(SetUfoArmorModuleSettingPacket.TYPE, SetUfoArmorModuleSettingPacket.STREAM_CODEC,
+                SetUfoArmorModuleSettingPacket::handle);
         registrar.playToServer(
                 PacketChangeSideConfig.TYPE,
                 PacketChangeSideConfig.STREAM_CODEC,

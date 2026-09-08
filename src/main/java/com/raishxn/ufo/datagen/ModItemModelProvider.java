@@ -30,6 +30,8 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
         protected void registerModels() {
         basicItem(ModItems.BISMUTH.get());
+        basicItem(ModItems.UFO_UPGRADE_CARD.get());
+        ModItems.UFO_ARMOR_MODULE_CARDS.forEach(card -> basicItem(card.get()));
         basicItem(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
         basicItem(ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
         basicItem(ModItems.TESSERACT_COMPONENT_MATRIX.get());

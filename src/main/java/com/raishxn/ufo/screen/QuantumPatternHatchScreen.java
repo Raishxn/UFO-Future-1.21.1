@@ -27,9 +27,19 @@ public class QuantumPatternHatchScreen extends AEBaseScreen<QuantumPatternHatchM
     private final SettingToggleButton<LockCraftingMode> lockCraftingModeButton;
     private final ToggleButton showInPatternAccessTerminalButton;
     private final QuantumPatternHatchLockReason lockReason;
-
+    private final com.raishxn.ufo.client.gui.widget.QuantumWirelessToggleButton wirelessButton;
     public QuantumPatternHatchScreen(QuantumPatternHatchMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
+        this.wirelessButton = new com.raishxn.ufo.client.gui.widget.QuantumWirelessToggleButton(
+                "wired_mode", "wireless_mode", "gui.ufo.wireless.mode", b -> menu.toggleQuantumWireless());
+        this.addToLeftToolbar(wirelessButton);
+        this.addToLeftToolbar(new appeng.client.gui.widgets.IconButton(b -> menu.adjustRange(hasShiftDown() ? -1 : 1)) {
+            @Override protected Icon getIcon() { return Icon.COG; }
+            @Override public List<Component> getTooltipMessage() {
+                return List.of(Component.translatable("gui.ufo.wireless.range", menu.linkRange),
+                        Component.translatable("gui.ufo.wireless.range_hint"));
+            }
+        });
 
         this.blockingModeButton = new ServerSettingToggleButton<>(Settings.BLOCKING_MODE, YesNo.NO);
         this.addToLeftToolbar(this.blockingModeButton);
@@ -57,8 +67,30 @@ public class QuantumPatternHatchScreen extends AEBaseScreen<QuantumPatternHatchM
     }
 
     @Override
+    public List<net.minecraft.client.renderer.Rect2i> getExclusionZones() {
+        var zones = new ArrayList<>(super.getExclusionZones());
+        if (menu.hasQuantumWireless) zones.add(new net.minecraft.client.renderer.Rect2i(
+                leftPos + imageWidth, topPos + 80, 63, 110));
+        return zones;
+    }
+
+    @Override
+    public void drawBG(net.minecraft.client.gui.GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float partialTicks) {
+        super.drawBG(graphics, x, y, mouseX, mouseY, partialTicks);
+        if (menu.hasQuantumWireless) {
+            com.raishxn.ufo.client.gui.widget.MultiblockSupplyWidget.renderWireless(
+                    graphics, font, x + imageWidth, y + 80, menu.connectedMachines, menu.bonusMachines,
+                    menu.bonusSpeed, menu.bonusEnergy, menu.bonusHeat,
+                    menu.activeMultiblocks, menu.multiSpeed, menu.multiEnergy, menu.multiHeat);
+        }
+    }
+
+    @Override
     protected void updateBeforeRender() {
         super.updateBeforeRender();
+        this.wirelessButton.visible = menu.hasQuantumWireless;
+        this.wirelessButton.active = menu.hasQuantumWireless;
+        this.wirelessButton.setState(menu.quantumWireless);
 
         this.lockReason.setVisible(menu.getLockCraftingMode() != LockCraftingMode.NONE);
         this.blockingModeButton.set(this.menu.getBlockingMode());

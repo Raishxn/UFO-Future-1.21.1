@@ -196,8 +196,8 @@ public class ModRecipeProvider extends RecipeProvider {
         DMARecipeBuilder.create("dma/unstable_white_hole_matter").output(ModItems.UNSTABLE_WHITE_HOLE_MATTER.get()).inputItem(ModItems.WHITE_DWARF_MATTER.get(), 4).inputItem(ModItems.QUANTUM_ANOMALY.get()).inputFluid(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), 2000).energy(10000000).time(1200).save(c);
         DMARecipeBuilder.create("dma/safe_containment_matter").output(ModItems.SAFE_CONTAINMENT_MATTER.get()).inputItem(ModItems.OBSIDIAN_MATRIX.get(), 4).inputItem(Items.NETHERITE_INGOT).inputFluid(ModFluids.SOURCE_UU_MATTER_FLUID.get(), 500).energy(100000).time(200).save(c);
         DMARecipeBuilder.create("dma/aether_containment_capsule").output(ModItems.AETHER_CONTAINMENT_CAPSULE.get()).inputItem(ModItems.SAFE_CONTAINMENT_MATTER.get(), 2).inputItem(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get()).inputFluid(ModFluids.SOURCE_SPATIAL_FLUID.get(), 1000).energy(500000).time(400).save(c);
-        DMARecipeBuilder.create("dma/scrap_from_matrix").output(ModItems.SCRAP.get(), 4).output(AEItems.MATTER_BALL.get(), 1, 0.1F).inputItem(ModItems.OBSIDIAN_MATRIX.get()).inputFluid(Fluids.WATER, 1000).energy(100000).time(200).save(c);
-        DMARecipeBuilder.create("dma/scrap_box").output(ModItems.SCRAP_BOX.get()).inputItem(ModItems.SCRAP.get(), 56).inputFluid(Fluids.WATER, 1000).energy(10000000).time(2000).noBulkQmfMirror().save(c);
+        DMARecipeBuilder.create("dma/scrap_from_matrix").output(ModItems.SCRAP.get(), 18).output(AEItems.MATTER_BALL.get(), 1, 0.1F).inputItem(ModItems.OBSIDIAN_MATRIX.get(), 2).inputFluid(Fluids.WATER, 1000).energy(100000).time(160).save(c);
+        DMARecipeBuilder.create("dma/scrap_box").output(ModItems.SCRAP_BOX.get()).inputItem(ModItems.SCRAP.get(), 56).inputFluid(Fluids.WATER, 1000).energy(10000000).time(1600).noBulkQmfMirror().save(c);
         
         this.buildFluidRecipes(c);
         this.buildMatterProgression(c);
@@ -660,6 +660,22 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_pattern_provider", has(AEBlocks.PATTERN_PROVIDER))
                 .save(c);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.QUANTUM_INTERFACE.get())
+                .pattern("QCQ").pattern("PIP").pattern("QFQ")
+                .define('Q', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
+                .define('C', ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
+                .define('P', ModItems.DIMENSIONAL_PROCESSOR.get())
+                .define('I', AEBlocks.INTERFACE)
+                .define('F', ModBlocks.QUANTUM_LATTICE_FRAME.get())
+                .unlockedBy("has_interface", has(AEBlocks.INTERFACE)).save(c);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.QUANTUM_WIRELESS_TOOL.get())
+                .pattern(" F ").pattern(" P ").pattern(" I ")
+                .define('F', AEItems.FLUIX_CRYSTAL)
+                .define('P', ModItems.DIMENSIONAL_PROCESSOR.get())
+                .define('I', Items.IRON_INGOT)
+                .unlockedBy("has_dimensional_processor", has(ModItems.DIMENSIONAL_PROCESSOR.get())).save(c);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.QUANTUM_PATTERN_PROVIDER_PART.get())
                 .requires(ModItems.QUANTUM_PATTERN_HATCH.get())
                 .unlockedBy("has_quantum_pattern_hatch", has(ModItems.QUANTUM_PATTERN_HATCH.get()))
@@ -976,11 +992,11 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(c);
 
         UniversalMultiblockRecipeBuilder.create("universal/qmf/scrap_massive", UniversalMultiblockMachineKind.QMF)
-                .inputItem(ModItems.OBSIDIAN_MATRIX.get(), 1024)
+                .inputItem(ModItems.OBSIDIAN_MATRIX.get(), 2048)
                 .inputFluid(Fluids.WATER, 1_024_000)
-                .outputItem(ModItems.SCRAP.get(), 4096)
+                .outputItem(ModItems.SCRAP.get(), 18_432)
                 .energy(102_400_000L)
-                .time(200)
+                .time(160)
                 .requiredTier(1)
                 .save(c);
 
@@ -989,7 +1005,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .inputFluid(Fluids.WATER, 1_024_000)
                 .outputItem(ModItems.SCRAP_BOX.get(), 1024)
                 .energy(10_240_000_000L)
-                .time(2000)
+                .time(1600)
                 .requiredTier(1)
                 .save(c);
 

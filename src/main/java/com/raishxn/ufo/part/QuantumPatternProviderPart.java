@@ -24,11 +24,17 @@ public class QuantumPatternProviderPart extends PatternProviderPart {
     }
 
     @Override
+    public void openMenu(Player player, appeng.menu.locator.MenuHostLocator locator) {
+        MenuOpener.open(ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), player, locator);
+    }
+
+    @Override
     public void returnToMainMenu(Player player, ISubMenu subMenu) {
         MenuOpener.returnTo(ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), player, subMenu.getLocator());
     }
 
-    public boolean onPartActivate(Player player, InteractionHand hand, Vec3 pos) {
+    @Override
+    public boolean onUseWithoutItem(Player player, Vec3 pos) {
         if (!player.level().isClientSide()) {
             MenuOpener.open(ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), player, MenuLocators.forPart(this));
         }

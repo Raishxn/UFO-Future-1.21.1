@@ -1,4 +1,4 @@
-// 1.21.1	2026-09-05T18:26:58.600125553	Recipes
+// 1.21.1	2026-09-07T15:59:23.218417761	Recipes
 623466a712bf2b54aad620b471840892932161d4 data/ufo/advancement/recipes/misc/ae_energy_input_hatch.json
 a25a6bd915843952e3b74014247693fdda691447 data/ufo/advancement/recipes/misc/bismuth.json
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
@@ -43,6 +43,7 @@ ca25101ccdb64a2ada54a572667f2e0c3d372fb9 data/ufo/advancement/recipes/misc/quant
 92b2a98ed2f5f63c460bcbd161a6559d0d6fedf5 data/ufo/advancement/recipes/misc/quantum_energy_cell.json
 1fc2b5e9105e86bebb88fde3d3a8c127c7f4830a data/ufo/advancement/recipes/misc/quantum_entropy_casing.json
 0dfff1cce5880968d4f5b5246670a739d36ecdc3 data/ufo/advancement/recipes/misc/quantum_hyper_mechanical_casing.json
+397686d5fa3a5912e1a0ac6b0e3ae9d778836a19 data/ufo/advancement/recipes/misc/quantum_interface.json
 56b43b2d1257cb105cc6145548398a74d8925e79 data/ufo/advancement/recipes/misc/quantum_lattice_frame.json
 a918061e3624c8d1f1477f3ef55e440ce162c555 data/ufo/advancement/recipes/misc/quantum_matter_fabricator_controller.json
 5e132bb3f58edb55b3a1c94d99f9ecaf950118a6 data/ufo/advancement/recipes/misc/quantum_pattern_hatch.json
@@ -69,6 +70,7 @@ b84a34efa5e5a59273c9bf7f6d52f898bb919869 data/ufo/advancement/recipes/misc/white
 b4b9c13dcdcff857ec32c9d1ed25abe2dfd9a7c8 data/ufo/advancement/recipes/misc/white_dwarf_fragment_ingot_from_nugget.json
 66c62dc2a381d505d35eef1edffb44d25542fb85 data/ufo/advancement/recipes/misc/white_dwarf_fragment_nugget.json
 dafa4a2a23069195280d65b5dda4d1beae9c570c data/ufo/advancement/recipes/misc/white_dwarf_item_cell_housing.json
+524b48bcfb05dde5f3394a9c082493804d842736 data/ufo/advancement/recipes/tools/quantum_wireless_tool.json
 9f5a5965462c6ce0be4d804a57e1ac99ab4d6b13 data/ufo/advancement/recipes/tools/structure_scanner.json
 bd7e3b77b737390b041c5c1425a80c75e3b1eda5 data/ufo/advancement/recipes/tools/ufo_axe.json
 b1d951052c5562bfdab7e66b98d1df10e8abc207 data/ufo/advancement/recipes/tools/ufo_bow.json
@@ -130,8 +132,8 @@ b94e87211b57660f51928eac239c7da4ec01850d data/ufo/recipe/dma/pulsar_dust.json
 7e8a1b005c7379ebdd51afb20b5bba1c4212ddea data/ufo/recipe/dma/quantum_catalyst_t2.json
 bc20feaf24272e8ad6e8e6b471c3fc0c850327cb data/ufo/recipe/dma/raw_star_matter_plasma.json
 d25d59f91b5438aaccbfb7a86febede3d4ba240f data/ufo/recipe/dma/safe_containment_matter.json
-ad30626b9aec41c5baa5dbc56439521da83c3c3b data/ufo/recipe/dma/scrap_box.json
-ed557fb32bab55ad0a75344ea6e0814e77b0cd63 data/ufo/recipe/dma/scrap_from_matrix.json
+1441a911abc220e706142734c3095309e870b8ea data/ufo/recipe/dma/scrap_box.json
+6e7f682ad00cf36854293f1be680bf08217c8fc4 data/ufo/recipe/dma/scrap_from_matrix.json
 e308c679c2fac082693bd47553ffc29922f39adf data/ufo/recipe/dma/source_spatial_fluid.json
 6580481095aeaa645a31965bde21fc854955ebe0 data/ufo/recipe/dma/source_temporal_fluid.json
 8e1d7fe82e0cf19a08701a87198e31087ddeee7c data/ufo/recipe/dma/thermal_resistor_boots.json
@@ -185,6 +187,7 @@ d75c15674fcca4dd88e4cf83891764db5c60c8e7 data/ufo/recipe/pulsar_fragment_nugget.
 9a177f4ec2897ca955d138f75bd02e899c4487d4 data/ufo/recipe/quantum_energy_cell.json
 52c55d11d5a10bc315040c311c0396c8947e5846 data/ufo/recipe/quantum_entropy_casing.json
 89d08402c995c7017ffd8b71add16ddfe90e6dc4 data/ufo/recipe/quantum_hyper_mechanical_casing.json
+a8524420528c6b6a9a956ddb7d05e101d637d851 data/ufo/recipe/quantum_interface.json
 bd6df17b9e946e44bae722511cc14fbe4986a1c4 data/ufo/recipe/quantum_lattice_frame.json
 cbdb8fc126fa31f624cc8d1d6c554d0f9d1588f9 data/ufo/recipe/quantum_matter_fabricator_controller.json
 bf99783993d1854a8809dcc48ca599a16a345b9e data/ufo/recipe/quantum_pattern_hatch.json
@@ -192,6 +195,7 @@ bf99783993d1854a8809dcc48ca599a16a345b9e data/ufo/recipe/quantum_pattern_hatch.j
 1f42a01f45512514102ef041b040120884766f14 data/ufo/recipe/quantum_pattern_provider_part.json
 7275787e0ffab28e38bc6515d3c709595b7aa468 data/ufo/recipe/quantum_processor_assembler_controller.json
 a86448001aa1a320628595e361e3b8c10f19c521 data/ufo/recipe/quantum_slicer_controller.json
+382195f1257142e00b6883d66b4e844c57095ead data/ufo/recipe/quantum_wireless_tool.json
 4f4e6acd73367192426d760c593d87802e9080fd data/ufo/recipe/stellar_field_generator_t1.json
 d35075a62b55edb2ca37477f936e65f231ec4ab0 data/ufo/recipe/stellar_field_generator_t2.json
 62358cff19228a38f72e857625ff270bfc7412d4 data/ufo/recipe/stellar_field_generator_t3.json
@@ -323,8 +327,8 @@ ee7c10b9938d4db4c0815c3c8ccf149816e55cf5 data/ufo/recipe/universal/qmf/matterflo
 9d9c6a1ddc3c15bcfd1851b930809c1db8b991a0 data/ufo/recipe/universal/qmf/overflux_catalyst_t3_batch.json
 b622a73f1d0679f2ab503e7b21e0c37f54c8fadb data/ufo/recipe/universal/qmf/pulsar_matter_batch.json
 14b579dbc595546fbd207ff7c596e4b78a483cec data/ufo/recipe/universal/qmf/quantum_catalyst_t3_batch.json
-a3eb4bb468f4397b1879605e5143eeb4b93e96e3 data/ufo/recipe/universal/qmf/scrap_box_massive.json
-c5bd45ad458d118838759a2cc17de461f11c6a8f data/ufo/recipe/universal/qmf/scrap_massive.json
+8d5d9ac35a022cc1377d0451dfa27e361c38ed70 data/ufo/recipe/universal/qmf/scrap_box_massive.json
+9c72e254633ca217b116ae323cb892dd244c27af data/ufo/recipe/universal/qmf/scrap_massive.json
 5cc2282a13a26b7c53468b2ef1669b996cd7aa61 data/ufo/recipe/universal/qmf/stable_coolant_t3.json
 b660b9786174d4cdf246982da4b739ba97d4869d data/ufo/recipe/universal/qmf/tesseract_component_matrix_batch.json
 5c5f23d229de215a45543d262af321a21f436ea0 data/ufo/recipe/universal/qmf/ufo_boots.json

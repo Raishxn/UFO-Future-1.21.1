@@ -8,7 +8,7 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
-includeBuild('../UFO-Core-1.21.1') {
+includeBuild('../RaishxCore') {
     dependencySubstitution {
         substitute module('com.raishxn.ufocore:raishxcore') using project(':')
     }

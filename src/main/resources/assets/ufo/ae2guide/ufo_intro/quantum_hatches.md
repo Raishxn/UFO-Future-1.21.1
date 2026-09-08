@@ -64,3 +64,5 @@ When AE2 pushes a processing pattern, the items delivered with that pattern are
 owned by the process immediately. The controller does not charge those item
 requirements a second time. Missing fluids or supported chemicals may still be
 pulled through their configured storage paths.
+
+See [Wireless Network and Bonuses](quantum_wireless_buffs.md) for automatic recipe bonuses configured in config/ufo/wireless.toml and the adjustable 32-block source range.
