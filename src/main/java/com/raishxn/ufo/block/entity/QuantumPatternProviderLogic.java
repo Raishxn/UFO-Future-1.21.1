@@ -10,11 +10,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Custom provider logic for the Quantum Pattern Hatch.
- * If this hatch is linked to a multiblock controller that accepts AE2 crafting plans,
- * forward the pattern directly to that controller.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+/** Routes legacy Hatch plans to DMAs and Pattern Buffer plans to multiblocks. */
 public class QuantumPatternProviderLogic extends PatternProviderLogic {
 
     private final QuantumPatternHatchBE hatch;
@@ -70,6 +69,27 @@ public class QuantumPatternProviderLogic extends PatternProviderLogic {
         if (!delivery.ufo$getSendList().isEmpty()) return false;
         remoteDelivery = null;
 
+        boolean patternBuffer = hatch.isPatternBuffer();
+
+        if (patternBuffer) {
+            return pushPatternToMultiblocks(patternDetails, inputHolder, level, controllerPos, delivery);
+        }
+
+        // A legacy Hatch never becomes a multiblock endpoint again. Keep this
+        // stale-world guard so an old controller link cannot eject elsewhere.
+        if (level != null && controllerPos != null) {
+            var controllerBe = level.getBlockEntity(controllerPos);
+            if (controllerBe instanceof ICraftingMachine machine && machine.acceptsPlans()) {
+                Direction direction = hatch.getPushDirectionForController();
+                if (machine.pushPattern(patternDetails, inputHolder, direction)) {
+                    delivery.ufo$onPushPatternSuccess(patternDetails);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         if (hatch.wirelessLinks().enabled()) {
             var invoker = (com.raishxn.ufo.mixin.InvokerPatternProviderLogic) this;
             if (level == null || !hatch.getMainNode().isActive() || !getAvailablePatterns().contains(patternDetails)
@@ -77,7 +97,10 @@ public class QuantumPatternProviderLogic extends PatternProviderLogic {
                     || getCraftingLockedReason() != appeng.api.config.LockCraftingMode.NONE) return false;
             for (int i = 0; i < Math.min(32, hatch.wirelessLinks().size()); i++) {
                 var target = hatch.wirelessLinks().next();
-                if (target == null || hatch.wirelessLinks().resolve(hatch, target) == null) continue;
+                if (target == null) continue;
+                var targetBe = hatch.wirelessLinks().resolve(hatch, target);
+                if (targetBe == null) continue;
+                if (!(targetBe instanceof DimensionalMatterAssemblerBlockEntity)) continue;
                 var machine = ICraftingMachine.of(level, target.pos(), target.face());
                 if (machine != null && machine.acceptsPlans()
                         && machine.pushPattern(patternDetails, inputHolder, target.face())) {
@@ -122,18 +145,52 @@ public class QuantumPatternProviderLogic extends PatternProviderLogic {
             return false;
         }
 
-        if (level != null && controllerPos != null) {
-            var controllerBe = level.getBlockEntity(controllerPos);
-            if (controllerBe instanceof ICraftingMachine machine && machine.acceptsPlans()) {
-                Direction direction = hatch.getPushDirectionForController();
-                return machine.pushPattern(patternDetails, inputHolder, direction);
-            }
+        // Standalone legacy Hatch behavior remains AE2-compatible.
+        return super.pushPattern(patternDetails, inputHolder);
+    }
 
-            // If the hatch is linked to a multiblock controller, do not fall back to the
-            // default adjacent-inventory behavior. The controller is the only valid target.
+    private boolean pushPatternToMultiblocks(
+            IPatternDetails patternDetails,
+            appeng.api.stacks.KeyCounter[] inputHolder,
+            @Nullable Level level,
+            @Nullable BlockPos controllerPos,
+            com.raishxn.ufo.mixin.InvokerPatternProviderLogic delivery) {
+        if (level == null || !hatch.getMainNode().isActive()
+                || !getAvailablePatterns().contains(patternDetails)
+                || !delivery.ufo$getSendList().isEmpty()
+                || getCraftingLockedReason() != appeng.api.config.LockCraftingMode.NONE) {
             return false;
         }
 
-        return super.pushPattern(patternDetails, inputHolder);
+        List<MultiblockRoute> routes = new ArrayList<>();
+        if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof ICraftingMachine localMachine) {
+            routes.add(new MultiblockRoute(localMachine, hatch.getPushDirectionForController()));
+        }
+
+        if (hatch.wirelessLinks().enabled()) {
+            for (var target : hatch.wirelessLinks().targets()) {
+                var targetBe = hatch.wirelessLinks().resolve(hatch, target);
+                if (targetBe instanceof QuantumPatternProxyBE proxy && proxy.bindPatternBuffer(hatch)) {
+                    routes.add(new MultiblockRoute(proxy, target.face()));
+                }
+            }
+        }
+
+        int routeCount = routes.size();
+        int start = hatch.getPatternDispatchStart(routeCount);
+        for (int offset = 0; offset < routeCount; offset++) {
+            int routeIndex = (start + offset) % routeCount;
+            MultiblockRoute route = routes.get(routeIndex);
+            if (route.machine().acceptsPlans()
+                    && route.machine().pushPattern(patternDetails, inputHolder, route.direction())) {
+                hatch.completePatternDispatch(routeIndex, routeCount);
+                delivery.ufo$onPushPatternSuccess(patternDetails);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private record MultiblockRoute(ICraftingMachine machine, Direction direction) {
     }
 }

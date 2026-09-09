@@ -21,7 +21,7 @@ the QMF and Slicer; do not reuse another machine's layer plan.
 
 | Component | Count |
 |---|---:|
-| <ItemLink id="ufo:quantum_hyper_mechanical_casing" /> | 80 (one becomes Pattern Hatch) |
+| <ItemLink id="ufo:quantum_hyper_mechanical_casing" /> | 80 (one becomes Pattern Buffer or Proxy) |
 | <ItemLink id="ae2:quartz_vibrant_glass" /> | 73 (fixed) |
 | <ItemLink id="ae2:quartz_block" /> | 16 (fixed) |
 | <ItemLink id="ae2:fluix_block" /> | 12 (fixed) |

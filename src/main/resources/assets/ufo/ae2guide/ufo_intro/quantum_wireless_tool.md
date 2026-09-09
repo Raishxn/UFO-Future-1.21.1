@@ -11,10 +11,11 @@ item_ids:
 
 <ItemImage id="ufo:quantum_wireless_tool" scale="4" />
 
-Enable wireless mode on the source first using its UI button or sneak-right-click with the tool. Selecting or editing links while wireless is disabled is refused with a reminder.
+Enable wireless mode on the source first using its UI button or sneak-right-click
+with the tool. Selecting a Pattern Buffer enables its proxy route automatically.
 
-1. Right-click a Quantum Pattern Hatch block or [Quantum Interface](quantum_interface.md) to select the source.
-2. Right-click a destination machine's accepting face to add a link. Click the same face again to remove it.
+1. Right-click a Quantum Pattern Buffer, legacy Quantum Pattern Hatch or [Quantum Interface](quantum_interface.md) to select the source.
+2. A Buffer links only to Pattern Proxies; a legacy Hatch links only to DMAs. Click the same target face again to remove it.
 3. Sneak-right-click the source to toggle wired/wireless mode, or use its screen button.
 
 While holding the tool, blue lines connect the selected source to blue destination faces. A yellow cube identifies the selected source, and yellow previews a new face under the crosshair. Links refresh automatically while the source is loaded. The HUD also identifies the source, coordinates and dimension. The cable-bus Quantum Pattern Provider does not currently act as a wireless source.
@@ -25,4 +26,4 @@ The original 16×16 tool texture belongs to UFO's visual design; it does not reu
 
 <RecipeFor id="ufo:quantum_wireless_tool" />
 
-The default range is 32 blocks per source, adjustable in the hatch/interface UI. See [Wireless Network and Bonuses](quantum_wireless_buffs.md).
+The default range is 32 blocks per source, adjustable in the buffer/hatch/interface UI. See [Wireless Network and Bonuses](quantum_wireless_buffs.md).

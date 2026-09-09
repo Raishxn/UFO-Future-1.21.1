@@ -79,7 +79,8 @@ public class QuantumPatternHatchScreen extends AEBaseScreen<QuantumPatternHatchM
         super.drawBG(graphics, x, y, mouseX, mouseY, partialTicks);
         if (menu.hasQuantumWireless) {
             com.raishxn.ufo.client.gui.widget.MultiblockSupplyWidget.renderWireless(
-                    graphics, font, x + imageWidth, y + 80, menu.connectedMachines, menu.bonusMachines,
+                    graphics, font, x + imageWidth, y + 80, menu.patternBuffer,
+                    menu.connectedMachines, menu.bonusMachines,
                     menu.bonusSpeed, menu.bonusEnergy, menu.bonusHeat,
                     menu.activeMultiblocks, menu.multiSpeed, menu.multiEnergy, menu.multiHeat);
         }

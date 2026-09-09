@@ -80,6 +80,13 @@ public class QuantumWirelessToolItem extends Item {
                 player.displayClientMessage(Component.translatable(host.wirelessLinks().enabled()
                         ? "message.ufo.wireless.enabled" : "message.ufo.wireless.disabled"), true);
             } else {
+                // Pattern Buffers exist specifically to dispatch through proxies.
+                // Selecting one for the first time enables that route immediately.
+                if (!host.wirelessLinks().enabled()
+                        && target.getBlockState().is(com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get())) {
+                    host.wirelessLinks().toggleMode();
+                    target.setChanged();
+                }
                 if (!host.wirelessLinks().enabled()) {
                     player.displayClientMessage(Component.translatable("message.ufo.wireless.enable_first"), true);
                     return InteractionResult.FAIL;
@@ -111,6 +118,17 @@ public class QuantumWirelessToolItem extends Item {
         }
         var node = host.getMainNode().getNode();
         if (node == null) return InteractionResult.FAIL;
+        if (source instanceof com.raishxn.ufo.block.entity.QuantumPatternHatchBE provider) {
+            boolean validTarget = provider.isPatternBuffer()
+                    ? target instanceof com.raishxn.ufo.block.entity.QuantumPatternProxyBE
+                    : target instanceof com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity;
+            if (!validTarget) {
+                player.displayClientMessage(Component.translatable(provider.isPatternBuffer()
+                        ? "message.ufo.pattern_buffer.proxy_only"
+                        : "message.ufo.pattern_hatch.dma_only"), true);
+                return InteractionResult.FAIL;
+            }
+        }
         if (!host.wirelessLinks().inRange(sourcePos, target.getBlockPos())) {
             player.displayClientMessage(Component.translatable("message.ufo.wireless.out_of_range", host.wirelessLinks().range()), true);
             return InteractionResult.FAIL;
@@ -121,6 +139,18 @@ public class QuantumWirelessToolItem extends Item {
             if (remote != null && remote.getGrid().size() > 1 && remote.getGrid() != node.getGrid()) return InteractionResult.FAIL;
         }
         if (!host.wirelessLinks().toggle(target, context.getClickedFace())) return InteractionResult.FAIL;
+        if (source instanceof com.raishxn.ufo.block.entity.QuantumPatternHatchBE provider
+                && provider.isPatternBuffer()
+                && target instanceof com.raishxn.ufo.block.entity.QuantumPatternProxyBE proxy) {
+            boolean linked = host.wirelessLinks().targets().stream().anyMatch(candidate ->
+                    candidate.pos().equals(target.getBlockPos())
+                            && candidate.face() == context.getClickedFace());
+            if (linked) {
+                proxy.bindPatternBuffer(provider);
+            } else {
+                proxy.unbindPatternBuffer(provider);
+            }
+        }
         source.setChanged();
         CustomData.update(DataComponents.CUSTOM_DATA, stack, data -> {
             data.putInt("ufoWirelessSourceLinks", host.wirelessLinks().size());

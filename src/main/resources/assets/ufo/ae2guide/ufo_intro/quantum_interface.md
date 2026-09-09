@@ -23,7 +23,9 @@ Use the [Quantum Wireless Tool](quantum_wireless_tool.md) to select this interfa
 
 Destinations must remain loaded, in range and in the same dimension. Each source starts at 32 blocks; its range gear adjusts this within the server maximum. Devices connected to another ME grid cannot be used as a wireless bridge. Isolated devices are supported.
 
-The Quantum Interface provides logistics only and never grants wireless machine buffs. The Quantum Pattern Hatch owns the wireless bonus panel.
+The Quantum Interface provides logistics only and never grants wireless machine
+buffs. The Quantum Pattern Buffer owns the multiblock bonus panel; the legacy
+Quantum Pattern Hatch owns the DMA bonus panel.
 
 Wireless and transfer widget artwork is credited to **AE2 Lightning Tech**. See the bundled asset notice for authorship and license details. This implementation does not yet include every Overloaded Interface feature, such as EJECT mode and its filters.
 

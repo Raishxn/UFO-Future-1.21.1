@@ -63,7 +63,8 @@ pattern or the Structure Scanner in Creative when appropriate.
 
 1. Place every required hatch in a valid structure position.
 2. Connect the indicated face of the AE hatches to the same powered ME network.
-3. Insert encoded processing patterns into the Quantum Pattern Hatch.
+3. Insert encoded processing patterns into the Quantum Pattern Buffer. Use a
+   linked Pattern Proxy in every additional processing multiblock.
 4. Ensure inputs and output capacity exist in ME storage.
 5. Send one job first, then scale to the controller's 27-thread limit.
 

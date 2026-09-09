@@ -685,6 +685,20 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(ModItems.QUANTUM_PATTERN_PROVIDER_PART.get())
                 .unlockedBy("has_quantum_pattern_provider", has(ModItems.QUANTUM_PATTERN_PROVIDER_PART.get()))
                 .save(c, UfoMod.id("quantum_pattern_hatch_from_provider_part"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.QUANTUM_PATTERN_BUFFER.get())
+                .requires(ModItems.QUANTUM_PATTERN_HATCH.get())
+                .requires(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
+                .unlockedBy("has_quantum_pattern_hatch", has(ModItems.QUANTUM_PATTERN_HATCH.get()))
+                .save(c);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.QUANTUM_PATTERN_PROXY.get(), 2)
+                .pattern(" F ").pattern("PCP").pattern(" F ")
+                .define('F', AEItems.FLUIX_CRYSTAL)
+                .define('P', AEItems.ENGINEERING_PROCESSOR)
+                .define('C', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
+                .unlockedBy("has_quantum_casing", has(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get()))
+                .save(c);
     }
 
     private void buildUniversalMultiblockRecipes(RecipeOutput c) {

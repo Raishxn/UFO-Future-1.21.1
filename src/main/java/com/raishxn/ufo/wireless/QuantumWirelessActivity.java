@@ -4,6 +4,7 @@ import com.raishxn.ufo.UFOConfig;
 import com.raishxn.ufo.block.entity.AbstractParallelMultiblockControllerBE;
 import com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity;
 import com.raishxn.ufo.block.entity.QuantumPatternHatchBE;
+import com.raishxn.ufo.block.entity.QuantumPatternProxyBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -60,10 +61,21 @@ public final class QuantumWirelessActivity {
             display.dmaBonus = WirelessBonus.NONE; display.multiblockBonus = WirelessBonus.NONE;
             if (!hatch.wirelessLinks().enabled() || !hatch.getMainNode().isActive()) continue;
             Map<UUID, Boolean> eligible = new HashMap<>();
+            if (hatch.isPatternBuffer() && hatch.getControllerPos() != null
+                    && level.hasChunkAt(hatch.getControllerPos())
+                    && level.getBlockEntity(hatch.getControllerPos()) instanceof AbstractParallelMultiblockControllerBE local
+                    && local.acceptsPlansForWirelessBonus()) {
+                eligible.put(QuantumWirelessLinks.identity(local), false);
+            }
             for (var target : hatch.wirelessLinks().targets()) {
                 var be = hatch.wirelessLinks().resolve(hatch, target);
-                if (be instanceof DimensionalMatterAssemblerBlockEntity dma && !dma.isWirelessCreative()) eligible.put(target.identity(), true);
-                else if (be instanceof AbstractParallelMultiblockControllerBE multi && multi.acceptsPlansForWirelessBonus()) eligible.put(target.identity(), false);
+                if (!hatch.isPatternBuffer() && be instanceof DimensionalMatterAssemblerBlockEntity dma
+                        && !dma.isWirelessCreative()) eligible.put(target.identity(), true);
+                else if (hatch.isPatternBuffer() && be instanceof QuantumPatternProxyBE proxy
+                        && proxy.getControllerBlockEntity() instanceof AbstractParallelMultiblockControllerBE multi
+                        && multi.acceptsPlansForWirelessBonus()) {
+                    eligible.put(QuantumWirelessLinks.identity(multi), false);
+                }
             }
             eligible.forEach((id, dma) -> {
                 if (state.activity.active(id, now)) {

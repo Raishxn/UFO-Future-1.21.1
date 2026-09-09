@@ -67,6 +67,11 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     }
 
     @Override
+    public ResourceLocation getRegistryName(StellarSimulationRecipe recipe) {
+        return JeiRecipeIds.get(recipe);
+    }
+
+    @Override
     public int getWidth() {
         return WIDTH;
     }

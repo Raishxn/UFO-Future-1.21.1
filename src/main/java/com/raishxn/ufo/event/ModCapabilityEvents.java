@@ -85,6 +85,16 @@ public class ModCapabilityEvents {
                 (be, context) -> be
         );
         event.registerBlockEntity(
+                appeng.api.AECapabilities.CRAFTING_MACHINE,
+                ModBlockEntities.QUANTUM_CRYOFORGE_CONTROLLER_BE.get(),
+                (be, context) -> be
+        );
+        event.registerBlockEntity(
+                appeng.api.AECapabilities.CRAFTING_MACHINE,
+                ModBlockEntities.QUANTUM_PATTERN_PROXY_BE.get(),
+                (be, context) -> be
+        );
+        event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 ModBlockEntities.DIMENSIONAL_MATTER_ASSEMBLER_BE.get(),
                 appeng.blockentity.AEBaseInvBlockEntity::getExposedItemHandler

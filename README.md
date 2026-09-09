@@ -46,10 +46,10 @@ system, one **MK1 / MK2 / MK3** tier ladder and one set of ME-native ports.
   into the ME network directly, with no intermediate inventory
 - **ME Massive Fluid Hatch** — fluid output plus the external coolant intake
 - **AE Energy Input Hatch** — feeds the controller's internal AE buffer
-- **Quantum Pattern Hatch** — stores **72 encoded patterns** and exposes the
-  controller to AE2 autocrafting as a real crafting machine. Outside a multiblock,
-  it works as a standalone pattern provider; pipes can return items and fluids
-  through the standard AE2 return buffer
+- **Quantum Pattern Buffer / Proxy** — every universal processing multiblock
+  requires exactly one of these parts. The Buffer stores **72 encoded patterns**
+  and serves its own controller; linked Proxies let the same Buffer dispatch to
+  additional multiblocks. The legacy Quantum Pattern Hatch is reserved for DMAs
 - **Stellar Field Generator Mk.I / Mk.II / Mk.III** — the field blocks that set
   a structure's tier; mixed tiers invalidate the structure
 - **Tier bonus** — running a lower-tier recipe on a higher-tier machine halves

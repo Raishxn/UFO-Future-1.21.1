@@ -20,24 +20,24 @@ The **QMF** is the multiblock evolution of the DMA for heavy automation, bulk cr
 - Up to **27 parallel threads** in standard mode
 - **9 parallel threads** in Safe Mode
 - Accepts both native **QMF recipes** and **DMA recipes**
-- Supports AE2 autocrafting through the **Quantum Pattern Hatch**
+- Supports AE2 autocrafting through a **Quantum Pattern Buffer or Proxy**
 - Reads ingredients directly from the connected ME network
 - Pushes outputs back into ME automatically
 
-## Quantum Pattern Hatch
+## Quantum Pattern Buffer / Proxy
 
-<BlockImage id="ufo:quantum_pattern_hatch" scale="3"></BlockImage>
+<BlockImage id="ufo:quantum_pattern_buffer" scale="3"></BlockImage>
 
-- Stores up to **72 encoded patterns**
-- Links to the controller when the structure is assembled
-- Exposes the multiblock as a crafting machine to AE2
+- A local Buffer stores up to **72 encoded patterns** and connects to AE2
+- A Proxy uses the patterns in its linked Buffer
+- Either part links to this controller when the structure is assembled
 - Lets the controller run multiple jobs in parallel
 
 ## First Automated Job
 
 1. Confirm the controller reports `IDLE`, not `UNFORMED` or `PAUSED_NO_GRID`.
 2. Encode one processing pattern with the deterministic base output shown by JEI.
-3. Insert it in the Quantum Pattern Hatch and request one craft from an ME terminal.
+3. Insert it in the local Quantum Pattern Buffer and request one craft from an ME terminal.
 4. Confirm one process cell appears in the controller GUI.
 5. Scale to 27 jobs only after input, coolant, energy and output paths are stable.
 

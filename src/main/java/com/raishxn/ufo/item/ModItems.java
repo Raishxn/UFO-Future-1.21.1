@@ -290,6 +290,14 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get(), new Item.Properties(),
                      ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.DARK_AQUA, ChatFormatting.BLUE));
 
+     public static final DeferredItem<Item> QUANTUM_PATTERN_BUFFER = ITEMS.register("quantum_pattern_buffer",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.LIGHT_PURPLE, ChatFormatting.WHITE, ChatFormatting.BLUE));
+
+     public static final DeferredItem<Item> QUANTUM_PATTERN_PROXY = ITEMS.register("quantum_pattern_proxy",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PATTERN_PROXY.get(), new Item.Properties(),
+                     ChatFormatting.LIGHT_PURPLE, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA));
+
      public static final DeferredItem<Item> QUANTUM_PATTERN_PROVIDER_PART = registerPartItem(
              "quantum_pattern_provider_part",
              QuantumPatternProviderPart.class,

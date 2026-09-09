@@ -10,7 +10,7 @@ navigation:
 
 ## Pattern Contract
 
-The Quantum Pattern Hatch stores up to **72 encoded processing patterns**. The
+The Quantum Pattern Buffer stores up to **72 encoded processing patterns**. The
 QMF advertises those patterns only while formed and connected. AE2 remains the
 owner of pattern-delivered ingredients; the controller does not extract them a
 second time.
@@ -29,7 +29,7 @@ not part of the promise to the crafting CPU and return separately when produced.
 
 Install the required ME Massive Fluid Hatch in any casing position
 and connect a NeoForge-compatible fluid pipe. Coolant is consumed only
-from its local tank; ME storage is never used as an automatic fallback. The Quantum Pattern Hatch may likewise occupy any casing
+from its local tank; ME storage is never used as an automatic fallback. The Quantum Pattern Buffer or Proxy may likewise occupy any casing
 position, but exactly one is required; neither hatch is valid in Vibrant Glass.
 
 Base load is **1 HU per active thread per tick**; Overclock raises the base to

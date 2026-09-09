@@ -25,6 +25,7 @@ public class ParallelProcessState {
     private final TransactionalAmountLedger<AEKey> pendingByproducts = new TransactionalAmountLedger<>();
     private boolean outputsPrepared;
     private int outputPolicyVersion;
+    private RecipeBatchScale batchScale = RecipeBatchScale.FULL;
 
     public ResourceLocation getRecipeId() {
         return recipeId;
@@ -53,6 +54,7 @@ public class ParallelProcessState {
         this.pendingByproducts.clear();
         this.outputsPrepared = false;
         this.outputPolicyVersion = AutocraftingOutputPolicy.LEGACY_UNVERSIONED;
+        this.batchScale = RecipeBatchScale.FULL;
     }
 
     public void resizeBuffers(int itemSize, int fluidSize, int chemicalSize) {
@@ -116,6 +118,14 @@ public class ParallelProcessState {
 
     public void setOutputPolicyVersion(int outputPolicyVersion) {
         this.outputPolicyVersion = Math.max(AutocraftingOutputPolicy.LEGACY_UNVERSIONED, outputPolicyVersion);
+    }
+
+    public RecipeBatchScale getBatchScale() {
+        return this.batchScale;
+    }
+
+    public void setBatchScale(RecipeBatchScale batchScale) {
+        this.batchScale = java.util.Objects.requireNonNull(batchScale, "batchScale");
     }
 
     public boolean isPaused() {
@@ -247,6 +257,8 @@ public class ParallelProcessState {
         tag.put("pendingByproducts", saveStacks(getPendingByproducts(), registries));
         tag.putBoolean("outputsPrepared", this.outputsPrepared);
         tag.putInt("outputPolicyVersion", this.outputPolicyVersion);
+        tag.putLong("batchNumerator", this.batchScale.numerator());
+        tag.putLong("batchDenominator", this.batchScale.denominator());
         return tag;
     }
 
@@ -270,6 +282,11 @@ public class ParallelProcessState {
         this.outputPolicyVersion = tag.contains("outputPolicyVersion", Tag.TAG_INT)
                 ? Math.max(AutocraftingOutputPolicy.LEGACY_UNVERSIONED, tag.getInt("outputPolicyVersion"))
                 : AutocraftingOutputPolicy.LEGACY_UNVERSIONED;
+        long numerator = tag.contains("batchNumerator", Tag.TAG_LONG) ? tag.getLong("batchNumerator") : 1L;
+        long denominator = tag.contains("batchDenominator", Tag.TAG_LONG) ? tag.getLong("batchDenominator") : 1L;
+        this.batchScale = numerator > 0L && denominator > 0L
+                ? new RecipeBatchScale(numerator, denominator)
+                : RecipeBatchScale.FULL;
     }
 
     private static ListTag saveStacks(List<GenericStack> stacks, HolderLookup.Provider registries) {

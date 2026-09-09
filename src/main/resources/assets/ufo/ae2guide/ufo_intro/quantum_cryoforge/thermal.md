@@ -8,7 +8,7 @@ navigation:
 
 # Cryoforge Thermal Efficiency
 
-The ME Massive Fluid Hatch and Quantum Pattern Hatch are valid only where the
+The ME Massive Fluid Hatch and Quantum Pattern Buffer/Proxy are valid only where the
 template expects a casing/universal-hatch position. Glass positions remain
 strict. The fluid hatch accepts the three thermal coolants from external pipes,
 uses its local tank before ME storage, and does not change the Cryoforge's shape.

@@ -161,7 +161,8 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("quantum_pattern_hatch", () -> {
                 var type = BlockEntityType.Builder.of(
                         (pos, state) -> new com.raishxn.ufo.block.entity.QuantumPatternHatchBE(pos, state),
-                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_HATCH.get(),
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get()
                 ).build(null);
                 ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()).setBlockEntity(
                         (Class) appeng.blockentity.crafting.PatternProviderBlockEntity.class,
@@ -169,6 +170,23 @@ public class ModBlockEntities {
                         null,
                         null
                 );
+                ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get()).setBlockEntity(
+                        (Class) appeng.blockentity.crafting.PatternProviderBlockEntity.class,
+                        (BlockEntityType) type,
+                        null,
+                        null
+                );
+                return type;
+            });
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternProxyBE>> QUANTUM_PATTERN_PROXY_BE =
+            BLOCK_ENTITIES.register("quantum_pattern_proxy", () -> {
+                var holder = new AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternProxyBE>>();
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.QuantumPatternProxyBE(holder.get(), pos, state),
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_PROXY.get()
+                ).build(null);
+                holder.set(type);
                 return type;
             });
 

@@ -25,12 +25,20 @@ public final class MultiblockSupplyWidget {
 
     /** Same panel and typography used by controllers, without coolant rows for a provider. */
     public static void renderWireless(GuiGraphics graphics, Font font, int x, int y,
-            int links, int activeMachines, double speed, double energy, double heat,
+            boolean patternBuffer, int links, int activeMachines, double speed, double energy, double heat,
             int activeMultiblocks, double multiSpeed, double multiEnergy, double multiHeat) {
         graphics.blit(TEXTURE, x, y, 0, 0, WIDTH, HEIGHT, 256, 256);
-        String[] labels = {"wireless.connected", "wireless.eligible", "supply.speed", "supply.energy", "supply.heat"};
-        String[] values = {Integer.toString(links), activeMachines + " / " + activeMultiblocks,
-                number(speed) + " / " + number(multiSpeed), number(energy) + " / " + number(multiEnergy), number(heat) + " / " + number(multiHeat)};
+        String[] labels = {
+                patternBuffer ? "wireless.proxies" : "wireless.connected",
+                patternBuffer ? "wireless.multiblocks" : "wireless.eligible",
+                "supply.speed", "supply.energy", "supply.heat"
+        };
+        int eligible = patternBuffer ? activeMultiblocks : activeMachines;
+        double effectiveSpeed = patternBuffer ? multiSpeed : speed;
+        double effectiveEnergy = patternBuffer ? multiEnergy : energy;
+        double effectiveHeat = patternBuffer ? multiHeat : heat;
+        String[] values = {Integer.toString(links), Integer.toString(eligible),
+                number(effectiveSpeed), number(effectiveEnergy), number(effectiveHeat)};
         for (int i = 0; i < labels.length; i++) {
             smallText(graphics, font, Component.translatable("gui.ufo." + labels[i]).getString(),
                     x + 4, y + 4 + i * 20, 55, 0xFFAAAAAA);

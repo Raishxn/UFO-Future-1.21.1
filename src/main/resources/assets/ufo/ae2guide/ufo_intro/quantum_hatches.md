@@ -5,6 +5,8 @@ navigation:
   position: 46
 item_ids:
   - ufo:quantum_pattern_hatch
+  - ufo:quantum_pattern_buffer
+  - ufo:quantum_pattern_proxy
   - ufo:quantum_pattern_provider_part
   - ufo:me_massive_output_hatch
   - ufo:me_massive_fluid_hatch
@@ -14,9 +16,16 @@ item_ids:
 
 # Quantum Hatches
 
-<BlockImage id="ufo:quantum_pattern_hatch" scale="3"></BlockImage>
+<BlockImage id="ufo:quantum_pattern_buffer" scale="3"></BlockImage>
 
-The **Quantum Pattern Hatch** exposes universal multiblocks to AE2 autocrafting and stores up to **72 patterns**.
+Every universal processing multiblock requires exactly one **Quantum Pattern
+Buffer** or **Quantum Pattern Proxy** in a compatible casing position. The
+Buffer stores up to **72 patterns**, connects to the ME grid, and serves the
+controller in its own structure. A Proxy contains no patterns and needs no ME
+cable; it lets another multiblock use a linked Buffer's patterns.
+
+The legacy **Quantum Pattern Hatch** is now exclusive to standalone DMA
+automation and is not a valid multiblock part.
 
 <ItemImage id="ufo:quantum_pattern_provider_part" scale="3" />
 
@@ -49,10 +58,20 @@ Stellar Nexus, QMF, QPA, Slicer and Cryoforge require one coolant hatch and one
 energy hatch in any compatible casing positions. The assembly previews show examples. Coolant
 comes exclusively from the local tank: there is no automatic ME storage fallback.
 Use pipes or an explicitly configured export device to control coolant delivery.
-Existing structures with the required hatches can keep their current hatch positions.
+Existing structures can keep their current compatible casing positions, but an
+old Pattern Hatch must be replaced by a Buffer or Proxy.
 Additional supported hatches may replace casing positions; Vibrant Glass remains
-glass-only. The Quantum Pattern Hatch can still move between supported casing
-positions, with exactly one required for QMF, QPA and Slicer.
+glass-only. Exactly one Pattern Buffer or Proxy is required for QMF, QPA,
+Slicer and Cryoforge.
+
+## Sharing Patterns Between Multiblocks
+
+Install a Pattern Buffer in the primary multiblock and put all encoded patterns
+there. Install a Pattern Proxy in every additional multiblock. With the Quantum
+Wireless Tool, right-click the Buffer and then each Proxy. The Buffer first
+tries its own controller; a pattern that does not belong there, or cannot start
+there, is offered to linked Proxies. Links, pattern inventory and controller
+membership persist across world reloads.
 
 Right-click a massive hatch with an empty hand to see whether it is online and
 linked to a controller. A neighboring hatch does not create an invisible cable
@@ -65,4 +84,6 @@ owned by the process immediately. The controller does not charge those item
 requirements a second time. Missing fluids or supported chemicals may still be
 pulled through their configured storage paths.
 
-See [Wireless Network and Bonuses](quantum_wireless_buffs.md) for automatic recipe bonuses configured in config/ufo/wireless.toml and the adjustable 32-block source range.
+The Pattern Buffer owns multiblock wireless bonuses. The legacy Pattern Hatch
+owns DMA bonuses only. See [Wireless Network and Bonuses](quantum_wireless_buffs.md)
+for values configured in config/ufo/wireless.toml and the adjustable source range.

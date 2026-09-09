@@ -43,7 +43,8 @@ public final class QuantumPatternPredicates {
     }
 
     public static boolean isUniversalHatch(BlockState state) {
-        return state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())
+        return state.is(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get())
+                || state.is(MultiblockBlocks.QUANTUM_PATTERN_PROXY.get())
                 || state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())
                 || state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
                 || state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
@@ -56,7 +57,8 @@ public final class QuantumPatternPredicates {
 
     public static boolean isQuantumCasingOrMovableHatch(BlockState state) {
         return isQuantumCasing(state)
-                || state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())
+                || state.is(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get())
+                || state.is(MultiblockBlocks.QUANTUM_PATTERN_PROXY.get())
                 || state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
                 || state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get());
     }
@@ -100,11 +102,11 @@ public final class QuantumPatternPredicates {
     }
 
     public static Component casingOrMovableHatchName() {
-        return Component.literal("Quantum Hyper Mechanical Casing, Quantum Pattern Hatch, ME Massive Fluid Hatch, or AE Energy Input Hatch");
+        return Component.literal("Quantum Hyper Mechanical Casing, Quantum Pattern Buffer/Proxy, ME Massive Fluid Hatch, or AE Energy Input Hatch");
     }
 
     public static Component patternHatchName() {
-        return Component.literal("Quantum Pattern Hatch");
+        return Component.literal("Quantum Pattern Buffer or Proxy");
     }
 
     public static Component fieldName() {
@@ -154,7 +156,8 @@ public final class QuantumPatternPredicates {
     public static List<BlockState> casingAndHatchCandidates() {
         return List.of(
                 MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get().defaultBlockState(),
-                MultiblockBlocks.QUANTUM_PATTERN_HATCH.get().defaultBlockState(),
+                MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get().defaultBlockState(),
+                MultiblockBlocks.QUANTUM_PATTERN_PROXY.get().defaultBlockState(),
                 MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get().defaultBlockState(),
                 MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get().defaultBlockState(),
                 MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get().defaultBlockState(),
@@ -165,7 +168,8 @@ public final class QuantumPatternPredicates {
     public static List<BlockState> casingAndMovableHatchCandidates() {
         return List.of(
                 MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get().defaultBlockState(),
-                MultiblockBlocks.QUANTUM_PATTERN_HATCH.get().defaultBlockState(),
+                MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get().defaultBlockState(),
+                MultiblockBlocks.QUANTUM_PATTERN_PROXY.get().defaultBlockState(),
                 MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get().defaultBlockState(),
                 MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get().defaultBlockState());
     }

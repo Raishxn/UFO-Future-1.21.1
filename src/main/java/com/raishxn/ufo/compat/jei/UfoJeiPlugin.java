@@ -98,19 +98,20 @@ public class UfoJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();
+        JeiRecipeIds.clear();
         registration.addRecipes(
                 DimensionalMatterAssemblerRecipeCategory.RECIPE_TYPE,
                 List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.DMA_RECIPE_TYPE.get()).stream()
-                        .map(RecipeHolder::value)
+                        .map(JeiRecipeIds::remember)
                         .toList()));
         registration.addRecipes(
                 QmfRecipeCategory.RECIPE_TYPE,
                 List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.QMF_TYPE.get()).stream()
-                        .map(RecipeHolder::value)
+                        .map(JeiRecipeIds::remember)
                         .toList()));
         MultiblockInfoCategory.registerRecipes(registration);
         var universalRecipes = List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.UNIVERSAL_MULTIBLOCK_TYPE.get()).stream()
-                .map(RecipeHolder::value)
+                .map(JeiRecipeIds::remember)
                 .toList());
         registration.addRecipes(
                 UniversalMultiblockRecipeCategory.QMF_RECIPE_TYPE,
@@ -127,7 +128,7 @@ public class UfoJeiPlugin implements IModPlugin {
         registration.addRecipes(
                 StellarSimulationRecipeCategory.RECIPE_TYPE,
                 List.copyOf(recipeManager.getAllRecipesFor(com.raishxn.ufo.init.ModRecipes.STELLAR_SIMULATION_TYPE.get()).stream()
-                        .map(RecipeHolder::value)
+                        .map(JeiRecipeIds::remember)
                         .toList()));
     }
 

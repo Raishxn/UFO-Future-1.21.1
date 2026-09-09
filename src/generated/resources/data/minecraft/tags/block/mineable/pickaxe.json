@@ -11,6 +11,8 @@
     "ufo:quantum_processor_assembler_controller",
     "ufo:quantum_cryoforge_controller",
     "ufo:quantum_pattern_hatch",
+    "ufo:quantum_pattern_buffer",
+    "ufo:quantum_pattern_proxy",
     "ufo:stellar_nexus_controller",
     "ufo:stellar_field_generator_t1",
     "ufo:stellar_field_generator_t2",

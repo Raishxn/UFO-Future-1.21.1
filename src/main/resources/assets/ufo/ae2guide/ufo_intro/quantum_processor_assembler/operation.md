@@ -14,7 +14,7 @@ only recipes whose inputs, outputs and required tier match the encoded pattern.
 ## Recommended AE2 Chain
 
 1. Publish every prerequisite printed-component pattern from the Quantum Slicer.
-2. Publish the final assembly pattern from this machine's Pattern Hatch.
+2. Publish the final assembly pattern from its Pattern Buffer, or from the Buffer linked to its Proxy.
 3. Keep both providers on the same powered crafting network.
 4. Request one result and inspect the crafting plan before requesting bulk work.
 

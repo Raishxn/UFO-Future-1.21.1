@@ -205,6 +205,8 @@ public class ModCreativeModeTabs {
                         output.accept(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
+                        output.accept(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get());
+                        output.accept(MultiblockBlocks.QUANTUM_PATTERN_PROXY.get());
                         output.accept(ModItems.QUANTUM_INTERFACE.get());
                         output.accept(ModItems.QUANTUM_PATTERN_PROVIDER_PART.get());
                         output.accept(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get());

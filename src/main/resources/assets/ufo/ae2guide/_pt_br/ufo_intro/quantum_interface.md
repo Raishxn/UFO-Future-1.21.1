@@ -21,7 +21,7 @@ Selecione esta interface com a [Quantum Wireless Tool](quantum_wireless_tool.md)
 
 Os destinos precisam estar carregados, na mesma dimensão e dentro do alcance. Cada origem começa em 32 blocos, ajustáveis pela engrenagem de alcance até o máximo do servidor. Dispositivos ligados a outra rede ME não podem ser usados como ponte. Dispositivos isolados são aceitos.
 
-A Quantum Interface fornece apenas logística e não concede buffs wireless. O painel de bônus wireless pertence à Quantum Pattern Hatch.
+A Quantum Interface fornece apenas logística e não concede buffs wireless. O Quantum Pattern Buffer mostra os bônus de multiblocos; o Quantum Pattern Hatch legado mostra os bônus de DMAs.
 
 Créditos dos widgets wireless e de transferência: **AE2 Lightning Tech**. Autoria e licenças estão no aviso de assets incluído no mod. Ainda não há paridade completa com o Overloaded Interface, como o modo EJECT e seus filtros.
 

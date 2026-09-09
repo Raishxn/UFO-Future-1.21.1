@@ -21,7 +21,7 @@ in the scene are intentional. Drag to inspect every layer.
 
 | Component | Count |
 |---|---:|
-| <ItemLink id="ufo:quantum_hyper_mechanical_casing" /> | 143 (one becomes Pattern Hatch) |
+| <ItemLink id="ufo:quantum_hyper_mechanical_casing" /> | 143 (one becomes Pattern Buffer or Proxy) |
 | <ItemLink id="ae2:quartz_vibrant_glass" /> | 36 (fixed) |
 | <ItemLink id="ae2:quartz_block" /> | 24 (fixed) |
 | <ItemLink id="ae2:fluix_block" /> | 12 (fixed) |

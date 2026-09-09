@@ -43,6 +43,13 @@ public class ModMenus {
                                     appeng.helpers.patternprovider.PatternProviderLogicHost.class)
                             .build(ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "quantum_pattern_hatch_menu")));
 
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumPatternHatchMenu>> QUANTUM_PATTERN_BUFFER_MENU =
+            MENUS.register("quantum_pattern_buffer_menu",
+                    () -> MenuTypeBuilder
+                            .create((id, inv, host) -> new com.raishxn.ufo.screen.QuantumPatternHatchMenu(id, inv, host),
+                                    appeng.helpers.patternprovider.PatternProviderLogicHost.class)
+                            .build(ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "quantum_pattern_buffer_menu")));
+
     public static final Supplier<MenuType<com.raishxn.ufo.screen.EntropicAssemblerMatrixMenu>> ENTROPIC_ASSEMBLER_MATRIX_MENU =
             MENUS.register("entropic_assembler_matrix_menu",
                     () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.EntropicAssemblerMatrixMenu::new));

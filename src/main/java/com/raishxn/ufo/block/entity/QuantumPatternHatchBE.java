@@ -38,9 +38,15 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
 
     @Nullable
     private BlockPos controllerPos;
+    private int patternDispatchCursor;
 
     public QuantumPatternHatchBE(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.QUANTUM_PATTERN_HATCH_BE.get(), pos, blockState);
+    }
+
+    /** The Buffer is the multiblock pattern part; the legacy Hatch is standalone. */
+    public boolean isPatternBuffer() {
+        return this.getBlockState().is(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get());
     }
 
     @Override
@@ -52,6 +58,23 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     public void onReady() {
         super.onReady();
         com.raishxn.ufo.wireless.QuantumWirelessActivity.register(this);
+        bindLinkedPatternProxies();
+    }
+
+    private void bindLinkedPatternProxies() {
+        if (this.level == null || this.level.isClientSide() || !isPatternBuffer()) {
+            return;
+        }
+        for (var target : this.wirelessLinks.targets()) {
+            if (!this.level.hasChunkAt(target.pos())) {
+                continue;
+            }
+            var targetBe = this.level.getBlockEntity(target.pos());
+            if (targetBe instanceof QuantumPatternProxyBE proxy
+                    && com.raishxn.ufo.wireless.QuantumWirelessLinks.matches(proxy, target.identity())) {
+                proxy.bindPatternBuffer(this);
+            }
+        }
     }
 
     @Override
@@ -62,12 +85,12 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
 
     @Override
     public AEItemKey getTerminalIcon() {
-        return AEItemKey.of(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
+        return AEItemKey.of(this.getBlockState().getBlock());
     }
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return new ItemStack(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
+        return new ItemStack(this.getBlockState().getBlock());
     }
 
     @Override
@@ -129,19 +152,32 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
         return pushDirection != null ? pushDirection : Direction.NORTH;
     }
 
+    int getPatternDispatchStart(int routeCount) {
+        return routeCount > 0 ? Math.floorMod(this.patternDispatchCursor, routeCount) : 0;
+    }
+
+    void completePatternDispatch(int selectedRoute, int routeCount) {
+        this.patternDispatchCursor = routeCount > 0
+                ? Math.floorMod(selectedRoute + 1, routeCount)
+                : 0;
+        setChanged();
+    }
+
     @Override
     public @NotNull net.minecraft.network.chat.Component getDisplayName() {
-        return net.minecraft.network.chat.Component.translatable("block.ufo.quantum_pattern_hatch");
+        return this.getBlockState().getBlock().getName();
     }
 
     @Override
     public void openMenu(Player player, MenuHostLocator locator) {
-        MenuOpener.open(ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), player, locator);
+        MenuOpener.open(isPatternBuffer() ? ModMenus.QUANTUM_PATTERN_BUFFER_MENU.get()
+                : ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), player, locator);
     }
 
     @Override
     public void returnToMainMenu(Player player, ISubMenu subMenu) {
-        MenuOpener.returnTo(ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), player, subMenu.getLocator());
+        MenuOpener.returnTo(isPatternBuffer() ? ModMenus.QUANTUM_PATTERN_BUFFER_MENU.get()
+                : ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), player, subMenu.getLocator());
     }
 
     @Nullable
@@ -154,6 +190,7 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(tag, registries);
         wirelessLinks.save(tag);
+        tag.putInt("ufoPatternDispatchCursor", this.patternDispatchCursor);
         if (this.controllerPos != null) {
             tag.put("controllerPos", NbtUtils.writeBlockPos(this.controllerPos));
         }
@@ -163,6 +200,7 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     public void loadTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.loadTag(tag, registries);
         wirelessLinks.load(tag);
+        this.patternDispatchCursor = Math.max(0, tag.getInt("ufoPatternDispatchCursor"));
         if (tag.contains("controllerPos")) {
             NbtUtils.readBlockPos(tag.getCompound("controllerPos"), "").ifPresent(pos -> this.controllerPos = pos);
         } else {

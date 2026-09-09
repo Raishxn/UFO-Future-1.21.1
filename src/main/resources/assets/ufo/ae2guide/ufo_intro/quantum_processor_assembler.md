@@ -19,14 +19,15 @@ The **Quantum Processor Assembler** is the bulk processor-finishing multiblock.
 
 - Up to **27 parallel jobs** in standard mode
 - **9 parallel jobs** in Safe Mode
-- AE2 pattern support through the **Quantum Pattern Hatch**
+- AE2 pattern support through a **Quantum Pattern Buffer or Proxy**
 - Universal multiblock recipe support for processor families
 - Direct ME network pull and push behavior for items and fluids
 
-## Pattern Hatch
+## Pattern Buffer / Proxy
 
-- The **Quantum Pattern Hatch** stores **72 encoded patterns**
-- It exposes the controller to AE2 as a crafting machine
+- A local **Quantum Pattern Buffer** stores **72 encoded patterns**
+- A **Quantum Pattern Proxy** uses the patterns held by its linked Buffer
+- Either part exposes its controller to the Buffer as a crafting machine
 - Each pushed pattern reserves one free thread
 
 ## Production-Line Role

@@ -49,6 +49,7 @@ public class QuantumPatternHatchMenu extends AEBaseMenu {
     @GuiSync(34) public double multiSpeed = 1;
     @GuiSync(35) public double multiEnergy = 1;
     @GuiSync(36) public double multiHeat = 1;
+    @GuiSync(37) public boolean patternBuffer;
     private final com.raishxn.ufo.wireless.QuantumWirelessHost wirelessHost;
 
     public QuantumPatternHatchMenu(MenuType<? extends QuantumPatternHatchMenu> menuType, int id, Inventory playerInventory,
@@ -79,7 +80,10 @@ public class QuantumPatternHatchMenu extends AEBaseMenu {
     }
 
     public QuantumPatternHatchMenu(int id, Inventory playerInventory, PatternProviderLogicHost host) {
-        this(com.raishxn.ufo.init.ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), id, playerInventory, host);
+        this(host instanceof com.raishxn.ufo.block.entity.QuantumPatternHatchBE provider && provider.isPatternBuffer()
+                        ? com.raishxn.ufo.init.ModMenus.QUANTUM_PATTERN_BUFFER_MENU.get()
+                        : com.raishxn.ufo.init.ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(),
+                id, playerInventory, host);
     }
 
     @Override
@@ -90,6 +94,7 @@ public class QuantumPatternHatchMenu extends AEBaseMenu {
             linkRange = wirelessHost == null ? 32 : wirelessHost.wirelessLinks().range();
             connectedMachines = wirelessHost == null ? 0 : wirelessHost.wirelessLinks().connectedMachines(wirelessHost);
             if (wirelessHost instanceof com.raishxn.ufo.block.entity.QuantumPatternHatchBE hatch) {
+                patternBuffer = hatch.isPatternBuffer();
                 var profile = hatch.bonusProfile;
                 com.raishxn.ufo.wireless.QuantumWirelessActivity.refresh(hatch.getLevel());
                 bonusSpeed = profile.dmaBonus.speed(); bonusEnergy = profile.dmaBonus.energy(); bonusHeat = profile.dmaBonus.heat();

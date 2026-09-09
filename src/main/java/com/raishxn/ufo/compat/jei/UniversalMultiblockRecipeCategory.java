@@ -97,6 +97,11 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
     }
 
     @Override
+    public ResourceLocation getRegistryName(UniversalMultiblockRecipe recipe) {
+        return JeiRecipeIds.get(recipe);
+    }
+
+    @Override
     public void setRecipe(IRecipeLayoutBuilder builder, UniversalMultiblockRecipe recipe, IFocusGroup focuses) {
         var itemInputs = recipe.getItemInputs();
         for (int i = 0; i < itemInputs.size(); i++) {

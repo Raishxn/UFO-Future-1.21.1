@@ -96,6 +96,12 @@ public class MultiblockBlocks {
     public static final DeferredBlock<QuantumPatternHatchBlock> QUANTUM_PATTERN_HATCH = BLOCKS.register("quantum_pattern_hatch",
             QuantumPatternHatchBlock::new);
 
+    public static final DeferredBlock<QuantumPatternBufferBlock> QUANTUM_PATTERN_BUFFER = BLOCKS.register("quantum_pattern_buffer",
+            QuantumPatternBufferBlock::new);
+
+    public static final DeferredBlock<QuantumPatternProxyBlock> QUANTUM_PATTERN_PROXY = BLOCKS.register("quantum_pattern_proxy",
+            QuantumPatternProxyBlock::new);
+
     public static final DeferredBlock<appeng.block.misc.InterfaceBlock> QUANTUM_INTERFACE = BLOCKS.register("quantum_interface",
             appeng.block.misc.InterfaceBlock::new);
 

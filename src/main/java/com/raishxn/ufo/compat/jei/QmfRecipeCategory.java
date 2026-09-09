@@ -65,6 +65,11 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
     }
 
     @Override
+    public ResourceLocation getRegistryName(QMFRecipe recipe) {
+        return JeiRecipeIds.get(recipe);
+    }
+
+    @Override
     public void setRecipe(IRecipeLayoutBuilder builder, QMFRecipe recipe, IFocusGroup focuses) {
         var itemInputs = recipe.getItemInputs();
         for (int i = 0; i < itemInputs.size(); i++) {

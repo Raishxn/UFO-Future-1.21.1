@@ -21,7 +21,7 @@ generated from the same schema used by scan, JEI and auto-build. Drag to rotate.
 
 | Component | Count | Rule |
 |---|---:|---|
-| <ItemLink id="ufo:quantum_hyper_mechanical_casing" /> | 245 | Any one casing may become the Pattern Hatch |
+| <ItemLink id="ufo:quantum_hyper_mechanical_casing" /> | 245 | Any one casing may become the Pattern Buffer or Proxy |
 | <ItemLink id="ae2:quartz_vibrant_glass" /> | 26 | Fixed observation shell |
 | <ItemLink id="ae2:quartz_block" /> | 10 | Fixed |
 | <ItemLink id="ae2:fluix_block" /> | 3 | Fixed |
@@ -31,7 +31,7 @@ generated from the same schema used by scan, JEI and auto-build. Drag to rotate.
 
 Air channels are intentional. Quartz Block, Fluix Block and Vibrant Glass are
 strict positions; only Quantum Hyper Mechanical Casing may be replaced by the
-Pattern Hatch or ME Massive Fluid Hatch.
+Pattern Buffer, Pattern Proxy or ME Massive Fluid Hatch.
 
 ## Using Auto-build
 

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ufo:quantum_pattern_hatch"
+    },
+    {
+      "item": "ufo:quantum_hyper_mechanical_casing"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:quantum_pattern_buffer"
+  }
+}

@@ -11,7 +11,7 @@ navigation:
 The required ME Massive Fluid Hatch receives coolant from external fluid pipes.
 Place it in any casing position; the assembly preview is an example. Only its local tank is consumed;
 there is no automatic ME storage fallback.
-The single Quantum Pattern Hatch may also move between casing positions; neither
+The single Quantum Pattern Buffer or Proxy may also move between casing positions; neither
 hatch may replace Vibrant Glass.
 
 Normal operation generates 1 HU per active thread each tick. Overclock multiplies

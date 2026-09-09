@@ -11,7 +11,7 @@ A rede wireless distribui patterns e insumos entre máquinas sem cabos de transf
 
 ## Montando a rede
 
-1. Conecte a Quantum Pattern Hatch à rede ME e coloque os patterns de processamento.
+1. Para multiblocos, conecte o Quantum Pattern Buffer à rede ME e coloque nele os patterns de processamento. Instale e vincule um Pattern Proxy em cada multibloco adicional. Para DMAs, continue usando o Quantum Pattern Hatch legado.
 2. Ative wireless na UI da hatch.
 3. Selecione a hatch com a [Quantum Wireless Tool](quantum_wireless_tool.md).
 4. Clique na face de entrada de cada máquina. Repetir o clique na mesma face remove o vínculo.
@@ -19,7 +19,7 @@ A rede wireless distribui patterns e insumos entre máquinas sem cabos de transf
 
 A ferramenta mostra a origem e a prévia em amarelo; linhas e faces azuis identificam vínculos existentes. As máquinas devem estar carregadas, na mesma dimensão e dentro do alcance. Outra rede ME não pode ser usada como ponte.
 
-Para coolant, configure uma Quantum Interface ligada à rede e ative Auto Export. Selecione essa interface e vincule as faces de entrada de coolant. Ela fornece apenas logística: **somente a Quantum Pattern Hatch concede buffs**.
+Para coolant, configure uma Quantum Interface ligada à rede e ative Auto Export. Selecione essa interface e vincule as faces de entrada de coolant. Ela fornece apenas logística: **o Pattern Buffer concede buffs aos multiblocos e o Pattern Hatch legado concede buffs aos DMAs**.
 
 ## Alcance ajustável
 

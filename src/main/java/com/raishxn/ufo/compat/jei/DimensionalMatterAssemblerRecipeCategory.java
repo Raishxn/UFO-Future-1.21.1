@@ -70,6 +70,11 @@ public class DimensionalMatterAssemblerRecipeCategory implements IRecipeCategory
     }
 
     @Override
+    public ResourceLocation getRegistryName(DimensionalMatterAssemblerRecipe recipe) {
+        return JeiRecipeIds.get(recipe);
+    }
+
+    @Override
     public int getWidth() {
         return background.getWidth();
     }

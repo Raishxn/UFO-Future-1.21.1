@@ -67,7 +67,7 @@ public final class GuideStructureProvider implements DataProvider {
         Map<Character, BlockState> states = new LinkedHashMap<>(definition.defaultCreativeStates());
         states.put(controllerSymbol, controllerState);
         if (definition.roles().containsKey('P')) {
-            states.put('P', MultiblockBlocks.QUANTUM_PATTERN_HATCH.get().defaultBlockState());
+            states.put('P', MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get().defaultBlockState());
         }
         return new GuideStructure(name, definition.pattern(), states);
     }

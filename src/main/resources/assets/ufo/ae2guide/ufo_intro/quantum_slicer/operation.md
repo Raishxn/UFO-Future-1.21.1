@@ -12,7 +12,7 @@ The Slicer turns upstream materials into printed and sliced components consumed
 by processor recipes. Treat it as the first provider in a two-machine AE2 chain.
 
 1. Encode a Slicer processing pattern with the exact JEI input and base output.
-2. Store it in this machine's Quantum Pattern Hatch.
+2. Store it in this machine's Quantum Pattern Buffer, or in the Buffer linked to its Proxy.
 3. Encode the corresponding final processor recipe for the
    [Quantum Processor Assembler](../quantum_processor_assembler.md).
 4. Request a single final processor and verify both providers are scheduled.
