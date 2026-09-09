@@ -25,6 +25,12 @@ public class ModCapabilityEvents {
         // Registra as capabilities dos Itens (suas ferramentas e armaduras)
         registerItemCapabilities(event);
 
+        // Extending AE2's CraftingBlockEntity does not register capabilities for
+        // our separate BlockEntityType. Without this, cables and other CPU members
+        // cannot discover this node when they initialize after it on world reload.
+        event.registerBlockEntity(appeng.api.AECapabilities.IN_WORLD_GRID_NODE_HOST,
+                ModBlockEntities.MEGA_CRAFTING_UNITS_BE.get(), (be, context) -> be);
+
         event.registerBlockEntity(appeng.api.AECapabilities.IN_WORLD_GRID_NODE_HOST,
                 ModBlockEntities.QUANTUM_INTERFACE_BE.get(), (be, context) -> be);
         event.registerBlockEntity(appeng.api.AECapabilities.ME_STORAGE,

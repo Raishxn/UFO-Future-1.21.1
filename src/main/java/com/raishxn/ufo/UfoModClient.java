@@ -86,7 +86,7 @@ public class UfoModClient {
         InitScreens.register(event, ModMenus.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU.get(), QuantumProcessorAssemblerControllerScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.QUANTUM_CRYOFORGE_CONTROLLER_MENU.get(), QuantumCryoforgeControllerScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), QuantumPatternHatchScreen::new, "/screens/quantum_pattern_hatch.json");
-        InitScreens.register(event, ModMenus.QUANTUM_INTERFACE_MENU.get(), com.raishxn.ufo.screen.QuantumInterfaceScreen::new, "/screens/quantum_interface.json");
+        InitScreens.register(event, ModMenus.QUANTUM_INTERFACE_MENU.get(), com.raishxn.ufo.screen.QuantumInterfaceScreen::new, "/screens/ufo_quantum_interface.json");
         event.register(ModMenus.UFO_ARMOR_CONFIG_MENU.get(), com.raishxn.ufo.screen.UfoArmorConfigScreen::new);
         InitScreens.register(event, ModMenus.ENTROPIC_ASSEMBLER_MATRIX_MENU.get(), EntropicAssemblerMatrixScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.ENTROPIC_CONVERGENCE_ENGINE_MENU.get(), EntropicConvergenceEngineScreen::new, "/screens/universal_multiblock_controller.json");

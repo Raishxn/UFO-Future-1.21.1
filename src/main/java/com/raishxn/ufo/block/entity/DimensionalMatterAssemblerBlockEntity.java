@@ -31,6 +31,7 @@ import com.raishxn.ufo.block.DimensionalMatterAssemblerBlock;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.block.entity.processing.SingleTankFluidReservation;
 import com.raishxn.ufo.block.entity.processing.DmaHazardCadence;
+import com.raishxn.ufo.block.entity.processing.DmaTickWakePolicy;
 import com.raishxn.ufo.block.entity.processing.GridPoweredEnergySource;
 import com.raishxn.ufo.block.entity.processing.CoolantRegistry;
 import com.raishxn.ufo.block.entity.processing.CoolantTuning;
@@ -111,6 +112,9 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     private boolean wirelessJobStarted;
     private double wirelessProgressFraction, wirelessHeatWork, wirelessHeatFraction;
     private net.minecraft.resources.ResourceLocation wirelessResumeRecipe;
+    private long lastGridServiceTick = Long.MIN_VALUE;
+    private long blockFallbackProcessedAt = Long.MIN_VALUE;
+    private boolean runningBlockTickerFallback;
     public boolean isWirelessCreative() { return hasCreativeCatalyst; }
     /** Reserve the whole dispatch on detached inventories, including shared slot capacity. */
     public boolean canAcceptWirelessInputs(appeng.api.stacks.KeyCounter[] inputs) {
@@ -198,6 +202,10 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     public void onReady() {
         super.onReady();
         recalculateUpgrades();
+        if (DmaTickWakePolicy.hasRestoredWork(
+                this.wirelessJobStarted, this.processingTime, this.wirelessResumeRecipe != null)) {
+            this.getMainNode().ifPresent((grid, node) -> grid.getTickManager().wakeDevice(node));
+        }
     }
 
     public int getTemperature() {
@@ -216,10 +224,27 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         if (this.level == null || this.level.isClientSide())
             return;
 
-        // Auto-wake the AE2 TickManager if we have power but are asleep when we
-        // shouldn't be
-        if (this.dirty) {
+        boolean restoredWork = DmaTickWakePolicy.hasRestoredWork(
+                this.wirelessJobStarted, this.processingTime, this.wirelessResumeRecipe != null);
+
+        // A wireless DMA can be an isolated AE2 node. On a cold load AE2 may have
+        // registered its service as sleeping before NBT restored the job.
+        if (this.dirty || restoredWork) {
             getMainNode().ifPresent((grid, node) -> grid.getTickManager().wakeDevice(node));
+        }
+
+        long gameTime = this.level.getGameTime();
+        if (DmaTickWakePolicy.shouldUseBlockTickerFallback(restoredWork, gameTime, lastGridServiceTick)) {
+            var node = getMainNode().getNode();
+            if (node != null) {
+                runningBlockTickerFallback = true;
+                blockFallbackProcessedAt = gameTime;
+                try {
+                    tickingRequest(node, 1);
+                } finally {
+                    runningBlockTickerFallback = false;
+                }
+            }
         }
 
         handleThermalLogic();
@@ -787,11 +812,27 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
     @Override
     public TickingRequest getTickingRequest(IGridNode iGridNode) {
-        return new TickingRequest(1, 20, !hasAutoExportWork() && !this.hasCraftWork());
+        // During a cold world load AE2 may ask for the initial ticking state before
+        // recipe lookup and inventory callbacks can wake this node. Persisted jobs
+        // must start awake or they can remain asleep forever with all inputs present.
+        boolean restoredWork = DmaTickWakePolicy.hasRestoredWork(
+                this.wirelessJobStarted, this.processingTime, this.wirelessResumeRecipe != null);
+        return new TickingRequest(1, 20,
+                !restoredWork && !hasAutoExportWork() && !this.hasCraftWork());
     }
 
     @Override
     public TickRateModulation tickingRequest(IGridNode iGridNode, int ticksSinceLastCall) {
+        if (!runningBlockTickerFallback && this.level != null) {
+            long gameTime = this.level.getGameTime();
+            this.lastGridServiceTick = gameTime;
+            // The level ticker already performed the recovery tick. Avoid doing
+            // the same unit of work twice if AE2 wakes later in this game tick.
+            if (this.blockFallbackProcessedAt == gameTime) {
+                return this.hasCraftWork() ? TickRateModulation.URGENT
+                        : this.hasAutoExportWork() ? TickRateModulation.SLOWER : TickRateModulation.SLEEP;
+            }
+        }
         long startedAt = System.nanoTime();
         try {
         if (this.dirty) {
