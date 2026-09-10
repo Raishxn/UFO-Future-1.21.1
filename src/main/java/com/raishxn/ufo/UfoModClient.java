@@ -17,6 +17,7 @@ import appeng.init.client.InitScreens;
 import com.raishxn.ufo.client.gui.DimensionalMatterAssemblerScreen;
 import com.raishxn.ufo.screen.QuantumPatternHatchScreen;
 import com.raishxn.ufo.screen.QuantumCryoforgeControllerScreen;
+import com.raishxn.ufo.screen.QuantumComputationNexusScreen;
 import com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerScreen;
 import com.raishxn.ufo.screen.QuantumSlicerControllerScreen;
 import com.raishxn.ufo.screen.StellarNexusControllerScreen;
@@ -85,6 +86,7 @@ public class UfoModClient {
         InitScreens.register(event, ModMenus.QUANTUM_SLICER_CONTROLLER_MENU.get(), QuantumSlicerControllerScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER_MENU.get(), QuantumProcessorAssemblerControllerScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.QUANTUM_CRYOFORGE_CONTROLLER_MENU.get(), QuantumCryoforgeControllerScreen::new, "/screens/universal_multiblock_controller.json");
+        event.register(ModMenus.QUANTUM_COMPUTATION_NEXUS_MENU.get(), QuantumComputationNexusScreen::new);
         InitScreens.register(event, ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), QuantumPatternHatchScreen::new, "/screens/quantum_pattern_hatch.json");
         InitScreens.register(event, ModMenus.QUANTUM_PATTERN_BUFFER_MENU.get(), QuantumPatternHatchScreen::new, "/screens/quantum_pattern_buffer.json");
         InitScreens.register(event, ModMenus.QUANTUM_INTERFACE_MENU.get(), com.raishxn.ufo.screen.QuantumInterfaceScreen::new, "/screens/ufo_quantum_interface.json");

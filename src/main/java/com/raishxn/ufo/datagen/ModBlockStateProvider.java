@@ -48,7 +48,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
         qmfControllerBlock(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER);
         controllerWithBase(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER, "quantum_hyper_mechanical_casing");
         controllerWithBase(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER, "quantum_hyper_mechanical_casing");
-        controllerWithBase(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER, "quantum_hyper_mechanical_casing", true);
+        controllerWithBase(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER, "quantum_hyper_mechanical_casing");
+        endgameControllerWithOverlay(MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER,
+                "quantum_computation_nexus");
+        quantumPortWithOverlay(MultiblockBlocks.QUANTUM_GRID_LINK, "quantum_grid_link_overlay");
 
         // ═══════════════════ STELLAR NEXUS ═══════════════════
         stellarNexusControllerBlock(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER);
@@ -268,11 +271,68 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(block.get(), inactiveModel.end());
     }
 
-    private void controllerWithBase(DeferredBlock<? extends Block> block, String baseTextureName) {
-        controllerWithBase(block, baseTextureName, false);
+    private void endgameControllerWithOverlay(DeferredBlock<? extends Block> block, String overlayFolder) {
+        String name = block.getId().getPath();
+        ResourceLocation base = modLoc("block/multiblock/quantum_hyper_mechanical_casing");
+        ModelFile inactive = endgameControllerModel(name, base,
+                modLoc("block/" + overlayFolder + "/overlay_front"),
+                modLoc("block/" + overlayFolder + "/overlay_front_glow"));
+        ModelFile active = endgameControllerModel(name + "_active", base,
+                modLoc("block/" + overlayFolder + "/overlay_front_active"),
+                modLoc("block/" + overlayFolder + "/overlay_front_active_glow"));
+
+        getVariantBuilder(block.get()).forAllStates(state -> {
+            Direction direction = state.getValue(DirectionalBlock.FACING);
+            boolean powered = state.getValue(com.raishxn.ufo.block.QuantumComputationNexusControllerBlock.POWERED);
+            return ConfiguredModel.builder()
+                    .modelFile(powered ? active : inactive)
+                    .rotationX(direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0)
+                    .rotationY(direction.getAxis().isVertical() ? 0 : (((int) direction.toYRot()) + 180) % 360)
+                    .build();
+        });
+        // Keep exactly one front in inventory too; duplicated overlays make the controller
+        // appear to have several fronts when the item camera shows two horizontal faces.
+        ModelFile inventory = endgameControllerItemModel(name + "_inventory", base,
+                modLoc("block/" + overlayFolder + "/overlay_front"),
+                modLoc("block/" + overlayFolder + "/overlay_front_glow"));
+        simpleBlockItem(block.get(), inventory);
     }
 
-    private void controllerWithBase(DeferredBlock<? extends Block> block, String baseTextureName, boolean reverseFront) {
+    private ModelFile endgameControllerModel(String name, ResourceLocation base,
+                                             ResourceLocation overlay, ResourceLocation glow) {
+        return models().withExistingParent(name, "block/block")
+                .renderType("cutout")
+                .texture("particle", base)
+                .texture("base", base)
+                .texture("overlay", overlay)
+                .texture("glow", glow)
+                .element().from(0, 0, 0).to(16, 16, 16)
+                    .allFaces((direction, face) -> face.texture("#base").cullface(direction)).end()
+                .element().from(0, 0, 0).to(16, 16, 16)
+                    .face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end().end()
+                .element().from(0, 0, 0).to(16, 16, 16)
+                    .face(Direction.NORTH).texture("#glow").cullface(Direction.NORTH).end().end();
+    }
+
+    private ModelFile endgameControllerItemModel(String name, ResourceLocation base,
+                                                 ResourceLocation overlay, ResourceLocation glow) {
+        return models().withExistingParent(name, "block/block")
+                .renderType("cutout")
+                .texture("particle", base)
+                .texture("base", base)
+                .texture("overlay", overlay)
+                .texture("glow", glow)
+                .element().from(0, 0, 0).to(16, 16, 16)
+                    .allFaces((direction, face) -> face.texture("#base").cullface(direction)).end()
+                // The inherited GUI camera (30, 225, 0) sees NORTH. Give the item one
+                // visible front without duplicating the overlay on another side.
+                .element().from(0, 0, -0.01F).to(16, 16, 0)
+                    .face(Direction.NORTH).texture("#overlay").uvs(0, 0, 16, 16).end().end()
+                .element().from(0, 0, -0.02F).to(16, 16, -0.01F)
+                    .face(Direction.NORTH).texture("#glow").uvs(0, 0, 16, 16).end().end();
+    }
+
+    private void controllerWithBase(DeferredBlock<? extends Block> block, String baseTextureName) {
         String name = block.getId().getPath();
         ResourceLocation baseTexture = modLoc("block/multiblock/" + baseTextureName);
         ResourceLocation overlayTexture = modLoc("block/multiblock/overlay_front");
@@ -284,8 +344,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .texture("overlay", overlayTexture)
                 .element().from(0, 0, 0).to(16, 16, 16).allFaces((dir, face) -> face.texture("#base").cullface(dir)).end()
                 .element().from(0, 0, 0).to(16, 16, 16)
-                .face(reverseFront ? Direction.SOUTH : Direction.NORTH).texture("#overlay")
-                .cullface(reverseFront ? Direction.SOUTH : Direction.NORTH).end().end();
+                .face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end().end();
 
         getVariantBuilder(block.get()).forAllStates(state -> {
             Direction dir = state.getValue(DirectionalBlock.FACING);
@@ -413,5 +472,31 @@ public class ModBlockStateProvider extends BlockStateProvider {
                     .from(0, 0, 0).to(16, 16, 16)
                     .face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end()
                 .end();
+    }
+
+    private void quantumPortWithOverlay(DeferredBlock<? extends Block> block, String overlayName) {
+        String name = block.getId().getPath();
+        ResourceLocation overlay = modLoc("block/multiblock/" + overlayName);
+        ResourceLocation quantumBase = modLoc("block/multiblock/quantum_hyper_mechanical_casing");
+        ResourceLocation entropyBase = modLoc("block/multiblock/entropy_singularity_casing");
+        ModelFile defaultModel = hatchModel(name, quantumBase, overlay);
+        ModelFile quantumModel = hatchModel(name + "_quantum", quantumBase, overlay);
+        ModelFile entropyModel = hatchModel(name + "_entropy", entropyBase, overlay);
+
+        getVariantBuilder(block.get()).forAllStates(state -> {
+            Direction direction = state.getValue(DirectionalBlock.FACING);
+            MultiblockCasingStyle style = state.getValue(com.raishxn.ufo.block.QuantumGridLinkBlock.CASING_STYLE);
+            ModelFile model = switch (style) {
+                case QUANTUM -> quantumModel;
+                case ENTROPY -> entropyModel;
+                case DEFAULT -> defaultModel;
+            };
+            return ConfiguredModel.builder()
+                    .modelFile(model)
+                    .rotationX(direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0)
+                    .rotationY(direction.getAxis().isVertical() ? 0 : (((int) direction.toYRot()) + 180) % 360)
+                    .build();
+        });
+        simpleBlockItem(block.get(), defaultModel);
     }
 }

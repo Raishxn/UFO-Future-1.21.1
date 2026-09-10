@@ -96,14 +96,11 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     @Override
     public void linkToController(BlockPos controllerPos) {
         if (controllerPos.equals(this.controllerPos)) {
-            // Clear the temporary L-0038 casing skin from worlds that were
-            // saved during its short-lived use. Pattern Hatches deliberately
-            // retain their native texture even when a multiblock is formed.
-            updateCasingStyle(MultiblockCasingStyle.DEFAULT);
+            updateCasingStyle(casingStyleFor(controllerPos));
             return;
         }
         this.controllerPos = controllerPos;
-        updateCasingStyle(MultiblockCasingStyle.DEFAULT);
+        updateCasingStyle(casingStyleFor(controllerPos));
         setChanged();
     }
 
@@ -145,6 +142,12 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
         this.level.setBlock(this.worldPosition,
                 this.getBlockState().setValue(QuantumPatternHatchBlock.CASING_STYLE, style),
                 net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+    }
+
+    private MultiblockCasingStyle casingStyleFor(BlockPos controllerPos) {
+        return this.level != null && this.level.getBlockEntity(controllerPos) instanceof StellarNexusControllerBE
+                ? MultiblockCasingStyle.ENTROPY
+                : MultiblockCasingStyle.QUANTUM;
     }
 
     public Direction getPushDirectionForController() {

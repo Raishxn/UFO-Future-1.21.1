@@ -32,7 +32,8 @@ public class ClientForgeEvents {
         if (event.getLevel().isClientSide() && event.getEntity().isShiftKeyDown() && event.getItemStack().isEmpty()) {
             var state = event.getLevel().getBlockState(event.getPos());
             if (MultiblockControllerDefinitions.isSupportedController(state)) {
-                var facing = state.getValue(net.minecraft.world.level.block.DirectionalBlock.FACING);
+                var blockEntity = event.getLevel().getBlockEntity(event.getPos());
+                var facing = MultiblockControllerDefinitions.getPatternFacing(blockEntity, state);
                 com.raishxn.ufo.client.GhostHologramRenderer.toggleHologram(event.getPos(), facing);
 
                 if (com.raishxn.ufo.client.GhostHologramRenderer.isActive(event.getPos())) {

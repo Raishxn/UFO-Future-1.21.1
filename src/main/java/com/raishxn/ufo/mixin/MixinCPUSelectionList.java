@@ -2,17 +2,24 @@ package com.raishxn.ufo.mixin;
 
 import appeng.core.localization.Tooltips;
 import appeng.menu.me.crafting.CraftingStatusMenu;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.text.DecimalFormat;
 
 @Mixin(value = appeng.client.gui.widgets.CPUSelectionList.class, priority = 5000, remap = false)
 public class MixinCPUSelectionList {
+    @Shadow @Final
+    private appeng.client.gui.style.Blitter buttonBg;
+
     @Unique
     private static final DecimalFormat ufo$DF = new DecimalFormat("#.##");
     @Unique
@@ -21,6 +28,28 @@ public class MixinCPUSelectionList {
     private static final long ufo$INFINITE_STORAGE_THRESHOLD = Long.MAX_VALUE - 16;
     @Unique
     private static final int ufo$INFINITE_THREADS_THRESHOLD = Integer.MAX_VALUE - 1;
+
+    @ModifyArg(
+            method = "drawBackgroundLayer",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I"
+            ),
+            index = 1
+    )
+    private Component ufo$clipVisibleCpuName(Component name) {
+        var font = Minecraft.getInstance().font;
+        // AE2 draws CPU names at 2/3 scale. Convert the button's visible width
+        // back to unscaled font pixels before shortening the text.
+        int maxWidth = Math.max(0, (int) ((buttonBg.getSrcWidth() - 6) / 0.666f));
+        if (font.width(name) <= maxWidth) {
+            return name;
+        }
+
+        String suffix = "...";
+        String clipped = font.plainSubstrByWidth(name.getString(), Math.max(0, maxWidth - font.width(suffix)));
+        return Component.literal(clipped + suffix).withStyle(name.getStyle());
+    }
 
     @Redirect(
             method = "getTooltip",

@@ -24,6 +24,7 @@ public final class QuantumPatternPredicates {
     public static Map<Character, BlockState> getDefaultCreativeStates() {
         Map<Character, BlockState> map = new HashMap<>();
         map.put('C', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get().defaultBlockState());
+        map.put('L', MultiblockBlocks.QUANTUM_GRID_LINK.get().defaultBlockState());
         map.put('F', MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().defaultBlockState());
 
         Block vibrantGlass = BuiltInRegistries.BLOCK.get(AE2_QUARTZ_VIBRANT_GLASS);
@@ -40,6 +41,10 @@ public final class QuantumPatternPredicates {
 
     public static boolean isQuantumCasing(BlockState state) {
         return state.is(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get());
+    }
+
+    public static boolean isQuantumGridLink(BlockState state) {
+        return state.is(MultiblockBlocks.QUANTUM_GRID_LINK.get());
     }
 
     public static boolean isUniversalHatch(BlockState state) {
@@ -95,6 +100,10 @@ public final class QuantumPatternPredicates {
 
     public static Component casingName() {
         return Component.literal("Quantum Hyper Mechanical Casing");
+    }
+
+    public static Component gridLinkName() {
+        return Component.literal("Quantum Grid Link");
     }
 
     public static Component casingOrHatchName() {

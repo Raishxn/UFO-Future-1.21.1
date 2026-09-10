@@ -93,6 +93,17 @@ public class MultiblockBlocks {
                     .requiresCorrectToolForDrops()
                     .lightLevel(state -> state.getValue(AbstractSimpleMultiblockControllerBlock.ACTIVE) ? 14 : 0)));
 
+    public static final DeferredBlock<QuantumComputationNexusControllerBlock> QUANTUM_COMPUTATION_NEXUS_CONTROLLER = BLOCKS.register("quantum_computation_nexus_controller",
+            () -> new QuantumComputationNexusControllerBlock(BlockBehaviour.Properties.of()
+                    .strength(50.0f, 1200.0f)
+                    .requiresCorrectToolForDrops()
+                    .lightLevel(state -> state.getValue(QuantumComputationNexusControllerBlock.POWERED) ? 14 : 0)));
+
+    public static final DeferredBlock<QuantumGridLinkBlock> QUANTUM_GRID_LINK = BLOCKS.register("quantum_grid_link",
+            () -> new QuantumGridLinkBlock(BlockBehaviour.Properties.of()
+                    .strength(25.0f, 600.0f)
+                    .requiresCorrectToolForDrops()));
+
     public static final DeferredBlock<QuantumPatternHatchBlock> QUANTUM_PATTERN_HATCH = BLOCKS.register("quantum_pattern_hatch",
             QuantumPatternHatchBlock::new);
 

@@ -8,6 +8,7 @@ import com.raishxn.ufo.block.entity.pattern.QmfPatternFactory;
 import com.raishxn.ufo.block.entity.pattern.QpaPatternFactory;
 import com.raishxn.ufo.block.entity.pattern.QuantumCryoforgePatternFactory;
 import com.raishxn.ufo.block.entity.pattern.QuantumSlicerPatternFactory;
+import com.raishxn.ufo.block.entity.pattern.QuantumComputationNexusPatternFactory;
 import com.raishxn.ufo.block.entity.pattern.StellarNexusPatternFactory;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.CachedOutput;
@@ -52,6 +53,8 @@ public final class GuideStructureProvider implements DataProvider {
                 'H', MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().defaultBlockState()));
         structures.add(fromDefinition("quantum_cryoforge", QuantumCryoforgePatternFactory.getDefinition(),
                 'C', MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get().defaultBlockState()));
+        structures.add(fromDefinition("quantum_computation_nexus", QuantumComputationNexusPatternFactory.getDefinition(),
+                'H', MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get().defaultBlockState()));
 
         Map<Character, BlockState> stellarStates = new LinkedHashMap<>(StellarNexusPatternFactory.getDefaultCreativeStates());
         stellarStates.put('H', MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get().defaultBlockState());

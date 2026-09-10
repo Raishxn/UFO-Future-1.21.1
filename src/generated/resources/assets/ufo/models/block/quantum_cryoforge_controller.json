@@ -41,8 +41,8 @@
     },
     {
       "faces": {
-        "south": {
-          "cullface": "south",
+        "north": {
+          "cullface": "north",
           "texture": "#overlay"
         }
       },

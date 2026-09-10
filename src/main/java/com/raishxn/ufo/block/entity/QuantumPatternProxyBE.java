@@ -6,7 +6,9 @@ import appeng.api.implementations.blockentities.PatternContainerGroup;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.KeyCounter;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
+import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import com.raishxn.ufo.block.QuantumPatternProxyBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -46,12 +48,14 @@ public final class QuantumPatternProxyBE extends BlockEntity implements IMultibl
             this.controllerPos = immutable;
             setChanged();
         }
+        updateCasingStyle(casingStyleFor(immutable));
     }
 
     @Override
     public void unlinkFromController() {
         if (controllerPos != null) {
             controllerPos = null;
+            updateCasingStyle(MultiblockCasingStyle.DEFAULT);
             setChanged();
         }
     }
@@ -59,6 +63,23 @@ public final class QuantumPatternProxyBE extends BlockEntity implements IMultibl
     public void unlinkForRemoval() {
         controllerPos = null;
         setChanged();
+    }
+
+    private MultiblockCasingStyle casingStyleFor(BlockPos controllerPos) {
+        return level != null && level.getBlockEntity(controllerPos) instanceof StellarNexusControllerBE
+                ? MultiblockCasingStyle.ENTROPY
+                : MultiblockCasingStyle.QUANTUM;
+    }
+
+    private void updateCasingStyle(MultiblockCasingStyle style) {
+        if (level == null || level.isClientSide()
+                || !getBlockState().hasProperty(QuantumPatternProxyBlock.CASING_STYLE)
+                || getBlockState().getValue(QuantumPatternProxyBlock.CASING_STYLE) == style) {
+            return;
+        }
+        level.setBlock(worldPosition,
+                getBlockState().setValue(QuantumPatternProxyBlock.CASING_STYLE, style),
+                net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
     }
 
     @Nullable

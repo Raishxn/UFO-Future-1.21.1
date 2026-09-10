@@ -286,6 +286,14 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get(), new Item.Properties(),
                      ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.BLUE, ChatFormatting.DARK_AQUA));
 
+     public static final DeferredItem<Item> QUANTUM_COMPUTATION_NEXUS_CONTROLLER = ITEMS.register("quantum_computation_nexus_controller",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.BLUE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.WHITE));
+
+     public static final DeferredItem<Item> QUANTUM_GRID_LINK = ITEMS.register("quantum_grid_link",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_GRID_LINK.get(), new Item.Properties(),
+                     ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.BLUE, ChatFormatting.LIGHT_PURPLE));
+
      public static final DeferredItem<Item> QUANTUM_PATTERN_HATCH = ITEMS.register("quantum_pattern_hatch",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get(), new Item.Properties(),
                      ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.DARK_AQUA, ChatFormatting.BLUE));

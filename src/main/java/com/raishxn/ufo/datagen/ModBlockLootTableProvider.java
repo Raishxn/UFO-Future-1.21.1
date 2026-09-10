@@ -41,6 +41,8 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get());
+        this.dropSelf(MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get());
+        this.dropSelf(MultiblockBlocks.QUANTUM_GRID_LINK.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_PATTERN_PROXY.get());

@@ -2,6 +2,7 @@ package com.raishxn.ufo.core;
 
 import appeng.block.crafting.ICraftingUnitType;
 import com.raishxn.ufo.block.ModBlocks;
+import com.raishxn.ufocore.api.crafting.CraftingComputeCapacity;
 import net.minecraft.world.item.Item;
 
 /**
@@ -48,6 +49,11 @@ public enum MegaCraftingStorageTier implements ICraftingUnitType {
     // Este getter não é usado pela interface, mas é bom manter para consistência.
     public long getBytes() {
         return bytes;
+    }
+
+    /** Capacity contribution when this block is installed in a Quantum Computation Nexus. */
+    public CraftingComputeCapacity quantumComputeContribution() {
+        return CraftingComputeCapacity.storage(bytes);
     }
 
     // --- MÉTODOS DA INTERFACE ICraftingUnitType ---

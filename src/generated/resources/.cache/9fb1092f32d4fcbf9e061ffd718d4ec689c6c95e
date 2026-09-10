@@ -1,4 +1,4 @@
-// 1.21.1	2026-09-09T15:18:09.468798814	Recipes
+// 1.21.1	2026-09-10T02:26:37.450123151	Recipes
 623466a712bf2b54aad620b471840892932161d4 data/ufo/advancement/recipes/misc/ae_energy_input_hatch.json
 a25a6bd915843952e3b74014247693fdda691447 data/ufo/advancement/recipes/misc/bismuth.json
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
@@ -42,6 +42,7 @@ a2e3f211998c3caf1b304987f920320e1cd320e7 data/ufo/advancement/recipes/misc/pulsa
 ca25101ccdb64a2ada54a572667f2e0c3d372fb9 data/ufo/advancement/recipes/misc/quantum_cryoforge_controller.json
 92b2a98ed2f5f63c460bcbd161a6559d0d6fedf5 data/ufo/advancement/recipes/misc/quantum_energy_cell.json
 1fc2b5e9105e86bebb88fde3d3a8c127c7f4830a data/ufo/advancement/recipes/misc/quantum_entropy_casing.json
+3a9e122840eeac27abae55ea547c7caf2c3f74ba data/ufo/advancement/recipes/misc/quantum_grid_link.json
 0dfff1cce5880968d4f5b5246670a739d36ecdc3 data/ufo/advancement/recipes/misc/quantum_hyper_mechanical_casing.json
 397686d5fa3a5912e1a0ac6b0e3ae9d778836a19 data/ufo/advancement/recipes/misc/quantum_interface.json
 56b43b2d1257cb105cc6145548398a74d8925e79 data/ufo/advancement/recipes/misc/quantum_lattice_frame.json
@@ -188,6 +189,7 @@ d75c15674fcca4dd88e4cf83891764db5c60c8e7 data/ufo/recipe/pulsar_fragment_nugget.
 48b4e93930ebacb57a2fd8b4535b8e6afea0ef7d data/ufo/recipe/quantum_cryoforge_controller.json
 9a177f4ec2897ca955d138f75bd02e899c4487d4 data/ufo/recipe/quantum_energy_cell.json
 52c55d11d5a10bc315040c311c0396c8947e5846 data/ufo/recipe/quantum_entropy_casing.json
+5f0d09212f02913685b2d4b09608b00c31b339e3 data/ufo/recipe/quantum_grid_link.json
 89d08402c995c7017ffd8b71add16ddfe90e6dc4 data/ufo/recipe/quantum_hyper_mechanical_casing.json
 a8524420528c6b6a9a956ddb7d05e101d637d851 data/ufo/recipe/quantum_interface.json
 bd6df17b9e946e44bae722511cc14fbe4986a1c4 data/ufo/recipe/quantum_lattice_frame.json

@@ -31,6 +31,12 @@ public record PacketScanUniversalStructure(BlockPos pos) implements CustomPacket
             if (universal instanceof IMultiblockController controller
                     && context.player() instanceof net.minecraft.server.level.ServerPlayer player) {
                 controller.scanStructure(player.level());
+                return;
+            }
+            var nexus = MachinePacketGuard.requireComputationNexus(
+                    context, pos, MachinePacketGuard.Action.SCAN_STRUCTURE);
+            if (nexus != null && context.player() instanceof net.minecraft.server.level.ServerPlayer player) {
+                nexus.scanStructure(player.level());
             }
         });
     }

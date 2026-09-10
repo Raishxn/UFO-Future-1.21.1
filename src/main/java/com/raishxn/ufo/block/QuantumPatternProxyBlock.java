@@ -1,27 +1,56 @@
 package com.raishxn.ufo.block;
 
+import com.mojang.serialization.MapCodec;
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
+import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
 import com.raishxn.ufo.block.entity.QuantumPatternProxyBE;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
 import com.raishxn.ufo.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 /** Lightweight multiblock endpoint for a remote Quantum Pattern Buffer. */
-public final class QuantumPatternProxyBlock extends Block implements EntityBlock {
+public final class QuantumPatternProxyBlock extends DirectionalBlock implements EntityBlock {
+    public static final MapCodec<QuantumPatternProxyBlock> CODEC = MapCodec.unit(QuantumPatternProxyBlock::new);
+    public static final EnumProperty<MultiblockCasingStyle> CASING_STYLE =
+            EnumProperty.create("casing_style", MultiblockCasingStyle.class);
+
     public QuantumPatternProxyBlock() {
         super(BlockBehaviour.Properties.of().strength(25.0f, 600.0f).requiresCorrectToolForDrops());
+        registerDefaultState(stateDefinition.any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(CASING_STYLE, MultiblockCasingStyle.DEFAULT));
+    }
+
+    @Override
+    protected MapCodec<? extends DirectionalBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING, CASING_STYLE);
     }
 
     @Nullable

@@ -1,0 +1,6 @@
+{
+  "parent": "ufo:block/quantum_pattern_hatch_quantum",
+  "textures": {
+    "overlay": "ufo:block/multiblock/quantum_buffer_hatch"
+  }
+}

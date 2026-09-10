@@ -2,6 +2,7 @@ package com.raishxn.ufo.core;
 
 import appeng.block.crafting.ICraftingUnitType; // <<-- 1. IMPORT CORRETO
 import com.raishxn.ufo.block.ModBlocks;
+import com.raishxn.ufocore.api.crafting.CraftingComputeCapacity;
 import net.minecraft.world.item.Item;
 
 // 2. FAÇA O ENUM IMPLEMENTAR A INTERFACE
@@ -28,6 +29,11 @@ public enum MegaCoProcessorTier implements ICraftingUnitType {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    /** Exact lane contribution for the Quantum Computation Nexus, outside AE2's int aggregation. */
+    public CraftingComputeCapacity quantumComputeContribution() {
+        return CraftingComputeCapacity.lanes(acceleratorThreads);
     }
 
     // --- MÉTODOS DA INTERFACE ICraftingUnitType ---

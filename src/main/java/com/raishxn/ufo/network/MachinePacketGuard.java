@@ -6,6 +6,8 @@ import com.raishxn.ufo.menu.DimensionalMatterAssemblerMenu;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
 import com.raishxn.ufo.screen.AbstractUniversalMultiblockControllerMenu;
 import com.raishxn.ufo.screen.StellarNexusControllerMenu;
+import com.raishxn.ufo.screen.QuantumComputationNexusMenu;
+import com.raishxn.ufo.block.entity.QuantumComputationNexusControllerBE;
 import com.raishxn.ufocore.api.network.MachineAction;
 import com.raishxn.ufocore.neoforge.network.UfoMachinePacketGuard;
 import java.util.Locale;
@@ -56,6 +58,14 @@ public final class MachinePacketGuard {
                 AbstractUniversalMultiblockControllerMenu.class,
                 AbstractUniversalMultiblockControllerMenu::getBlockEntity, action.coreAction);
         return current instanceof IUniversalMultiblockController controller ? controller : null;
+    }
+
+    public static @Nullable QuantumComputationNexusControllerBE requireComputationNexus(
+            IPayloadContext context,
+            BlockPos pos,
+            Action action) {
+        return UfoMachinePacketGuard.require(context, pos, QuantumComputationNexusMenu.class,
+                QuantumComputationNexusMenu::getBlockEntity, action.coreAction);
     }
 
     public static @Nullable DimensionalMatterAssemblerBlockEntity requireDma(

@@ -1,6 +1,7 @@
 package com.raishxn.ufo.datagen;
 
 import appeng.api.ids.AEItemIds;
+import appeng.api.util.AEColor;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
@@ -690,6 +691,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requires(ModItems.QUANTUM_PATTERN_HATCH.get())
                 .requires(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
                 .unlockedBy("has_quantum_pattern_hatch", has(ModItems.QUANTUM_PATTERN_HATCH.get()))
+                .save(c);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.QUANTUM_GRID_LINK.get())
+                .pattern("CPC").pattern("LDL").pattern("CPC")
+                .define('C', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
+                .define('P', AEItems.ENGINEERING_PROCESSOR)
+                .define('L', AEBlocks.CONTROLLER)
+                .define('D', AEParts.SMART_DENSE_CABLE.item(AEColor.TRANSPARENT))
+                .unlockedBy("has_quantum_casing", has(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get()))
                 .save(c);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.QUANTUM_PATTERN_PROXY.get(), 2)

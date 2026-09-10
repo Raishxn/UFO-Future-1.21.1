@@ -51,7 +51,8 @@ public class ModBlockEntities {
             net.minecraft.core.BlockPos pos,
             BlockState state,
             CraftingBlockEntity blockEntity) {
-        if (!(level instanceof ServerLevel) || blockEntity.isFormed()) {
+        if (!(level instanceof ServerLevel) || blockEntity.isFormed()
+                || com.raishxn.ufo.api.ae.NexusCraftingUnitOwnership.deferVanillaFormation(blockEntity)) {
             return;
         }
 
@@ -156,6 +157,29 @@ public class ModBlockEntities {
                     (pos, state) -> new com.raishxn.ufo.block.entity.QuantumCryoforgeControllerBE(pos, state),
                     com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get()
             ).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumComputationNexusControllerBE>> QUANTUM_COMPUTATION_NEXUS_CONTROLLER_BE =
+            BLOCK_ENTITIES.register("quantum_computation_nexus_controller", () -> {
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.QuantumComputationNexusControllerBE(pos, state),
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get()
+                ).build(null);
+                AEBaseBlockEntity.registerBlockEntityItem(type,
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get().asItem());
+                return type;
+            });
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumGridLinkBE>> QUANTUM_GRID_LINK_BE =
+            BLOCK_ENTITIES.register("quantum_grid_link", () -> {
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.QuantumGridLinkBE(
+                                ModBlockEntities.QUANTUM_GRID_LINK_BE.get(), pos, state),
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_GRID_LINK.get()
+                ).build(null);
+                AEBaseBlockEntity.registerBlockEntityItem(type,
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_GRID_LINK.get().asItem());
+                return type;
+            });
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternHatchBE>> QUANTUM_PATTERN_HATCH_BE =
             BLOCK_ENTITIES.register("quantum_pattern_hatch", () -> {

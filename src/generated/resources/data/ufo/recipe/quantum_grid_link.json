@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "ufo:quantum_hyper_mechanical_casing"
+    },
+    "D": {
+      "item": "ae2:fluix_smart_dense_cable"
+    },
+    "L": {
+      "item": "ae2:controller"
+    },
+    "P": {
+      "item": "ae2:engineering_processor"
+    }
+  },
+  "pattern": [
+    "CPC",
+    "LDL",
+    "CPC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:quantum_grid_link"
+  }
+}

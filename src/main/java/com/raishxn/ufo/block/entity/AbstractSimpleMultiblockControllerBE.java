@@ -7,6 +7,7 @@ import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockScanMode;
 import com.raishxn.ufo.api.multiblock.MultiblockRuntimeState;
 import com.raishxn.ufo.api.multiblock.StructureMembershipIndex;
+import com.raishxn.ufo.api.multiblock.StructureInvalidationTarget;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
 import com.raishxn.ufo.diagnostic.MachineMetricKey;
@@ -45,7 +46,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity implements IMultiblockController, MenuProvider, IUniversalMultiblockController, IUpgradeableObject {
+public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity implements IMultiblockController, MenuProvider, IUniversalMultiblockController, IUpgradeableObject, StructureInvalidationTarget {
     protected boolean assembled = false;
     protected boolean structureDirty = true;
     protected final List<BlockPos> parts = new ArrayList<>();

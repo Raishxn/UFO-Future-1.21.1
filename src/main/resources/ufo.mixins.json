@@ -11,7 +11,9 @@
     "MixinCPUSelectionList",
     "MixinCraftingCPUCluster",
     "MixinAggregatePatternRecovery",
-    "MixinKeyTypeSelection"
+    "MixinKeyTypeSelection",
+    "MixinNexusCraftingUnitOwnership",
+    "MixinNexusVirtualCraftingCluster"
   ],
   "client": [
     "AccessorAbstractContainerScreen",

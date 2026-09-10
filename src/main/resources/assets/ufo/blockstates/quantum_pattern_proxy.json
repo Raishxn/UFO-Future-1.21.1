@@ -1,5 +1,22 @@
 {
   "variants": {
-    "": {"model": "ufo:block/quantum_pattern_proxy"}
+    "casing_style=default,facing=down": {"model": "ufo:block/quantum_pattern_proxy", "x": 90},
+    "casing_style=default,facing=east": {"model": "ufo:block/quantum_pattern_proxy", "y": 90},
+    "casing_style=default,facing=north": {"model": "ufo:block/quantum_pattern_proxy"},
+    "casing_style=default,facing=south": {"model": "ufo:block/quantum_pattern_proxy", "y": 180},
+    "casing_style=default,facing=up": {"model": "ufo:block/quantum_pattern_proxy", "x": -90},
+    "casing_style=default,facing=west": {"model": "ufo:block/quantum_pattern_proxy", "y": 270},
+    "casing_style=quantum,facing=down": {"model": "ufo:block/quantum_pattern_proxy_quantum", "x": 90},
+    "casing_style=quantum,facing=east": {"model": "ufo:block/quantum_pattern_proxy_quantum", "y": 90},
+    "casing_style=quantum,facing=north": {"model": "ufo:block/quantum_pattern_proxy_quantum"},
+    "casing_style=quantum,facing=south": {"model": "ufo:block/quantum_pattern_proxy_quantum", "y": 180},
+    "casing_style=quantum,facing=up": {"model": "ufo:block/quantum_pattern_proxy_quantum", "x": -90},
+    "casing_style=quantum,facing=west": {"model": "ufo:block/quantum_pattern_proxy_quantum", "y": 270},
+    "casing_style=entropy,facing=down": {"model": "ufo:block/quantum_pattern_proxy_entropy", "x": 90},
+    "casing_style=entropy,facing=east": {"model": "ufo:block/quantum_pattern_proxy_entropy", "y": 90},
+    "casing_style=entropy,facing=north": {"model": "ufo:block/quantum_pattern_proxy_entropy"},
+    "casing_style=entropy,facing=south": {"model": "ufo:block/quantum_pattern_proxy_entropy", "y": 180},
+    "casing_style=entropy,facing=up": {"model": "ufo:block/quantum_pattern_proxy_entropy", "x": -90},
+    "casing_style=entropy,facing=west": {"model": "ufo:block/quantum_pattern_proxy_entropy", "y": 270}
   }
 }

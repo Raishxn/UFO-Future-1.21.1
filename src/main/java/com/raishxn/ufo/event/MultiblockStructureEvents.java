@@ -2,7 +2,7 @@ package com.raishxn.ufo.event;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.api.multiblock.StructureMembershipIndex;
-import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
+import com.raishxn.ufo.api.multiblock.StructureInvalidationTarget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
@@ -78,7 +78,7 @@ public final class MultiblockStructureEvents {
         String dimension = level.dimension().location().toString();
         for (long controllerPos : StructureMembershipIndex.INSTANCE.controllersAt(dimension, changedPos.asLong())) {
             BlockPos pos = BlockPos.of(controllerPos);
-            if (level.isLoaded(pos) && level.getBlockEntity(pos) instanceof AbstractSimpleMultiblockControllerBE controller) {
+            if (level.isLoaded(pos) && level.getBlockEntity(pos) instanceof StructureInvalidationTarget controller) {
                 controller.markStructureDirty();
             }
         }
@@ -92,7 +92,7 @@ public final class MultiblockStructureEvents {
                 continue;
             }
             BlockPos pos = BlockPos.of(controllerPos);
-            if (level.isLoaded(pos) && level.getBlockEntity(pos) instanceof AbstractSimpleMultiblockControllerBE controller) {
+            if (level.isLoaded(pos) && level.getBlockEntity(pos) instanceof StructureInvalidationTarget controller) {
                 controller.markStructureDirty();
             }
         }

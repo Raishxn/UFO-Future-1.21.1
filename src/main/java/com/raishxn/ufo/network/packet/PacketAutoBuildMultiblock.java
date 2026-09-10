@@ -27,6 +27,10 @@ public record PacketAutoBuildMultiblock(BlockPos pos) implements CustomPacketPay
                 var universal = MachinePacketGuard.requireUniversal(context, pos, MachinePacketGuard.Action.AUTO_BUILD);
                 if (universal instanceof BlockEntity blockEntity) target = blockEntity;
             }
+            if (target == null) {
+                target = MachinePacketGuard.requireComputationNexus(
+                        context, pos, MachinePacketGuard.Action.AUTO_BUILD);
+            }
             if (target != null) MultiblockAutoBuildService.start(player, target);
         });
     }
