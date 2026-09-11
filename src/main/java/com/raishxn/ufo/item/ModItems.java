@@ -290,6 +290,10 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get(), new Item.Properties(),
                      ChatFormatting.AQUA, ChatFormatting.BLUE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.WHITE));
 
+     public static final DeferredItem<Item> QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER = ITEMS.register("quantum_pattern_fabrication_matrix_controller",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get(), new Item.Properties(),
+                     ChatFormatting.LIGHT_PURPLE, ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.BLUE));
+
      public static final DeferredItem<Item> QUANTUM_GRID_LINK = ITEMS.register("quantum_grid_link",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_GRID_LINK.get(), new Item.Properties(),
                      ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.BLUE, ChatFormatting.LIGHT_PURPLE));

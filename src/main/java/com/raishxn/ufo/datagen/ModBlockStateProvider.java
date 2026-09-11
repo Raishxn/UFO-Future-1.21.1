@@ -50,7 +50,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
         controllerWithBase(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER, "quantum_hyper_mechanical_casing");
         controllerWithBase(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER, "quantum_hyper_mechanical_casing");
         endgameControllerWithOverlay(MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER,
-                "quantum_computation_nexus");
+                "quantum_computation_nexus",
+                com.raishxn.ufo.block.QuantumComputationNexusControllerBlock.POWERED, true);
+        endgameControllerWithOverlay(MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER,
+                "quantum_pattern_fabrication_matrix",
+                com.raishxn.ufo.block.QuantumPatternFabricationMatrixControllerBlock.POWERED, false);
         quantumPortWithOverlay(MultiblockBlocks.QUANTUM_GRID_LINK, "quantum_grid_link_overlay");
 
         // ═══════════════════ STELLAR NEXUS ═══════════════════
@@ -271,19 +275,22 @@ public class ModBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(block.get(), inactiveModel.end());
     }
 
-    private void endgameControllerWithOverlay(DeferredBlock<? extends Block> block, String overlayFolder) {
+    private void endgameControllerWithOverlay(DeferredBlock<? extends Block> block, String overlayFolder,
+                                               BooleanProperty poweredProperty, boolean hasInactiveGlow) {
         String name = block.getId().getPath();
         ResourceLocation base = modLoc("block/multiblock/quantum_hyper_mechanical_casing");
-        ModelFile inactive = endgameControllerModel(name, base,
-                modLoc("block/" + overlayFolder + "/overlay_front"),
-                modLoc("block/" + overlayFolder + "/overlay_front_glow"));
+        ResourceLocation inactiveOverlay = modLoc("block/" + overlayFolder + "/overlay_front");
+        ModelFile inactive = hasInactiveGlow
+                ? endgameControllerModel(name, base, inactiveOverlay,
+                        modLoc("block/" + overlayFolder + "/overlay_front_glow"))
+                : endgameControllerModel(name, base, inactiveOverlay);
         ModelFile active = endgameControllerModel(name + "_active", base,
                 modLoc("block/" + overlayFolder + "/overlay_front_active"),
                 modLoc("block/" + overlayFolder + "/overlay_front_active_glow"));
 
         getVariantBuilder(block.get()).forAllStates(state -> {
             Direction direction = state.getValue(DirectionalBlock.FACING);
-            boolean powered = state.getValue(com.raishxn.ufo.block.QuantumComputationNexusControllerBlock.POWERED);
+            boolean powered = state.getValue(poweredProperty);
             return ConfiguredModel.builder()
                     .modelFile(powered ? active : inactive)
                     .rotationX(direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0)
@@ -292,10 +299,23 @@ public class ModBlockStateProvider extends BlockStateProvider {
         });
         // Keep exactly one front in inventory too; duplicated overlays make the controller
         // appear to have several fronts when the item camera shows two horizontal faces.
-        ModelFile inventory = endgameControllerItemModel(name + "_inventory", base,
-                modLoc("block/" + overlayFolder + "/overlay_front"),
-                modLoc("block/" + overlayFolder + "/overlay_front_glow"));
+        ModelFile inventory = hasInactiveGlow
+                ? endgameControllerItemModel(name + "_inventory", base, inactiveOverlay,
+                        modLoc("block/" + overlayFolder + "/overlay_front_glow"))
+                : endgameControllerItemModel(name + "_inventory", base, inactiveOverlay);
         simpleBlockItem(block.get(), inventory);
+    }
+
+    private ModelFile endgameControllerModel(String name, ResourceLocation base, ResourceLocation overlay) {
+        return models().withExistingParent(name, "block/block")
+                .renderType("cutout")
+                .texture("particle", base)
+                .texture("base", base)
+                .texture("overlay", overlay)
+                .element().from(0, 0, 0).to(16, 16, 16)
+                    .allFaces((direction, face) -> face.texture("#base").cullface(direction)).end()
+                .element().from(0, 0, 0).to(16, 16, 16)
+                    .face(Direction.NORTH).texture("#overlay").cullface(Direction.NORTH).end().end();
     }
 
     private ModelFile endgameControllerModel(String name, ResourceLocation base,
@@ -330,6 +350,19 @@ public class ModBlockStateProvider extends BlockStateProvider {
                     .face(Direction.NORTH).texture("#overlay").uvs(0, 0, 16, 16).end().end()
                 .element().from(0, 0, -0.02F).to(16, 16, -0.01F)
                     .face(Direction.NORTH).texture("#glow").uvs(0, 0, 16, 16).end().end();
+    }
+
+    private ModelFile endgameControllerItemModel(String name, ResourceLocation base,
+                                                 ResourceLocation overlay) {
+        return models().withExistingParent(name, "block/block")
+                .renderType("cutout")
+                .texture("particle", base)
+                .texture("base", base)
+                .texture("overlay", overlay)
+                .element().from(0, 0, 0).to(16, 16, 16)
+                    .allFaces((direction, face) -> face.texture("#base").cullface(direction)).end()
+                .element().from(0, 0, -0.01F).to(16, 16, 0)
+                    .face(Direction.NORTH).texture("#overlay").uvs(0, 0, 16, 16).end().end();
     }
 
     private void controllerWithBase(DeferredBlock<? extends Block> block, String baseTextureName) {

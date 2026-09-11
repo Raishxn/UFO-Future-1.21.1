@@ -10,6 +10,7 @@
     "ufo:quantum_processor_assembler_controller",
     "ufo:quantum_cryoforge_controller",
     "ufo:quantum_computation_nexus_controller",
+    "ufo:quantum_pattern_fabrication_matrix_controller",
     "ufo:quantum_grid_link",
     "ufo:quantum_pattern_hatch",
     "ufo:quantum_pattern_buffer",

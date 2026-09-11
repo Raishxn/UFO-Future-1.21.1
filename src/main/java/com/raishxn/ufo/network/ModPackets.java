@@ -101,6 +101,11 @@ public class ModPackets {
                 PacketAutoBuildMultiblock.STREAM_CODEC,
                 PacketAutoBuildMultiblock::handle
         );
+        registrar.playToServer(
+                PacketOpenPatternMatrixPatterns.TYPE,
+                PacketOpenPatternMatrixPatterns.STREAM_CODEC,
+                PacketOpenPatternMatrixPatterns::handle
+        );
     }
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {

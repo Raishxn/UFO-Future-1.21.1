@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,7 @@ import java.math.BigInteger;
 
 /** Read-only, server-synchronised diagnostics for the Quantum Computation Nexus. */
 public final class QuantumComputationNexusMenu extends AEBaseMenu {
-    public static final int DATA_COUNT = 15;
+    public static final int DATA_COUNT = 16;
 
     private final QuantumComputationNexusControllerBE blockEntity;
     private final ContainerLevelAccess levelAccess;
@@ -26,7 +27,11 @@ public final class QuantumComputationNexusMenu extends AEBaseMenu {
         super(ModMenus.QUANTUM_COMPUTATION_NEXUS_MENU.get(), containerId, inventory, blockEntity);
         this.blockEntity = blockEntity;
         this.levelAccess = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
-        this.data = blockEntity.getMenuData();
+        // The controller exposes a read-only server view. Clientbound DataSlot updates need a
+        // writable mirror; otherwise ContainerData#set silently discards every synchronized value.
+        this.data = inventory.player.level().isClientSide
+                ? new SimpleContainerData(DATA_COUNT)
+                : blockEntity.getMenuData();
         checkContainerDataCount(data, DATA_COUNT);
         addDataSlots(data);
     }
@@ -61,6 +66,10 @@ public final class QuantumComputationNexusMenu extends AEBaseMenu {
 
     public int getCpuPartitionCount() {
         return Math.max(0, data.get(14));
+    }
+
+    public boolean isInfiniteMode() {
+        return data.get(15) == 1;
     }
 
     public BigInteger getStorageBytes() {

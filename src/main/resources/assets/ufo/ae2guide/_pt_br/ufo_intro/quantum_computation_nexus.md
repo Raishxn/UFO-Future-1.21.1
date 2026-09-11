@@ -54,6 +54,17 @@ exigidos pelo plano e cria uma CPU virtual temporaria. O restante do armazenamen
 continua disponivel para outros jobs. Os Co-Processadores formam uma capacidade
 compartilhada, repartida de forma justa entre os jobs ativos.
 
+### Modo de computacao infinita
+
+Instalar pelo menos **25 Armazenamentos de Crafting Cosmic String** (tier de 1 PiB)
+e **25 Co-Processadores 2B** ativa o modo de computacao infinita do Nexus. O
+Armazenamento de Crafting e os Co-Processadores passam a ser publicados como
+**infinitos** para o AE2. O controller mostra `∞`, mas os tooltips continuam
+informando a capacidade fisica instalada na cavidade.
+
+Os dois requisitos precisam ser cumpridos com modulos do ultimo tier. Modulos de
+tiers inferiores continuam somando sua capacidade normal, mas nao contam para o desbloqueio.
+
 Quando o job termina e seus itens pendentes voltam ao grid, sua CPU virtual
 desaparece e a reserva retorna ao pool. A tela mostra o total fisico e a quantidade
 atual de jobs, nunca dezenas de CPUs fisicas.
@@ -63,6 +74,9 @@ Os blocos internos nao sao transformados em um inventario virtual: permanecem
 visiveis no mundo.
 
 ## Tela do controller
+
+No modo infinito, as duas metricas principais exibem `∞`. Passe o mouse sobre
+elas para consultar os totais fisicos dos modulos instalados.
 
 - **Abrir guia** retorna para esta pagina.
 - **Escanear multibloco** informa e destaca blocos ausentes.

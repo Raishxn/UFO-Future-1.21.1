@@ -26,6 +26,8 @@ import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.QuantumComputationNexusControllerBlock;
 import com.raishxn.ufo.block.entity.pattern.QuantumComputationNexusPatternFactory;
 import com.raishxn.ufo.crafting.NexusSharedCraftingCpuPool;
+import com.raishxn.ufo.core.MegaCoProcessorTier;
+import com.raishxn.ufo.core.MegaCraftingStorageTier;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.screen.QuantumComputationNexusMenu;
@@ -57,6 +59,7 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
         implements StructureInvalidationTarget, MenuProvider, IMultiblockController,
         QuantumGridLinkHost, NexusVirtualCpuHost, IPriorityHost {
     private static final int PERIODIC_RESCAN_TICKS = 20;
+    public static final int INFINITE_MODE_MODULE_THRESHOLD = 25;
     private static final String TAG_CPU_POOL = "NexusCpuPool";
     private static final String TAG_CPU_PRIORITY = "CpuPriority";
 
@@ -71,6 +74,7 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
     private CraftingComputeCapacity exactCapacity = CraftingComputeCapacity.ZERO;
     private int storageModuleCount;
     private int coProcessorModuleCount;
+    private boolean infiniteMode;
     private int cpuPriority;
 
     private final ContainerData menuData = new ContainerData() {
@@ -86,6 +90,7 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
                 case 6, 7, 8, 9 -> amountPart(exactCapacity.storageBytes().asBigInteger(), index - 6);
                 case 10, 11, 12, 13 -> amountPart(exactCapacity.parallelLanes().asBigInteger(), index - 10);
                 case 14 -> cpuPool.getActiveJobCount();
+                case 15 -> infiniteMode ? 1 : 0;
                 default -> 0;
             };
         }
@@ -152,12 +157,20 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
         CraftingComputeCapacity capacity = CraftingComputeCapacity.ZERO;
         int storages = 0;
         int coProcessors = 0;
+        int ultimateStorages = 0;
+        int ultimateCoProcessors = 0;
         for (BlockPos pos : spaces) {
             if (!serverLevel.isLoaded(pos)) return;
             BlockState state = serverLevel.getBlockState(pos);
             CraftingComputeCapacity contribution = contributionOf(state);
             if (!contribution.storageBytes().isZero()) storages++;
             if (!contribution.parallelLanes().isZero()) coProcessors++;
+            if (state.is(ModBlocks.CRAFTING_STORAGE_BLOCKS.get(MegaCraftingStorageTier.STORAGE_1QD).get())) {
+                ultimateStorages++;
+            }
+            if (state.is(ModBlocks.CO_PROCESSOR_BLOCKS.get(MegaCoProcessorTier.COPROCESSOR_2B).get())) {
+                ultimateCoProcessors++;
+            }
             capacity = capacity.add(contribution);
             if (serverLevel.getBlockEntity(pos) instanceof CraftingBlockEntity module) modules.add(module);
         }
@@ -171,6 +184,8 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
         exactCapacity = capacity;
         storageModuleCount = storages;
         coProcessorModuleCount = coProcessors;
+        infiniteMode = ultimateStorages >= INFINITE_MODE_MODULE_THRESHOLD
+                && ultimateCoProcessors >= INFINITE_MODE_MODULE_THRESHOLD;
         formed = storages > 0;
         if (!formed) {
             // A valid shell without storage is still not an operational Nexus and must keep its internals visible.
@@ -188,8 +203,9 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
         long storage = exactCapacity.storageBytes().asBigInteger()
                 .min(java.math.BigInteger.valueOf(Long.MAX_VALUE)).longValue();
         int coProcessors = exactCapacity.parallelLanes().asBigInteger()
-                .min(java.math.BigInteger.valueOf(Integer.MAX_VALUE - 1L)).intValue();
-        cpuPool.reconfigure(storage, coProcessors);
+                // Integer.MAX_VALUE - 1 is reserved as the explicit infinity marker in the AE2 terminal.
+                .min(java.math.BigInteger.valueOf(Integer.MAX_VALUE - 2L)).intValue();
+        cpuPool.reconfigure(storage, coProcessors, infiniteMode);
     }
 
     private void clearModuleOwnershipNotIn(List<CraftingBlockEntity> retained) {
@@ -213,6 +229,7 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
         exactCapacity = CraftingComputeCapacity.ZERO;
         storageModuleCount = 0;
         coProcessorModuleCount = 0;
+        infiniteMode = false;
         if (wasFormed) onGridConnectableSidesChanged();
         setChanged();
     }

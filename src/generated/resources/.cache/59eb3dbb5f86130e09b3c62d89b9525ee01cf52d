@@ -1,4 +1,4 @@
-// 1.21.1	2026-09-10T02:26:37.449471335	Loot Tables
+// 1.21.1	2026-09-10T18:28:20.833321763	Loot Tables
 aba597cd7ae8bef0da9188896eb4f4b55d797bfc data/ufo/loot_table/blocks/150m_mega_co_processor.json
 2c419982a9aba6bf4a6c011b5be266bda1362491 data/ufo/loot_table/blocks/1b_mega_crafting_storage.json
 668cc62d0394f4cef5fe88eb9bf057281e53ad4a data/ufo/loot_table/blocks/1qd_mega_crafting_storage.json
@@ -34,6 +34,7 @@ c6a0a60117bfceb8171bdea38398a3aadc11550c data/ufo/loot_table/blocks/quantum_hype
 5b629fd18d891c968535dec05c8047f0e16f2d06 data/ufo/loot_table/blocks/quantum_lattice_frame.json
 c92fdf4e743d8e51a069f34756ee413946fcafd1 data/ufo/loot_table/blocks/quantum_matter_fabricator_controller.json
 640f247236ab79d7e1df8e309969e71eedbf9cc0 data/ufo/loot_table/blocks/quantum_pattern_buffer.json
+bcae9df12c726bd2b719365f5465a9870ce33f45 data/ufo/loot_table/blocks/quantum_pattern_fabrication_matrix_controller.json
 f2f117cf2da9639ef76199a89d10ff427a76d9f5 data/ufo/loot_table/blocks/quantum_pattern_hatch.json
 109cbda43298ed6f98aeea5d10548c979270b17f data/ufo/loot_table/blocks/quantum_pattern_proxy.json
 bfb44b0fe6105e3a3f92825cc9151104b3d0e936 data/ufo/loot_table/blocks/quantum_processor_assembler_controller.json

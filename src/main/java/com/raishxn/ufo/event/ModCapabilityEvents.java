@@ -35,6 +35,9 @@ public class ModCapabilityEvents {
                 ModBlockEntities.QUANTUM_COMPUTATION_NEXUS_CONTROLLER_BE.get(), (be, context) -> be);
 
         event.registerBlockEntity(appeng.api.AECapabilities.IN_WORLD_GRID_NODE_HOST,
+                ModBlockEntities.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER_BE.get(), (be, context) -> be);
+
+        event.registerBlockEntity(appeng.api.AECapabilities.IN_WORLD_GRID_NODE_HOST,
                 ModBlockEntities.QUANTUM_GRID_LINK_BE.get(), (be, context) -> be);
 
         event.registerBlockEntity(appeng.api.AECapabilities.IN_WORLD_GRID_NODE_HOST,

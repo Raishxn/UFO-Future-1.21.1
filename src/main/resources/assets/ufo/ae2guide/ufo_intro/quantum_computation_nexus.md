@@ -56,6 +56,17 @@ bytes and creates one temporary virtual CPU. All remaining bytes stay available
 for simultaneous jobs. Co-Processors are one shared dispatch budget, divided
 fairly between active jobs rather than duplicated for every job.
 
+### Infinite computation mode
+
+Installing at least **25 Cosmic String Crafting Storages** (the 1 PiB tier) and
+**25 2B Co-Processors** activates the Nexus' infinite computation mode. Both
+Crafting Storage and Co-Processors are then advertised as **infinite** to AE2.
+The controller displays `∞`, while its tooltips continue to report the physical
+capacity installed in the cavity.
+
+Both requirements must be met using the highest-tier modules. Lower-tier modules
+still add their normal finite capacity but do not count toward this unlock.
+
 After a job finishes and its held items have returned to the network, its virtual
 CPU disappears and its reservation returns to the idle pool. The controller
 reports physical totals and active jobs, never dozens of physical CPU entries.
@@ -68,6 +79,7 @@ in place.
 
 The controller screen reports structure, grid and CPU status separately. It also
 shows exact total storage, parallel lanes and the number of recognised modules.
+In infinite mode the main metrics become `∞`; hover them to inspect their physical totals.
 
 - **Open Guide** returns to this page.
 - **Scan Multiblock Structure** reports and highlights missing blocks.

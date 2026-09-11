@@ -1,6 +1,7 @@
 package com.raishxn.ufo.item.custom.cell;
 
 import appeng.api.config.Actionable;
+import appeng.api.config.IncludeExclude;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
@@ -11,6 +12,10 @@ import appeng.api.storage.cells.CellState;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
+import appeng.api.upgrades.IUpgradeInventory;
+import appeng.core.definitions.AEItems;
+import appeng.util.ConfigInventory;
+import appeng.util.prioritylist.IPartitionList;
 import com.raishxn.ufo.UFOConfig;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.item.InfinityCell;
@@ -27,15 +32,31 @@ public class InfinityGenesisCellInventory implements StorageCell {
 
     private final ItemStack stack;
     private final @Nullable ISaveProvider saveProvider;
+    private final IPartitionList partitionList;
+    private final IncludeExclude partitionMode;
 
     public InfinityGenesisCellInventory(ItemStack stack, @Nullable ISaveProvider saveProvider) {
         this.stack = stack;
         this.saveProvider = saveProvider;
+        InfinityGenesisCell cell = (InfinityGenesisCell) stack.getItem();
+        IUpgradeInventory upgrades = cell.getUpgrades(stack);
+        this.partitionMode = upgrades.isInstalled(AEItems.INVERTER_CARD)
+                ? IncludeExclude.BLACKLIST
+                : IncludeExclude.WHITELIST;
+
+        ConfigInventory config = cell.getConfigInventory(stack);
+        IPartitionList.Builder partition = IPartitionList.builder();
+        if (upgrades.isInstalled(AEItems.FUZZY_CARD)) {
+            partition.fuzzyMode(cell.getFuzzyMode(stack));
+        }
+        partition.addAll(config.keySet());
+        this.partitionList = partition.build();
     }
 
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
-        if (amount <= 0 || what == null || isStorageCellKey(what)) {
+        if (amount <= 0 || what == null || isStorageCellKey(what)
+                || !matchesPartitionAndUpgrades(what)) {
             return 0;
         }
 
@@ -68,7 +89,7 @@ public class InfinityGenesisCellInventory implements StorageCell {
 
     @Override
     public boolean isPreferredStorageFor(AEKey what, IActionSource source) {
-        return what != null && contains(what);
+        return what != null && contains(what) && matchesPartitionAndUpgrades(what);
     }
 
     @Override
@@ -106,6 +127,11 @@ public class InfinityGenesisCellInventory implements StorageCell {
             }
         }
         return false;
+    }
+
+    /** Mirrors AE2's configurable-cell partition semantics used by the Cell Workbench. */
+    private boolean matchesPartitionAndUpgrades(AEKey what) {
+        return partitionList.matchesFilter(what, partitionMode);
     }
 
     private static boolean isStorageCellKey(AEKey what) {

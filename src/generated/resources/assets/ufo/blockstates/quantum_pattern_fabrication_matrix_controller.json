@@ -1,0 +1,96 @@
+{
+  "variants": {
+    "facing=down,formed=false,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller",
+      "x": 90
+    },
+    "facing=down,formed=false,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active",
+      "x": 90
+    },
+    "facing=down,formed=true,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller",
+      "x": 90
+    },
+    "facing=down,formed=true,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active",
+      "x": 90
+    },
+    "facing=east,formed=false,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller",
+      "y": 90
+    },
+    "facing=east,formed=false,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active",
+      "y": 90
+    },
+    "facing=east,formed=true,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller",
+      "y": 90
+    },
+    "facing=east,formed=true,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active",
+      "y": 90
+    },
+    "facing=north,formed=false,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller"
+    },
+    "facing=north,formed=false,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active"
+    },
+    "facing=north,formed=true,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller"
+    },
+    "facing=north,formed=true,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active"
+    },
+    "facing=south,formed=false,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller",
+      "y": 180
+    },
+    "facing=south,formed=false,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active",
+      "y": 180
+    },
+    "facing=south,formed=true,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller",
+      "y": 180
+    },
+    "facing=south,formed=true,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active",
+      "y": 180
+    },
+    "facing=up,formed=false,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller",
+      "x": -90
+    },
+    "facing=up,formed=false,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active",
+      "x": -90
+    },
+    "facing=up,formed=true,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller",
+      "x": -90
+    },
+    "facing=up,formed=true,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active",
+      "x": -90
+    },
+    "facing=west,formed=false,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller",
+      "y": 270
+    },
+    "facing=west,formed=false,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active",
+      "y": 270
+    },
+    "facing=west,formed=true,powered=false": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller",
+      "y": 270
+    },
+    "facing=west,formed=true,powered=true": {
+      "model": "ufo:block/quantum_pattern_fabrication_matrix_controller_active",
+      "y": 270
+    }
+  }
+}

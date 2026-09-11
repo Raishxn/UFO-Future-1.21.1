@@ -39,32 +39,46 @@ import org.jetbrains.annotations.Nullable;
 
 /** Shared-capacity Nexus pool: idle capacity is one CPU; every active job gets one temporary CPU. */
 public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
+    /**
+     * AE2 executes one Java call per dispatched pattern. UFO crafting units can advertise billions of lanes, but
+     * passing that raw number to AE2 would make a single server tick attempt billions of calls. Time-slice the
+     * physical execution while retaining the full lane count for capacity, selection and sharing.
+     */
+    private static final int MAX_PATTERN_DISPATCH_SLOTS = 2_048;
+
     private static final String TAG_CPUS = "cpus";
     private static final String TAG_ID = "id";
     private static final String TAG_RESERVED = "reserved";
     private static final String TAG_STATE = "state";
     private static final String TAG_TOTAL = "total";
     private static final String TAG_COPROCESSORS = "coprocessors";
+    private static final String TAG_INFINITE = "infinite";
 
     private final NexusVirtualCpuHost host;
     private final Map<UUID, Entry> active = new LinkedHashMap<>();
     private long totalStorage;
     private long remainingStorage;
     private int sharedCoProcessors;
+    private boolean infiniteMode;
     private boolean listChanged;
 
     public NexusSharedCraftingCpuPool(NexusVirtualCpuHost host) {
         this.host = host;
     }
 
-    public void reconfigure(long storage, int coProcessors) {
+    public void reconfigure(long storage, int coProcessors, boolean infinite) {
         storage = Math.max(0L, storage);
         coProcessors = Math.max(0, coProcessors);
-        if (!active.isEmpty()) return;
-        if (storage == totalStorage && coProcessors == sharedCoProcessors) return;
-        totalStorage = storage;
-        remainingStorage = storage;
-        sharedCoProcessors = coProcessors;
+        long advertisedStorage = infinite ? Long.MAX_VALUE : storage;
+        int advertisedCoProcessors = infinite ? Integer.MAX_VALUE - 1 : coProcessors;
+        if (advertisedStorage == totalStorage && advertisedCoProcessors == sharedCoProcessors
+                && infinite == infiniteMode) return;
+        totalStorage = advertisedStorage;
+        sharedCoProcessors = advertisedCoProcessors;
+        infiniteMode = infinite;
+        // Running jobs own their already-reserved bytes and remain valid. New capacity changes
+        // only the unreserved pool and the execution lanes assigned on the next tick.
+        recalculateRemaining();
         listChanged = true;
         host.ufo$markCpuDirty();
     }
@@ -79,8 +93,9 @@ public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
         if (!(craftingService instanceof CraftingService concrete)) return Long.MIN_VALUE;
         List<Entry> scheduled = new ArrayList<>(active.values());
         int count = scheduled.size();
-        int dispatchSlots = sharedCoProcessors >= Integer.MAX_VALUE - 1
+        int advertisedSlots = sharedCoProcessors >= Integer.MAX_VALUE - 1
                 ? Integer.MAX_VALUE : sharedCoProcessors + 1;
+        int dispatchSlots = Math.min(advertisedSlots, MAX_PATTERN_DISPATCH_SLOTS);
         int scheduledCount = Math.min(count, dispatchSlots);
         long latest = Long.MIN_VALUE;
         for (int index = 0; index < scheduledCount; index++) {
@@ -126,14 +141,14 @@ public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
                                             @Nullable ICraftingRequester requester) {
         if (!isActive()) return CraftingSubmitResult.CPU_OFFLINE;
         long reserved = Math.max(0L, plan.bytes());
-        if (reserved > remainingStorage) return CraftingSubmitResult.CPU_TOO_SMALL;
+        if (!infiniteMode && reserved > remainingStorage) return CraftingSubmitResult.CPU_TOO_SMALL;
 
         UUID id = UUID.randomUUID();
         CraftingCPUCluster cpu = new CraftingCPUCluster(BlockPos.ZERO, BlockPos.ZERO);
         ((NexusVirtualCraftingClusterBridge) (Object) cpu)
                 .ufo$configureVirtualCpu(host, reserved, sharedCoProcessors);
         active.put(id, new Entry(id, reserved, cpu));
-        remainingStorage -= reserved;
+        if (!infiniteMode) remainingStorage -= reserved;
         ICraftingSubmitResult result = cpu.submitJob(grid, plan, source, requester);
         if (!result.successful()) {
             active.remove(id);
@@ -189,6 +204,7 @@ public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
     public void writeToNBT(CompoundTag tag, HolderLookup.Provider registries) {
         tag.putLong(TAG_TOTAL, totalStorage);
         tag.putInt(TAG_COPROCESSORS, sharedCoProcessors);
+        tag.putBoolean(TAG_INFINITE, infiniteMode);
         ListTag list = new ListTag();
         for (Entry entry : active.values()) {
             CompoundTag state = new CompoundTag();
@@ -205,6 +221,7 @@ public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
     public void readFromNBT(CompoundTag tag, HolderLookup.Provider registries) {
         totalStorage = Math.max(0L, tag.getLong(TAG_TOTAL));
         sharedCoProcessors = Math.max(0, tag.getInt(TAG_COPROCESSORS));
+        infiniteMode = tag.getBoolean(TAG_INFINITE);
         active.clear();
         for (Tag raw : tag.getList(TAG_CPUS, Tag.TAG_COMPOUND)) {
             CompoundTag encoded = (CompoundTag) raw;
@@ -240,6 +257,10 @@ public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
     }
 
     private void recalculateRemaining() {
+        if (infiniteMode) {
+            remainingStorage = Long.MAX_VALUE;
+            return;
+        }
         long used = 0L;
         for (Entry entry : active.values()) {
             used = used >= Long.MAX_VALUE - entry.reserved() ? Long.MAX_VALUE : used + entry.reserved();

@@ -31,6 +31,10 @@ public record PacketAutoBuildMultiblock(BlockPos pos) implements CustomPacketPay
                 target = MachinePacketGuard.requireComputationNexus(
                         context, pos, MachinePacketGuard.Action.AUTO_BUILD);
             }
+            if (target == null) {
+                target = MachinePacketGuard.requirePatternMatrix(
+                        context, pos, MachinePacketGuard.Action.AUTO_BUILD);
+            }
             if (target != null) MultiblockAutoBuildService.start(player, target);
         });
     }

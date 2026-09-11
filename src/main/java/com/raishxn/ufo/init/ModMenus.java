@@ -44,6 +44,18 @@ public class ModMenus {
                             .withMenuTitle(com.raishxn.ufo.block.entity.QuantumComputationNexusControllerBE::getDisplayName)
                             .build(UfoMod.id("quantum_computation_nexus_menu")));
 
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumPatternFabricationMatrixMenu>> QUANTUM_PATTERN_FABRICATION_MATRIX_MENU =
+            MENUS.register("quantum_pattern_fabrication_matrix_menu",
+                    () -> MenuTypeBuilder
+                            .create(com.raishxn.ufo.screen.QuantumPatternFabricationMatrixMenu::new,
+                                    com.raishxn.ufo.block.entity.QuantumPatternFabricationMatrixControllerBE.class)
+                            .withMenuTitle(com.raishxn.ufo.block.entity.QuantumPatternFabricationMatrixControllerBE::getDisplayName)
+                            .build(UfoMod.id("quantum_pattern_fabrication_matrix_menu")));
+
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumPatternMatrixPatternMenu>> QUANTUM_PATTERN_MATRIX_PATTERN_MENU =
+            MENUS.register("quantum_pattern_matrix_pattern_menu",
+                    () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.QuantumPatternMatrixPatternMenu::clientCreate));
+
     public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumPatternHatchMenu>> QUANTUM_PATTERN_HATCH_MENU =
             MENUS.register("quantum_pattern_hatch_menu",
                     () -> MenuTypeBuilder

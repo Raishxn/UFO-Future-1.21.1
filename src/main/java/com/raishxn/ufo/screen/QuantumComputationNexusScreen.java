@@ -140,6 +140,9 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
         } else if (!menu.isCpuOnline()) {
             status = Component.translatable("gui.ufo.quantum_computation_nexus.no_storage");
             statusColor = 0xFFFFD166;
+        } else if (menu.isInfiniteMode()) {
+            status = Component.translatable("gui.ufo.quantum_computation_nexus.online_infinite");
+            statusColor = 0xFFFFD86B;
         } else {
             status = Component.translatable("gui.ufo.quantum_computation_nexus.online");
             statusColor = 0xFF5DFFA2;
@@ -151,11 +154,13 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
         graphics.drawString(font, nodes, imageWidth - 18 - font.width(nodes), 39, TEXT, false);
 
         graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.storage"), 18, 73, MUTED, false);
-        graphics.drawCenteredString(font, formatBinary(menu.getStorageBytes()), 65, 91, CYAN);
+        graphics.drawCenteredString(font, menu.isInfiniteMode() ? "∞" : formatBinary(menu.getStorageBytes()),
+                65, 91, CYAN);
         graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.bytes"), 18, 108, MUTED, false);
 
         graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.parallelism"), 139, 73, MUTED, false);
-        graphics.drawCenteredString(font, formatDecimal(menu.getParallelLanes()), 186, 91, PURPLE);
+        graphics.drawCenteredString(font, menu.isInfiniteMode() ? "∞" : formatDecimal(menu.getParallelLanes()),
+                186, 91, PURPLE);
         graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.lanes"), 139, 108, MUTED, false);
 
         graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.modules"), 18, 138, MUTED, false);
@@ -166,15 +171,21 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
 
     private void renderMetricTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (inside(mouseX, mouseY, leftPos + 10, topPos + 64, 111, 57)) {
-            graphics.renderTooltip(font,
-                    Component.literal(menu.getStorageBytes() + " ")
-                            .append(Component.translatable("gui.ufo.quantum_computation_nexus.bytes"))
-                            .withStyle(ChatFormatting.AQUA), mouseX, mouseY);
+            var tooltip = Component.literal(menu.getStorageBytes() + " ")
+                    .append(Component.translatable("gui.ufo.quantum_computation_nexus.bytes"));
+            if (menu.isInfiniteMode()) {
+                tooltip.append(" • ")
+                        .append(Component.translatable("gui.ufo.quantum_computation_nexus.infinite_active"));
+            }
+            graphics.renderTooltip(font, tooltip.withStyle(ChatFormatting.AQUA), mouseX, mouseY);
         } else if (inside(mouseX, mouseY, leftPos + 131, topPos + 64, 111, 57)) {
-            graphics.renderTooltip(font,
-                    Component.literal(menu.getParallelLanes() + " ")
-                            .append(Component.translatable("gui.ufo.quantum_computation_nexus.lanes"))
-                            .withStyle(ChatFormatting.LIGHT_PURPLE), mouseX, mouseY);
+            var tooltip = Component.literal(menu.getParallelLanes() + " ")
+                    .append(Component.translatable("gui.ufo.quantum_computation_nexus.lanes"));
+            if (menu.isInfiniteMode()) {
+                tooltip.append(" • ")
+                        .append(Component.translatable("gui.ufo.quantum_computation_nexus.infinite_active"));
+            }
+            graphics.renderTooltip(font, tooltip.withStyle(ChatFormatting.LIGHT_PURPLE), mouseX, mouseY);
         }
     }
 

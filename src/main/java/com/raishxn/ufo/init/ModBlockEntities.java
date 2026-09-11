@@ -169,6 +169,17 @@ public class ModBlockEntities {
                 return type;
             });
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternFabricationMatrixControllerBE>> QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER_BE =
+            BLOCK_ENTITIES.register("quantum_pattern_fabrication_matrix_controller", () -> {
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.QuantumPatternFabricationMatrixControllerBE(pos, state),
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get()
+                ).build(null);
+                AEBaseBlockEntity.registerBlockEntityItem(type,
+                        com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get().asItem());
+                return type;
+            });
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumGridLinkBE>> QUANTUM_GRID_LINK_BE =
             BLOCK_ENTITIES.register("quantum_grid_link", () -> {
                 var type = BlockEntityType.Builder.of(

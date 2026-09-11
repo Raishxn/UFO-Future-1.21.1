@@ -23,11 +23,15 @@ public class MixinCPUSelectionList {
     @Unique
     private static final DecimalFormat ufo$DF = new DecimalFormat("#.##");
     @Unique
-    private static final String[] ufo$UNITS = {"", "K", "M", "G", "T", "P", "E", "Y", "Z", "R", "Q"};
+    private static final String[] ufo$DECIMAL_UNITS = {"", "K", "M", "G", "T", "P", "E", "Y", "Z", "R", "Q"};
+    @Unique
+    private static final String[] ufo$BINARY_UNITS = {"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"};
     @Unique
     private static final long ufo$INFINITE_STORAGE_THRESHOLD = Long.MAX_VALUE - 16;
     @Unique
     private static final int ufo$INFINITE_THREADS_THRESHOLD = Integer.MAX_VALUE - 1;
+    @Unique
+    private static final int ufo$FINITE_THREADS_CAP = Integer.MAX_VALUE - 2;
 
     @ModifyArg(
             method = "drawBackgroundLayer",
@@ -73,6 +77,9 @@ public class MixinCPUSelectionList {
         if (value >= ufo$INFINITE_THREADS_THRESHOLD) {
             return Component.literal("\u221E").withStyle(Tooltips.NUMBER_TEXT);
         }
+        if (value == ufo$FINITE_THREADS_CAP) {
+            return Component.literal("≥" + ufo$formatDecimal(value)).withStyle(Tooltips.NUMBER_TEXT);
+        }
         return Component.literal(ufo$formatDecimal(value)).withStyle(Tooltips.NUMBER_TEXT);
     }
 
@@ -81,9 +88,9 @@ public class MixinCPUSelectionList {
         if (bytes >= ufo$INFINITE_STORAGE_THRESHOLD) {
             return "\u221E";
         }
-        if (bytes < 1024) return ufo$DF.format(bytes);
-        int unit = Math.min((int) (Math.log(bytes) / Math.log(1024)), ufo$UNITS.length - 1);
-        return ufo$DF.format(bytes / Math.pow(1024, unit)) + ufo$UNITS[unit];
+        if (bytes < 1024) return ufo$DF.format(bytes) + "B";
+        int unit = Math.min((int) (Math.log(bytes) / Math.log(1024)), ufo$BINARY_UNITS.length - 1);
+        return ufo$DF.format(bytes / Math.pow(1024, unit)) + ufo$BINARY_UNITS[unit];
     }
 
     @Redirect(
@@ -109,13 +116,16 @@ public class MixinCPUSelectionList {
         if (coProcessors >= ufo$INFINITE_THREADS_THRESHOLD) {
             return "\u221E";
         }
+        if (coProcessors == ufo$FINITE_THREADS_CAP) {
+            return "≥" + ufo$formatDecimal(coProcessors);
+        }
         return ufo$formatDecimal(coProcessors);
     }
 
     @Unique
     private static String ufo$formatDecimal(long amount) {
         if (amount < 1000) return ufo$DF.format(amount);
-        int unit = Math.min((int) (Math.log10(amount) / 3), ufo$UNITS.length - 1);
-        return ufo$DF.format(amount / Math.pow(1000, unit)) + ufo$UNITS[unit];
+        int unit = Math.min((int) (Math.log10(amount) / 3), ufo$DECIMAL_UNITS.length - 1);
+        return ufo$DF.format(amount / Math.pow(1000, unit)) + ufo$DECIMAL_UNITS[unit];
     }
 }
