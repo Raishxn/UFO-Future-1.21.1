@@ -68,14 +68,13 @@ public abstract class MixinAggregateCraftingCpuLogic {
                 ufo$aggregateOperations += result.consumedOperations();
                 return result.consumedOperations();
             }
-            // An aggregate provider owns at least one pending task but cannot accept it yet
-            // (for example, all 128 persistent routes are occupied). Do not fall through to
-            // AE2's copy-by-copy loop, which would undo the bounded-work guarantee.
-            if (result.sawAggregateProvider()) {
-                return 0;
-            }
         }
 
+        // Nothing aggregate-dispatched this tick: fall through to AE2's copy-by-copy
+        // loop. A busy aggregate provider rejects vanilla pushes without queueing
+        // (pushPattern -> pushAggregate returns the full leftover), and any normal
+        // provider for the same pattern keeps making progress instead of deadlocking
+        // behind a full aggregate route queue.
         return original.call(self, remainingOperations, craftingService, energyService, level);
     }
 }

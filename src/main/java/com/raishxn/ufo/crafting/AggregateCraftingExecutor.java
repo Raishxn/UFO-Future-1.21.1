@@ -41,7 +41,7 @@ public final class AggregateCraftingExecutor {
             ObjLongConsumer<Object> taskValueSetter,
             BiConsumer<Long, AEKeyType> addContainerMaximum,
             Runnable markDirty) {
-        if (operationBudget <= 0 || rawTasks.isEmpty()) return new Result(0, startOffset, false);
+        if (operationBudget <= 0 || rawTasks.isEmpty()) return new Result(0, startOffset);
 
         @SuppressWarnings("unchecked")
         Map<IPatternDetails, Object> tasks = (Map<IPatternDetails, Object>) rawTasks;
@@ -53,7 +53,6 @@ public final class AggregateCraftingExecutor {
         long deadline = System.nanoTime() + MAX_CALL_NANOS;
         int probes = 0;
         int consumedOperations = 0;
-        boolean sawAggregateProvider = false;
 
         while (iterator.hasNext() && probes < MAX_TASK_PROBES
                 && consumedOperations < operationBudget && System.nanoTime() < deadline) {
@@ -71,7 +70,6 @@ public final class AggregateCraftingExecutor {
             int providerPriority = Integer.MIN_VALUE;
             for (ICraftingProvider provider : craftingService.getProviders(details)) {
                 if (!(provider instanceof IAggregateCraftingProvider candidate)) continue;
-                sawAggregateProvider = true;
                 if (candidate.isBusy()) continue;
                 long capacity;
                 try {
@@ -164,7 +162,7 @@ public final class AggregateCraftingExecutor {
         }
 
         int nextOffset = tasks.isEmpty() ? 0 : Math.floorMod(offset + Math.max(1, probes), tasks.size());
-        return new Result(consumedOperations, nextOffset, sawAggregateProvider);
+        return new Result(consumedOperations, nextOffset);
     }
 
     private static Map<AEKey, Long> aggregateRequirements(KeyCounter[] oneCopyInputs) {
@@ -223,6 +221,6 @@ public final class AggregateCraftingExecutor {
         return left > Long.MAX_VALUE / right ? Long.MAX_VALUE : left * right;
     }
 
-    public record Result(int consumedOperations, int nextOffset, boolean sawAggregateProvider) {
+    public record Result(int consumedOperations, int nextOffset) {
     }
 }
