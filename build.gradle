@@ -46,6 +46,14 @@ repositories {
             includeGroup "dev.emi"
         }
     }
+    maven {
+        // Modrinth - Productive Bees dev runtime (optional bee integration).
+        name 'Modrinth'
+        url "https://api.modrinth.com/maven/"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 base {
@@ -166,6 +174,8 @@ dependencies {
     localRuntime "curse.maven:kubejs-238086:${kubejs_file_id}"
     localRuntime "curse.maven:rhino-416294:${rhino_file_id}"
     localRuntime "curse.maven:advancedae-1084104:${advancedae_file_id}"
+    // UFO bees datapack integration; also drives the QMF spawn egg recipes.
+    localRuntime "maven.modrinth:productivebees:1.21.1-13.13.0"
 
     // Pure unit tests for infrastructure that does not require a running game.
     testImplementation platform("org.junit:junit-bom:5.10.2")
