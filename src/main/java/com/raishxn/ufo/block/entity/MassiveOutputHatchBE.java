@@ -242,6 +242,20 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
             return buffered;
         }
 
+        // Preferred over AE cells: FE stored inside the ME network by Applied Flux,
+        // exchanged to AE at the standard rate. AE network power stays as the last resort.
+        if (net.neoforged.fml.ModList.get().isLoaded("appflux")) {
+            long feNeeded = (long) appeng.api.config.PowerUnit.AE.convertTo(appeng.api.config.PowerUnit.FE, remaining);
+            double fromFlux = com.raishxn.ufo.compat.appflux.AppliedFluxPlugin.extractNetworkFeAsAe(
+                    node.getGrid(), feNeeded, IActionSource.ofMachine(this), simulate);
+            if (fromFlux > 0.0D) {
+                buffered += (long) Math.min(remaining, fromFlux);
+                remaining = Math.max(0L, remaining - (long) Math.min(remaining, fromFlux));
+                if (!simulate && fromFlux > 0.0D) setChanged();
+            }
+        }
+        if (remaining <= 0L) return buffered;
+
         IEnergyService energy = node.getGrid().getEnergyService();
         double extracted = energy.extractAEPower(
                 remaining,

@@ -15,6 +15,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
+import appeng.api.config.PowerUnit;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.security.IActionSource;
@@ -106,6 +107,29 @@ public class AppliedFluxPlugin {
             storage.getInventory().insert(FluxKey.of(EnergyType.FE), extracted - inserted, Actionable.MODULATE, source);
         } catch (Throwable failure) {
             disableAfterFailure("rechargeEnergyStorage", failure);
+        }
+    }
+
+    /**
+     * Consumes FE stored inside the ME network by Applied Flux and converts it to AE at
+     * the standard FE-to-AE rate. This is a currency exchange, not generation, so the
+     * multiblock supply hatches can burn network FE before touching AE energy cells.
+     *
+     * @return the AE produced, or 0 when Applied Flux is absent or the extraction failed.
+     */
+    public static double extractNetworkFeAsAe(IGrid grid, long maxFe, IActionSource source, boolean simulate) {
+        if (maxFe <= 0L || unavailable()) {
+            return 0.0D;
+        }
+        try {
+            double aePerFe = PowerUnit.FE.convertTo(PowerUnit.AE, 1D);
+            long extracted = grid.getStorageService().getInventory().extract(
+                    FluxKey.of(EnergyType.FE), maxFe,
+                    simulate ? Actionable.SIMULATE : Actionable.MODULATE, source);
+            return extracted > 0L ? extracted * aePerFe : 0.0D;
+        } catch (Throwable failure) {
+            disableAfterFailure("extractNetworkFeAsAe", failure);
+            return 0.0D;
         }
     }
 }
