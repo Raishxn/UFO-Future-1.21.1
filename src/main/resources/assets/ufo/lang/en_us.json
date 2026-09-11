@@ -456,5 +456,8 @@
   "gui.ufo.infinity_fabrication_singularity.mode.speed": "Speed",
   "gui.ufo.infinity_fabrication_singularity.mode.speed.detail": "Up to 128 routes/tick at double AE cost",
   "gui.ufo.infinity_fabrication_singularity.mode.efficiency": "Efficiency",
-  "gui.ufo.infinity_fabrication_singularity.mode.efficiency.detail": "Up to 32 routes/tick at half AE cost"
+  "gui.ufo.infinity_fabrication_singularity.mode.efficiency.detail": "Up to 32 routes/tick at half AE cost",
+  "entity.productivebees.matter_ball_bee": "Matter Ball Bee",
+  "entity.productivebees.scrap_bee": "Scrap Bee",
+  "entity.productivebees.scrap_box_bee": "Scrap Box Bee"
 }

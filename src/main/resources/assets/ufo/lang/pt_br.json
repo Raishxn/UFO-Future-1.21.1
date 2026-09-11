@@ -456,5 +456,8 @@
   "gui.ufo.infinity_fabrication_singularity.mode.speed": "Velocidade",
   "gui.ufo.infinity_fabrication_singularity.mode.speed.detail": "Até 128 rotas/tick com o dobro do custo de AE",
   "gui.ufo.infinity_fabrication_singularity.mode.efficiency": "Eficiência",
-  "gui.ufo.infinity_fabrication_singularity.mode.efficiency.detail": "Até 32 rotas/tick com metade do custo de AE"
+  "gui.ufo.infinity_fabrication_singularity.mode.efficiency.detail": "Até 32 rotas/tick com metade do custo de AE",
+  "entity.productivebees.matter_ball_bee": "Abelha de Bola de Matéria",
+  "entity.productivebees.scrap_bee": "Abelha de Sucata",
+  "entity.productivebees.scrap_box_bee": "Abelha de Caixa de Sucata"
 }

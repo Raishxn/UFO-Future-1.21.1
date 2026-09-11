@@ -149,6 +149,24 @@ opt-in), Holo Cloak (invisibilidade para outros players), Apocalypse Beacon
 Pyro Barrier + DMA Thermal Shield), política de deprecação dos 4 IDs da Astral
 e se a bancada abre a trilha de telas do autor.
 
+### 3.8 Abelhas UFO (Productive Bees) **[concluído]**
+
+Rosto decidido em 2026-09-11: manter o trio Bola de Matéria / Sucata / Caixa de
+Sucata — eles cobrem exatamente os dois loops de volume do pack (matter balls
+para UU-matter/células infinity e a cadeia scrap → scrap box). Itens de
+progressão (processadores, matrices, catalysts) continuam exclusivos de
+máquina e não viram abelha.
+
+- **Buff**: genes de produtividade e tolerância a clima no máximo
+  (VERY_HIGH) e centrifugação em dobro (32–64 matter balls, 64–128 scrap,
+  4–8 scrap boxes por favo).
+- **Obtenção só no QMF** (MK2): receitas caras emitem o
+  `spawn_egg_configurable_bee` do Productive Bees com o componente
+  `entity_data` da abelha. Com `selfbreed: false`, cada abelha extra custa
+  outra rodada de QMF — abelha forte é investimento de multibloco.
+- Guarda `mod_loaded: productivebees` em tudo: sem o mod no pack, nada é
+  carregado.
+
 ---
 
 ## 4. Fundação — pré-requisitos que destravam o resto

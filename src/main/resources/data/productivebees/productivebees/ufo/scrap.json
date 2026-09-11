@@ -1,0 +1,14 @@
+{
+  "primaryColor": "#5f7c86",
+  "secondaryColor": "#1d2a30",
+  "tertiaryColor": "#2e3f45",
+  "particleColor": "#5e7d88",
+  "flowerItem": "ufo:scrap",
+  "size": 0.9,
+  "selfbreed": false,
+  "renderer": "default",
+  "attributes": {
+    "productivity": 3,
+    "weather_tolerance": 3
+  }
+}

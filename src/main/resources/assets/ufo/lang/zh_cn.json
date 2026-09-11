@@ -315,5 +315,8 @@
     "gui.ufo.infinity_fabrication_singularity.mode.speed": "速度",
     "gui.ufo.infinity_fabrication_singularity.mode.speed.detail": "每 tick 最多 128 条路由，双倍 AE 消耗",
     "gui.ufo.infinity_fabrication_singularity.mode.efficiency": "节能",
-    "gui.ufo.infinity_fabrication_singularity.mode.efficiency.detail": "每 tick 最多 32 条路由，半额 AE 消耗"
+    "gui.ufo.infinity_fabrication_singularity.mode.efficiency.detail": "每 tick 最多 32 条路由，半额 AE 消耗",
+    "entity.productivebees.matter_ball_bee": "物质球蜜蜂",
+    "entity.productivebees.scrap_bee": "废料蜜蜂",
+    "entity.productivebees.scrap_box_bee": "废料盒蜜蜂"
 }

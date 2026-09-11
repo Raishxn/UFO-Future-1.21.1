@@ -1,0 +1,20 @@
+{
+  "primaryColor": "#adb0c4",
+  "secondaryColor": "#4d4d67",
+  "tertiaryColor": "#dedfe3",
+  "particleColor": "#878fa5",
+  "flowerItem": "ae2:matter_ball",
+  "size": 0.8,
+  "selfbreed": false,
+  "renderer": "default_crystal",
+  "attributes": {
+    "productivity": 3,
+    "weather_tolerance": 3
+  },
+  "conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ufo"
+    }
+  ]
+}
