@@ -22,6 +22,10 @@ Some UFO Future textures are based on, adapted from, or inspired by work from th
 
 - AE2 Crystal Science: https://github.com/Frostbite-time/AE2-Crystal-Science
 - GT New Horizons Modpack: https://github.com/GTNewHorizons/GT-New-Horizons-Modpack
+- GTO Project: https://github.com/GregTech-Odyssey — reference for the compact
+  connected-texture casing sheets (`entropy_singularity_casing_ctm.png`,
+  `quantum_hyper_mechanical_casing_ctm.png`). The Stellar Nexus renderer is based
+  on GTO Core's `EyeOfHarmonyRenderer`, as credited in its source.
 - AE2 Lightning Tech: its interactive multiblock preview, auto-build architecture, and compact connected-texture geometry were ported and adapted for UFO Future under LGPL-3.0. The `quick_build.png` toolbar icon is redistributed under CC BY-NC-SA 3.0 with attribution to the AE2 Lightning Tech contributors: https://github.com/ae2lt/AE2-Lightning-Tech
 
 The Quantum Wireless two-state toolbar widget adapts AE2 Lightning Tech's TextureToggleButton. Eight associated mode/import/export/speed icons are redistributed unchanged under CC BY-NC-SA 3.0. See [the provenance inventory](docs/credits/ae2-lightning-wireless.md) and the bundled `assets/ufo/AE2LT-WIRELESS-NOTICE.md` for the source revision, file list and licenses. Quantum Interface functional parity is still in progress.
