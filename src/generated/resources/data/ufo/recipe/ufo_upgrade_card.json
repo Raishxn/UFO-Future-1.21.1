@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "item": "ufo:dimensional_processor"
+    },
+    "G": {
+      "item": "ae2:quartz_vibrant_glass"
+    },
+    "P": {
+      "item": "ae2:engineering_processor"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "GRG",
+    "PDP",
+    "GRG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:ufo_upgrade_card"
+  }
+}

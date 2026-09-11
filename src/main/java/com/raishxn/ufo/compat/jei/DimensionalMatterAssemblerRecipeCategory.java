@@ -13,6 +13,7 @@ import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -172,30 +173,30 @@ public class DimensionalMatterAssemblerRecipeCategory implements IRecipeCategory
     }
 
     @Override
-    public List<Component> getTooltipStrings(DimensionalMatterAssemblerRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+    public void getTooltip(ITooltipBuilder tooltip, DimensionalMatterAssemblerRecipe recipe,
+                           IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         // Tooltip on energy bar (9,81) -> (100,91)
         if (mouseX >= ENERGY_BAR_X && mouseX <= ENERGY_BAR_X + ENERGY_BAR_W
                 && mouseY >= ENERGY_BAR_Y && mouseY <= ENERGY_BAR_Y + ENERGY_BAR_H) {
             int baseTicks = recipe.getTime();
             double seconds = baseTicks / 20.0;
-            return List.of(
+            tooltip.addAll(List.of(
                     Component.literal("Energy: " + formatEnergy(recipe.getEnergy())),
                     Component.literal(String.format("Base Time: %.1fs (%d ticks)", seconds, baseTicks)),
                     Component.literal("§7Chrono Catalysts reduce processing time")
-            );
+            ));
+            return;
         }
 
         // Tooltip on progress bar area (105, 42) to (125, 53)
         if (mouseX >= 105 && mouseX <= 125 && mouseY >= 42 && mouseY <= 53) {
             int baseTicks = recipe.getTime();
             double seconds = baseTicks / 20.0;
-            return List.of(
+            tooltip.addAll(List.of(
                     Component.literal(String.format("Processing Time: %.1fs", seconds)),
                     Component.literal("§7(base, without Chrono Catalysts)")
-            );
+            ));
         }
-
-        return List.of();
     }
 
     /**

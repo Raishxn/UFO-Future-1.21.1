@@ -10,7 +10,6 @@ import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.radiation.IRadiationManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.nbt.CompoundTag;
@@ -93,7 +92,7 @@ public final class UfoMekanismKey extends AEKey {
 
     @Override
     public void addDrops(long amount, List<ItemStack> drops, Level level, BlockPos pos) {
-        IRadiationManager.INSTANCE.dumpRadiation(GlobalPos.of(level.dimension(), pos), withAmount(amount));
+        IRadiationManager.INSTANCE.dumpRadiation(level, pos, withAmount(amount));
     }
 
     @Override

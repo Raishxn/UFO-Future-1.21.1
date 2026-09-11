@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IJeiHelpers;
@@ -59,11 +60,6 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     @Override
     public IDrawable getIcon() {
         return this.icon;
-    }
-
-    @Override
-    public IDrawable getBackground() {
-        return this.background;
     }
 
     @Override
@@ -164,6 +160,7 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
     @Override
     public void draw(StellarSimulationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics gfx, double mouseX, double mouseY) {
+        this.background.draw(gfx);
         Font font = Minecraft.getInstance().font;
 
         String simulationName = recipe.getSimulationName();
@@ -237,7 +234,8 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     }
 
     @Override
-    public List<Component> getTooltipStrings(StellarSimulationRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+    public void getTooltip(ITooltipBuilder tooltip, StellarSimulationRecipe recipe,
+                           IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         List<Component> tips = new ArrayList<>();
 
         if (mouseY >= 74 && mouseY <= 84 && mouseX >= 10 && mouseX <= 49) {
@@ -248,7 +246,8 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
             } else {
                 tips.add(Component.literal("No fuel liquid required."));
             }
-            return tips;
+            tooltip.addAll(tips);
+            return;
         }
 
         if (mouseY >= 74 && mouseY <= 84 && mouseX >= 53 && mouseX <= 98) {
@@ -261,39 +260,43 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
                 tips.add(Component.literal("Cooling Level: " + recipe.getCoolingLevel() + "/3"));
                 tips.add(Component.literal("Generic coolant from ME network."));
             }
-            return tips;
+            tooltip.addAll(tips);
+            return;
         }
 
         if (mouseY >= 86 && mouseY <= 96 && mouseX >= 10 && mouseX <= 49) {
             tips.add(Component.literal("Duration: " + recipe.getFormattedTime() + " (" + recipe.getTime() + " ticks)"));
-            return tips;
+            tooltip.addAll(tips);
+            return;
         }
 
         if (mouseY >= 86 && mouseY <= 96 && mouseX >= 53 && mouseX <= 92) {
             tips.add(Component.literal("Required Stellar Field Generator: Mk." + toRoman(recipe.getFieldTier())));
-            return tips;
+            tooltip.addAll(tips);
+            return;
         }
 
         if (mouseY >= 98 && mouseY <= 108 && mouseX >= 32 && mouseX <= 71) {
             tips.add(Component.literal("Total AE Energy Required: " + String.format(Locale.ROOT, "%,d", recipe.getTotalEnergy()) + " AE"));
             tips.add(Component.literal("Charged passively from AE grid via Energy Hatch."));
-            return tips;
+            tooltip.addAll(tips);
+            return;
         }
 
         if (mouseX >= CONTROLLER_X && mouseX <= CONTROLLER_X + 16 && mouseY >= CONTROLLER_Y && mouseY <= CONTROLLER_Y + 16) {
             tips.add(Component.literal("Controller"));
             tips.add(Component.literal("Click the controller to open Multiblock Info"));
-            return tips;
+            tooltip.addAll(tips);
+            return;
         }
 
         if (mouseX >= 94 && mouseX <= 114 && mouseY >= 38 && mouseY <= 49) {
-            return List.of(
+            tooltip.addAll(List.of(
                     Component.literal(recipe.getFormattedTime()),
                     Component.literal("(" + recipe.getTime() + " ticks)"),
-                    Component.literal("Outputs directly into ME Network"));
+                    Component.literal("Outputs directly into ME Network")));
+            return;
         }
-
-        return List.of();
     }
 
     public static String formatAmount(long amount) {

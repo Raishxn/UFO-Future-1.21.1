@@ -1,8 +1,7 @@
 # 🗺️ UFO Future — Roadmap de Updates Futuras
 
-> Propostas de 2026-09-06, baseadas no estado `3.0.0-alpha.1` e no `CONTINUITY_LEDGER.md`.
-> Itens marcados **[pendente]** já constam no ledger (só foram organizados aqui);
-> **[novo]** são propostas desta rodada.
+> Escopo revisado em 2026-09-11 para conter somente direções confirmadas pelo
+> autor. Ideias exploratórias não aprovadas foram retiradas.
 >
 > **Referências de design** (o padrão de "agrega de verdade"):
 > [Neo ECO AE Extension](https://www.curseforge.com/minecraft/mc-mods/neo-eco-ae-extension)
@@ -14,60 +13,20 @@
 
 ## 1. Multiblocos — a linha que agrega
 
-### 1.1 Re-imaginação da família entrópica como trio NeoECO **[pendente — decisão do autor]**
+### 1.1 Trio endgame de autocrafting **[concluído]**
 
-O ledger já registra que `EntropicAssemblerMatrixBE` será excluída e a família
-entrópica inteira re-imaginada como multibloco. A proposta concreta é seguir o
-modelo NeoECO e dividir em **três estruturas independentes**, cada uma com a
-escada MK1/MK2/MK3 e field generators que o mod já tem:
+A re-imaginação foi concluída como três estruturas independentes, todas ligadas
+à mesma rede ME por Quantum Grid Link:
 
-| Estrutura | Papel | Base técnica que reaproveita |
-|-----------|-------|------------------------------|
-| **Multibloco de Computação** (novo Entropic Convergence Engine) | Crafting CPU físico: blocos de crafting-storage e co-processadores instalados na própria estrutura, fila de mais de 1 job por MK | Orçamento de execução por tick já mapeado no AE2 (`getCoProcessors() + 1`); matemática agregada segura (decisão arquitetural nº 6) |
-| **Multibloco de Crafting** (nova Entropic Assembler Matrix) | Aceita patterns AE2 direto na estrutura, throughput e paralelismo por MK | Quantum Pattern Hatch (72 patterns) e o contrato de autocrafting da L-0023 |
-| **Multibloco de Armazenamento — "Stellar Vault"** | MEStorage gigante: células BigInteger/Infinity instaladas como blocos físicos na estrutura, byte-pool agregado, particionável | `BigCellCapacityMath`, `BigIntegerLimits`, `IPartitionList` já corrigidos na L-0004 |
+| Estrutura | Papel implementado |
+|-----------|--------------------|
+| **Quantum Computation Nexus** | Pool compartilhado de crafting storages e co-processadores, com CPUs virtuais dinâmicas e modo infinito |
+| **Quantum Pattern Fabrication Matrix** | Biblioteca escalável de padrões e assembler virtual para crafting, ferraria e stonecutting |
+| **Infinity Fabrication Singularity** | Executor agregado de até 128 rotas persistentes; substitui o loop por cópia em pedidos de bilhões de itens |
 
-- A Vault é o único dos três que **não existe em nenhuma forma hoje** — é o
-  equivalente direto do multibloco de storage do NeoECO e fecha o trio.
-- O orçamento de execução por tick do multibloco de computação serve também
-  como solução estrutural do **P0 de autocraft massivo** (item 4.1).
-- Cada substituição precisa do marco próprio com política de IDs/saves, como o
-  ledger já exige.
-
-### 1.2 Ion Storm Collector — energia capturada de fenômenos **[novo]**
-
-Multibloco no espírito do AE2 Lightning Tech, com identidade UFO: um coletor
-que converte **fenômenos do mundo** em energia AE — raios de tempestade como
-fonte principal, com possibilidade de capturar explosões próximas e eventos
-dimensionais como fontes secundárias de eficiência diferente.
-
-- **Energia de pico, não constante**: tempestades geram bursts que carregam o
-  buffer AE do multibloco (complemento natural do Event Horizon Energy Cell,
-  que hoje só armazena).
-- **Safe por padrão**: nenhum grief sem opt-in do servidor — reusa o padrão de
-  design do `StellarExplosionPolicy` (L-0010), que já resolve exatamente esse
-  problema para o Stellar.
-- MK1/MK2/MK3 aumentam raio de captação, taxa de conversão e buffer; coolant
-  opcional no OC, como no resto da linha.
-
-### 1.3 Quantum Stock Vault — stocking multibloco **[novo]**
-
-Estrutura (ou part, se preferir começar pequena) que **mantém estoque-alvo** no
-ME network: "manter 256 de cada ingrediente de processor", puxando do storage e
-guardando num buffer ME-native interno.
-
-- Automatiza o abastecimento de autocrafting sem fileira de export buses.
-- MK tiers = número de alvos monitorados e taxa de reposição.
-- Encaixa no abastecimento explícito novo: o jogador define o alvo, a máquina
-  só repõe pelo hatch.
-
-### 1.4 Quantum Disassembler — reciclagem **[novo]**
-
-Máquina ou multibloco que decompõe equipamentos UFO (armadura, multi-tool,
-células antigas, catalysts obsoletos) de volta em componentes, com percentual
-de retorno e custo de energia/coolant. A "disassembly" já apareceu como recorte
-fora de escopo do rebalance de receitas — como feature própria ela fecha o loop
-de progressão e dá destino a sobras de upgrades.
+O problema prioritário era completar o pipeline `computação → padrões → execução`
+e eliminar o P0 de autocraft massivo sem duplicar a infraestrutura BigInteger já
+existente.
 
 ---
 
@@ -83,21 +42,8 @@ UX mais antiga do core.
 
 `MachinePacketGuard` já autentica menu/posição/distância, mas não existe
 política de gameplay de dono/equipe. É pré-requisito para habilitar com
-segurança o modo destrutivo opt-in em servidores ( Stellar explosivo, Ion
-Collector ) — reconhecido como limite consciente na L-0010.
-
-### 2.3 Stellar Level Emitter — threshold BigInteger **[novo]**
-
-Level emitter que lê **quantidades agregadas** das células BigInteger e dispara
-autocraft/redstone em thresholds de bilhões. Hoje não há trigger bom para
-"quando eu tiver menos de 5B de Pulsar Matter, crafta mais" — e esse fluxo é o
-coração do endgame do mod. Naturalmente emparelha com o Stellar Vault (1.1).
-
-### 2.4 FE Output Port **[novo]**
-
-Port que devolve o buffer AE como FE/RF para o mundo (Mekanism, Applied Flux,
-máquinas externas). O Event Horizon Cell já aceita FE de entrada; a saída fecha
-o ciclo de energia bidirecional que o mod promete no README.
+segurança o modo destrutivo opt-in em servidores (Stellar explosivo) —
+reconhecido como limite consciente na L-0010.
 
 ### Backlog rápido (ideias menores, sem prioridade definida)
 
@@ -130,10 +76,9 @@ conjunto de simulações; medição antes de rebalancear (L-0045).
 
 ### 3.5 Material Supermassive acima de Pulsar **[novo]**
 
-Linha de material gate (ex.: "Black Hole Matter") para os multiblocos novos do
-item 1 — o trio entrópico e o Ion Collector precisam de um degrau acima de
-Pulsar para não encostar no teto atual da progressão. Aproveita a cadeia de
-matéria existente (Neutronium → Proto → Dark Matter).
+Linha de material gate (ex.: "Black Hole Matter") para conteúdo futuro que
+precise de um degrau acima de Pulsar sem encostar no teto atual da progressão.
+Aproveita a cadeia de matéria existente (Neutronium → Proto → Dark Matter).
 
 ### 3.6 Tools/scanner **[pendente]** — melhorias do multi-tool e do scanner de
 estrutura citadas como fora de escopo do rebalance, pendentes de recorte.
@@ -175,7 +120,6 @@ Astral Nexus, cujos poderes viram módulos top-tier pagos.
 | Energia | Capacitor Core | todas | 1–3 | Buffer RF 10M/1B/100B; passivo |
 | Energia | AE Link | peitoral | 2–3 | Carrega wireless da rede AE2 (MK3 = range infinito); toggle |
 | Energia | Flux Intake | peitoral | 1–3 | Entrada FE externa + Applied Flux; taxa máx. configurável |
-| Energia | Storm Harvester | peitoral | 3 | Gera RF em tempestade/raios (gêmeo do Ion Collector); taxa |
 | Movimento | Graviton Flight | peitoral | 1–3 | MK1 glide, MK2 voo com cap de velocidade, MK3 voo criativo; velocidade configurável |
 | Movimento | Astral Wings | peitoral | 2–3 | Visual das asas (`AstralNexusWingsLayer` reaproveitado) + glide + airdash; força do dash |
 | Movimento | Kinetic Servos | calça | 1–3 | Speed I–III + jump boost; níveis configuráveis |
@@ -196,7 +140,6 @@ Astral Nexus, cujos poderes viram módulos top-tier pagos.
 | Utilidade | Void Swimmer | capacete | 1–2 | Water breathing + swim speed + visão subaquática; toggle |
 | Utilidade | Builder's Reach | calça | 2–3 | Alcance estendido com clamp server-side; valor |
 | AE2 | Wireless ME Access | peitoral | 2–3 | Terminal ME sem cabo (integra AE2WTLib se presente); MK3 sem range |
-| AE2 | Stock Sentinel | capacete | 2–3 | Monitora alvo de estoque na rede e notifica/autocrafta; lista de alvos (emparelha com o item 2.3) |
 
 **Backlog divertido (uma linha cada)**: Entropy Sink (converter lixo em RF,
 opt-in), Holo Cloak (invisibilidade para outros players), Apocalypse Beacon
@@ -229,10 +172,11 @@ qualquer multibloco novo deve nascer já dentro do runtime unificado.
 sobreposição de estruturas estão descobertos. Novos multiblocos devem entrar
 com GameTests desde o primeiro recorte.
 
-### 4.5 ME Addon Toolkit no RaishxCore **[pendente — direção confirmada]**
-Extrair a infraestrutura genérica (definição compilada, holograma, auto-build,
-widget de supply, ports) para o Core, com o modid já renomeado para
-`raishxcore`. Só depois de validar o widget de supply (4.2).
+### 4.5 Extração completa do ME Addon Toolkit para o RaishxCore **[próxima prioridade]**
+Concluir a extração da infraestrutura genérica: definição/matcher compilado e
+constraints, scanner, índice de membership e invalidação, holograma, auto-build,
+viewer, widgets/snapshots, ports e guards de packet. O Core mantém contratos
+neutros; topologias, receitas e balanceamento continuam no UFO Future.
 
 ### 4.6 Trilha de UI do autor **[pendente — pausada por decisão]**
 Telas próprias, UI-0002 e o mockup JEI (`/home/raishxn/MineProjects/printUI/
@@ -248,17 +192,14 @@ aditiva de uma linha.
 
 ## Ordem sugerida
 
-1. **4.1 → 4.2 → 4.4** — estabilizar (P0 + validação de supply + GameTests).
-2. **1.1 (trio entrópico)** — maior valor agregado; o multibloco de computação
-   resolve o P0 estruturalmente e a Vault fecha o modelo NeoECO.
-3. **2.3 + 1.2** — ecossistema de storage (Level Emitter BigInteger) e energia
-   capturada (Ion Collector), ambos alimentados pelo que já existe.
-4. **1.3 + 1.4 + 3.5** — Stock Vault, Disassembler e o material Supermassive
-   como novo degrau de progressão.
-5. **2.1 + 2.2 + 4.5 + 4.6** — UX e fundação em paralelo, conforme janela do
-   autor (side config → ownership → ME Addon Toolkit → telas próprias).
-6. **3.1–3.6** — conteúdo de progressão espaçado entre os itens acima.
-7. **3.7 (armadura modular)** — linha paralela de conteúdo: o sistema de
+1. **Validar o trio 1.1 no `runClient` e no save real**, incluindo migração,
+   repetição agregada e proibição absoluta de Fields mistos.
+2. **4.5 — extração completa para o RaishxCore**, mantendo testes de contrato e
+   validando o UFO a cada recorte migrado.
+3. **4.1 → 4.2 → 4.4** — fechar o P0, validação de supply e cobertura GameTest.
+4. **2.1 + 2.2 + 4.6** — side config, ownership e telas quando autorizadas.
+5. **3.1–3.6** — conteúdo de progressão espaçado entre os itens acima.
+6. **3.7 (armadura modular)** — linha paralela de conteúdo: o sistema de
    módulos pode começar após o passo 2, contanto que a fundação do passo 1
    esteja fechada; a remoção da Astral Nexus acompanha o primeiro release com
    módulos.

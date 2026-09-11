@@ -7,6 +7,7 @@ import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
 import appeng.items.AEBaseItem;
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.armor.UfoArmorModule;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.core.MegaCoProcessorTier;
@@ -58,6 +59,7 @@ public class ModRecipeProvider extends RecipeProvider {
         this.buildMaterialsAndFluidsDMA(c);
         this.buildCatalystsDMA(c);
         this.buildArmorsDMA(c);
+        this.buildArmorUpgradeRecipes(c);
         this.buildIngotGenerators(c);
         this.buildInfinityCellsDMA(c);
         this.buildHousingRecipes(c);
@@ -369,6 +371,70 @@ public class ModRecipeProvider extends RecipeProvider {
         this.createArmorDMA(c, ModArmor.THERMAL_RESISTOR_CHEST, Items.NETHERITE_CHESTPLATE, ModArmor.THERMAL_RESISTOR_PLATING, 8, 1500000);
         this.createArmorDMA(c, ModArmor.THERMAL_RESISTOR_PANTS, Items.NETHERITE_LEGGINGS, ModArmor.THERMAL_RESISTOR_PLATING, 7, 1200000);
         this.createArmorDMA(c, ModArmor.THERMAL_RESISTOR_BOOTS, Items.NETHERITE_BOOTS, ModArmor.THERMAL_RESISTOR_PLATING, 4, 800000);
+    }
+
+    /**
+     * The armor itself is a QMF investment, while modules are replaceable specialization cards.
+     * Keep their recipes endgame-aware without charging another complete armor piece per module.
+     */
+    private void buildArmorUpgradeRecipes(RecipeOutput c) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.UFO_UPGRADE_CARD.get())
+                .pattern("GRG")
+                .pattern("PDP")
+                .pattern("GRG")
+                .define('G', AEBlocks.QUARTZ_VIBRANT_GLASS)
+                .define('R', Items.REDSTONE)
+                .define('P', AEItems.ENGINEERING_PROCESSOR)
+                .define('D', ModItems.DIMENSIONAL_PROCESSOR.get())
+                .unlockedBy("has_dimensional_processor", has(ModItems.DIMENSIONAL_PROCESSOR.get()))
+                .save(c, UfoMod.id("ufo_upgrade_card"));
+
+        buildArmorModuleRecipe(c, UfoArmorModule.AEGIS_SINGULARITY,
+                Items.SHIELD, ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.REALITY_ANCHOR,
+                Items.LODESTONE, ModItems.DARK_MATTER.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.CHRONO_REGENERATOR,
+                Items.CLOCK, ModItems.CHRONO_CATALYST_T2.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.VOID_FLIGHT,
+                Items.ELYTRA, ModItems.TESSERACT_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.PHASE_STEP,
+                Items.ENDER_PEARL, ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.ENTROPY_MAGNET,
+                Items.COMPASS, ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.QUANTUM_RELAY,
+                Items.ENDER_EYE, ModItems.TESSERACT_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.MATTER_TRANSLOCATOR,
+                Items.CHORUS_FRUIT, ModItems.DARK_MATTER.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.ABYSSAL_SIGHT,
+                Items.ECHO_SHARD, ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.ADAPTIVE_BIOSPHERE,
+                Items.GOLDEN_APPLE, ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.KINETIC_OVERDRIVE,
+                Items.BREEZE_ROD, ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.SINGULARITY_STRIKE,
+                Items.MACE, ModItems.DARK_MATTER.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.REPRISAL_MATRIX,
+                Items.SHIELD, ModItems.TESSERACT_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.LOOT_SINGULARITY,
+                Items.RABBIT_FOOT, ModItems.TESSERACT_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.CLOAKING_FIELD,
+                Items.PHANTOM_MEMBRANE, ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
+        buildArmorModuleRecipe(c, UfoArmorModule.ASTRAL_WINGS,
+                Items.ELYTRA, ModItems.DARK_MATTER.get());
+    }
+
+    private void buildArmorModuleRecipe(RecipeOutput c, UfoArmorModule module,
+                                        ItemLike focus, ItemLike matrix) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.moduleCard(module).get())
+                .pattern(" F ")
+                .pattern("PCP")
+                .pattern(" M ")
+                .define('F', focus)
+                .define('P', ModItems.DIMENSIONAL_PROCESSOR.get())
+                .define('C', ModItems.UFO_UPGRADE_CARD.get())
+                .define('M', matrix)
+                .unlockedBy("has_blank_upgrade_card", has(ModItems.UFO_UPGRADE_CARD.get()))
+                .save(c, UfoMod.id(module.itemId()));
     }
 
     private void createArmorDMA(RecipeOutput c, Supplier<Item> output, Item baseArmor, Supplier<Item> material, int amount, int energy) {
@@ -702,6 +768,45 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_quantum_casing", has(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get()))
                 .save(c);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,
+                        MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get())
+                .pattern("HCH")
+                .pattern("DAD")
+                .pattern("HSH")
+                .define('H', ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
+                .define('C', ModBlocks.CO_PROCESSOR_BLOCKS.get(MegaCoProcessorTier.COPROCESSOR_300M).get())
+                .define('D', ModItems.DIMENSIONAL_PROCESSOR.get())
+                .define('A', AEBlocks.CONTROLLER)
+                .define('S', ModBlocks.CRAFTING_STORAGE_BLOCKS.get(MegaCraftingStorageTier.STORAGE_1T).get())
+                .unlockedBy("has_hyper_dense_component", has(ModItems.HYPER_DENSE_COMPONENT_MATRIX.get()))
+                .save(c);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,
+                        MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get())
+                .pattern("HSH")
+                .pattern("DAD")
+                .pattern("HPH")
+                .define('H', ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
+                .define('S', AEItems.SINGULARITY)
+                .define('D', ModItems.DIMENSIONAL_PROCESSOR.get())
+                .define('A', ModItems.QUANTUM_ANOMALY.get())
+                .define('P', AEBlocks.PATTERN_PROVIDER)
+                .unlockedBy("has_hyper_dense_component", has(ModItems.HYPER_DENSE_COMPONENT_MATRIX.get()))
+                .save(c);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,
+                        MultiblockBlocks.INFINITY_FABRICATION_SINGULARITY_CONTROLLER.get())
+                .pattern("TNT")
+                .pattern("DAD")
+                .pattern("TMT")
+                .define('T', ModItems.TESSERACT_COMPONENT_MATRIX.get())
+                .define('N', MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get())
+                .define('D', ModItems.DARK_MATTER.get())
+                .define('A', ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get())
+                .define('M', MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get())
+                .unlockedBy("has_tesseract_component", has(ModItems.TESSERACT_COMPONENT_MATRIX.get()))
+                .save(c);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.QUANTUM_PATTERN_PROXY.get(), 2)
                 .pattern(" F ").pattern("PCP").pattern(" F ")
                 .define('F', AEItems.FLUIX_CRYSTAL)
@@ -808,14 +913,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(c);
 
         UniversalMultiblockRecipeBuilder.create("universal/qmf/cosmic_string_component_matrix_batch", UniversalMultiblockMachineKind.QMF)
-                .inputItem(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get(), 8)
-                .inputItem(ModItems.DARK_MATTER.get(), 16)
-                .inputItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get(), 16)
-                .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 256)
-                .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 128000)
+                .inputItem(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get(), 1)
+                .inputItem(ModItems.DARK_MATTER.get(), 2)
+                .inputItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get(), 2)
+                .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 32)
+                .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 16000)
                 .outputItem(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get(), 1)
-                .energy(6400000000L)
-                .time(19200)
+                .energy(800000000)
+                .time(2400)
                 .requiredTier(2)
                 .save(c);
 
@@ -844,14 +949,14 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(c);
 
         UniversalMultiblockRecipeBuilder.create("universal/qmf/bulk/cosmic_string_component_matrix", UniversalMultiblockMachineKind.QMF)
-                .inputItem(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get(), 512)
-                .inputItem(ModItems.DARK_MATTER.get(), 1024)
-                .inputItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get(), 1024)
-                .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 16384)
-                .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 8192000)
+                .inputItem(ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get(), 64)
+                .inputItem(ModItems.DARK_MATTER.get(), 128)
+                .inputItem(ModItems.CHARGED_ENRICHED_NEUTRONIUM_SPHERE.get(), 128)
+                .inputItem(ModItems.DIMENSIONAL_PROCESSOR.get(), 2048)
+                .inputFluid(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), 1024000)
                 .outputItem(ModItems.COSMIC_STRING_COMPONENT_MATRIX.get(), 64)
-                .energy(409600000000L)
-                .time(19200)
+                .energy(51200000000L)
+                .time(2400)
                 .requiredTier(2)
                 .save(c);
 
@@ -1276,28 +1381,6 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('N', ModItems.NEUTRON_STAR_MATTER.get())
                 .define('Q', MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
                 .unlockedBy("has_condensation_matrix", has(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get()))
-                .save(c);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get())
-                .pattern("QCQ")
-                .pattern("HPH")
-                .pattern("QCQ")
-                .define('Q', ModItems.QUANTUM_ANOMALY.get())
-                .define('C', MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
-                .define('H', ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
-                .define('P', MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())
-                .unlockedBy("has_quantum_pattern_hatch", has(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()))
-                .save(c);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get(), 4)
-                .pattern("ACA")
-                .pattern("HPH")
-                .pattern("ACA")
-                .define('A', ModItems.QUANTUM_ANOMALY.get())
-                .define('C', MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
-                .define('H', ModItems.HYPER_DENSE_COMPONENT_MATRIX.get())
-                .define('P', MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())
-                .unlockedBy("has_quantum_pattern_hatch", has(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get()))
                 .save(c);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get())

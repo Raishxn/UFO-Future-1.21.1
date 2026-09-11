@@ -44,9 +44,9 @@ change costs while the machine workflow remains the same.
 6. Build the <ItemLink id="ufo:stellar_nexus_controller" /> for final-tier
    simulations and long-cycle production.
 
-> The Entropic Assembler Matrix is intentionally not documented as a production
-> machine in this edition because its implementation is scheduled for a complete
-> redesign.
+> The retired Entropic Assembler Matrix has been replaced by the Quantum
+> Computation Nexus, Quantum Pattern Fabrication Matrix and Infinity Fabrication
+> Singularity autocrafting pipeline.
 
 ## Navigation
 

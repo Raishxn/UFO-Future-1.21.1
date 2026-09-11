@@ -1,12 +1,5 @@
 package com.raishxn.ufo.fluid;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -14,8 +7,6 @@ import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-
-import java.util.function.Consumer;
 
 /**
  * Classe base utilitária para facilitar a criação de tipos de fluidos com texturas e cores personalizadas no NeoForge.
@@ -67,9 +58,8 @@ public class BaseFluidType extends FluidType {
         return fogColor;
     }
 
-    @Override
-    public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-        consumer.accept(new IClientFluidTypeExtensions() {
+    public IClientFluidTypeExtensions createClientExtensions() {
+        return new IClientFluidTypeExtensions() {
             @Override
             public @NotNull ResourceLocation getStillTexture() {
                 return stillTexture;
@@ -109,6 +99,6 @@ public class BaseFluidType extends FluidType {
             public int getTintColor(FluidStack stack) {
                 return tintColor;
             }
-        });
+        };
     }
 }

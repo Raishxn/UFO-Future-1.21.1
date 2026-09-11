@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.raishxn.ufo.UfoMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -41,7 +40,8 @@ public class StructureHighlightRenderer {
         poseStack.pushPose();
         poseStack.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
 
-        VertexConsumer vertexConsumer = mc.renderBuffers().bufferSource().getBuffer(RenderType.lines());
+        VertexConsumer vertexConsumer = mc.renderBuffers().bufferSource()
+                .getBuffer(StructureHighlightRenderType.XRAY_LINES);
 
         HIGHLIGHTS.entrySet().removeIf(entry -> entry.getValue() <= now);
 
@@ -59,5 +59,6 @@ public class StructureHighlightRenderer {
         }
 
         poseStack.popPose();
+        mc.renderBuffers().bufferSource().endBatch(StructureHighlightRenderType.XRAY_LINES);
     }
 }

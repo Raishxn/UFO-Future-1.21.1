@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "ufo:ufo_upgrade_card"
+    },
+    "F": {
+      "item": "minecraft:chorus_fruit"
+    },
+    "M": {
+      "item": "ufo:dark_matter"
+    },
+    "P": {
+      "item": "ufo:dimensional_processor"
+    }
+  },
+  "pattern": [
+    " F ",
+    "PCP",
+    " M "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:ufo_matter_translocator_card"
+  }
+}

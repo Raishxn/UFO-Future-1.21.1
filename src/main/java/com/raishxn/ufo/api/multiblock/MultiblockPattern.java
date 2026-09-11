@@ -58,6 +58,7 @@ public class MultiblockPattern {
     private final Map<Character, BlockPredicate> legend;
     private final Map<Character, Component> legendNames;
     private final Map<Character, List<BlockState>> displayCandidates;
+    private final Map<Character, Component> uniformSymbols;
     private final Character controllerChar;
     private final int controllerLayer;
     private final int controllerRow;
@@ -88,11 +89,13 @@ public class MultiblockPattern {
     }
 
     private MultiblockPattern(char[][][] pattern, Map<Character, BlockPredicate> legend, Map<Character, Component> legendNames,
-                              Map<Character, List<BlockState>> displayCandidates, char controllerChar) {
+                              Map<Character, List<BlockState>> displayCandidates,
+                              Map<Character, Component> uniformSymbols, char controllerChar) {
         this.pattern = pattern;
         this.legend = Map.copyOf(legend);
         this.legendNames = Map.copyOf(legendNames);
         this.displayCandidates = Map.copyOf(displayCandidates);
+        this.uniformSymbols = Map.copyOf(uniformSymbols);
         this.controllerChar = controllerChar;
 
         // Locate controller position in the pattern
@@ -126,7 +129,7 @@ public class MultiblockPattern {
                     BlockPredicate predicate = this.legend.get(symbol);
                     if (symbol != controllerChar && predicate != null && predicate != ANY) {
                         compiledCells.add(new PatternCell(
-                                offset, predicate,
+                                symbol, offset, predicate,
                                 this.legendNames.getOrDefault(symbol, Component.literal("Expected part"))));
                     }
                 }
@@ -162,6 +165,7 @@ public class MultiblockPattern {
         List<PatternError> allErrors = new ArrayList<>();
         boolean valid = true;
         boolean hasUnloadedPositions = false;
+        Map<Character, Block> uniformBlocks = new HashMap<>();
 
         for (PatternCell cell : this.testedCells) {
             LocalOffset offset = cell.offset();
@@ -189,7 +193,19 @@ public class MultiblockPattern {
                     return new MatchResult(false, List.of(), Optional.of(err), List.of(err), false);
                 }
             } else {
-                partPositions.add(worldPos);
+                Component uniformExpected = this.uniformSymbols.get(cell.symbol());
+                Block firstBlock = uniformBlocks.putIfAbsent(cell.symbol(), state.getBlock());
+                if (uniformExpected != null && firstBlock != null && firstBlock != state.getBlock()) {
+                    valid = false;
+                    PatternError err = new PatternError(worldPos, uniformExpected);
+                    allErrors.add(err);
+                    if (firstError == null) firstError = err;
+                    if (!diagnostic) {
+                        return new MatchResult(false, List.of(), Optional.of(err), List.of(err), false);
+                    }
+                } else {
+                    partPositions.add(worldPos);
+                }
             }
         }
 
@@ -268,7 +284,7 @@ public class MultiblockPattern {
     private record LocalOffset(int x, int y, int z) {
     }
 
-    private record PatternCell(LocalOffset offset, BlockPredicate predicate, Component expected) {
+    private record PatternCell(char symbol, LocalOffset offset, BlockPredicate predicate, Component expected) {
     }
 
     /** Positions whose changes can alter the match result, including required air cells. */
@@ -324,6 +340,7 @@ public class MultiblockPattern {
         private final Map<Character, BlockPredicate> legend = new HashMap<>();
         private final Map<Character, Component> legendNames = new HashMap<>();
         private final Map<Character, List<BlockState>> displayCandidates = new HashMap<>();
+        private final Map<Character, Component> uniformSymbols = new HashMap<>();
         private char controllerChar = 'C';
         private boolean strict;
 
@@ -370,6 +387,12 @@ public class MultiblockPattern {
             return this;
         }
 
+        /** Requires every tested slot using this symbol to contain the same block type. */
+        public Builder uniform(char c, Component mismatchName) {
+            this.uniformSymbols.put(c, Objects.requireNonNull(mismatchName));
+            return this;
+        }
+
         /**
          * Sets the character that represents the controller in the pattern.
          * Defaults to {@code 'C'}.
@@ -399,6 +422,11 @@ public class MultiblockPattern {
 
         public MultiblockPattern build() {
             validateShape();
+            for (char symbol : uniformSymbols.keySet()) {
+                if (!legend.containsKey(symbol)) {
+                    throw new IllegalArgumentException("Uniform symbol '" + symbol + "' has no legend predicate");
+                }
+            }
             // Convert List<String[]> → char[][][]
             char[][][] patternArray = new char[layers.size()][][];
             for (int y = 0; y < layers.size(); y++) {
@@ -408,7 +436,8 @@ public class MultiblockPattern {
                     patternArray[y][z] = rows[z].toCharArray();
                 }
             }
-            return new MultiblockPattern(patternArray, legend, legendNames, new HashMap<>(displayCandidates), controllerChar);
+            return new MultiblockPattern(patternArray, legend, legendNames, new HashMap<>(displayCandidates),
+                    new HashMap<>(uniformSymbols), controllerChar);
         }
 
         private void validateShape() {

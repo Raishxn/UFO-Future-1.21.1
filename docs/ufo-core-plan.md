@@ -103,7 +103,7 @@ saldo.
 
 - receitas, loot, balanceamento e IDs de conteúdo;
 - modelos/texturas específicos de um addon;
-- a topologia e o propósito da futura Entropic Assembler Matrix;
+- topologias, receitas e balanceamento específicos dos multiblocos do UFO;
 - políticas específicas de explosão, coolant ou catalyst do Stellar Nexus;
 - compatibilidade opcional que ainda não tenha consumidor real.
 
@@ -115,11 +115,13 @@ saldo.
    ports neutros, todos com testes de contrato.
 3. **Concluído:** packet guard/rate-limit e widgets universais extraídos; Stellar
    e as telas universais já consomem as implementações do Core.
-4. **Próximo:** extrair scanner, membership index e lifecycle de auto-build em
-   etapas pequenas, preservando NBT, packets e comportamento já aprovado.
-5. **Próximo:** criar snapshots universais, barras/medidores e preview no cliente.
-6. **Criar o primeiro addon novo:** definir uma máquina/progressão que
-   realmente use o Core e revele lacunas da API.
+4. **Próxima prioridade:** concluir a extração do toolkit inteiro: scanner,
+   matcher/constraints, membership index, lifecycle de auto-build, holograma,
+   snapshots, barras/medidores, widgets, ports e guards de packet.
+5. **Validar a extração no UFO:** preservar NBT, packets, formação e comportamento
+   já aprovado antes de remover as implementações duplicadas do mod.
+6. **Criar o primeiro addon novo:** definir uma máquina/progressão que realmente
+   use o Core e revele lacunas da API.
 7. **Congelar API v1:** após `ufo-future` e um segundo addon consumirem o Core sem
    forks, estabilizar `com.raishxn.ufocore.api` como API 1.0.
 
@@ -132,18 +134,9 @@ saldo.
   record/adapter próprio resolve o acoplamento.
 - Mudanças de API exigem versionamento, migration note e teste de compatibilidade.
 
-## Direção para a Entropic Assembler Matrix
+## Decisão sobre a Entropic Assembler Matrix
 
-Ela não deve virar apenas “mais uma CPU maior”. Antes de projetá-la, precisamos
-decidir a função que falta ao ecossistema:
-
-- **Lattice Computer:** throughput/memória/segurança de autocrafting em módulos;
-- **Matter Compression Matrix:** transformação de quantidades enormes com
-  `UfoAmount`, compressão e decomposição controladas;
-- **Stellar Foundry:** produção térmica modular, coils/campo/cooling loop e risco;
-- **Entropy chain:** conversão poderosa com resíduos, contenção e trade-offs.
-
-A recomendação inicial é a **Matter Compression Matrix**: ela prova a matemática
-de escala extrema do Core, não concorre diretamente com CPUs AE2 fortes e cria
-um papel claro para inputs/outputs muito grandes. A decisão final deve vir antes
-de criar bloco, recipe ou save para a Matrix.
+A Matrix foi aposentada e removida em 2026-09-11. O trio Quantum Computation
+Nexus, Quantum Pattern Fabrication Matrix e Infinity Fabrication Singularity
+assume o pipeline de autocrafting. O Core deve oferecer a infraestrutura comum
+desse pipeline sem incorporar topologia, receitas ou balanceamento do UFO.

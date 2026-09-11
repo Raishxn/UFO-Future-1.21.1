@@ -180,6 +180,17 @@ public class ModBlockEntities {
                 return type;
             });
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.InfinityFabricationSingularityControllerBE>> INFINITY_FABRICATION_SINGULARITY_CONTROLLER_BE =
+            BLOCK_ENTITIES.register("infinity_fabrication_singularity_controller", () -> {
+                var type = BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.InfinityFabricationSingularityControllerBE(pos, state),
+                        com.raishxn.ufo.block.MultiblockBlocks.INFINITY_FABRICATION_SINGULARITY_CONTROLLER.get()
+                ).build(null);
+                AEBaseBlockEntity.registerBlockEntityItem(type,
+                        com.raishxn.ufo.block.MultiblockBlocks.INFINITY_FABRICATION_SINGULARITY_CONTROLLER.get().asItem());
+                return type;
+            });
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumGridLinkBE>> QUANTUM_GRID_LINK_BE =
             BLOCK_ENTITIES.register("quantum_grid_link", () -> {
                 var type = BlockEntityType.Builder.of(
@@ -242,23 +253,6 @@ public class ModBlockEntities {
                 );
                 ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()).setBlockEntity(
                         (Class) com.raishxn.ufo.block.entity.EntropicMachinePartBE.class,
-                        (BlockEntityType) type,
-                        null,
-                        null
-                );
-                return type;
-            });
-
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicAssemblerMatrixBE>> ENTROPIC_ASSEMBLER_MATRIX_BE =
-            BLOCK_ENTITIES.register("entropic_assembler_matrix", () -> {
-                var type = BlockEntityType.Builder.of(
-                        (pos, state) -> new com.raishxn.ufo.block.entity.EntropicAssemblerMatrixBE(pos, state),
-                        com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get()
-                ).build(null);
-                AEBaseBlockEntity.registerBlockEntityItem(type,
-                        com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get().asItem());
-                ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get()).setBlockEntity(
-                        (Class) com.raishxn.ufo.block.entity.EntropicAssemblerMatrixBE.class,
                         (BlockEntityType) type,
                         null,
                         null

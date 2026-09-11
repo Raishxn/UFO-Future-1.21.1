@@ -19,11 +19,11 @@ import com.raishxn.ufo.screen.QuantumPatternHatchScreen;
 import com.raishxn.ufo.screen.QuantumCryoforgeControllerScreen;
 import com.raishxn.ufo.screen.QuantumComputationNexusScreen;
 import com.raishxn.ufo.screen.QuantumPatternFabricationMatrixScreen;
+import com.raishxn.ufo.screen.InfinityFabricationSingularityScreen;
 import com.raishxn.ufo.screen.QuantumPatternMatrixPatternScreen;
 import com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerScreen;
 import com.raishxn.ufo.screen.QuantumSlicerControllerScreen;
 import com.raishxn.ufo.screen.StellarNexusControllerScreen;
-import com.raishxn.ufo.screen.EntropicAssemblerMatrixScreen;
 import com.raishxn.ufo.screen.EntropicConvergenceEngineScreen;
 import com.raishxn.ufo.menu.UFOMenus;
 import com.raishxn.ufo.block.ModBlocks;
@@ -31,6 +31,7 @@ import com.raishxn.ufo.init.ModMenus;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import com.raishxn.ufo.client.renderer.DimensionalMatterAssemblerRenderer;
 import com.raishxn.ufo.client.renderer.StellarNexusRenderer;
 import com.raishxn.ufo.init.ModBlockEntities;
@@ -49,7 +50,16 @@ public class UfoModClient {
         eventBus.addListener(this::registerWirelessOverlay);
         eventBus.addListener(this::registerRenderers);
         eventBus.addListener(this::onAddLayers);
+        eventBus.addListener(this::registerClientExtensions);
         eventBus.addListener(com.raishxn.ufo.client.render.StellarModelRegistry::registerAdditional);
+    }
+
+    private void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        for (var holder : com.raishxn.ufo.fluid.ModFluidTypes.FLUID_TYPES.getEntries()) {
+            if (holder.get() instanceof com.raishxn.ufo.fluid.BaseFluidType fluidType) {
+                event.registerFluidType(fluidType.createClientExtensions(), fluidType);
+            }
+        }
     }
 
     private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
@@ -91,13 +101,14 @@ public class UfoModClient {
         event.register(ModMenus.QUANTUM_COMPUTATION_NEXUS_MENU.get(), QuantumComputationNexusScreen::new);
         event.register(ModMenus.QUANTUM_PATTERN_FABRICATION_MATRIX_MENU.get(),
                 QuantumPatternFabricationMatrixScreen::new);
+        InitScreens.register(event, ModMenus.INFINITY_FABRICATION_SINGULARITY_MENU.get(),
+                InfinityFabricationSingularityScreen::new, "/screens/infinity_fabrication_singularity.json");
         event.register(ModMenus.QUANTUM_PATTERN_MATRIX_PATTERN_MENU.get(),
                 QuantumPatternMatrixPatternScreen::new);
         InitScreens.register(event, ModMenus.QUANTUM_PATTERN_HATCH_MENU.get(), QuantumPatternHatchScreen::new, "/screens/quantum_pattern_hatch.json");
         InitScreens.register(event, ModMenus.QUANTUM_PATTERN_BUFFER_MENU.get(), QuantumPatternHatchScreen::new, "/screens/quantum_pattern_buffer.json");
         InitScreens.register(event, ModMenus.QUANTUM_INTERFACE_MENU.get(), com.raishxn.ufo.screen.QuantumInterfaceScreen::new, "/screens/ufo_quantum_interface.json");
         event.register(ModMenus.UFO_ARMOR_CONFIG_MENU.get(), com.raishxn.ufo.screen.UfoArmorConfigScreen::new);
-        InitScreens.register(event, ModMenus.ENTROPIC_ASSEMBLER_MATRIX_MENU.get(), EntropicAssemblerMatrixScreen::new, "/screens/universal_multiblock_controller.json");
         InitScreens.register(event, ModMenus.ENTROPIC_CONVERGENCE_ENGINE_MENU.get(), EntropicConvergenceEngineScreen::new, "/screens/universal_multiblock_controller.json");
     }
 

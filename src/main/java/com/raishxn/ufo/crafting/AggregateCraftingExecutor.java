@@ -68,6 +68,7 @@ public final class AggregateCraftingExecutor {
             IPatternDetails details = task.getKey();
             IAggregateCraftingProvider aggregateProvider = null;
             long providerCapacity = 0L;
+            int providerPriority = Integer.MIN_VALUE;
             for (ICraftingProvider provider : craftingService.getProviders(details)) {
                 if (!(provider instanceof IAggregateCraftingProvider candidate)) continue;
                 sawAggregateProvider = true;
@@ -78,12 +79,17 @@ public final class AggregateCraftingExecutor {
                 } catch (RuntimeException ignored) {
                     continue;
                 }
-                if (capacity > providerCapacity) {
+                int priority = candidate.getAggregatePriority();
+                if (priority > providerPriority || priority == providerPriority && capacity > providerCapacity) {
                     aggregateProvider = candidate;
                     providerCapacity = capacity;
+                    providerPriority = priority;
                 }
             }
             if (aggregateProvider == null || providerCapacity <= 1L || remainingTaskCopies <= 1L) continue;
+
+            int operationCost = Math.max(1, aggregateProvider.getAggregateOperationCost());
+            if (operationCost > operationBudget - consumedOperations) continue;
 
             KeyCounter expectedOutputs = new KeyCounter();
             KeyCounter expectedContainers = new KeyCounter();
@@ -101,7 +107,9 @@ public final class AggregateCraftingExecutor {
                 copies = Math.min(copies, saturatingAdd(1L, availableAfterFirst / perCopy));
             }
 
-            double powerPerCopy = CraftingCpuHelper.calculatePatternPower(oneCopyInputs);
+            double energyMultiplier = aggregateProvider.getAggregateEnergyMultiplier();
+            if (!(energyMultiplier > 0.0D) || !Double.isFinite(energyMultiplier)) energyMultiplier = 1.0D;
+            double powerPerCopy = CraftingCpuHelper.calculatePatternPower(oneCopyInputs) * energyMultiplier;
             if (powerPerCopy > 0.0D && copies > 0L) {
                 double requestedPower = powerPerCopy * copies;
                 double availablePower = energyService.extractAEPower(
@@ -152,7 +160,7 @@ public final class AggregateCraftingExecutor {
             taskValueSetter.accept(task.getValue(), newValue);
             if (newValue <= 0L) iterator.remove();
             markDirty.run();
-            consumedOperations++;
+            consumedOperations += operationCost;
         }
 
         int nextOffset = tasks.isEmpty() ? 0 : Math.floorMod(offset + Math.max(1, probes), tasks.size());

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "ufo:quantum_anomaly"
+    },
+    "D": {
+      "item": "ufo:dimensional_processor"
+    },
+    "H": {
+      "item": "ufo:hyper_dense_component_matrix"
+    },
+    "P": {
+      "item": "ae2:pattern_provider"
+    },
+    "S": {
+      "item": "ae2:singularity"
+    }
+  },
+  "pattern": [
+    "HSH",
+    "DAD",
+    "HPH"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:quantum_pattern_fabrication_matrix_controller"
+  }
+}

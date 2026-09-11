@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 /** Routes UFO aggregate providers around AE2's one-Java-call-per-copy execution loop. */
 @Mixin(value = CraftingCpuLogic.class, priority = 3000, remap = false)
 public abstract class MixinAggregateCraftingCpuLogic {
-    private static final int UFO_MAX_AGGREGATE_OPERATIONS_PER_TICK = 64;
+    private static final int UFO_MAX_AGGREGATE_OPERATIONS_PER_TICK = 128;
 
     @Shadow private ExecutingCraftingJob job;
     @Shadow @Final CraftingCPUCluster cluster;
@@ -67,6 +67,12 @@ public abstract class MixinAggregateCraftingCpuLogic {
             if (result.consumedOperations() > 0) {
                 ufo$aggregateOperations += result.consumedOperations();
                 return result.consumedOperations();
+            }
+            // An aggregate provider owns at least one pending task but cannot accept it yet
+            // (for example, all 128 persistent routes are occupied). Do not fall through to
+            // AE2's copy-by-copy loop, which would undo the bounded-work guarantee.
+            if (result.sawAggregateProvider()) {
+                return 0;
             }
         }
 

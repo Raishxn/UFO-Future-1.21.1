@@ -1,5 +1,6 @@
 package com.raishxn.ufo.block.entity;
 
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridMultiblock;
 import appeng.api.networking.IGridNode;
@@ -403,7 +404,10 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
             return;
         }
 
-        BlockState current = this.level.getBlockState(this.worldPosition);
+        if (LoadedBlockEntityLookup.get(this.level, this.worldPosition) != this) {
+            return;
+        }
+        BlockState current = this.getBlockState();
         if (current.getBlock() instanceof com.raishxn.ufo.block.AbstractEntropicMachineBlock<?> block) {
             BlockState updated = current
                     .setValue(com.raishxn.ufo.block.AbstractEntropicMachineBlock.FORMED, this.assembled)

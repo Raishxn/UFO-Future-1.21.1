@@ -1,5 +1,11 @@
 # PRD: Entropic Convergence Engine e Entropic Assembler Matrix
 
+> **Documento histórico/obsoleto (2026-09-11):** a Entropic Assembler Matrix foi
+> removida do produto. O pipeline atual de autocrafting é formado por Quantum
+> Computation Nexus, Quantum Pattern Fabrication Matrix e Infinity Fabrication
+> Singularity. As seções sobre a Matrix abaixo são mantidas apenas como registro
+> das decisões antigas.
+
 ## 1. Resumo
 
 Este PRD define dois novos multiblocos de capstone industrial para o `UFO Future`, ambos projetados para tornar obsoletos, dentro da progressao do mod, o `Quantum Computer` do `AdvancedAE` e o `Assembler Matrix` do `ExtendedAE`.

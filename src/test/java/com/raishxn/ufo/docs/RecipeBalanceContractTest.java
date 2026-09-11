@@ -84,7 +84,7 @@ class RecipeBalanceContractTest {
     }
 
     @Test
-    void componentMatrixProgressionKeepsTheApprovedEightfoldChain() throws IOException {
+    void componentMatrixProgressionKeepsTheApprovedCosts() throws IOException {
         assertProcess("dma/component/phase_shift.json", "ae2:cell_component_256k", 2,
                 2_000_000L, 400);
         assertProcess("dma/component/hyper_dense_component_matrix.json", "ufo:phase_shift_component_matrix", 8,
@@ -94,7 +94,7 @@ class RecipeBalanceContractTest {
         assertProcess("universal/qmf/event_horizon_component_matrix_batch.json",
                 "ufo:tesseract_component_matrix", 8, 1_600_000_000L, 4_800);
         assertProcess("universal/qmf/cosmic_string_component_matrix_batch.json",
-                "ufo:event_horizon_component_matrix", 8, 6_400_000_000L, 19_200);
+                "ufo:event_horizon_component_matrix", 1, 800_000_000L, 2_400);
     }
 
     @Test

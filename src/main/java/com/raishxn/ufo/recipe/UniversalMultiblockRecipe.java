@@ -5,8 +5,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.raishxn.ufo.api.multiblock.MultiblockMachineTier;
 import com.raishxn.ufo.init.ModRecipes;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -205,22 +207,30 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
         return copy;
     }
 
-    public record ItemOutputDefinition(Item item, long amount) {
+    public record ItemOutputDefinition(ItemStack stack, long amount) {
+        public ItemOutputDefinition {
+            stack = normalizeItemOutput(stack);
+        }
+
         public static final MapCodec<ItemOutputDefinition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                BuiltInRegistries.ITEM.byNameCodec().fieldOf("id").forGetter(ItemOutputDefinition::item),
+                BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("id")
+                        .forGetter(output -> output.stack.getItemHolder()),
+                DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY)
+                        .forGetter(output -> output.stack.getComponentsPatch()),
                 Codec.LONG.optionalFieldOf("count", 1L).forGetter(ItemOutputDefinition::amount)
-        ).apply(instance, ItemOutputDefinition::new));
+        ).apply(instance, (item, components, amount) ->
+                new ItemOutputDefinition(new ItemStack(item, 1, components), amount)));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, ItemOutputDefinition> STREAM_CODEC = StreamCodec.of(
                 (buf, output) -> {
-                    buf.writeResourceLocation(BuiltInRegistries.ITEM.getKey(output.item));
+                    ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, output.stack);
                     buf.writeLong(output.amount);
                 },
-                buf -> new ItemOutputDefinition(BuiltInRegistries.ITEM.get(buf.readResourceLocation()), buf.readLong())
+                buf -> new ItemOutputDefinition(ItemStack.OPTIONAL_STREAM_CODEC.decode(buf), buf.readLong())
         );
 
         public ItemStack toStack() {
-            return new ItemStack(this.item, 1);
+            return this.stack.copy();
         }
     }
 
@@ -233,7 +243,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                 ChemicalRequirement.CODEC.listOf().optionalFieldOf("chemical_inputs", List.of()).forGetter(UniversalMultiblockRecipe::getChemicalInputs),
                 ItemOutputDefinition.CODEC.codec().optionalFieldOf("item_output").forGetter((UniversalMultiblockRecipe recipe) -> recipe.itemOutput.isEmpty()
                         ? java.util.Optional.empty()
-                        : java.util.Optional.of(new ItemOutputDefinition(recipe.itemOutput.getItem(), recipe.itemOutputAmount))),
+                        : java.util.Optional.of(new ItemOutputDefinition(recipe.itemOutput, recipe.itemOutputAmount))),
                 FluidStack.CODEC.optionalFieldOf("fluid_output", FluidStack.EMPTY).forGetter((UniversalMultiblockRecipe recipe) -> recipe.fluidOutput),
                 Codec.LONG.optionalFieldOf("fluid_output_amount", 0L).forGetter(UniversalMultiblockRecipe::getFluidOutputAmount),
                 Codec.LONG.fieldOf("energy").forGetter(UniversalMultiblockRecipe::getEnergy),
@@ -265,7 +275,7 @@ public class UniversalMultiblockRecipe implements Recipe<RecipeInput> {
                     boolean hasItemOutput = !recipe.itemOutput.isEmpty();
                     buf.writeBoolean(hasItemOutput);
                     if (hasItemOutput) {
-                        ItemOutputDefinition.STREAM_CODEC.encode(buf, new ItemOutputDefinition(recipe.itemOutput.getItem(), recipe.itemOutputAmount));
+                        ItemOutputDefinition.STREAM_CODEC.encode(buf, new ItemOutputDefinition(recipe.itemOutput, recipe.itemOutputAmount));
                     }
                     boolean hasFluidOutput = !recipe.fluidOutput.isEmpty() && recipe.fluidOutputAmount > 0;
                     buf.writeBoolean(hasFluidOutput);

@@ -17,7 +17,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import appeng.blockentity.powersink.AEBasePoweredBlockEntity;
 
-@EventBusSubscriber(modid = UfoMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = UfoMod.MOD_ID)
 public class ModCapabilityEvents {
 
     @SubscribeEvent

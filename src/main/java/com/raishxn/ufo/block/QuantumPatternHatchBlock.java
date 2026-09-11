@@ -1,18 +1,21 @@
 package com.raishxn.ufo.block;
 
 import appeng.block.crafting.PatternProviderBlock;
+import appeng.block.crafting.PushDirection;
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
 import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
 import com.raishxn.ufo.block.entity.QuantumPatternHatchBE;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import org.jetbrains.annotations.Nullable;
 
 public class QuantumPatternHatchBlock extends PatternProviderBlock {
     public static final EnumProperty<MultiblockCasingStyle> CASING_STYLE =
@@ -21,6 +24,20 @@ public class QuantumPatternHatchBlock extends PatternProviderBlock {
     public QuantumPatternHatchBlock() {
         super();
         this.registerDefaultState(this.defaultBlockState().setValue(CASING_STYLE, MultiblockCasingStyle.DEFAULT));
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState state = super.getStateForPlacement(context);
+        if (state == null) {
+            return null;
+        }
+
+        // Pattern providers default to ALL, whose model has a fixed north-facing front.
+        // Give standalone hatches/buffers the expected player-facing orientation instead.
+        return state.setValue(PUSH_DIRECTION,
+                PushDirection.fromDirection(context.getHorizontalDirection().getOpposite()));
     }
 
     @Override

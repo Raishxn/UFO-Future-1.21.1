@@ -41,17 +41,8 @@ public class MultiblockBlocks {
     public static final DeferredBlock<EntropicConvergenceEngineBlock> ENTROPY_COMPUTER_CONDENSATION_MATRIX = BLOCKS.register("entropy_computer_condensation_matrix",
             EntropicConvergenceEngineBlock::new);
 
-    public static final DeferredBlock<EntropicAssemblerCasingBlock> ENTROPIC_ASSEMBLER_CASING = BLOCKS.register("entropic_assembler_casing",
-            EntropicAssemblerCasingBlock::new);
-
     public static final DeferredBlock<EntropicConvergenceCasingBlock> ENTROPIC_CONVERGENCE_CASING = BLOCKS.register("entropic_convergence_casing",
             EntropicConvergenceCasingBlock::new);
-
-    public static final DeferredBlock<EntropicAssemblerMatrixControllerBlock> ENTROPIC_ASSEMBLER_MATRIX = BLOCKS.register("entropic_assembler_matrix",
-            () -> new EntropicAssemblerMatrixControllerBlock(BlockBehaviour.Properties.of()
-                    .strength(30.0f, 1200.0f)
-                    .requiresCorrectToolForDrops()
-                    .lightLevel(state -> 12)));
 
     public static final DeferredBlock<EntropicConvergenceEngineBlock> ENTROPIC_CONVERGENCE_ENGINE = BLOCKS.register("entropic_convergence_engine",
             EntropicConvergenceEngineBlock::new);
@@ -106,6 +97,14 @@ public class MultiblockBlocks {
                             .requiresCorrectToolForDrops()
                             .lightLevel(state -> state.getValue(
                                     QuantumPatternFabricationMatrixControllerBlock.POWERED) ? 14 : 0)));
+
+    public static final DeferredBlock<InfinityFabricationSingularityControllerBlock> INFINITY_FABRICATION_SINGULARITY_CONTROLLER =
+            BLOCKS.register("infinity_fabrication_singularity_controller",
+                    () -> new InfinityFabricationSingularityControllerBlock(BlockBehaviour.Properties.of()
+                            .strength(50.0f, 1200.0f)
+                            .requiresCorrectToolForDrops()
+                            .lightLevel(state -> state.getValue(
+                                    InfinityFabricationSingularityControllerBlock.POWERED) ? 15 : 0)));
 
     public static final DeferredBlock<QuantumGridLinkBlock> QUANTUM_GRID_LINK = BLOCKS.register("quantum_grid_link",
             () -> new QuantumGridLinkBlock(BlockBehaviour.Properties.of()

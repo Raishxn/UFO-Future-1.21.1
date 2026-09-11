@@ -39,9 +39,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         multiblockCube(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING);
         connectedTextureCube(MultiblockBlocks.ENTROPY_SINGULARITY_CASING, "entropy_singularity_casing");
         craftingLikeCube(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX, "entropy_computer_condensation_matrix");
-        multiblockCubeWithTexture(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX, "entropy_assembler_core_casing");
         craftingLikeCube(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE, "entropy_computer_condensation_matrix");
-        entropicMachineCube(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING, "entropic_assembler_casing");
         entropicMachineCube(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING, "entropic_convergence_casing");
         multiblockCubeWithTexture(MultiblockBlocks.QUANTUM_ENTROPY_CASING, "quantum_hyper_mechanical_casing");
         connectedTextureCube(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING, "quantum_hyper_mechanical_casing");
@@ -55,6 +53,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         endgameControllerWithOverlay(MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER,
                 "quantum_pattern_fabrication_matrix",
                 com.raishxn.ufo.block.QuantumPatternFabricationMatrixControllerBlock.POWERED, false);
+        endgameControllerWithOverlay(MultiblockBlocks.INFINITY_FABRICATION_SINGULARITY_CONTROLLER,
+                "infinity_fabrication_singularity",
+                com.raishxn.ufo.block.InfinityFabricationSingularityControllerBlock.POWERED, true);
         quantumPortWithOverlay(MultiblockBlocks.QUANTUM_GRID_LINK, "quantum_grid_link_overlay");
 
         // ═══════════════════ STELLAR NEXUS ═══════════════════

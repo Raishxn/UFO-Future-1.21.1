@@ -1,9 +1,9 @@
 {
   "type": "ufo:universal_multiblock",
-  "energy": 6400000000,
+  "energy": 800000000,
   "fluid_inputs": [
     {
-      "amount": 128000,
+      "amount": 16000,
       "fluid": {
         "amount": 1,
         "id": "ufo:transcending_matter"
@@ -12,25 +12,25 @@
   ],
   "item_inputs": [
     {
-      "amount": 8,
+      "amount": 1,
       "ingredient": {
         "item": "ufo:event_horizon_component_matrix"
       }
     },
     {
-      "amount": 16,
+      "amount": 2,
       "ingredient": {
         "item": "ufo:dark_matter"
       }
     },
     {
-      "amount": 16,
+      "amount": 2,
       "ingredient": {
         "item": "ufo:charged_enriched_neutronium_sphere"
       }
     },
     {
-      "amount": 256,
+      "amount": 32,
       "ingredient": {
         "item": "ufo:dimensional_processor"
       }
@@ -42,5 +42,5 @@
   "machine": "qmf",
   "recipe_name": "universal/qmf/cosmic_string_component_matrix_batch",
   "required_tier": 2,
-  "time": 19200
+  "time": 2400
 }

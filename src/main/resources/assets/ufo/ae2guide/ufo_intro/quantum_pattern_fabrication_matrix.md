@@ -63,8 +63,8 @@ Every installed Field Generator contributes independently:
 | MK2 | 512 | 11,264 |
 | MK3 | 1,024 | 22,528 |
 
-Mixed tiers are supported. For example, ten MK1, ten MK2 and two MK3 Fields give
-`10 × 256 + 10 × 512 + 2 × 1024 = 9,728` pattern slots.
+Every Field position must use the same tier. Mixing MK1, MK2 and MK3 Fields
+invalidates the structure and the scanner highlights the first mismatched Field.
 
 Downgrading Fields never deletes patterns. Existing entries above the new capacity
 remain available for removal, while new insertions wait until enough capacity is

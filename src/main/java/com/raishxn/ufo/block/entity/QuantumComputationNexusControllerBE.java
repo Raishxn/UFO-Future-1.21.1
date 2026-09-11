@@ -31,6 +31,7 @@ import com.raishxn.ufo.core.MegaCraftingStorageTier;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.screen.QuantumComputationNexusMenu;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import com.raishxn.ufocore.api.crafting.CraftingComputeCapacity;
 import java.util.ArrayList;
 import java.util.List;
@@ -186,12 +187,10 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
         coProcessorModuleCount = coProcessors;
         infiniteMode = ultimateStorages >= INFINITE_MODE_MODULE_THRESHOLD
                 && ultimateCoProcessors >= INFINITE_MODE_MODULE_THRESHOLD;
-        formed = storages > 0;
-        if (!formed) {
-            // A valid shell without storage is still not an operational Nexus and must keep its internals visible.
-            deform();
-            return;
-        }
+        // Formation describes the shell. Compute readiness is a separate state derived from the
+        // installed storage capacity, allowing an empty Nexus to connect and report exactly what
+        // it is missing instead of contradicting the structure scanner.
+        formed = true;
         link.linkToController(worldPosition);
         link.synchronizeInternalNodes(List.of());
         configurePool();
@@ -237,7 +236,7 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
     private void clearAllModuleOwnership() {
         if (level == null) return;
         for (BlockPos pos : modulePositions) {
-            if (level.isLoaded(pos) && level.getBlockEntity(pos) instanceof CraftingBlockEntity module) {
+            if (LoadedBlockEntityLookup.get(level, pos) instanceof CraftingBlockEntity module) {
                 ((NexusCraftingUnitOwnership) module).ufo$setNexusController(null);
             }
         }
@@ -262,8 +261,8 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
     }
 
     @Nullable private QuantumGridLinkBE getGridLink() {
-        if (level == null || gridLinkPos == null || !level.hasChunkAt(gridLinkPos)) return null;
-        return level.getBlockEntity(gridLinkPos) instanceof QuantumGridLinkBE link ? link : null;
+        if (level == null || gridLinkPos == null) return null;
+        return LoadedBlockEntityLookup.get(level, gridLinkPos) instanceof QuantumGridLinkBE link ? link : null;
     }
     @Nullable private IGridNode getGridLinkNode() {
         QuantumGridLinkBE link = getGridLink();
@@ -304,7 +303,8 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
     }
     private void updateVisualState() {
         if (level == null || level.isClientSide() || isRemoved()) return;
-        BlockState current = level.getBlockState(worldPosition);
+        if (LoadedBlockEntityLookup.get(level, worldPosition) != this) return;
+        BlockState current = getBlockState();
         if (!(current.getBlock() instanceof QuantumComputationNexusControllerBlock)) return;
         boolean powered = formed && isGridLinkActive();
         BlockState updated = current.setValue(QuantumComputationNexusControllerBlock.FORMED, formed)

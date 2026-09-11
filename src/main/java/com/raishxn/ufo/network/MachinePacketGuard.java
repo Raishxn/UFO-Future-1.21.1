@@ -10,6 +10,8 @@ import com.raishxn.ufo.screen.QuantumComputationNexusMenu;
 import com.raishxn.ufo.block.entity.QuantumComputationNexusControllerBE;
 import com.raishxn.ufo.screen.QuantumPatternFabricationMatrixMenu;
 import com.raishxn.ufo.block.entity.QuantumPatternFabricationMatrixControllerBE;
+import com.raishxn.ufo.screen.InfinityFabricationSingularityMenu;
+import com.raishxn.ufo.block.entity.InfinityFabricationSingularityControllerBE;
 import com.raishxn.ufocore.api.network.MachineAction;
 import com.raishxn.ufocore.neoforge.network.UfoMachinePacketGuard;
 import java.util.Locale;
@@ -36,7 +38,8 @@ public final class MachinePacketGuard {
         CHANGE_SIDE_CONFIG(2L),
         SCAN_STRUCTURE(20L),
         AUTO_BUILD(20L),
-        OPEN_PATTERN_MANAGEMENT(2L);
+        OPEN_PATTERN_MANAGEMENT(2L),
+        SET_CRAFTING_MODE(2L);
 
         private final MachineAction coreAction;
 
@@ -77,6 +80,14 @@ public final class MachinePacketGuard {
             Action action) {
         return UfoMachinePacketGuard.require(context, pos, QuantumPatternFabricationMatrixMenu.class,
                 QuantumPatternFabricationMatrixMenu::getBlockEntity, action.coreAction);
+    }
+
+    public static @Nullable InfinityFabricationSingularityControllerBE requireFabricationSingularity(
+            IPayloadContext context,
+            BlockPos pos,
+            Action action) {
+        return UfoMachinePacketGuard.require(context, pos, InfinityFabricationSingularityMenu.class,
+                InfinityFabricationSingularityMenu::getBlockEntity, action.coreAction);
     }
 
     public static @Nullable DimensionalMatterAssemblerBlockEntity requireDma(

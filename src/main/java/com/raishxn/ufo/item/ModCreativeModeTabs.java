@@ -206,6 +206,7 @@ public class ModCreativeModeTabs {
                         output.accept(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get());
+                        output.accept(MultiblockBlocks.INFINITY_FABRICATION_SINGULARITY_CONTROLLER.get());
                         output.accept(MultiblockBlocks.QUANTUM_GRID_LINK.get());
                         output.accept(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
                         output.accept(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get());
@@ -223,7 +224,6 @@ public class ModCreativeModeTabs {
                         // --- ENTROPY MULTIBLOCK ---
                         output.accept(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get());
                         output.accept(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get());
-                        output.accept(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get());
                         output.accept(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get());
 
                     }).build());

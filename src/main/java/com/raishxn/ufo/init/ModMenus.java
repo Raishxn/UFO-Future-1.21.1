@@ -52,6 +52,14 @@ public class ModMenus {
                             .withMenuTitle(com.raishxn.ufo.block.entity.QuantumPatternFabricationMatrixControllerBE::getDisplayName)
                             .build(UfoMod.id("quantum_pattern_fabrication_matrix_menu")));
 
+    public static final Supplier<MenuType<com.raishxn.ufo.screen.InfinityFabricationSingularityMenu>> INFINITY_FABRICATION_SINGULARITY_MENU =
+            MENUS.register("infinity_fabrication_singularity_menu",
+                    () -> MenuTypeBuilder
+                            .create(com.raishxn.ufo.screen.InfinityFabricationSingularityMenu::new,
+                                    com.raishxn.ufo.block.entity.InfinityFabricationSingularityControllerBE.class)
+                            .withMenuTitle(com.raishxn.ufo.block.entity.InfinityFabricationSingularityControllerBE::getDisplayName)
+                            .build(UfoMod.id("infinity_fabrication_singularity_menu")));
+
     public static final Supplier<MenuType<com.raishxn.ufo.screen.QuantumPatternMatrixPatternMenu>> QUANTUM_PATTERN_MATRIX_PATTERN_MENU =
             MENUS.register("quantum_pattern_matrix_pattern_menu",
                     () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.QuantumPatternMatrixPatternMenu::clientCreate));
@@ -69,10 +77,6 @@ public class ModMenus {
                             .create((id, inv, host) -> new com.raishxn.ufo.screen.QuantumPatternHatchMenu(id, inv, host),
                                     appeng.helpers.patternprovider.PatternProviderLogicHost.class)
                             .build(ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "quantum_pattern_buffer_menu")));
-
-    public static final Supplier<MenuType<com.raishxn.ufo.screen.EntropicAssemblerMatrixMenu>> ENTROPIC_ASSEMBLER_MATRIX_MENU =
-            MENUS.register("entropic_assembler_matrix_menu",
-                    () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.EntropicAssemblerMatrixMenu::new));
 
     public static final Supplier<MenuType<com.raishxn.ufo.screen.EntropicConvergenceEngineMenu>> ENTROPIC_CONVERGENCE_ENGINE_MENU =
             MENUS.register("entropic_convergence_engine_menu",

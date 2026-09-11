@@ -43,6 +43,12 @@ public record PacketScanUniversalStructure(BlockPos pos) implements CustomPacket
                     context, pos, MachinePacketGuard.Action.SCAN_STRUCTURE);
             if (matrix != null && context.player() instanceof net.minecraft.server.level.ServerPlayer player) {
                 matrix.scanStructure(player.level());
+                return;
+            }
+            var singularity = MachinePacketGuard.requireFabricationSingularity(
+                    context, pos, MachinePacketGuard.Action.SCAN_STRUCTURE);
+            if (singularity != null && context.player() instanceof net.minecraft.server.level.ServerPlayer player) {
+                singularity.scanStructure(player.level());
             }
         });
     }

@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "ufo:block/multiblock/entropy_assembler_core_casing"
-  }
-}

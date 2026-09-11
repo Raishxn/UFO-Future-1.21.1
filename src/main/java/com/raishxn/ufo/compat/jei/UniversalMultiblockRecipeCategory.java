@@ -8,6 +8,7 @@ import com.raishxn.ufo.recipe.UniversalMultiblockRecipe;
 import mekanism.client.recipe_viewer.jei.ChemicalStackRenderer;
 import mekanism.client.recipe_viewer.jei.MekanismJEI;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -87,11 +88,6 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
     }
 
     @Override
-    public IDrawable getBackground() {
-        return this.background;
-    }
-
-    @Override
     public IDrawable getIcon() {
         return this.icon;
     }
@@ -99,6 +95,16 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
     @Override
     public ResourceLocation getRegistryName(UniversalMultiblockRecipe recipe) {
         return JeiRecipeIds.get(recipe);
+    }
+
+    @Override
+    public int getWidth() {
+        return this.background.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return this.background.getHeight();
     }
 
     @Override
@@ -185,33 +191,34 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
     }
 
     @Override
-    public List<Component> getTooltipStrings(UniversalMultiblockRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+    public void getTooltip(ITooltipBuilder tooltip, UniversalMultiblockRecipe recipe,
+                           IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         if (mouseX >= ENERGY_BAR_X && mouseX <= ENERGY_BAR_X + ENERGY_BAR_W
                 && mouseY >= ENERGY_BAR_Y && mouseY <= ENERGY_BAR_Y + ENERGY_BAR_H) {
-            return List.of(
+            tooltip.addAll(List.of(
                     Component.literal("Energy: " + formatEnergy(recipe.getEnergy())),
                     Component.literal(String.format("Base Time: %.1fs (%d ticks)", recipe.getTime() / 20.0, recipe.getTime())),
                     Component.literal("Required Tier: MK" + recipe.getRequiredTier())
-            );
+            ));
+            return;
         }
 
         if (mouseX >= 105 && mouseX <= 125 && mouseY >= 42 && mouseY <= 53) {
-            return List.of(
+            tooltip.addAll(List.of(
                     Component.literal(String.format("Processing Time: %.1fs (%d ticks)", recipe.getTime() / 20.0, recipe.getTime())),
                     Component.literal("Required Tier: MK" + recipe.getRequiredTier())
-            );
+            ));
+            return;
         }
 
         if (mouseX >= CONTROLLER_X && mouseX <= CONTROLLER_X + 16
                 && mouseY >= CONTROLLER_Y && mouseY <= CONTROLLER_Y + 28) {
-            return List.of(
+            tooltip.addAll(List.of(
                     Component.literal("Controller"),
                     Component.literal("Required Machine Tier: MK" + recipe.getRequiredTier()),
                     Component.literal("Click the controller to open Multiblock Info")
-            );
+            ));
         }
-
-        return List.of();
     }
 
     private static ItemStack controllerStackFor(UniversalMultiblockMachineKind machineKind) {

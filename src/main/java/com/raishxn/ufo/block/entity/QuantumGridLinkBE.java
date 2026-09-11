@@ -15,14 +15,20 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.implementations.blockentities.PatternContainerGroup;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.config.Actionable;
+import appeng.api.config.FuzzyMode;
+import appeng.api.config.PowerMultiplier;
 import appeng.api.crafting.IPatternDetails;
+import appeng.api.networking.energy.IEnergyService;
 import appeng.api.orientation.BlockOrientation;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
+import appeng.api.storage.MEStorage;
 import appeng.api.util.AECableType;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
+import appeng.crafting.execution.CraftingCpuHelper;
+import appeng.crafting.inv.ICraftingInventory;
 import appeng.me.helpers.MachineSource;
 import com.raishxn.ufo.api.ae.QuantumGridLinkHost;
 import com.raishxn.ufo.api.ae.QuantumPatternMatrixHost;
@@ -33,6 +39,8 @@ import com.raishxn.ufo.block.QuantumGridLinkBlock;
 import com.raishxn.ufocore.api.crafting.SharedCraftingCpuPool;
 import com.raishxn.ufocore.api.crafting.SharedCraftingCpuPoolProvider;
 import com.raishxn.ufo.api.crafting.IAggregateCraftingProvider;
+import com.raishxn.ufo.crafting.SingularityCraftingMode;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -64,12 +72,14 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         implements IMultiblockPart, SharedCraftingCpuPoolProvider,
         QuantumPatternMatrixHost, QuantumPatternMatrixContainerService, IAggregateCraftingProvider, IGridTickable {
     private static final String TAG_PENDING_CRAFTING_OUTPUTS = "pendingCraftingOutputs";
+    private static final String TAG_PENDING_CRAFTING_ROUTES = "pendingCraftingRoutes";
+    private static final String TAG_ROUTE_OUTPUTS = "outputs";
 
     @Nullable
     private BlockPos controllerPos;
     private final Set<IGridNode> internalNodes = Collections.newSetFromMap(new IdentityHashMap<>());
     private final Map<IGridNode, IGridConnection> ownedConnections = new IdentityHashMap<>();
-    private final Map<AEKey, Long> pendingCraftingOutputs = new LinkedHashMap<>();
+    private final List<Map<AEKey, Long>> pendingCraftingRoutes = new ArrayList<>();
     private final IActionSource actionSource = new MachineSource(this);
     private boolean deferRestoredCraftingOutputs;
 
@@ -147,8 +157,19 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     @Nullable
     private QuantumPatternFabricationMatrixControllerBE getPatternMatrixController() {
         if (!isOwnedByFormedController() || level == null || controllerPos == null) return null;
-        return level.getBlockEntity(controllerPos) instanceof QuantumPatternFabricationMatrixControllerBE matrix
+        return LoadedBlockEntityLookup.get(level, controllerPos) instanceof QuantumPatternFabricationMatrixControllerBE matrix
                 ? matrix : null;
+    }
+
+    @Nullable
+    private InfinityFabricationSingularityControllerBE getSingularityController() {
+        if (!isOwnedByFormedController() || level == null || controllerPos == null) return null;
+        return LoadedBlockEntityLookup.get(level, controllerPos) instanceof InfinityFabricationSingularityControllerBE singularity
+                ? singularity : null;
+    }
+
+    public boolean isSingularityProvider() {
+        return getSingularityController() != null;
     }
 
     @Override
@@ -205,29 +226,57 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     @Override
     public List<IPatternDetails> getAvailablePatterns() {
         QuantumPatternFabricationMatrixControllerBE matrix = getPatternMatrixController();
-        return matrix != null ? matrix.getAvailablePatterns() : List.of();
+        if (matrix != null) return matrix.getAvailablePatterns();
+        InfinityFabricationSingularityControllerBE singularity = getSingularityController();
+        return singularity != null ? singularity.getRoutedPatterns() : List.of();
     }
 
     @Override
     public int getPatternPriority() {
-        return patternMatrixPriority();
+        return getSingularityController() != null ? Integer.MAX_VALUE / 2 : patternMatrixPriority();
+    }
+
+    @Override
+    public int getAggregatePriority() {
+        return getSingularityController() != null ? 1_000 : 0;
+    }
+
+    @Override
+    public int getAggregateOperationCost() {
+        InfinityFabricationSingularityControllerBE singularity = getSingularityController();
+        return singularity != null ? singularity.getCraftingMode().operationCost() : 1;
+    }
+
+    @Override
+    public double getAggregateEnergyMultiplier() {
+        InfinityFabricationSingularityControllerBE singularity = getSingularityController();
+        return singularity != null ? singularity.getCraftingMode().energyMultiplier() : 1.0D;
     }
 
     @Override
     public long getAggregateCapacity(IPatternDetails details) {
         QuantumPatternFabricationMatrixControllerBE matrix = getPatternMatrixController();
-        return matrix != null && getGrid() != null && pendingCraftingOutputs.isEmpty()
-                && matrix.getAvailablePatterns().contains(details)
-                ? Long.MAX_VALUE
-                : 0L;
+        if (matrix != null) {
+            return getGrid() != null && pendingCraftingRoutes.isEmpty()
+                    && matrix.getAvailablePatterns().contains(details) ? Long.MAX_VALUE : 0L;
+        }
+        InfinityFabricationSingularityControllerBE singularity = getSingularityController();
+        return singularity != null && singularity.isOperational() && getGrid() != null
+                && pendingCraftingRoutes.size() < singularity.getRouteLimit()
+                && singularity.getRoutedPatterns().contains(details) ? Long.MAX_VALUE : 0L;
     }
 
     @Override
     public long pushAggregate(IPatternDetails details, KeyCounter[] inputHolder, long maxCraft) {
         QuantumPatternFabricationMatrixControllerBE matrix = getPatternMatrixController();
+        InfinityFabricationSingularityControllerBE singularity = getSingularityController();
         IGrid grid = getGrid();
-        if (maxCraft <= 0 || matrix == null || grid == null || !pendingCraftingOutputs.isEmpty()
-                || !matrix.getAvailablePatterns().contains(details)) {
+        boolean matrixReady = matrix != null && pendingCraftingRoutes.isEmpty()
+                && matrix.getAvailablePatterns().contains(details);
+        boolean singularityReady = singularity != null && singularity.isOperational()
+                && pendingCraftingRoutes.size() < singularity.getRouteLimit()
+                && singularity.getRoutedPatterns().contains(details);
+        if (maxCraft <= 0 || grid == null || !matrixReady && !singularityReady) {
             return maxCraft;
         }
 
@@ -259,9 +308,7 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         }
         if (products.isEmpty()) return maxCraft;
 
-        for (var product : products.entrySet()) {
-            pendingCraftingOutputs.merge(product.getKey(), product.getValue(), QuantumGridLinkBE::saturatingAdd);
-        }
+        pendingCraftingRoutes.add(products);
         setChanged();
         IGridNode node = getMainNode().getNode();
         if (node != null) {
@@ -272,18 +319,21 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
 
     @Override
     public boolean isBusy() {
-        return getPatternMatrixController() == null || getGrid() == null
-                || !pendingCraftingOutputs.isEmpty();
+        QuantumPatternFabricationMatrixControllerBE matrix = getPatternMatrixController();
+        if (matrix != null) return getGrid() == null || !pendingCraftingRoutes.isEmpty();
+        InfinityFabricationSingularityControllerBE singularity = getSingularityController();
+        return singularity == null || !singularity.isOperational() || getGrid() == null
+                || pendingCraftingRoutes.size() >= singularity.getRouteLimit();
     }
 
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(1, 20, pendingCraftingOutputs.isEmpty());
+        return new TickingRequest(1, 20, pendingCraftingRoutes.isEmpty());
     }
 
     @Override
     public TickRateModulation tickingRequest(IGridNode node, int ticksSinceLastCall) {
-        if (pendingCraftingOutputs.isEmpty()) {
+        if (pendingCraftingRoutes.isEmpty()) {
             return TickRateModulation.SLEEP;
         }
 
@@ -299,20 +349,28 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
 
         var storage = grid.getStorageService().getInventory();
         boolean movedAnything = false;
-        Iterator<Map.Entry<AEKey, Long>> iterator = pendingCraftingOutputs.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<AEKey, Long> output = iterator.next();
-            long inserted = storage.insert(output.getKey(), output.getValue(), Actionable.MODULATE, actionSource);
-            if (inserted <= 0) continue;
-            movedAnything = true;
-            if (inserted >= output.getValue()) {
-                iterator.remove();
-            } else {
-                output.setValue(output.getValue() - inserted);
+        InfinityFabricationSingularityControllerBE singularity = getSingularityController();
+        int routeBudget = Math.min(pendingCraftingRoutes.size(),
+                singularity == null ? 1 : singularity.getCraftingMode().routesPerTick());
+        Iterator<Map<AEKey, Long>> routes = pendingCraftingRoutes.iterator();
+        while (routes.hasNext() && routeBudget-- > 0) {
+            Map<AEKey, Long> route = routes.next();
+            Iterator<Map.Entry<AEKey, Long>> outputs = route.entrySet().iterator();
+            while (outputs.hasNext()) {
+                Map.Entry<AEKey, Long> output = outputs.next();
+                long inserted = storage.insert(output.getKey(), output.getValue(), Actionable.MODULATE, actionSource);
+                if (inserted <= 0) continue;
+                movedAnything = true;
+                if (inserted >= output.getValue()) {
+                    outputs.remove();
+                } else {
+                    output.setValue(output.getValue() - inserted);
+                }
             }
+            if (route.isEmpty()) routes.remove();
         }
         if (movedAnything) setChanged();
-        if (pendingCraftingOutputs.isEmpty()) {
+        if (pendingCraftingRoutes.isEmpty()) {
             return TickRateModulation.SLEEP;
         }
         return movedAnything ? TickRateModulation.URGENT : TickRateModulation.SLOWER;
@@ -321,6 +379,195 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     public void patternsChanged() {
         if (getMainNode().isReady() && getMainNode().getNode() != null) {
             ICraftingProvider.requestUpdate(getMainNode());
+        }
+    }
+
+    public int getPendingCraftingRouteCount() {
+        return pendingCraftingRoutes.size();
+    }
+
+    /**
+     * Repeats enabled Singularity patterns directly from ME storage. One accepted pattern route
+     * consumes every currently craftable copy in aggregate, independently of the copy count.
+     *
+     * @return the fair-scheduling offset for the next controller tick
+     */
+    public AutoCraftResult autoCraftPatterns(List<IPatternDetails> patterns, int startOffset, int routeBudget) {
+        InfinityFabricationSingularityControllerBE singularity = getSingularityController();
+        IGrid grid = getGrid();
+        if (singularity == null || grid == null || level == null || patterns.isEmpty() || routeBudget <= 0) {
+            return new AutoCraftResult(0, 0);
+        }
+
+        int patternCount = patterns.size();
+        int offset = Math.floorMod(startOffset, patternCount);
+        int probes = Math.min(patternCount, routeBudget);
+        int availableRoutes = Math.min(routeBudget,
+                Math.max(0, singularity.getRouteLimit() - pendingCraftingRoutes.size()));
+        if (availableRoutes <= 0) return new AutoCraftResult(offset, 0);
+
+        MEStorage storage = grid.getStorageService().getInventory();
+        IEnergyService energy = grid.getEnergyService();
+        // Building the network-wide fuzzy-key snapshot is the expensive part. Reuse one snapshot
+        // for the complete pass instead of rebuilding it once for every encoded pattern.
+        NetworkCraftingInventory networkInventory = new NetworkCraftingInventory(storage);
+        int acceptedRoutes = 0;
+        int probedPatterns = 0;
+        while (probedPatterns < probes && acceptedRoutes < availableRoutes) {
+            IPatternDetails details = patterns.get((offset + probedPatterns) % patternCount);
+            probedPatterns++;
+            if (tryAutoCraftRoute(details, storage, energy, networkInventory,
+                    singularity.getCraftingMode())) {
+                acceptedRoutes++;
+            }
+        }
+        if (acceptedRoutes > 0) {
+            setChanged();
+            IGridNode node = getMainNode().getNode();
+            if (node != null) grid.getTickManager().alertDevice(node);
+        }
+        return new AutoCraftResult((offset + probedPatterns) % patternCount, acceptedRoutes);
+    }
+
+    private boolean tryAutoCraftRoute(IPatternDetails details, MEStorage storage,
+                                      IEnergyService energy, NetworkCraftingInventory networkInventory,
+                                      SingularityCraftingMode mode) {
+        KeyCounter expectedOutputs = new KeyCounter();
+        KeyCounter expectedContainers = new KeyCounter();
+        KeyCounter[] oneCopyInputs;
+        try {
+            oneCopyInputs = CraftingCpuHelper.extractPatternInputs(
+                    details, networkInventory, level, expectedOutputs, expectedContainers);
+        } catch (RuntimeException ignored) {
+            return false;
+        }
+        if (oneCopyInputs == null) return false;
+
+        Map<AEKey, Long> requirements = aggregateRequirements(oneCopyInputs);
+        Map<AEKey, Long> perCopyProducts = new LinkedHashMap<>();
+        addProducts(perCopyProducts, expectedOutputs, 1L);
+        addProducts(perCopyProducts, expectedContainers, 1L);
+        if (requirements.isEmpty() || perCopyProducts.isEmpty()) {
+            CraftingCpuHelper.reinjectPatternInputs(networkInventory, oneCopyInputs);
+            return false;
+        }
+
+        long copies = Long.MAX_VALUE;
+        for (Map.Entry<AEKey, Long> requirement : requirements.entrySet()) {
+            long perCopy = requirement.getValue();
+            long availableAfterFirst = storage.extract(
+                    requirement.getKey(), Long.MAX_VALUE, Actionable.SIMULATE, actionSource);
+            copies = Math.min(copies, saturatingAdd(1L, availableAfterFirst / perCopy));
+        }
+        for (long outputPerCopy : perCopyProducts.values()) {
+            copies = Math.min(copies, Long.MAX_VALUE / outputPerCopy);
+        }
+
+        double powerPerCopy = CraftingCpuHelper.calculatePatternPower(oneCopyInputs)
+                * mode.energyMultiplier();
+        if (powerPerCopy > 0.0D && Double.isFinite(powerPerCopy)) {
+            double requestedPower = powerPerCopy * copies;
+            double availablePower = energy.extractAEPower(
+                    requestedPower, Actionable.SIMULATE, PowerMultiplier.CONFIG);
+            if (availablePower < requestedPower - 0.01D) {
+                copies = Math.min(copies, floorPositive(availablePower / powerPerCopy));
+            }
+        }
+        if (copies <= 0L) {
+            CraftingCpuHelper.reinjectPatternInputs(networkInventory, oneCopyInputs);
+            return false;
+        }
+
+        Map<AEKey, Long> additionallyExtracted = new LinkedHashMap<>();
+        if (!extractAdditionalCopies(storage, requirements, copies - 1L, additionallyExtracted)) {
+            reinject(storage, additionallyExtracted);
+            CraftingCpuHelper.reinjectPatternInputs(networkInventory, oneCopyInputs);
+            return false;
+        }
+
+        Map<AEKey, Long> products = new LinkedHashMap<>();
+        for (Map.Entry<AEKey, Long> product : perCopyProducts.entrySet()) {
+            products.put(product.getKey(), product.getValue() * copies);
+        }
+
+        if (powerPerCopy > 0.0D && Double.isFinite(powerPerCopy)) {
+            energy.extractAEPower(powerPerCopy * copies, Actionable.MODULATE, PowerMultiplier.CONFIG);
+        }
+        pendingCraftingRoutes.add(products);
+        return true;
+    }
+
+    private static Map<AEKey, Long> aggregateRequirements(KeyCounter[] oneCopyInputs) {
+        Map<AEKey, Long> requirements = new LinkedHashMap<>();
+        for (KeyCounter input : oneCopyInputs) {
+            if (input == null) continue;
+            for (var entry : input) {
+                if (entry.getKey() != null && entry.getLongValue() > 0L) {
+                    requirements.merge(entry.getKey(), entry.getLongValue(), QuantumGridLinkBE::saturatingAdd);
+                }
+            }
+        }
+        return requirements;
+    }
+
+    private boolean extractAdditionalCopies(MEStorage storage, Map<AEKey, Long> requirements,
+                                             long additionalCopies, Map<AEKey, Long> extracted) {
+        if (additionalCopies <= 0L) return true;
+        for (Map.Entry<AEKey, Long> requirement : requirements.entrySet()) {
+            long requested = saturatingMultiply(requirement.getValue(), additionalCopies);
+            long taken = storage.extract(requirement.getKey(), requested, Actionable.MODULATE, actionSource);
+            if (taken > 0L) extracted.put(requirement.getKey(), taken);
+            if (taken != requested) return false;
+        }
+        return true;
+    }
+
+    private void reinject(MEStorage storage, Map<AEKey, Long> stacks) {
+        for (Map.Entry<AEKey, Long> stack : stacks.entrySet()) {
+            storage.insert(stack.getKey(), stack.getValue(), Actionable.MODULATE, actionSource);
+        }
+    }
+
+    private static void addProducts(Map<AEKey, Long> products, KeyCounter source, long copies) {
+        for (var entry : source) {
+            if (entry.getKey() != null && entry.getLongValue() > 0L) {
+                products.merge(entry.getKey(), saturatingMultiply(entry.getLongValue(), copies),
+                        QuantumGridLinkBE::saturatingAdd);
+            }
+        }
+    }
+
+    private static long floorPositive(double value) {
+        if (!(value > 0.0D)) return 0L;
+        return value >= Long.MAX_VALUE ? Long.MAX_VALUE : (long) Math.floor(value);
+    }
+
+    private final class NetworkCraftingInventory implements ICraftingInventory {
+        private final MEStorage storage;
+        private final KeyCounter availableStacks;
+
+        private NetworkCraftingInventory(MEStorage storage) {
+            this.storage = storage;
+            this.availableStacks = storage.getAvailableStacks();
+        }
+
+        @Override
+        public void insert(AEKey what, long amount, Actionable mode) {
+            storage.insert(what, amount, mode, actionSource);
+        }
+
+        @Override
+        public long extract(AEKey what, long amount, Actionable mode) {
+            return storage.extract(what, amount, mode, actionSource);
+        }
+
+        @Override
+        public Iterable<AEKey> findFuzzyTemplates(AEKey what) {
+            List<AEKey> result = new ArrayList<>();
+            for (var entry : availableStacks.findFuzzy(what, FuzzyMode.IGNORE_ALL)) {
+                result.add(entry.getKey());
+            }
+            return result;
         }
     }
 
@@ -335,11 +582,14 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         return left > Long.MAX_VALUE / right ? Long.MAX_VALUE : left * right;
     }
 
+    public record AutoCraftResult(int nextOffset, int acceptedRoutes) {
+    }
+
     @Nullable
     @Override
     public SharedCraftingCpuPool getSharedCraftingCpuPool() {
         if (!isOwnedByFormedController() || level == null || controllerPos == null) return null;
-        return level.getBlockEntity(controllerPos) instanceof QuantumComputationNexusControllerBE controller
+        return LoadedBlockEntityLookup.get(level, controllerPos) instanceof QuantumComputationNexusControllerBE controller
                 ? controller.getCpuPool() : null;
     }
 
@@ -420,8 +670,8 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     }
 
     private boolean isOwnedByFormedController() {
-        if (level == null || controllerPos == null || !level.hasChunkAt(controllerPos)) return false;
-        BlockEntity entity = level.getBlockEntity(controllerPos);
+        if (level == null || controllerPos == null) return false;
+        BlockEntity entity = LoadedBlockEntityLookup.get(level, controllerPos);
         return entity instanceof QuantumGridLinkHost host
                 && host.isGridLinkFormed()
                 && host.ownsGridLink(worldPosition);
@@ -429,9 +679,8 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
 
     @Override
     public void onMainNodeStateChanged(IGridNodeListener.State reason) {
-        if (reason == IGridNodeListener.State.GRID_BOOT || level == null || controllerPos == null
-                || !level.hasChunkAt(controllerPos)) return;
-        if (level.getBlockEntity(controllerPos) instanceof QuantumGridLinkHost host) {
+        if (reason == IGridNodeListener.State.GRID_BOOT || level == null || controllerPos == null) return;
+        if (LoadedBlockEntityLookup.get(level, controllerPos) instanceof QuantumGridLinkHost host) {
             host.onGridLinkStateChanged();
         }
     }
@@ -443,7 +692,7 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     }
 
     private MultiblockCasingStyle casingStyleFor(BlockPos controllerPos) {
-        return level != null && level.getBlockEntity(controllerPos) instanceof StellarNexusControllerBE
+        return level != null && LoadedBlockEntityLookup.get(level, controllerPos) instanceof StellarNexusControllerBE
                 ? MultiblockCasingStyle.ENTROPY
                 : MultiblockCasingStyle.QUANTUM;
     }
@@ -478,12 +727,19 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     public void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(tag, registries);
         if (controllerPos != null) tag.put("controllerPos", NbtUtils.writeBlockPos(controllerPos));
-        if (!pendingCraftingOutputs.isEmpty()) {
-            ListTag outputs = new ListTag();
-            for (var output : pendingCraftingOutputs.entrySet()) {
-                outputs.add(GenericStack.writeTag(registries, new GenericStack(output.getKey(), output.getValue())));
+        if (!pendingCraftingRoutes.isEmpty()) {
+            ListTag routes = new ListTag();
+            for (Map<AEKey, Long> route : pendingCraftingRoutes) {
+                CompoundTag routeTag = new CompoundTag();
+                ListTag outputs = new ListTag();
+                for (var output : route.entrySet()) {
+                    outputs.add(GenericStack.writeTag(
+                            registries, new GenericStack(output.getKey(), output.getValue())));
+                }
+                routeTag.put(TAG_ROUTE_OUTPUTS, outputs);
+                routes.add(routeTag);
             }
-            tag.put(TAG_PENDING_CRAFTING_OUTPUTS, outputs);
+            tag.put(TAG_PENDING_CRAFTING_ROUTES, routes);
         }
     }
 
@@ -493,14 +749,28 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         controllerPos = tag.contains("controllerPos")
                 ? NbtUtils.readBlockPos(tag.getCompound("controllerPos"), "").orElse(null)
                 : null;
-        pendingCraftingOutputs.clear();
+        pendingCraftingRoutes.clear();
+        ListTag routes = tag.getList(TAG_PENDING_CRAFTING_ROUTES, Tag.TAG_COMPOUND);
+        for (int routeIndex = 0; routeIndex < routes.size(); routeIndex++) {
+            Map<AEKey, Long> route = readRoute(registries,
+                    routes.getCompound(routeIndex).getList(TAG_ROUTE_OUTPUTS, Tag.TAG_COMPOUND));
+            if (!route.isEmpty()) pendingCraftingRoutes.add(route);
+        }
+        // Save compatibility for Matrix output batches written before routes were introduced.
         ListTag outputs = tag.getList(TAG_PENDING_CRAFTING_OUTPUTS, Tag.TAG_COMPOUND);
+        Map<AEKey, Long> legacyRoute = readRoute(registries, outputs);
+        if (!legacyRoute.isEmpty()) pendingCraftingRoutes.add(legacyRoute);
+        deferRestoredCraftingOutputs = !pendingCraftingRoutes.isEmpty();
+    }
+
+    private static Map<AEKey, Long> readRoute(HolderLookup.Provider registries, ListTag outputs) {
+        Map<AEKey, Long> route = new LinkedHashMap<>();
         for (int index = 0; index < outputs.size(); index++) {
             GenericStack output = GenericStack.readTag(registries, outputs.getCompound(index));
             if (output != null && output.what() != null && output.amount() > 0) {
-                pendingCraftingOutputs.merge(output.what(), output.amount(), QuantumGridLinkBE::saturatingAdd);
+                route.merge(output.what(), output.amount(), QuantumGridLinkBE::saturatingAdd);
             }
         }
-        deferRestoredCraftingOutputs = !pendingCraftingOutputs.isEmpty();
+        return route;
     }
 }

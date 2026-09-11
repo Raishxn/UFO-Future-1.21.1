@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.model.geometry.*;
 import java.util.function.Function;
 
 /** Loads UFO crafting cubes without AE2's namespace-restricted built-in hook. */
-@EventBusSubscriber(modid = UfoMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = UfoMod.MOD_ID, value = Dist.CLIENT)
 public final class CraftingGeometryLoader implements IGeometryLoader<CraftingGeometryLoader.Geometry> {
     @SubscribeEvent
     public static void register(ModelEvent.RegisterGeometryLoaders event) {

@@ -240,17 +240,9 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(), new Item.Properties(),
                      ChatFormatting.RED, ChatFormatting.DARK_RED, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.LIGHT_PURPLE));
 
-     public static final DeferredItem<Item> ENTROPIC_ASSEMBLER_MATRIX = ITEMS.register("entropic_assembler_matrix",
-             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get(), new Item.Properties(),
-                     ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED, ChatFormatting.GOLD));
-
      public static final DeferredItem<Item> ENTROPIC_CONVERGENCE_ENGINE = ITEMS.register("entropic_convergence_engine",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get(), new Item.Properties(),
                      ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED));
-
-     public static final DeferredItem<Item> ENTROPIC_ASSEMBLER_CASING = ITEMS.register("entropic_assembler_casing",
-             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get(), new Item.Properties(),
-                     ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED, ChatFormatting.GOLD));
 
      public static final DeferredItem<Item> ENTROPIC_CONVERGENCE_CASING = ITEMS.register("entropic_convergence_casing",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get(), new Item.Properties(),
@@ -293,6 +285,10 @@ public class ModItems {
      public static final DeferredItem<Item> QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER = ITEMS.register("quantum_pattern_fabrication_matrix_controller",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get(), new Item.Properties(),
                      ChatFormatting.LIGHT_PURPLE, ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.BLUE));
+
+     public static final DeferredItem<Item> INFINITY_FABRICATION_SINGULARITY_CONTROLLER = ITEMS.register("infinity_fabrication_singularity_controller",
+             () -> new AnimatedNameBlockItem(MultiblockBlocks.INFINITY_FABRICATION_SINGULARITY_CONTROLLER.get(), new Item.Properties(),
+                     ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.AQUA, ChatFormatting.WHITE));
 
      public static final DeferredItem<Item> QUANTUM_GRID_LINK = ITEMS.register("quantum_grid_link",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_GRID_LINK.get(), new Item.Properties(),

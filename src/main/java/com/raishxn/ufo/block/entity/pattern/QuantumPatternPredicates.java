@@ -24,6 +24,7 @@ public final class QuantumPatternPredicates {
     public static Map<Character, BlockState> getDefaultCreativeStates() {
         Map<Character, BlockState> map = new HashMap<>();
         map.put('C', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get().defaultBlockState());
+        map.put('V', com.raishxn.ufo.block.ModBlocks.GRAVITON_PLATED_CASING.get().defaultBlockState());
         map.put('L', MultiblockBlocks.QUANTUM_GRID_LINK.get().defaultBlockState());
         map.put('F', MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().defaultBlockState());
 
@@ -41,6 +42,10 @@ public final class QuantumPatternPredicates {
 
     public static boolean isQuantumCasing(BlockState state) {
         return state.is(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get());
+    }
+
+    public static boolean isGravitonCasing(BlockState state) {
+        return state.is(com.raishxn.ufo.block.ModBlocks.GRAVITON_PLATED_CASING.get());
     }
 
     public static boolean isQuantumGridLink(BlockState state) {
@@ -106,6 +111,10 @@ public final class QuantumPatternPredicates {
         return Component.literal("Quantum Grid Link");
     }
 
+    public static Component gravitonCasingName() {
+        return Component.literal("Graviton-Plated Casing");
+    }
+
     public static Component casingOrHatchName() {
         return Component.literal("Quantum Hyper Mechanical Casing or Universal Hatch");
     }
@@ -120,6 +129,10 @@ public final class QuantumPatternPredicates {
 
     public static Component fieldName() {
         return Component.literal("Stellar Field Generator Mk.I or better");
+    }
+
+    public static Component uniformFieldName() {
+        return Component.literal("Same Stellar Field Generator tier as every other field position");
     }
 
     public static List<BlockState> fieldCandidates() {

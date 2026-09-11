@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "ufo:ufo_upgrade_card"
+    },
+    "F": {
+      "item": "minecraft:shield"
+    },
+    "M": {
+      "item": "ufo:event_horizon_component_matrix"
+    },
+    "P": {
+      "item": "ufo:dimensional_processor"
+    }
+  },
+  "pattern": [
+    " F ",
+    "PCP",
+    " M "
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:ufo_aegis_singularity_card"
+  }
+}

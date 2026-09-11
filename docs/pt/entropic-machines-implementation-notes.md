@@ -1,5 +1,9 @@
 # Entropic Machines: Notas de Implementacao
 
+> **Documento histórico/obsoleto (2026-09-11):** a Entropic Assembler Matrix
+> foi removida. As observações abaixo permanecem somente como registro técnico;
+> não representam o escopo atual do produto.
+
 ## Objetivo
 
 Registrar os principais riscos de performance e estabilidade para:

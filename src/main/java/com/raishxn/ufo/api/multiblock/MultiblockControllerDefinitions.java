@@ -6,6 +6,7 @@ import com.raishxn.ufo.block.entity.QuantumCryoforgeControllerBE;
 import com.raishxn.ufo.block.entity.QuantumSlicerControllerBE;
 import com.raishxn.ufo.block.entity.QuantumComputationNexusControllerBE;
 import com.raishxn.ufo.block.entity.QuantumPatternFabricationMatrixControllerBE;
+import com.raishxn.ufo.block.entity.InfinityFabricationSingularityControllerBE;
 import com.raishxn.ufo.block.entity.QmfControllerBE;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
 import com.raishxn.ufo.block.entity.pattern.QmfPatternFactory;
@@ -14,6 +15,7 @@ import com.raishxn.ufo.block.entity.pattern.QuantumCryoforgePatternFactory;
 import com.raishxn.ufo.block.entity.pattern.QuantumSlicerPatternFactory;
 import com.raishxn.ufo.block.entity.pattern.QuantumComputationNexusPatternFactory;
 import com.raishxn.ufo.block.entity.pattern.QuantumPatternFabricationMatrixPatternFactory;
+import com.raishxn.ufo.block.entity.pattern.InfinityFabricationSingularityPatternFactory;
 import com.raishxn.ufo.block.entity.pattern.StellarNexusPatternFactory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Direction;
@@ -64,7 +66,12 @@ public final class MultiblockControllerDefinitions {
                     ResourceLocation.fromNamespaceAndPath("ufo", "quantum_pattern_fabrication_matrix"),
                     MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get().asItem().getDefaultInstance(),
                     MultiblockControllerDefinition.fromCompiled(
-                            QuantumPatternFabricationMatrixPatternFactory.getDefinition()))
+                            QuantumPatternFabricationMatrixPatternFactory.getDefinition())),
+            new PreviewEntry(
+                    ResourceLocation.fromNamespaceAndPath("ufo", "infinity_fabrication_singularity"),
+                    MultiblockBlocks.INFINITY_FABRICATION_SINGULARITY_CONTROLLER.get().asItem().getDefaultInstance(),
+                    MultiblockControllerDefinition.fromCompiled(
+                            InfinityFabricationSingularityPatternFactory.getDefinition()))
     );
 
     private MultiblockControllerDefinitions() {
@@ -96,12 +103,18 @@ public final class MultiblockControllerDefinitions {
         if (be instanceof QuantumPatternFabricationMatrixControllerBE) {
             return Optional.of(getPreviewEntries().get(6).definition());
         }
+        if (be instanceof InfinityFabricationSingularityControllerBE) {
+            return Optional.of(getPreviewEntries().get(7).definition());
+        }
         return Optional.empty();
     }
 
     public static Direction getPatternFacing(BlockEntity be, BlockState state) {
         if (be instanceof QuantumPatternFabricationMatrixControllerBE matrix) {
             return matrix.getStructureFacing();
+        }
+        if (be instanceof InfinityFabricationSingularityControllerBE singularity) {
+            return singularity.getStructureFacing();
         }
         Direction facing;
         if (state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
@@ -121,6 +134,7 @@ public final class MultiblockControllerDefinitions {
                 || state.is(MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get())
                 || state.is(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get())
                 || state.is(MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get())
-                || state.is(MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get());
+                || state.is(MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get())
+                || state.is(MultiblockBlocks.INFINITY_FABRICATION_SINGULARITY_CONTROLLER.get());
     }
 }

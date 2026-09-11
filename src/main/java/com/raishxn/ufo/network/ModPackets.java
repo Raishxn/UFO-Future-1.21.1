@@ -106,6 +106,11 @@ public class ModPackets {
                 PacketOpenPatternMatrixPatterns.STREAM_CODEC,
                 PacketOpenPatternMatrixPatterns::handle
         );
+        registrar.playToServer(
+                PacketSetSingularityMode.TYPE,
+                PacketSetSingularityMode.STREAM_CODEC,
+                PacketSetSingularityMode::handle
+        );
     }
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {

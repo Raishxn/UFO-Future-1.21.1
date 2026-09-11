@@ -29,6 +29,7 @@ import com.raishxn.ufo.block.entity.pattern.QuantumPatternFabricationMatrixPatte
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.screen.QuantumPatternFabricationMatrixMenu;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import com.raishxn.ufo.screen.QuantumPatternMatrixPatternMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -235,8 +236,8 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
 
     @Nullable
     private QuantumGridLinkBE getGridLink() {
-        if (level == null || gridLinkPos == null || !level.hasChunkAt(gridLinkPos)) return null;
-        return level.getBlockEntity(gridLinkPos) instanceof QuantumGridLinkBE link ? link : null;
+        if (level == null || gridLinkPos == null) return null;
+        return LoadedBlockEntityLookup.get(level, gridLinkPos) instanceof QuantumGridLinkBE link ? link : null;
     }
 
     private void detachGridLink() {
@@ -272,7 +273,8 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
 
     private void updateVisualState() {
         if (level == null || level.isClientSide() || isRemoved()) return;
-        BlockState current = level.getBlockState(worldPosition);
+        if (LoadedBlockEntityLookup.get(level, worldPosition) != this) return;
+        BlockState current = getBlockState();
         if (!(current.getBlock() instanceof QuantumPatternFabricationMatrixControllerBlock)) return;
         boolean powered = formed && isGridLinkActive();
         BlockState updated = current

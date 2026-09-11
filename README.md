@@ -10,7 +10,7 @@
 
 <p align="center">
   <strong>An endgame Applied Energistics 2 addon for Minecraft 1.21.1 (NeoForge)</strong><br/>
-  Seven multiblocks · ME-native hatches · Stellar materials · Transformable energy tools · Tiered armor · BigInteger storage
+  Eight multiblocks · ME-native hatches · Aggregate billion-scale crafting · Stellar materials · Transformable energy tools · BigInteger storage
 </p>
 
 <p align="center">
@@ -27,7 +27,7 @@
 
 ### 🏗️ The Multiblock Line
 
-UFO Future 3.0 is built around seven multiblock machines that share one recipe
+UFO Future 3.0 is built around eight multiblock machines that share one recipe
 system, one **MK1 / MK2 / MK3** tier ladder and one set of ME-native ports.
 
 | Machine | Role | Scale |
@@ -37,8 +37,9 @@ system, one **MK1 / MK2 / MK3** tier ladder and one set of ME-native ports.
 | **Quantum Processor Assembler** | Finishing stage that turns printed parts into processors | 27 / 9 threads |
 | **Quantum Cryoforge** | Cryogenic processing stage of the universal recipe line | 27 / 9 threads |
 | **Stellar Nexus** | Endgame simulation multiblock: 200B AE buffer, fuel on start, coolant while running, heat as a real constraint | 1 job, 5 with Overclock |
-| **Entropic Convergence Engine** | Capstone AE2 crafting CPU — tiered crafting storage plus co-processors | MK1: 4.6 EB + 250M co-processors → MK3: effectively unlimited |
-| **Entropic Assembler Matrix** | Capstone crafting machine that accepts AE2 patterns directly | tiered by structure fill and field tier |
+| **Quantum Computation Nexus** | Combines installed UFO crafting-storage and co-processor blocks into one shared AE2 CPU pool | Dynamic virtual CPUs; 25 top-tier modules of each kind unlock infinite compute |
+| **Quantum Pattern Fabrication Matrix** | Searchable, field-scaled library and virtual assembler for crafting, smithing and stonecutting patterns | 5,632–22,528 slots with 22 equal-tier fields |
+| **Infinity Fabrication Singularity** | Capstone Quantum Crafter replacement: enabled patterns repeat automatically and massive requests run through the same aggregate executor | Up to 128 persistent routes; all available copies execute without per-item loops |
 
 ### 🔌 Shared Multiblock Infrastructure
 
@@ -50,8 +51,9 @@ system, one **MK1 / MK2 / MK3** tier ladder and one set of ME-native ports.
   requires exactly one of these parts. The Buffer stores **72 encoded patterns**
   and serves its own controller; linked Proxies let the same Buffer dispatch to
   additional multiblocks. The legacy Quantum Pattern Hatch is reserved for DMAs
-- **Stellar Field Generator Mk.I / Mk.II / Mk.III** — the field blocks that set
-  a structure's tier; mixed tiers invalidate the structure
+- **Stellar Field Generator Mk.I / Mk.II / Mk.III** — every field-based
+  multiblock requires one consistent tier across all field positions; mixing
+  Mk.I, Mk.II and Mk.III makes the structure invalid
 - **Tier bonus** — running a lower-tier recipe on a higher-tier machine halves
   the time and cuts energy to 75% per tier of headroom
 - **Safe Mode / Overclock** — trade throughput against heat and stability
@@ -202,7 +204,7 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
                       │
 ┌─────────────────────▼───────────────────────────────────────────┐
 │                     ENDGAME                                      │
-│  Entropic Convergence Engine · Entropic Assembler Matrix         │
+│  Entropic Convergence Engine · Infinity Fabrication Singularity  │
 │  UFO Armor · UFO Staff · Infinity Cells · Dimensional Catalyst   │
 └─────────────────────────────────────────────────────────────────┘
 ```

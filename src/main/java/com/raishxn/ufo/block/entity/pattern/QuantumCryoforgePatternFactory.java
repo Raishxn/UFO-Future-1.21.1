@@ -84,6 +84,7 @@ public final class QuantumCryoforgePatternFactory {
                 .where('F', (state, level, pos) -> QuantumPatternPredicates.isAnyFieldGenerator(state),
                         QuantumPatternPredicates.fieldName())
                 .candidates('F', QuantumPatternPredicates.allFieldCandidates())
+                .uniform('F', QuantumPatternPredicates.uniformFieldName())
                 .where('E', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state),
                         QuantumPatternPredicates.glassName())
                 .candidates('E', QuantumPatternPredicates.glassCandidates())

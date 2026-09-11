@@ -53,7 +53,11 @@ public class UniversalMultiblockRecipeBuilder {
     }
 
     public UniversalMultiblockRecipeBuilder outputItem(ItemLike item, int amount) {
-        this.itemOutput = new ItemStack(item, 1);
+        return outputItem(new ItemStack(item, 1), amount);
+    }
+
+    public UniversalMultiblockRecipeBuilder outputItem(ItemStack stack, long amount) {
+        this.itemOutput = stack.copyWithCount(1);
         this.itemOutputAmount = amount;
         return this;
     }

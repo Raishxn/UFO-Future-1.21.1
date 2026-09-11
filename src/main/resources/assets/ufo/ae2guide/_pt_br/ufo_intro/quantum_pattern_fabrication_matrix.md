@@ -62,8 +62,8 @@ Cada Field Generator instalado contribui separadamente:
 | MK2 | 512 | 11.264 |
 | MK3 | 1.024 | 22.528 |
 
-Tiers misturados sao aceitos. Por exemplo, dez MK1, dez MK2 e dois MK3 fornecem
-`10 × 256 + 10 × 512 + 2 × 1024 = 9.728` espacos para patterns.
+Todos os Fields devem usar o mesmo tier. Misturar Fields MK1, MK2 e MK3 invalida
+a estrutura, e o scanner destaca o primeiro Field de tier diferente.
 
 Reduzir o tier dos Fields nunca apaga patterns. Os patterns que excederem a nova
 capacidade continuam acessiveis para retirada, mas novas insercoes aguardam ate a

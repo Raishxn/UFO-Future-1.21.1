@@ -27,11 +27,11 @@ public final class MekanismChemicalCompat {
         if (amount <= 0L) {
             return ChemicalStack.EMPTY;
         }
-        var chemical = MekanismAPI.CHEMICAL_REGISTRY.get(chemicalId);
-        if (chemical == null || chemical.isEmptyType()) {
+        var chemical = MekanismAPI.CHEMICAL_REGISTRY.getHolder(chemicalId).orElse(null);
+        if (chemical == null || chemical.is(MekanismAPI.EMPTY_CHEMICAL_KEY)) {
             return ChemicalStack.EMPTY;
         }
-        return new ChemicalStack(chemical.getAsHolder(), amount);
+        return new ChemicalStack(chemical, amount);
     }
 
     public static ResourceLocation getChemicalId(ChemicalStack stack) {

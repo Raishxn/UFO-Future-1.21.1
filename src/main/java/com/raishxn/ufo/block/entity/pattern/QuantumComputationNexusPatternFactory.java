@@ -60,6 +60,7 @@ public final class QuantumComputationNexusPatternFactory {
                 .candidates('C', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get().defaultBlockState())
                 .where('F', (state, level, pos) -> QuantumPatternPredicates.isAnyFieldGenerator(state), QuantumPatternPredicates.fieldName())
                 .candidates('F', QuantumPatternPredicates.allFieldCandidates())
+                .uniform('F', QuantumPatternPredicates.uniformFieldName())
                 .where('G', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state), QuantumPatternPredicates.glassName())
                 .candidates('G', QuantumPatternPredicates.glassCandidates())
                 .where('Q', (state, level, pos) -> QuantumPatternPredicates.isQuartzBlock(state), QuantumPatternPredicates.quartzBlockName())

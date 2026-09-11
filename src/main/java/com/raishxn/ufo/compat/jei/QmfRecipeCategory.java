@@ -4,6 +4,7 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.recipe.QMFRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -55,11 +56,6 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
     }
 
     @Override
-    public IDrawable getBackground() {
-        return this.background;
-    }
-
-    @Override
     public IDrawable getIcon() {
         return this.icon;
     }
@@ -67,6 +63,16 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
     @Override
     public ResourceLocation getRegistryName(QMFRecipe recipe) {
         return JeiRecipeIds.get(recipe);
+    }
+
+    @Override
+    public int getWidth() {
+        return this.background.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return this.background.getHeight();
     }
 
     @Override
@@ -121,24 +127,24 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
     }
 
     @Override
-    public List<Component> getTooltipStrings(QMFRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+    public void getTooltip(ITooltipBuilder tooltip, QMFRecipe recipe,
+                           IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         if (mouseX >= ENERGY_BAR_X && mouseX <= ENERGY_BAR_X + ENERGY_BAR_W
                 && mouseY >= ENERGY_BAR_Y && mouseY <= ENERGY_BAR_Y + ENERGY_BAR_H) {
-            return List.of(
+            tooltip.addAll(List.of(
                     Component.literal("Energy: " + formatEnergy(recipe.getEnergy())),
                     Component.literal(String.format("Base Time: %.1fs (%d ticks)", recipe.getTime() / 20.0, recipe.getTime())),
                     Component.literal("Required Tier: MK" + recipe.getRequiredTier())
-            );
+            ));
+            return;
         }
 
         if (mouseX >= 105 && mouseX <= 125 && mouseY >= 42 && mouseY <= 53) {
-            return List.of(
+            tooltip.addAll(List.of(
                     Component.literal(String.format("Processing Time: %.1fs (%d ticks)", recipe.getTime() / 20.0, recipe.getTime())),
                     Component.literal("Required Tier: MK" + recipe.getRequiredTier())
-            );
+            ));
         }
-
-        return List.of();
     }
 
     private static String formatEnergy(long energy) {

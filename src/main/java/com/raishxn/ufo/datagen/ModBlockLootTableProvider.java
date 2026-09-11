@@ -31,9 +31,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get());
         this.dropSelf(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get());
         this.dropSelf(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
-        this.dropSelf(MultiblockBlocks.ENTROPIC_ASSEMBLER_MATRIX.get());
         this.dropSelf(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get());
-        this.dropSelf(MultiblockBlocks.ENTROPIC_ASSEMBLER_CASING.get());
         this.dropSelf(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_ENTROPY_CASING.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get());
@@ -43,6 +41,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.dropSelf(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_PATTERN_FABRICATION_MATRIX_CONTROLLER.get());
+        this.dropSelf(MultiblockBlocks.INFINITY_FABRICATION_SINGULARITY_CONTROLLER.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_GRID_LINK.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get());
         this.dropSelf(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get());
