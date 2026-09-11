@@ -10,14 +10,14 @@ navigation:
 <BlockImage id="ufo:infinity_fabrication_singularity_controller" scale="4"></BlockImage>
 
 A **Singularidade de Fabricação Infinita** é a solução endgame do UFO para
-substituir máquinas que fabricam uma cópia por vez. Ela transforma uma tarefa
-homogênea do AE2 em uma única rota agregada: pedir bilhões de itens iguais não
-gera bilhões de ciclos de máquina.
+substituir máquinas que fabricam uma cópia por vez. Ela transforma uma receita
+homogênea em uma única rota agregada: fabricar bilhões de itens iguais não gera
+bilhões de ciclos de máquina.
 
 Ela combina dois serviços dentro do próprio multibloco:
 
 - sua própria biblioteca de patterns escalada pelos geradores de campo;
-- seu próprio executor de fabricação agregada para pedidos massivos.
+- seu próprio executor de fabricação agregada que mantém a rede abastecida.
 
 Ela não exige um Nexus de Computação Quântica separado. Apenas a Singularidade
 formada e seu Quantum Grid Link precisam estar conectados à rede ME.
@@ -56,27 +56,30 @@ devem usar o mesmo tier; misturar tiers invalida a estrutura.
 Se os fields forem rebaixados, os patterns acima da nova capacidade são preservados
 e continuam acessíveis para remoção; nenhum pattern codificado é apagado automaticamente.
 
-## Crafting agregado
+## Fabricação agregada
 
-Em cada etapa compatível, a Singularidade valida uma cópia da receita, extrai de
-uma vez todas as cópias disponíveis e promete as saídas correspondentes à CPU de
-crafting do AE2 em uma operação limitada. As quantidades usam contadores de 64
-bits; pedidos na casa dos bilhões permanecem uma rota, sem loop por item.
+A Singularidade é uma produtora de estoque, não um alvo de crafting: seus
+patterns nunca são publicados no serviço de crafting do AE2, portanto não
+aparecem como craftáveis no terminal e não sequestram o planejamento das suas
+receitas. O crafting sob demanda desses itens continua fluindo pela sua cadeia
+normal de autocrafting.
 
-Até **128 rotas** podem ficar pendentes ao mesmo tempo. As rotas e suas saídas
-prometidas persistem ao recarregar o mundo. Padrões de crafting, ferraria e
-cortador de pedras são aceitos; padrões de processamento continuam usando suas
-máquinas reais.
+Para cada pattern habilitado, a Singularidade valida uma cópia da receita, extrai
+de uma vez todas as cópias disponíveis na rede e insere os resultados como uma
+única rota limitada. As quantidades usam contadores de 64 bits; uma única rota
+pode cobrir bilhões de cópias, sem loop por item. Até **128 rotas** podem ficar
+pendentes ao mesmo tempo; as rotas e suas saídas persistem ao recarregar o mundo.
+Padrões de crafting, ferraria e cortador de pedras são aceitos; padrões de
+processamento continuam usando suas máquinas reais.
 
-Patterns duplicados armazenados em páginas diferentes são publicados como uma única
-rota de crafting deduplicada.
+Patterns duplicados armazenados em páginas diferentes colapsam em uma única rota
+deduplicada.
 
-Ao habilitar o botão de um pattern, ele também entra em fabricação automática
-contínua, como no Quantum Crafter: enquanto houver ingredientes na rede, a
-Singularidade repete a receita. A diferença é que cada rodada consome todas as
-cópias disponíveis de uma vez e cria uma única rota agregada, em vez de iterar
-cópia por cópia. Desabilitar o pattern interrompe novas rodadas sem apagar saídas
-que já estejam aguardando espaço na rede.
+Enquanto um pattern estiver habilitado, a Singularidade o repete continuamente,
+como no Quantum Crafter: enquanto houver ingredientes na rede, cada rodada
+consome todas as cópias disponíveis de uma vez, em vez de iterar cópia por cópia.
+Desabilitar o pattern interrompe novas rodadas sem apagar saídas que já estejam
+aguardando espaço na rede.
 
 ## Modos de operação
 

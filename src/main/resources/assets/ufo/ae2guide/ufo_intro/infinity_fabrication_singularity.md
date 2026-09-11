@@ -12,14 +12,14 @@ item_ids:
 <BlockImage id="ufo:infinity_fabrication_singularity_controller" scale="4"></BlockImage>
 
 The **Infinity Fabrication Singularity** is UFO's endgame replacement for
-copy-by-copy crafting machines. It turns a homogeneous AE2 crafting task into one
-aggregate route, so a request for billions of identical items does not execute a
-billion machine cycles.
+copy-by-copy crafting machines. It turns a homogeneous recipe into one aggregate
+route, so fabricating billions of identical items does not execute a billion
+machine cycles.
 
 It combines two services inside one multiblock:
 
 - its own field-scaled crafting-pattern library;
-- its own aggregate fabrication executor for massive crafting requests.
+- its own aggregate fabrication executor that keeps the network stocked.
 
 It does not require a separate Quantum Computation Nexus. Only the formed
 Singularity and its Quantum Grid Link need to be connected to the ME network.
@@ -58,27 +58,30 @@ invalidates the structure.
 If fields are downgraded, patterns above the new capacity are preserved and remain
 accessible for removal; no encoded pattern is deleted automatically.
 
-## Aggregate crafting
+## Aggregate fabrication
 
-For each eligible crafting step, the Singularity validates one recipe copy, then
-extracts all available copies in bulk and promises the corresponding outputs to
-the AE2 crafting CPU in one bounded operation. Amounts use 64-bit counters, so
-requests in the billions remain a single route rather than an item-by-item loop.
+The Singularity is a stock producer, not a crafting target: its patterns are
+never published to the AE2 crafting service, so they do not appear as craftable
+in the terminal and cannot steal planning from your recipes. On-demand crafting
+for these items keeps flowing through your normal autocrafting chain.
 
-Up to **128 routes** can be pending at once. Routes and their promised outputs are
-persisted across world reloads. Smithing and stonecutting crafting patterns are
-supported alongside normal crafting patterns; processing patterns continue to
-use their actual processing machines.
+For each enabled pattern the Singularity validates one recipe copy, extracts
+every currently available copy from the network in bulk, and inserts the results
+as one bounded route. Amounts use 64-bit counters, so a single route can cover
+billions of copies without an item-by-item loop. Up to **128 routes** can be
+pending at once; routes and their outputs are persisted across world reloads.
+Smithing and stonecutting crafting patterns are supported alongside normal
+crafting patterns; processing patterns continue to use their actual processing
+machines.
 
-Duplicate patterns stored on different pages are published as one deduplicated
-crafting route.
+Duplicate patterns stored on different pages collapse into one deduplicated
+route.
 
-Enabling a pattern also starts continuous automatic fabrication, like the Quantum
-Crafter: while ingredients remain in the network, the Singularity repeats the
-recipe. Unlike the original machine, each round consumes every currently
-available copy at once and creates one aggregate route instead of iterating one
-copy at a time. Disabling the pattern stops new rounds without discarding outputs
-that are already waiting for network space.
+While a pattern is enabled, the Singularity repeats it continuously, like the
+Quantum Crafter: as long as ingredients remain in the network, each round
+consumes every available copy at once instead of iterating one copy at a time.
+Disabling the pattern stops new rounds without discarding outputs that are
+already waiting for network space.
 
 ## Operating modes
 

@@ -227,8 +227,10 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     public List<IPatternDetails> getAvailablePatterns() {
         QuantumPatternFabricationMatrixControllerBE matrix = getPatternMatrixController();
         if (matrix != null) return matrix.getAvailablePatterns();
-        InfinityFabricationSingularityControllerBE singularity = getSingularityController();
-        return singularity != null ? singularity.getRoutedPatterns() : List.of();
+        // Singularity patterns only drive the autonomous stock machine. Publishing them
+        // to the crafting service would list every stored recipe as craftable in the
+        // terminal and steal planning from the player's normal autocrafting chain.
+        return List.of();
     }
 
     @Override

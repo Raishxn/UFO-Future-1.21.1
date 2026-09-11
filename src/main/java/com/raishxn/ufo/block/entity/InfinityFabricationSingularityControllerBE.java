@@ -52,8 +52,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Discovers crafting patterns and shared CPUs on one ME grid, then exposes them through
- * one preferred aggregate executor hosted by its Quantum Grid Link.
+ * Hosts the field-scaled crafting-pattern library and repeats enabled patterns as
+ * aggregate stock-production routes executed by its Quantum Grid Link. Patterns stay
+ * internal: they are never published to AE2's crafting service, so terminal crafting
+ * keeps flowing through the player's normal autocrafting chain.
  */
 public final class InfinityFabricationSingularityControllerBE extends AENetworkedBlockEntity
         implements StructureInvalidationTarget, MenuProvider, IMultiblockController, QuantumGridLinkHost,
