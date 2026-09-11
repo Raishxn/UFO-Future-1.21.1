@@ -92,10 +92,12 @@ public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
     public long tickCraftingLogic(IEnergyService energyService, ICraftingService craftingService) {
         if (!(craftingService instanceof CraftingService concrete)) return Long.MIN_VALUE;
         List<Entry> scheduled = new ArrayList<>(active.values());
+        if (scheduled.isEmpty()) return Long.MIN_VALUE;
         int count = scheduled.size();
         int advertisedSlots = sharedCoProcessors >= Integer.MAX_VALUE - 1
                 ? Integer.MAX_VALUE : sharedCoProcessors + 1;
         int dispatchSlots = Math.min(advertisedSlots, MAX_PATTERN_DISPATCH_SLOTS);
+        dispatchSlots = throttleToNetworkPower(energyService, dispatchSlots);
         int scheduledCount = Math.min(count, dispatchSlots);
         long latest = Long.MIN_VALUE;
         for (int index = 0; index < scheduledCount; index++) {
@@ -109,6 +111,23 @@ public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
         rotateOrder();
         removeDrained();
         return latest;
+    }
+
+    /**
+     * A persisted job resumes at full lane count on every world load and can out-draw the
+     * network's generation, brown-out every node and leave the whole grid flickering.
+     * Scale dispatch lanes with the network's stored power: healthy buffers run full
+     * speed, draining buffers sip until generation catches back up.
+     */
+    private static int throttleToNetworkPower(IEnergyService energyService, int dispatchSlots) {
+        double maxStored = energyService.getMaxStoredPower();
+        if (maxStored <= 0.0D) return dispatchSlots;
+        double stored = energyService.getStoredPower();
+        double ratio = stored / maxStored;
+        if (ratio < 0.10D) return 1;
+        if (ratio < 0.25D) return Math.max(1, dispatchSlots / 8);
+        if (ratio < 0.50D) return Math.max(1, dispatchSlots / 2);
+        return dispatchSlots;
     }
 
     @Override
