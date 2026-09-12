@@ -755,7 +755,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             for (var req : recipe.getItemInputs()) {
                 if (req == null || req.isEmpty())
                     continue;
-                int amountNeeded = (int) req.getAmount();
+                int amountNeeded = req.getAmount();
                 for (var stack : availableInputs) {
                     if (req.getIngredient().test(stack)) {
                         int toTake = Math.min(stack.getCount(), amountNeeded);
@@ -933,7 +933,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
 
                     if (factor >= 1) {
                         var extracted = src.extractAEPower(
-                                (double) powerConsumption * factor / speedFactor,
+                                powerConsumption * factor / speedFactor,
                                 Actionable.MODULATE,
                                 PowerMultiplier.CONFIG);
                         var actualFactor = (int) Math.floor(extracted / powerConsumption * speedFactor);
@@ -984,7 +984,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                     // Consume inputs shapelessly
                     for (var req : out.getItemInputs()) {
                         if (req != null && !req.isEmpty()) {
-                            int amountNeeded = (int) req.getAmount();
+                            int amountNeeded = req.getAmount();
                             for (int i = 0; i < this.inputInv.size() && amountNeeded > 0; i++) {
                                 var currentStack = this.inputInv.getStackInSlot(i);
                                 if (req.getIngredient().test(currentStack)) {

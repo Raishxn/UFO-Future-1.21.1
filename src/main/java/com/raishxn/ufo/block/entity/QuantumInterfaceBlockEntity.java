@@ -17,6 +17,7 @@ import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.wireless.QuantumWirelessHost;
 import com.raishxn.ufo.wireless.QuantumWirelessLinks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -95,7 +96,7 @@ public class QuantumInterfaceBlockEntity extends InterfaceBlockEntity implements
                 var direction = Direction.values()[localSide++ % 6];
                 localSide %= 6;
                 pos = worldPosition.relative(direction); face = direction.getOpposite();
-                if (!level.hasChunkAt(pos)) continue;
+                if (!level.hasChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()))) continue;
             }
             // Charge a bounded operation cost, separate from energy used by the destination.
             if (grid.getEnergyService().extractAEPower(1, Actionable.MODULATE, PowerMultiplier.CONFIG) < 1) return;

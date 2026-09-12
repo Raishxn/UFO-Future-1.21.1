@@ -1,11 +1,8 @@
 package com.raishxn.ufo;
 
-import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.client.render.layer.AstralNexusWingsLayer;
 import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.event.ModTooltipEventHandler;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -130,8 +127,6 @@ public class UfoModClient {
         event.enqueueWork(() -> {
             com.raishxn.ufo.util.ModItemProperties.addCustomItemProperties();
             registerEnergyCellFillProperty(ModBlocks.UFO_ENERGY_CELL.get().asItem());
-
-            ItemBlockRenderTypes.setRenderLayer(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(), RenderType.cutout());
         });
     }
 

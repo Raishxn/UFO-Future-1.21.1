@@ -24,6 +24,7 @@ public class AstralNexusEvents {
         updateFlightOwnership(player, flightActive);
     }
 
+    @SuppressWarnings("deprecation")
     private static void updateFlightOwnership(Player player, boolean ufoSourceActive) {
         var persistentData = player.getPersistentData();
         int policyVersion = persistentData.getInt(FLIGHT_POLICY_VERSION_TAG);
@@ -39,7 +40,7 @@ public class AstralNexusEvents {
         var abilities = player.getAbilities();
         var decision = FlightOwnershipPolicy.decide(
                 ufoSourceActive,
-                abilities.mayfly,
+                player.mayFly(),
                 ownedByUfo,
                 abilities.instabuild || player.isSpectator());
 

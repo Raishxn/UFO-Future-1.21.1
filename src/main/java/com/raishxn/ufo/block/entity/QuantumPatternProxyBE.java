@@ -10,6 +10,7 @@ import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.QuantumPatternProxyBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -90,7 +91,7 @@ public final class QuantumPatternProxyBE extends BlockEntity implements IMultibl
 
     @Nullable
     public BlockEntity getControllerBlockEntity() {
-        if (level == null || controllerPos == null || !level.hasChunkAt(controllerPos)) {
+        if (level == null || controllerPos == null || !level.hasChunk(SectionPos.blockToSectionCoord(controllerPos.getX()), SectionPos.blockToSectionCoord(controllerPos.getZ()))) {
             return null;
         }
         return level.getBlockEntity(controllerPos);
@@ -129,7 +130,7 @@ public final class QuantumPatternProxyBE extends BlockEntity implements IMultibl
     @Nullable
     public QuantumPatternHatchBE getLinkedPatternBuffer() {
         if (level == null || patternBufferPos == null || patternBufferIdentity == null
-                || !level.hasChunkAt(patternBufferPos)) {
+                || !level.hasChunk(SectionPos.blockToSectionCoord(patternBufferPos.getX()), SectionPos.blockToSectionCoord(patternBufferPos.getZ()))) {
             return null;
         }
         if (!(level.getBlockEntity(patternBufferPos) instanceof QuantumPatternHatchBE buffer)

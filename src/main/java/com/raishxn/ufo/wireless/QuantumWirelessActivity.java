@@ -6,6 +6,7 @@ import com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity;
 import com.raishxn.ufo.block.entity.QuantumPatternHatchBE;
 import com.raishxn.ufo.block.entity.QuantumPatternProxyBE;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.*;
@@ -55,14 +56,14 @@ public final class QuantumWirelessActivity {
         state.activity.prune(now);
         state.bonuses.clear();
         for (var pos : List.copyOf(state.hosts)) {
-            if (!level.hasChunkAt(pos) || !(level.getBlockEntity(pos) instanceof QuantumPatternHatchBE hatch)) continue;
+            if (!level.hasChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ())) || !(level.getBlockEntity(pos) instanceof QuantumPatternHatchBE hatch)) continue;
             var display = hatch.bonusProfile;
             display.dmaMachines = 0; display.multiblockMachines = 0;
             display.dmaBonus = WirelessBonus.NONE; display.multiblockBonus = WirelessBonus.NONE;
             if (!hatch.wirelessLinks().enabled() || !hatch.getMainNode().isActive()) continue;
             Map<UUID, Boolean> eligible = new HashMap<>();
             if (hatch.isPatternBuffer() && hatch.getControllerPos() != null
-                    && level.hasChunkAt(hatch.getControllerPos())
+                    && level.hasChunk(SectionPos.blockToSectionCoord(hatch.getControllerPos().getX()), SectionPos.blockToSectionCoord(hatch.getControllerPos().getZ()))
                     && level.getBlockEntity(hatch.getControllerPos()) instanceof AbstractParallelMultiblockControllerBE local
                     && local.acceptsPlansForWirelessBonus()) {
                 eligible.put(QuantumWirelessLinks.identity(local), false);

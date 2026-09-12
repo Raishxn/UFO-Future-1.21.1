@@ -39,6 +39,7 @@ import appeng.api.storage.MEStorage;
 import appeng.blockentity.grid.AENetworkedBlockEntity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -1688,7 +1689,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         long flow = StellarCoolantMath.targetFlow(COOLANT_CONSUMPTION_PER_TICK,
                 this.running && !this.paused, this.safeMode, this.isOverclocked);
         for (MassiveOutputHatchBE hatch : this.coolantHatches) {
-            if (hatch.isRemoved() || this.level == null || !this.level.hasChunkAt(hatch.getBlockPos())) continue;
+            if (hatch.isRemoved() || this.level == null || !this.level.hasChunk(SectionPos.blockToSectionCoord(hatch.getBlockPos().getX()), SectionPos.blockToSectionCoord(hatch.getBlockPos().getZ()))) continue;
             var fluid = hatch.getStoredCoolant();
             long efficiency = 0;
             if (!fluid.isEmpty()) for (var definition : getCoolantDefinitions()) {

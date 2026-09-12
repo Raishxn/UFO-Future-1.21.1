@@ -44,6 +44,7 @@ import com.raishxn.ufo.init.ModSounds;
 import com.raishxn.ufo.item.custom.BaseCatalystItem;
 import com.raishxn.ufo.item.custom.DimensionalCatalystItem;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -156,7 +157,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         List<CoolantStatus> result = new ArrayList<>();
         if (this.level == null || !this.assembled) return List.of();
         for (MassiveOutputHatchBE hatch : this.coolantHatches) {
-            if (!hatch.isRemoved() && this.level.hasChunkAt(hatch.getBlockPos())) {
+            if (!hatch.isRemoved() && this.level.hasChunk(SectionPos.blockToSectionCoord(hatch.getBlockPos().getX()), SectionPos.blockToSectionCoord(hatch.getBlockPos().getZ()))) {
                 var fluid = hatch.getStoredCoolant();
                 var profile = fluid.isEmpty() ? new ThermalSystem.CoolantProfile(0, 1, 0) : getCoolantProfile(fluid.getFluid());
                 result.add(new CoolantStatus(hatch.getBlockPos().asLong(),

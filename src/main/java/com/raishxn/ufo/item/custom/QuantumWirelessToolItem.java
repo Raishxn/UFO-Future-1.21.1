@@ -3,6 +3,7 @@ package com.raishxn.ufo.item.custom;
 import com.raishxn.ufo.wireless.QuantumWirelessHost;
 import com.raishxn.ufo.wireless.QuantumWirelessLinks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -24,7 +25,7 @@ public class QuantumWirelessToolItem extends Item {
         if (!tag.hasUUID("ufoWirelessSourceIdentity")
                 || !tag.getString("ufoWirelessDimension").equals(level.dimension().location().toString())) return;
         var pos = BlockPos.of(tag.getLong("ufoWirelessSource"));
-        if (!level.hasChunkAt(pos)) return;
+        if (!level.hasChunk(SectionPos.blockToSectionCoord(pos.getX()), SectionPos.blockToSectionCoord(pos.getZ()))) return;
         var be = level.getBlockEntity(pos);
         if (!(be instanceof QuantumWirelessHost host)
                 || !QuantumWirelessLinks.matches(be, tag.getUUID("ufoWirelessSourceIdentity"))) return;
@@ -109,7 +110,7 @@ public class QuantumWirelessToolItem extends Item {
         var tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         if (!tag.hasUUID("ufoWirelessSourceIdentity") || !tag.getString("ufoWirelessDimension").equals(level.dimension().location().toString())) return InteractionResult.FAIL;
         var sourcePos = BlockPos.of(tag.getLong("ufoWirelessSource"));
-        if (!level.hasChunkAt(sourcePos) || !level.mayInteract(player, sourcePos)) return InteractionResult.FAIL;
+        if (!level.hasChunk(SectionPos.blockToSectionCoord(sourcePos.getX()), SectionPos.blockToSectionCoord(sourcePos.getZ())) || !level.mayInteract(player, sourcePos)) return InteractionResult.FAIL;
         var source = level.getBlockEntity(sourcePos);
         if (!(source instanceof QuantumWirelessHost host) || !QuantumWirelessLinks.matches(source, tag.getUUID("ufoWirelessSourceIdentity"))) return InteractionResult.FAIL;
         if (!host.wirelessLinks().enabled()) {

@@ -60,31 +60,31 @@ public class ModBlocks extends BlockRegistry {
             () -> new Block(BlockBehaviour.Properties.of().strength(6.0f).requiresCorrectToolForDrops()));
 
     public static final DeferredBlock<LiquidBlock> NEUTRON_STAR_FRAGMENT_FLUID_BLOCK = BLOCKS.register("neutron_star_fragment_fluid_block",
-            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> PULSAR_FRAGMENT_FLUID_BLOCK = BLOCKS.register("pulsar_fragment_fluid_block",
-            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_PULSAR_FRAGMENT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> WHITE_DWARF_FRAGMENT_FLUID_BLOCK = BLOCKS.register("white_dwarf_fragment_fluid_block",
-            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_WHITE_DWARF_FRAGMENT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_WHITE_DWARF_FRAGMENT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> LIQUID_STARLIGHT_FLUID_BLOCK = BLOCKS.register("liquid_starlight_fluid_block",
-            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_LIQUID_STARLIGHT_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> PRIMORDIAL_MATTER_FLUID_BLOCK = BLOCKS.register("primordial_matter_fluid_block",
-            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_PRIMORDIAL_MATTER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> RAW_STAR_MATTER_PLASMA_FLUID_BLOCK = BLOCKS.register("raw_star_matter_plasma_fluid_block",
-            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_RAW_STAR_MATTER_PLASMA_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> TRANSCENDING_MATTER_FLUID_BLOCK = BLOCKS.register("transcending_matter_fluid_block",
-            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_TRANSCENDING_MATTER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> UU_MATTER_FLUID_BLOCK = BLOCKS.register("uu_matter_fluid_block",
-            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_UU_MATTER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_UU_MATTER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.LAVA).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> UU_AMPLIFIER_FLUID_BLOCK = BLOCKS.register("uu_amplifier_fluid_block",
-            () -> new LiquidBlock((FlowingFluid) ModFluids.SOURCE_UU_AMPLIFIER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_UU_AMPLIFIER_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> GELID_CRYOTHEUM_BLOCK = BLOCKS.register("gelid_cryotheum_block",
             () -> new LiquidBlock(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
@@ -93,10 +93,10 @@ public class ModBlocks extends BlockRegistry {
             () -> new LiquidBlock(ModFluids.SOURCE_STABLE_COOLANT.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> TEMPORAL_FLUID_BLOCK = BLOCKS.register("temporal_fluid_block",
-            () -> new LiquidBlock((FlowingFluid)ModFluids.SOURCE_TEMPORAL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_TEMPORAL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final DeferredBlock<LiquidBlock> SPATIAL_FLUID_BLOCK = BLOCKS.register("spatial_fluid_block",
-            () -> new LiquidBlock((FlowingFluid)ModFluids.SOURCE_SPATIAL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(ModFluids.SOURCE_SPATIAL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
     public static final DeferredBlock<com.raishxn.ufo.block.DimensionalMatterAssemblerBlock> DIMENSIONAL_MATTER_ASSEMBLER_BLOCK =
             registerBlockWithStaticItem("dimensional_matter_assembler", com.raishxn.ufo.block.DimensionalMatterAssemblerBlock::new);

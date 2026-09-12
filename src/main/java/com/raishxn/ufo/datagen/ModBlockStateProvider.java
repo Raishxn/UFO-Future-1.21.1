@@ -149,7 +149,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
     private void craftingLikeCube(DeferredBlock<? extends Block> block, String textureName) {
         String name = block.getId().getPath();
         ResourceLocation texture = modLoc("block/multiblock/" + textureName);
-        ModelFile model = models().cubeAll(name, texture);
+        // cutout declared in the model itself so ItemBlockRenderTypes.setRenderLayer stays unused.
+        ModelFile model = models().cubeAll(name, texture).renderType("cutout");
 
         getVariantBuilder(block.get())
                 .partialState().with(AbstractCraftingUnitBlock.FORMED, false)

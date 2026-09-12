@@ -3,6 +3,7 @@ package com.raishxn.ufo.wireless;
 import com.raishxn.ufo.UFOConfig;
 import appeng.api.AECapabilities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -74,7 +75,7 @@ public final class QuantumWirelessLinks {
     public BlockEntity resolve(QuantumWirelessHost host, Target target) {
         var source = host.getBlockEntity();
         var level = source.getLevel();
-        if (level == null || !level.hasChunkAt(target.pos()) || !inRange(source.getBlockPos(), target.pos())) return null;
+        if (level == null || !level.hasChunk(SectionPos.blockToSectionCoord(target.pos().getX()), SectionPos.blockToSectionCoord(target.pos().getZ())) || !inRange(source.getBlockPos(), target.pos())) return null;
         var be = level.getBlockEntity(target.pos());
         if (be == null || be == source || !matches(be, target.identity())) return null;
         var nodeHost = level.getCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST, target.pos(), null);

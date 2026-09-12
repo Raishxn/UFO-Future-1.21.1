@@ -29,8 +29,8 @@ public class ModCellItem extends BasicStorageCell {
         if (tier == ModCellItems.TIER_INFINITY) {
             return Integer.MAX_VALUE /  1024;
         }
-        // Para as outras tiers, o valor cabe em um int, então fazemos a conversão.
-        return (int) (tier.bytes() / 1024);
+        // Para as outras tiers, o valor já cabe em um int.
+        return tier.bytes() / 1024;
     }
 
     private static int calculateBytesPerType(StorageTier tier) {

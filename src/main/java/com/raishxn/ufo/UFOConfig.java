@@ -42,7 +42,8 @@ public class UFOConfig {
             .define("stellar.explosion.secondaryExplosions", false);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> STELLAR_EXPLOSION_ALLOWED_DIMENSIONS = SERVER_BUILDER
             .comment("Dimension IDs where opted-in block grief is allowed. Other dimensions always use local-only mode.")
-            .defineListAllowEmpty("stellar.explosion.allowedDimensions", List.of("minecraft:overworld"), UFOConfig::isResourceLocation);
+            .defineListAllowEmpty("stellar.explosion.allowedDimensions", List.of("minecraft:overworld"),
+                    () -> "minecraft:overworld", UFOConfig::isResourceLocation);
 
     public static final ModConfigSpec.LongValue STELLAR_COOLANT_GELID_EFFICIENCY = SERVER_BUILDER
             .comment("Gelid Cryotheum efficiency in the Stellar Nexus coolant formula. Zero disables this coolant for the Nexus.")

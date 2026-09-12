@@ -1,6 +1,7 @@
 package com.raishxn.ufo.api.multiblock;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -253,7 +254,7 @@ public class MultiblockPattern {
                     if (worldPos.equals(controllerPos)) continue;
 
                     if (!level.isInWorldBounds(worldPos)) continue;
-                    if (!level.hasChunkAt(worldPos)) continue;
+                    if (!level.hasChunk(SectionPos.blockToSectionCoord(worldPos.getX()), SectionPos.blockToSectionCoord(worldPos.getZ()))) continue;
 
                     BlockPredicate predicate = legend.get(c);
                     BlockState targetState = defaultStates.get(c);

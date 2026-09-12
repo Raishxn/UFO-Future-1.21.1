@@ -126,6 +126,12 @@ final class ConnectedTextureBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    public TextureAtlasSprite getParticleIcon(net.neoforged.neoforge.client.model.data.ModelData data) {
+        return baseSprite;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
     public TextureAtlasSprite getParticleIcon() {
         return baseSprite;
     }

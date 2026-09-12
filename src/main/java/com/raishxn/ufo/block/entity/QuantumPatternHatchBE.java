@@ -15,6 +15,7 @@ import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.screen.QuantumPatternHatchMenu;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -66,7 +67,7 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
             return;
         }
         for (var target : this.wirelessLinks.targets()) {
-            if (!this.level.hasChunkAt(target.pos())) {
+            if (!this.level.hasChunk(SectionPos.blockToSectionCoord(target.pos().getX()), SectionPos.blockToSectionCoord(target.pos().getZ()))) {
                 continue;
             }
             var targetBe = this.level.getBlockEntity(target.pos());

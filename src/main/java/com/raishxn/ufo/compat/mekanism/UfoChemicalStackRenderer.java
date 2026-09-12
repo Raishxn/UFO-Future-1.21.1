@@ -30,7 +30,7 @@ public final class UfoChemicalStackRenderer implements AEKeyRenderHandler<UfoMek
     @Override
     public void drawInGui(Minecraft minecraft, GuiGraphics guiGraphics, int x, int y, UfoMekanismKey what) {
         var stack = what.getStack();
-        Blitter.sprite(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(stack.getChemical().getIcon()))
+        Blitter.sprite(Minecraft.getInstance().getTextureAtlas(net.minecraft.world.inventory.InventoryMenu.BLOCK_ATLAS).apply(stack.getChemical().getIcon()))
                 .colorRgb(stack.getChemicalTint())
                 .blending(false)
                 .dest(x, y, 16, 16)
@@ -40,7 +40,7 @@ public final class UfoChemicalStackRenderer implements AEKeyRenderHandler<UfoMek
     @Override
     public void drawOnBlockFace(PoseStack poseStack, MultiBufferSource buffers, UfoMekanismKey what, float scale, int combinedLight, Level level) {
         var stack = what.getStack();
-        var sprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(stack.getChemical().getIcon());
+        var sprite = Minecraft.getInstance().getTextureAtlas(net.minecraft.world.inventory.InventoryMenu.BLOCK_ATLAS).apply(stack.getChemical().getIcon());
         var color = stack.getChemicalTint();
 
         poseStack.pushPose();

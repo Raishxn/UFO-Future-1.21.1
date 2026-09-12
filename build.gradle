@@ -76,6 +76,15 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+// Lint policy: everything enabled, except this-escape, which is inherent to the
+// NeoForge patterns used here (block entity constructors handing `this` to node/
+// capability registration and DeferredRegister lambdas) and is only fixable by
+// restructuring registration across ~28 files. All other warnings are treated as
+// release blockers and must stay at zero.
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs.addAll(['-Xlint:all', '-Xlint:-this-escape'])
+}
+
 neoForge {
     version = project.neo_version
 

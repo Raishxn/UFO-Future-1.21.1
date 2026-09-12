@@ -6,6 +6,7 @@ package com.raishxn.ufo.api.multiblock;
  */
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -63,7 +64,7 @@ public final class MultiblockAutoBuildService {
                 pattern.getPattern(), pattern.getControllerChar(), pattern.getControllerCol(), pattern.getControllerRow(),
                 definition.defaultCreativeStates(), target -> !target.isAir(), (local, symbol, target) -> {
                     BlockPos world = worldPos(pattern, controllerBlockEntity.getBlockPos(), local, facing);
-                    if (!level.isInWorldBounds(world) || !level.hasChunkAt(world)) {
+                    if (!level.isInWorldBounds(world) || !level.hasChunk(SectionPos.blockToSectionCoord(world.getX()), SectionPos.blockToSectionCoord(world.getZ()))) {
                         unavailable.add(world);
                         return MultiblockAutoBuildPlan.SlotState.BLOCKED;
                     }

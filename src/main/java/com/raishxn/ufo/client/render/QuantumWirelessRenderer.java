@@ -3,6 +3,7 @@ package com.raishxn.ufo.client.render;
 import appeng.client.render.overlay.OverlayRenderType;
 import com.raishxn.ufo.item.custom.QuantumWirelessToolItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -25,7 +26,7 @@ public final class QuantumWirelessRenderer {
                 || !tag.getString("ufoWirelessDimension").equals(mc.level.dimension().location().toString())) return;
         var source = BlockPos.of(tag.getLong("ufoWirelessSource"));
         int range = Math.max(1, tag.getCompound("ufoWirelessView").getInt("ufoWirelessRange"));
-        if (!mc.level.hasChunkAt(source) || mc.level.getBlockEntity(source) == null
+        if (!mc.level.hasChunk(SectionPos.blockToSectionCoord(source.getX()), SectionPos.blockToSectionCoord(source.getZ())) || mc.level.getBlockEntity(source) == null
                 || !tag.getCompound("ufoWirelessView").getBoolean("ufoWirelessEnabled")) return;
         var pose = event.getPoseStack();
         var camera = event.getCamera().getPosition();
@@ -45,7 +46,7 @@ public final class QuantumWirelessRenderer {
             int face = link.getInt("face");
             if (face < 0 || face >= 6) continue;
             var destination = BlockPos.of(link.getLong("pos"));
-            if (!mc.level.hasChunkAt(destination) || source.distSqr(destination) > (double) range * range) continue;
+            if (!mc.level.hasChunk(SectionPos.blockToSectionCoord(destination.getX()), SectionPos.blockToSectionCoord(destination.getZ())) || source.distSqr(destination) > (double) range * range) continue;
             if (mc.hitResult instanceof BlockHitResult hit && hit.getBlockPos().equals(destination)
                     && hit.getDirection() == Direction.values()[face]) lookingAtLinkedFace = true;
             draw(pose, source, destination, Direction.values()[face], 0, .5F, 1);

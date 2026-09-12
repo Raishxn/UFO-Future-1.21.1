@@ -29,7 +29,7 @@ public class ModBlockEntities {
                 var validBlocks = Stream.concat(
                         ModBlocks.CRAFTING_STORAGE_BLOCKS.values().stream(),
                         ModBlocks.CO_PROCESSOR_BLOCKS.values().stream()
-                ).map(DeferredBlock::get).toArray(AEBaseEntityBlock[]::new);
+                ).map(DeferredBlock::get).toArray(AEBaseEntityBlock<?>[]::new);
 
                 var type = BlockEntityType.Builder.of(
                         (pos, state) -> new CraftingBlockEntity(typeHolder.get(), pos, state),
@@ -62,7 +62,10 @@ public class ModBlockEntities {
         }
     }
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumInterfaceBlockEntity>> QUANTUM_INTERFACE_BE =
+        // Unchecked by contract: AE2's AEBaseEntityBlock#setBlockEntity and the raw DeferredBlock
+    // casts inside these registrations are erased at this API boundary.
+    @SuppressWarnings("unchecked")
+public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumInterfaceBlockEntity>> QUANTUM_INTERFACE_BE =
             BLOCK_ENTITIES.register("quantum_interface", () -> {
                 var holder = new AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.QuantumInterfaceBlockEntity>>();
                 var block = com.raishxn.ufo.block.MultiblockBlocks.QUANTUM_INTERFACE.get();
@@ -75,7 +78,8 @@ public class ModBlockEntities {
                 return type;
             });
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity>> DIMENSIONAL_MATTER_ASSEMBLER_BE =
+        @SuppressWarnings("unchecked")
+public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity>> DIMENSIONAL_MATTER_ASSEMBLER_BE =
             BLOCK_ENTITIES.register("dimensional_matter_assembler", () -> {
                 final java.util.concurrent.atomic.AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.DimensionalMatterAssemblerBlockEntity>> typeHolder = new java.util.concurrent.atomic.AtomicReference<>();
                 var type = BlockEntityType.Builder.of(
@@ -93,7 +97,8 @@ public class ModBlockEntities {
                 return type;
             });
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<UfoEnergyCellBlockEntity>> UFO_ENERGY_CELL_BE =
+        @SuppressWarnings("unchecked")
+public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<UfoEnergyCellBlockEntity>> UFO_ENERGY_CELL_BE =
             BLOCK_ENTITIES.register("ufo_energy_cell", () -> {
                 final AtomicReference<BlockEntityType<UfoEnergyCellBlockEntity>> typeHolder = new AtomicReference<>();
                 var type = BlockEntityType.Builder.of(
@@ -110,7 +115,8 @@ public class ModBlockEntities {
                 return type;
             });
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<QuantumEnergyCellBlockEntity>> QUANTUM_ENERGY_CELL_BE =
+        @SuppressWarnings("unchecked")
+public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<QuantumEnergyCellBlockEntity>> QUANTUM_ENERGY_CELL_BE =
             BLOCK_ENTITIES.register("quantum_energy_cell", () -> {
                 final AtomicReference<BlockEntityType<QuantumEnergyCellBlockEntity>> typeHolder = new AtomicReference<>();
                 var type = BlockEntityType.Builder.of(
@@ -203,7 +209,8 @@ public class ModBlockEntities {
                 return type;
             });
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternHatchBE>> QUANTUM_PATTERN_HATCH_BE =
+        @SuppressWarnings("unchecked")
+public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternHatchBE>> QUANTUM_PATTERN_HATCH_BE =
             BLOCK_ENTITIES.register("quantum_pattern_hatch", () -> {
                 var type = BlockEntityType.Builder.of(
                         (pos, state) -> new com.raishxn.ufo.block.entity.QuantumPatternHatchBE(pos, state),
@@ -225,7 +232,8 @@ public class ModBlockEntities {
                 return type;
             });
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternProxyBE>> QUANTUM_PATTERN_PROXY_BE =
+        @SuppressWarnings("unchecked")
+public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternProxyBE>> QUANTUM_PATTERN_PROXY_BE =
             BLOCK_ENTITIES.register("quantum_pattern_proxy", () -> {
                 var holder = new AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.QuantumPatternProxyBE>>();
                 var type = BlockEntityType.Builder.of(
@@ -236,6 +244,9 @@ public class ModBlockEntities {
                 return type;
             });
 
+    // Unchecked by contract: AE2's AEBaseEntityBlock#setBlockEntity and the raw DeferredBlock
+    // casts inside these registrations are erased at this API boundary.
+    @SuppressWarnings("unchecked")
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicMachinePartBE>> ENTROPIC_MACHINE_PART_BE =
             BLOCK_ENTITIES.register("entropic_machine_part", () -> {
                 final java.util.concurrent.atomic.AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.EntropicMachinePartBE>> typeHolder = new java.util.concurrent.atomic.AtomicReference<>();
@@ -260,6 +271,7 @@ public class ModBlockEntities {
                 return type;
             });
 
+    @SuppressWarnings("unchecked")
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE>> ENTROPIC_CONVERGENCE_CASING_BE =
             BLOCK_ENTITIES.register("entropic_convergence_casing", () -> {
                 final java.util.concurrent.atomic.AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE>> typeHolder = new java.util.concurrent.atomic.AtomicReference<>();
@@ -279,6 +291,7 @@ public class ModBlockEntities {
                 return type;
             });
 
+    @SuppressWarnings("unchecked")
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE>> ENTROPIC_CONVERGENCE_ENGINE_BE =
             BLOCK_ENTITIES.register("entropic_convergence_engine", () -> {
                 final java.util.concurrent.atomic.AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE>> typeHolder = new java.util.concurrent.atomic.AtomicReference<>();

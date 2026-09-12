@@ -56,6 +56,7 @@ public final class MachinePacketGuard {
                 StellarNexusControllerMenu::getBlockEntity, action.coreAction);
     }
 
+    @SuppressWarnings("rawtypes")
     public static @Nullable IUniversalMultiblockController requireUniversal(
             IPayloadContext context,
             BlockPos pos,
