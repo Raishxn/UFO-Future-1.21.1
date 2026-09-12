@@ -12,13 +12,33 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+Resumo do ciclo 3.0 (marcos L-0001 a L-0059). O detalhe tecnico por marco esta
+em [CHANGELOG_L0001_L0037.md](CHANGELOG_L0001_L0037.md) e no ledger interno do
+projeto. IDs, saves, receitas e progressao existentes foram preservados.
+
 ### Bug Fixes
 
-- Nenhuma mudanca ainda.
+- Processos paralelos transacionais: inputs, energia e outputs persistem e sao recuperados apos rede cheia, reload ou quebra, sem perda nem duplicacao.
+- Celulas BigInteger: partition/inverter/fuzzy corrigidos, contagem de bytes coerente com o AE2, limites/NBT endurecidos e suporte completo ao Cell Workbench.
+- DMA: multiplos requisitos de fluido agora reservam e consomem a soma correta.
+- Stellar Nexus: outputs aguardam espaco na rede sem perda, falha termica segura por padrao (grief opt-in), coolant e energia restritos aos ports dedicados.
+- State machine explicita nos controllers e invalidacao estrutural por eventos: sem polling periodico em idle, com scans orientados a invalidacao.
+- Quantum Grid Link: outputs pendentes sobrevivem a quebra e ao reload fisico de chunk; quebra recupera o saldo exato em pacotes AE2, sem duplicar.
+- Unload/reload fisico de chunks e despromocao parcial: as maquinas do trio pausam sem deformar, sem scans e sem perder conteudo; a recuperacao e automatica.
+- Lookups entre chunks exatos (sem cache de quatro entradas), eliminando invalidacoes estruturais silenciosamente descartadas.
+- Mekanism tornou-se opcional real; Pulsar Chambers/caracacas ocultas no criativo, JEI e EMI sem Mekanism, com IDs e receitas preservadas.
+- GeckoLib removido do contrato runtime do UFO; mob Apocalypse Type-A removido.
+- Warnings javac em zero com `-Xlint:all` (excecao documentada: this-escape de registro NeoForge).
 
 ### Implementations
 
-- Nenhuma mudanca ainda.
+- Runtime multibloco 3.0: definitions compiladas compartilhadas por scan/holograma/JEI, indice estrutural por chunk e fast scan server-side.
+- Ports explicitos de energia, fluido, itens e quimicos com planejamento simulate -> commit e ThermalSystem compartilhado entre familias.
+- Trio endgame: Quantum Computation Nexus (CPU de crafting compartilhada), Quantum Pattern Fabrication Matrix e Infinity Fabrication Singularity com Quantum Grid Link e lotes que reutilizam catalisadores intactos.
+- Diagnostico integrado: `/ufo debug machine` e `/ufo debug perf` com metricas de tick/scan/storage/sync.
+- Suite de GameTests de ciclo de vida (21 cenarios) e soak dedicado de 102 estruturas reais por 10.000 ticks, com workflow manual no CI.
+- RaishxCore 0.1.0-alpha.2 como dependencia versionada (planner de crafting iterativo).
+- GuideME reformulado e CTM nativo nos casings, sem dependencia runtime externa.
 
 ## [2.1-fix4] - 2026-05-09
 
