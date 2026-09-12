@@ -188,7 +188,7 @@ public final class EndgameStructureLifecycleGameTests {
         });
     }
 
-    private static void awaitCondition(GameTestHelper helper, int ticksRemaining,
+    static void awaitCondition(GameTestHelper helper, int ticksRemaining,
             BooleanSupplier condition, String failureMessage, Runnable continuation) {
         helper.runAfterDelay(1, () -> {
             if (condition.getAsBoolean()) {
@@ -201,7 +201,7 @@ public final class EndgameStructureLifecycleGameTests {
         });
     }
 
-    private static Set<ChunkPos> footprintChunks(
+    static Set<ChunkPos> footprintChunks(
             BlockPos controllerPos, MultiblockDefinition definition, Direction patternFacing) {
         Set<ChunkPos> chunks = new LinkedHashSet<>();
         chunks.add(new ChunkPos(controllerPos));
@@ -213,11 +213,11 @@ public final class EndgameStructureLifecycleGameTests {
         return Set.copyOf(chunks);
     }
 
-    private static void setChunksForced(ServerLevel level, Set<ChunkPos> chunks, boolean forced) {
+    static void setChunksForced(ServerLevel level, Set<ChunkPos> chunks, boolean forced) {
         chunks.forEach(chunk -> level.setChunkForced(chunk.x, chunk.z, forced));
     }
 
-    private static void awaitPhysicalUnload(
+    static void awaitPhysicalUnload(
             GameTestHelper helper, Set<ChunkPos> chunks, BlockPos controllerPos,
             BlockEntity originalController, int ticksRemaining, Runnable continuation) {
         helper.runAfterDelay(1, () -> {
