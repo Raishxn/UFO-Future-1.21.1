@@ -79,6 +79,10 @@ as many copies as its ingredients and locally stored FE permit in bulk, and inse
 as one bounded route. Amounts use 64-bit counters, so a single route can cover
 billions of copies without an item-by-item loop. Up to **128 routes** can be
 pending at once; routes and their outputs are persisted across world reloads.
+Breaking the Quantum Grid Link first returns pending results to the connected ME
+network. Any amount the network cannot accept is dropped as an exact AE2 recovery
+package, including reserved catalysts. Chunk unload does not eject these packages;
+the pending routes remain saved instead.
 Smithing and stonecutting crafting patterns are supported alongside normal
 crafting patterns; processing patterns continue to use their actual processing
 machines.

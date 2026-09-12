@@ -78,11 +78,13 @@ public final class QuantumGridLinkBlock extends DirectionalBlock implements Enti
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof QuantumGridLinkBE link) {
             BlockPos controllerPos = link.getControllerPos();
+            // Recover while the original grid is still connected. Invalidating the
+            // controller first can detach this node before it can return its results.
+            link.unlinkForRemoval();
             if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
                 controller.removePart(pos);
                 markControllerDirty(level, controllerPos);
             }
-            link.unlinkForRemoval();
         }
         super.onRemove(state, level, pos, newState, moved);
     }

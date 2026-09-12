@@ -46,6 +46,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.Containers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -127,8 +128,40 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     }
 
     public void unlinkForRemoval() {
+        recoverPendingCraftingOutputsBeforeRemoval();
         destroyOwnedConnections();
         controllerPos = null;
+        setChanged();
+    }
+
+    /** Physical destruction only: unload must leave the saved output ledger untouched. */
+    private void recoverPendingCraftingOutputsBeforeRemoval() {
+        if (level == null || level.isClientSide() || pendingCraftingRoutes.isEmpty()) return;
+
+        IGrid grid = getGrid();
+        MEStorage storage = grid == null ? null : grid.getStorageService().getInventory();
+        // Do not merge routes: multiple balances for one key can sum beyond Long.MAX_VALUE.
+        Iterator<Map<AEKey, Long>> routes = pendingCraftingRoutes.iterator();
+        while (routes.hasNext()) {
+            Iterator<Map.Entry<AEKey, Long>> outputs = routes.next().entrySet().iterator();
+            while (outputs.hasNext()) {
+                var output = outputs.next();
+                long requested = output.getValue();
+                long inserted = storage == null ? 0L : Math.max(0L, Math.min(requested,
+                        storage.insert(output.getKey(), requested, Actionable.MODULATE, actionSource)));
+                long remaining = requested - inserted;
+                if (remaining > 0L) {
+                    Containers.dropItemStack(level,
+                            worldPosition.getX() + 0.5D,
+                            worldPosition.getY() + 0.5D,
+                            worldPosition.getZ() + 0.5D,
+                            GenericStack.wrapInItemStack(output.getKey(), remaining));
+                }
+                outputs.remove();
+            }
+            routes.remove();
+        }
+        deferRestoredCraftingOutputs = false;
         setChanged();
     }
 

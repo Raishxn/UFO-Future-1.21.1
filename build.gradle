@@ -188,6 +188,29 @@ tasks.named('test', Test).configure {
     useJUnitPlatform()
 }
 
+// Development-only integration tests; these classes are never packaged in the UFO jar.
+sourceSets {
+    gameTest {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
+}
+neoForge.mods {
+    ufo_tests { sourceSet sourceSets.gameTest }
+}
+neoForge.runs.configureEach {
+    loadedMods = [neoForge.mods.ufo]
+}
+neoForge.runs.gameTestServer {
+    loadedMods.add(neoForge.mods.ufo_tests)
+    systemProperty 'neoforge.enabledGameTestNamespaces', 'ufo_tests'
+}
+def prepareUfoGameTests = tasks.register('prepareUfoGameTests', Copy) {
+    from 'src/gameTest/templates'
+    into 'run/gameteststructures'
+}
+tasks.named('runGameTestServer') { dependsOn prepareUfoGameTests }
+
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
