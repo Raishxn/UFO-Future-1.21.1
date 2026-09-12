@@ -1,0 +1,15 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="LGPL-3.0-or-later"
+
+[[mods]]
+modId="ufo_soak_tests"
+version="1"
+displayName="UFO soak tests"
+
+[[dependencies.ufo_soak_tests]]
+modId="ufo"
+type="required"
+versionRange="[3.0.0-alpha.1,)"
+ordering="AFTER"
+side="BOTH"

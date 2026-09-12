@@ -9,6 +9,7 @@
 /run/
 /runs/
 /run-data/
+/run-soak/
 
 # IDE metadata
 /.idea/

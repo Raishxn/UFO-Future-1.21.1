@@ -220,9 +220,14 @@ sourceSets {
         compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
         runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
     }
+    soakTest {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
 }
 neoForge.mods {
     ufo_tests { sourceSet sourceSets.gameTest }
+    ufo_soak_tests { sourceSet sourceSets.soakTest }
 }
 neoForge.runs.configureEach {
     loadedMods = [neoForge.mods.ufo]
@@ -236,6 +241,28 @@ def prepareUfoGameTests = tasks.register('prepareUfoGameTests', Copy) {
     into 'run/gameteststructures'
 }
 tasks.named('runGameTestServer') { dependsOn prepareUfoGameTests }
+
+// Long-running fleet tests are isolated from the per-push GameTest suite. Defaults
+// model the release gate; smaller values are useful for validating the harness.
+neoForge.runs {
+    soakGameTestServer {
+        type = "gameTestServer"
+        gameDirectory = project.file('run-soak')
+        loadedMods = [neoForge.mods.ufo, neoForge.mods.ufo_soak_tests]
+        systemProperty 'neoforge.enabledGameTestNamespaces', 'ufo_soak_tests'
+        systemProperty 'ufo.soak.machines', providers.gradleProperty('soakMachines').orElse('102').get()
+        systemProperty 'ufo.soak.ticks', providers.gradleProperty('soakTicks').orElse('10000').get()
+        systemProperty 'ufo.soak.maxAverageTickMillis',
+                providers.gradleProperty('soakMaxAverageTickMillis').orElse('50').get()
+        logLevel = org.slf4j.event.Level.INFO
+    }
+}
+def prepareUfoSoakTests = tasks.register('prepareUfoSoakTests', Copy) {
+    from 'src/soakTest/templates'
+    into 'run-soak/gameteststructures'
+}
+tasks.named('runSoakGameTestServer') { dependsOn prepareUfoSoakTests }
+tasks.named('check') { dependsOn tasks.named('compileSoakTestJava') }
 
 // Boot a disposable copy of the GameTest world and verify the real viewer indexes.
 neoForge.runs {
@@ -305,7 +332,8 @@ tasks.withType(ProcessResources).configureEach {
 def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
     dependsOn tasks.named('runData'), generateModMetadata
     mustRunAfter tasks.named('compileTestJava'), tasks.named('test'),
-            tasks.named('compileGameTestJava'), tasks.named('runGameTestServer'),
+            tasks.named('compileGameTestJava'), tasks.named('compileSoakTestJava'),
+            tasks.named('runGameTestServer'),
             tasks.named('runVisibilityClient')
     from('src/generated/resources')
     from('src/main/resources')
