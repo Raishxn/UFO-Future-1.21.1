@@ -213,12 +213,7 @@ public class ModCapabilityEvents {
                 ModArmor.UFO_BOOTS.get()
         );
         if (ModList.get().isLoaded("mekanism")) {
-            event.registerItem(mekanism.common.capabilities.Capabilities.RADIATION_SHIELDING, (stack, context) -> () -> 1.0,
-                    ModArmor.ASTRAL_NEXUS_HELMET.get(),
-                    ModArmor.ASTRAL_NEXUS_CHESTPLATE.get(),
-                    ModArmor.ASTRAL_NEXUS_LEGGINGS.get(),
-                    ModArmor.ASTRAL_NEXUS_BOOTS.get()
-            );
+            com.raishxn.ufo.compat.mekanism.MekanismArmorCompat.registerCapabilities(event);
         }
     }
 }

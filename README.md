@@ -137,10 +137,9 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
 | **Minecraft** | required | 1.21.1 | — |
 | **NeoForge** | required | 21.1.216+ | — |
 | **[Applied Energistics 2](https://github.com/AppliedEnergistics/Applied-Energistics-2)** | required | `[19.2.17, 20)` | The network, storage and autocrafting UFO builds on |
-| **[RaishxCore](https://github.com/Raishxn/RaishxCore)** | required | `[0.1.0-alpha.1, 0.2)` | Multiblock, exact-amount and GUI foundations |
+| **[RaishxCore](https://github.com/Raishxn/RaishxCore)** | required | `[0.1.0-alpha.2, 0.2)` | Multiblock, exact-amount and GUI foundations |
 | **[AE2 Addon Lib](https://github.com/pedroksl/AE2AddonLib)** | required | `[1.0.3-1.21.1, 2)` | Recipes, registries, menus and widgets |
-| **[GeckoLib](https://github.com/bernie-g/geckolib)** | required | `[4.8.2, 5)` | Apocalypse Type-A entity and renderer |
-| **[Mekanism](https://github.com/mekanism/Mekanism)** | required | `[10.7.18, 11)` | Mekanism-backed cells and chemical integration |
+| **[Mekanism](https://github.com/mekanism/Mekanism)** | optional | `[10.7.18, 11)` | Mekanism-backed cells and chemical integration |
 | **[JEI](https://www.curseforge.com/minecraft/mc-mods/jei)** | optional | — | UFO recipe categories and multiblock previews |
 | **[EMI](https://github.com/emilyploszaj/emi)** | optional | — | Keeps the ingredient sidebar clear of attached UFO widgets |
 | **[Applied Mekanistics](https://www.curseforge.com/minecraft/mc-mods/applied-mekanistics)** | optional | — | Chemical keys when available |
@@ -150,8 +149,12 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
 
 1. Download the latest build from the [Releases page](https://github.com/Raishxn/UFO-Future-1.21.1/releases)
 2. Drop `ufo-<version>.jar` **and** `raishxcore-<version>.jar` into your `mods/` folder
-3. Make sure AE2, AE2 Addon Lib, GeckoLib and Mekanism are installed too
+3. Make sure AE2 and AE2 Addon Lib are installed too
 4. Launch the game
+
+Mekanism enables chemical processing and Mekanism-specific cells. Those cells
+remain inactive without it, and recipes that require its resources need Mekanism.
+UFO no longer requires GeckoLib; other mods in your pack may still require it.
 
 ### Your First Steps
 
@@ -217,22 +220,22 @@ Full documentation lives on the **[UFO Future Wiki](https://raishxn.github.io/UF
 
 | Page | Description |
 |------|-------------|
-| [Stellar Nexus](https://raishxn.github.io/UFO-Future-1.21.1/en/stellar-nexus/) | Endgame simulation multiblock, field tiers, coolant, heat |
-| [Quantum Matter Fabricator](https://raishxn.github.io/UFO-Future-1.21.1/en/quantum-matter-fabricator/) | Bulk matter processing and parallel threads |
-| [Quantum Slicer](https://raishxn.github.io/UFO-Future-1.21.1/en/quantum-slicer/) | Printed-component cutting stage |
-| [Quantum Processor Assembler](https://raishxn.github.io/UFO-Future-1.21.1/en/quantum-processor-assembler/) | Final processor assembly |
-| [Multiblock Tiers](https://raishxn.github.io/UFO-Future-1.21.1/en/multiblock-tiers/) | MK1/MK2/MK3 gating and the tier bonus |
-| [Dimensional Matter Assembler](https://raishxn.github.io/UFO-Future-1.21.1/en/dma/) | Core machine mechanics, GUI, thermal system |
-| [Catalysts](https://raishxn.github.io/UFO-Future-1.21.1/en/catalysts/) | All 13 upgrade cards — families, tiers, stacking rules |
-| [Mega Storage](https://raishxn.github.io/UFO-Future-1.21.1/en/mega-storage/) | Mega crafting storages and co-processors |
-| [Containment](https://raishxn.github.io/UFO-Future-1.21.1/en/containment/) | Safe Containment Matter and Aether Containment Capsule |
-| [KubeJS Recipes](https://raishxn.github.io/UFO-Future-1.21.1/en/kubejs-recipes/) | Full scripted recipe API documentation |
-| [Tools & Weapons](https://raishxn.github.io/UFO-Future-1.21.1/en/tools/) | Transformable multi-tool system |
-| [Armor Sets](https://raishxn.github.io/UFO-Future-1.21.1/en/armor/) | Thermal Resistor & UFO Armor |
-| [Storage Cells](https://raishxn.github.io/UFO-Future-1.21.1/en/storage-cells/) | BigInteger cells & Infinity Cells |
-| [Materials & Fluids](https://raishxn.github.io/UFO-Future-1.21.1/en/materials/) | All stellar materials and custom fluids |
-| [Crafting Progression](https://raishxn.github.io/UFO-Future-1.21.1/en/progression/) | Step-by-step progression guide |
-| [Recipe Balance Audit](https://raishxn.github.io/UFO-Future-1.21.1/en/recipe-balance-audit/) | Cost and throughput review of the recipe set |
+| [Stellar Nexus](https://raishxn.github.io/UFO-Future-1.21.1/stellar-nexus/) | Endgame simulation multiblock, field tiers, coolant, heat |
+| [Quantum Matter Fabricator](https://raishxn.github.io/UFO-Future-1.21.1/quantum-matter-fabricator/) | Bulk matter processing and parallel threads |
+| [Quantum Slicer](https://raishxn.github.io/UFO-Future-1.21.1/quantum-slicer/) | Printed-component cutting stage |
+| [Quantum Processor Assembler](https://raishxn.github.io/UFO-Future-1.21.1/quantum-processor-assembler/) | Final processor assembly |
+| [Multiblock Tiers](https://raishxn.github.io/UFO-Future-1.21.1/multiblock-tiers/) | MK1/MK2/MK3 gating and the tier bonus |
+| [Dimensional Matter Assembler](https://raishxn.github.io/UFO-Future-1.21.1/dma/) | Core machine mechanics, GUI, thermal system |
+| [Catalysts](https://raishxn.github.io/UFO-Future-1.21.1/catalysts/) | All 13 upgrade cards — families, tiers, stacking rules |
+| [Mega Storage](https://raishxn.github.io/UFO-Future-1.21.1/mega-storage/) | Mega crafting storages and co-processors |
+| [Containment](https://raishxn.github.io/UFO-Future-1.21.1/containment/) | Safe Containment Matter and Aether Containment Capsule |
+| [KubeJS Recipes](https://raishxn.github.io/UFO-Future-1.21.1/kubejs-recipes/) | Full scripted recipe API documentation |
+| [Tools & Weapons](https://raishxn.github.io/UFO-Future-1.21.1/tools/) | Transformable multi-tool system |
+| [Armor Sets](https://raishxn.github.io/UFO-Future-1.21.1/armor/) | Thermal Resistor & UFO Armor |
+| [Storage Cells](https://raishxn.github.io/UFO-Future-1.21.1/storage-cells/) | BigInteger cells & Infinity Cells |
+| [Materials & Fluids](https://raishxn.github.io/UFO-Future-1.21.1/materials/) | All stellar materials and custom fluids |
+| [Crafting Progression](https://raishxn.github.io/UFO-Future-1.21.1/progression/) | Step-by-step progression guide |
+| [Recipe Balance Audit](https://raishxn.github.io/UFO-Future-1.21.1/recipe-balance-audit/) | Cost and throughput review of the recipe set |
 
 ---
 
@@ -242,7 +245,7 @@ Full documentation lives on the **[UFO Future Wiki](https://raishxn.github.io/UF
 
 UFO Future exposes its recipe types for full KubeJS scripting — add, remove or
 replace recipes, use tags as ingredients, and script the multiblock line as well
-as the DMA. See the [KubeJS documentation](https://raishxn.github.io/UFO-Future-1.21.1/en/kubejs-recipes/) for examples.
+as the DMA. See the [KubeJS documentation](https://raishxn.github.io/UFO-Future-1.21.1/kubejs-recipes/) for examples.
 
 ### Configuration
 
@@ -270,7 +273,9 @@ Both checkouts must sit side by side — `settings.gradle` includes
 dependency with it. Build and release CI check out the exact Core commit in
 `raishxcore_revision`. Release artifacts include both UFO and Core JARs with
 checksums. The development GameTests run with `./gradlew runGameTestServer`
-and `./gradlew -p ../RaishxCore runGameTestServer`.
+and `./gradlew -p ../RaishxCore runGameTestServer`. Use
+`./gradlew runGameTestServer -PwithoutMekanism` to test without Mekanism or
+Applied Mekanistics.
 
 ---
 
@@ -296,7 +301,6 @@ incorrectly or is missing, please open an issue and it will be fixed.
 | **[NeoForge](https://github.com/neoforged/NeoForge)** | Mod loader. The project was bootstrapped from the NeoForge MDK, still covered by its MIT notice in [`TEMPLATE_LICENSE.txt`](TEMPLATE_LICENSE.txt). |
 | **[ParchmentMC](https://parchmentmc.org/)** | Parameter names and javadoc mappings used at build time |
 | **[AE2 Addon Lib](https://github.com/pedroksl/AE2AddonLib)** — pedroksl and contributors | Recipes, registries, menus and GUI widgets |
-| **[GeckoLib](https://github.com/bernie-g/geckolib)** — bernie-g and contributors | Animated entity and renderer support |
 | **[Mekanism](https://github.com/mekanism/Mekanism)** — Mekanism team | Chemical integration and Mekanism-backed cells |
 | **[RaishxCore](https://github.com/Raishxn/RaishxCore)** | Companion library: multiblock, exact-amount and GUI foundations |
 

@@ -70,6 +70,9 @@ jobs:
             exit 1
           fi
 
+      - name: Verify without Mekanism
+        run: ./gradlew runGameTestServer -PwithoutMekanism --stacktrace
+
       - name: Build with Gradle
         run: ./gradlew build runGameTestServer --stacktrace
 

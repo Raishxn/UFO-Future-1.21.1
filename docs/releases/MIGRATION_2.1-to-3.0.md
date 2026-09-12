@@ -17,12 +17,15 @@ update.
   satisfies the dependency. The core registers no content, so there is nothing to
   migrate on the save side.
 - **AE2 Addon Lib** 1.0.3 for Minecraft 1.21.1 or compatible.
-- **GeckoLib** 4.8.2+ within the declared 4.x range (as before).
-- **Mekanism** 10.7.x — **now required**. 2.1 treated Mekanism integration as
-  optional; 3.0 machines consume Mekanism chemicals directly, so the mod must be
-  present.
+- **Mekanism** 10.7.x — optional; enables chemical storage and processing.
+  Chemical-dependent recipes require Mekanism. GeckoLib and the experimental
+  Apocalypse Type-A entity have been removed.
 
 JEI, EMI, Applied Flux, Applied Mekanistics and KubeJS remain optional integrations.
+
+The experimental `ufo:apocalypse_type_a` entity and
+`ufo:apocalypse_type_a_spawn_egg` item are no longer registered. Existing copies
+of that entity and its spawn egg do not carry over to this build.
 
 ## 2. Removed: Entropic Assembler Matrix
 
@@ -112,7 +115,7 @@ current recipe.
 
 ## Quick checklist for an existing world
 
-1. Update mods: add `raishxcore`, keep AE2/GeckoLib versions in range, add Mekanism,
+1. Update mods: add `raishxcore`, keep AE2 versions in range, optionally add Mekanism,
    replace the UFO jar.
 2. Load the world; expect removed Entropic Assembler blocks/items to be gone.
 3. For each pre-existing processing multiblock, swap the two highlighted casings for

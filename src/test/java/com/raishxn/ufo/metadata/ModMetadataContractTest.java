@@ -24,7 +24,7 @@ class ModMetadataContractTest {
     void generatedMetadataDeclaresTheExactRequiredRuntimeContract() throws IOException {
         Map<String, Dependency> dependencies = dependencies();
 
-        assertEquals(Set.of("neoforge", "minecraft", "ae2", "raishxcore", "ae2addonlib", "geckolib", "mekanism"),
+        assertEquals(Set.of("neoforge", "minecraft", "ae2", "raishxcore", "ae2addonlib"),
                 dependencies.values().stream()
                         .filter(dependency -> dependency.type().equalsIgnoreCase("required"))
                         .map(Dependency::modId)
@@ -35,8 +35,7 @@ class ModMetadataContractTest {
         assertDependency(dependencies, "ae2", "required", "[19.2.17,20)", "AFTER", "BOTH");
         assertDependency(dependencies, "raishxcore", "required", "[0.1.0-alpha.2,0.2)", "AFTER", "BOTH");
         assertDependency(dependencies, "ae2addonlib", "required", "[1.0.3-1.21.1,2)", "AFTER", "BOTH");
-        assertDependency(dependencies, "geckolib", "required", "[4.8.2,5)", "AFTER", "BOTH");
-        assertDependency(dependencies, "mekanism", "required", "[10.7.18,11)", "AFTER", "BOTH");
+        assertDependency(dependencies, "mekanism", "optional", "[10.7.18,11)", "AFTER", "BOTH");
     }
 
     @Test
@@ -47,7 +46,7 @@ class ModMetadataContractTest {
         assertDependency(dependencies, "emi", "optional", "", "AFTER", "CLIENT");
         assertDependency(dependencies, "appmek", "optional", "", "AFTER", "BOTH");
         assertDependency(dependencies, "appflux", "optional", "", "AFTER", "BOTH");
-        assertEquals(Set.of("jei", "emi", "appmek", "appflux"), dependencies.values().stream()
+        assertEquals(Set.of("jei", "emi", "appmek", "appflux", "mekanism"), dependencies.values().stream()
                 .filter(dependency -> dependency.type().equalsIgnoreCase("optional"))
                 .map(Dependency::modId)
                 .collect(java.util.stream.Collectors.toSet()));

@@ -46,7 +46,7 @@ public class UfoJeiPlugin implements IModPlugin {
     public void registerIngredients(IModIngredientRegistration registration) {
         // Mekanism uses its native EMI plugin when EMI is installed, so its JEI
         // chemical type is otherwise missing for recipes bridged through JEMI.
-        if (!MekanismJEI.shouldLoad()) {
+        if (net.neoforged.fml.ModList.get().isLoaded("mekanism") && !MekanismJEI.shouldLoad()) {
             new MekanismJEI().registerIngredients(registration);
         }
     }

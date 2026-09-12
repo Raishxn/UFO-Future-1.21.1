@@ -113,16 +113,8 @@ config = "ufo.mixins.json"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
-    modId="geckolib"
-    type="required"
-    reason="The Apocalypse Type-A entity and renderer use GeckoLib."
-    versionRange="${geckolib_version_range}"
-    ordering="AFTER"
-    side="BOTH"
-
-[[dependencies.${mod_id}]]
     modId="mekanism"
-    type="required"
+    type="optional"
     reason="UFO FUTURE registers Mekanism-backed cells and chemical integration."
     versionRange="${mekanism_version_range}"
     ordering="AFTER"

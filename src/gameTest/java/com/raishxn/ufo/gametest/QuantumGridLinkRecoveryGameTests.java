@@ -35,6 +35,21 @@ import java.util.function.Consumer;
 @GameTestHolder("ufo_tests")
 @PrefixGameTestTemplate(false)
 public final class QuantumGridLinkRecoveryGameTests {
+    @GameTest(template = "empty", timeoutTicks = 20)
+    public static void optionalMekanismCellsStaySafe(GameTestHelper helper) {
+        boolean loaded = net.neoforged.fml.ModList.get().isLoaded("mekanism");
+        var chemicalCell = com.raishxn.ufo.item.ModCellItems.CHEMICAL_CELL_40M.get();
+        var cellStack = new ItemStack(chemicalCell);
+        helper.assertTrue(chemicalCell.isBlackListed(cellStack,
+                appeng.api.stacks.AEFluidKey.of(net.minecraft.world.level.material.Fluids.WATER)),
+                "Chemical cell must reject ordinary fluids, including without Mekanism");
+        var infinityCell = (com.raishxn.ufo.item.InfinityCell)
+                com.raishxn.ufo.item.ModCells.INFINITY_ANTIMATTER_PELLET_CELL.get();
+        helper.assertTrue((infinityCell.getRecord() != null) == loaded,
+                "Mekanism Infinity cell must only supply resources when Mekanism is installed");
+        helper.succeed();
+    }
+
     private static final BlockPos LINK = new BlockPos(1, 1, 1);
     private static final AEItemKey OUTPUT = AEItemKey.of(Items.DIAMOND);
     private static final long OUTPUT_AMOUNT = 4_000_000_000L;

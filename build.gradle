@@ -14,6 +14,12 @@ group = mod_group_id
 
 repositories {
     mavenCentral() // AE2, GuideMe, ae2addonlib (published on Sonatype Maven Central)
+    // Only the full development fixture needs GeckoLib, through AdvancedAE.
+    maven {
+        name 'GeckoLibDev'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content { includeGroup 'software.bernie.geckolib' }
+    }
     maven {
         // CurseMaven - for mods without their own Maven repo
         name 'CurseMaven'
@@ -28,14 +34,6 @@ repositories {
         url "https://modmaven.dev/"
         content {
             includeGroup "mekanism"
-        }
-    }
-    maven {
-        // GeckoLib
-        name 'GeckoLib'
-        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
-        content {
-            includeGroup "software.bernie.geckolib"
         }
     }
     maven {
@@ -143,8 +141,6 @@ dependencies {
     implementation "com.raishxn.ufocore:raishxcore:${raishxcore_version}"
     implementation "io.github.pedroksl:ae2addonlib:${ae2addonlib_version}-${minecraft_version}"
     implementation "org.appliedenergistics:guideme:${guideme_version}"
-    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
-    // Required by the registered Apocalypse Type-A entity and its client renderer.
 
     // ===========================================
     // Implementation - CurseForge (file ID)
@@ -171,15 +167,20 @@ dependencies {
     // Local Runtime - Dev test mods
     // ===========================================
     localRuntime "curse.maven:building-gadgets-298187:6850515"
-    localRuntime "curse.maven:applied-mekanistics-574300:${applied_mekanistics_file_id}"
+    if (!providers.gradleProperty('withoutMekanism').isPresent()) {
+        localRuntime "curse.maven:applied-mekanistics-574300:${applied_mekanistics_file_id}"
+    }
     localRuntime "curse.maven:avaritianeo-1083158:7353987"
-    localRuntime "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     localRuntime "curse.maven:applied-flux-965012:${applied_flux_file_id}"
     // Required by Extended AE / Applied Flux in the development pack, not by UFO code.
     localRuntime "curse.maven:glodium-957920:${glodium_file_id}"
     localRuntime "curse.maven:mega-cells-622112:${mega_file_id}"
-    localRuntime "mekanism:Mekanism:${mekanism_version}"
-    localRuntime "mekanism:Mekanism:${mekanism_version}:generators"
+    if (!providers.gradleProperty('withoutMekanism').isPresent()) {
+        localRuntime "mekanism:Mekanism:${mekanism_version}"
+    }
+    if (!providers.gradleProperty('withoutMekanism').isPresent()) {
+        localRuntime "mekanism:Mekanism:${mekanism_version}:generators"
+    }
     localRuntime "curse.maven:ex-pattern-provider-892005:${ex_pattern_file_id}"
     localRuntime "curse.maven:jei-238222:${jei_file_id}"
     compileOnly "dev.emi:emi-neoforge:${emi_version}"
@@ -189,7 +190,12 @@ dependencies {
     localRuntime "curse.maven:selene-499980:${selene_file_id}"
     localRuntime "curse.maven:kubejs-238086:${kubejs_file_id}"
     localRuntime "curse.maven:rhino-416294:${rhino_file_id}"
-    localRuntime "curse.maven:advancedae-1084104:${advancedae_file_id}"
+    if (!providers.gradleProperty('withoutMekanism').isPresent()) {
+        // AdvancedAE integration recipes need its items during datagen.
+        // GeckoLib is a dependency of that dev fixture, not of the UFO JAR.
+        localRuntime "curse.maven:advancedae-1084104:${advancedae_file_id}"
+        localRuntime "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:4.8.2"
+    }
     // UFO bees datapack integration; also drives the QMF spawn egg recipes.
     localRuntime "maven.modrinth:productivebees:1.21.1-13.13.0"
 
@@ -237,7 +243,6 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             loader_version_range   : loader_version_range,
             ae2_version_range      : ae2_version_range,
             ae2addonlib_version_range: ae2addonlib_version_range,
-            geckolib_version_range : geckolib_version_range,
             mekanism_version_range : mekanism_version_range,
             raishxcore_version_range  : raishxcore_version_range,
             mod_id                 : mod_id,

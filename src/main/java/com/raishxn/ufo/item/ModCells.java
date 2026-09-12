@@ -4,8 +4,8 @@ import appeng.api.ids.AEBlockIds;
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import com.raishxn.ufo.item.InfinityCell;
-import mekanism.common.registries.MekanismItems;
 import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -43,18 +43,18 @@ public class ModCells {
             () -> new InfinityCell(() -> AEItemKey.of(BuiltInRegistries.BLOCK.get(AEBlockIds.SKY_STONE_BLOCK)),
                     ChatFormatting.DARK_GRAY, ChatFormatting.GRAY, ChatFormatting.BLACK, ChatFormatting.GRAY));
     public static final DeferredItem<Item> INFINITY_ANTIMATTER_PELLET_CELL = ITEMS.register("infinity_antimatter_pellet_cell",
-            () -> new InfinityCell(() -> AEItemKey.of(MekanismItems.ANTIMATTER_PELLET.get()),
+            () -> new InfinityCell(() -> AEItemKey.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "pellet_antimatter"))),
                     ChatFormatting.WHITE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE, ChatFormatting.LIGHT_PURPLE));
 
     // --- NOVAS CÉLULAS INFINITAS (Mekanism) ---
     public static final DeferredItem<Item> INFINITY_PLUTONIUM_PELLET_CELL = ITEMS.register("infinity_plutonium_pellet_cell",
-            () -> new InfinityCell(() -> AEItemKey.of(MekanismItems.PLUTONIUM_PELLET.get()),
+            () -> new InfinityCell(() -> AEItemKey.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "pellet_plutonium"))),
                     ChatFormatting.GREEN, ChatFormatting.DARK_GREEN, ChatFormatting.GREEN));
     public static final DeferredItem<Item> INFINITY_POLONIUM_PELLET_CELL = ITEMS.register("infinity_polonium_pellet_cell",
-            () -> new InfinityCell(() -> AEItemKey.of(MekanismItems.POLONIUM_PELLET.get()),
+            () -> new InfinityCell(() -> AEItemKey.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "pellet_polonium"))),
                     ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.AQUA));
     public static final DeferredItem<Item> INFINITY_HDPE_PELLET_CELL = ITEMS.register("infinity_hdpe_pellet_cell",
-            () -> new InfinityCell(() -> AEItemKey.of(MekanismItems.HDPE_PELLET.get()),
+            () -> new InfinityCell(() -> AEItemKey.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("mekanism", "hdpe_pellet"))),
                     ChatFormatting.WHITE, ChatFormatting.GRAY, ChatFormatting.WHITE));
 
     // --- NOVAS CÉLULAS INFINITAS (Minecraft Vanilla) ---

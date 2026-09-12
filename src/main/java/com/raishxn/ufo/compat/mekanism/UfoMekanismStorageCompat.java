@@ -16,6 +16,7 @@ public final class UfoMekanismStorageCompat {
     }
 
     public static void initialize(IEventBus modEventBus) {
+        if (!isLoaded()) return;
         StackWorldBehaviors.registerImportStrategy(Holder.KEY_TYPE, UfoMekanismStackImportStrategy::new);
         StackWorldBehaviors.registerExportStrategy(Holder.KEY_TYPE, UfoMekanismStackExportStrategy::new);
         StackWorldBehaviors.registerExternalStorageStrategy(Holder.KEY_TYPE, UfoMekanismExternalStorageStrategy::new);
@@ -24,6 +25,7 @@ public final class UfoMekanismStorageCompat {
     }
 
     public static void initializeClient(IEventBus modEventBus) {
+        if (!isLoaded()) return;
         UfoChemicalStackRenderer.initialize(modEventBus);
     }
 
@@ -32,11 +34,14 @@ public final class UfoMekanismStorageCompat {
     }
 
     public static AEKeyType getChemicalKeyType() {
+        // Keep registered cell IDs loadable without the integration. All additions
+        // are rejected by isChemicalBlacklisted while Mekanism is absent.
+        if (!isLoaded()) return AEKeyType.fluids();
         return ModList.get().isLoaded("appmek") ? AppliedMekanisticsCompat.keyType() : Holder.KEY_TYPE;
     }
 
     public static boolean isChemicalBlacklisted(ItemStack cellItem, AEKey requestedAddition) {
-        return requestedAddition.getType() != getChemicalKeyType();
+        return !isLoaded() || requestedAddition.getType() != getChemicalKeyType();
     }
 
     private static void onRegisterEvent(RegisterEvent event) {

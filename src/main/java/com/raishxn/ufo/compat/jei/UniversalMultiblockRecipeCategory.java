@@ -130,7 +130,7 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
         }
 
         var chemicalInputs = recipe.getChemicalInputs();
-        for (int i = 0; i < chemicalInputs.size(); i++) {
+        for (int i = 0; net.neoforged.fml.ModList.get().isLoaded("mekanism") && i < chemicalInputs.size(); i++) {
             var ingredient = chemicalInputs.get(i);
             int tankIndex = fluidInputs.size() + i;
             int x = tankIndex == 0 ? 28 : 9;

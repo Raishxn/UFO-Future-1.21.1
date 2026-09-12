@@ -837,7 +837,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
         for (ParallelProcessState state : states) {
             for (GenericStack input : state.getBufferedInputs()) {
-                ResourceLocation chemicalId = MekanismChemicalCompat.getChemicalId(input.what());
+                ResourceLocation chemicalId = net.neoforged.fml.ModList.get().isLoaded("mekanism") ? MekanismChemicalCompat.getChemicalId(input.what()) : null;
                 if (chemicalId != null) {
                     long inserted = insertChemicalIntoHatches(chemicalId, input.amount());
                     state.consumeBufferedInput(input.what(), inserted);
@@ -1435,7 +1435,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         }
         for (int i = 0; i < remaining.size(); i++) {
             PatternStack stack = remaining.get(i);
-            ResourceLocation chemicalId = MekanismChemicalCompat.getChemicalId(stack.key);
+            ResourceLocation chemicalId = net.neoforged.fml.ModList.get().isLoaded("mekanism") ? MekanismChemicalCompat.getChemicalId(stack.key) : null;
             if (chemicalId == null || !chemicalId.equals(requirement.chemicalId())) {
                 continue;
             }

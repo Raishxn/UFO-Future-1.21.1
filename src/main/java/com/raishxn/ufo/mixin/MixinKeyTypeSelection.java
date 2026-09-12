@@ -25,6 +25,7 @@ public class MixinKeyTypeSelection {
             return;
         }
 
+        if (!net.neoforged.fml.ModList.get().isLoaded("mekanism")) return;
         ListTag enabledKeyTypes = tag.getList("enabledKeyTypes", 8);
         String chemicalId = UfoMekanismKeyType.TYPE.getId().toString();
         for (int i = 0; i < enabledKeyTypes.size(); i++) {

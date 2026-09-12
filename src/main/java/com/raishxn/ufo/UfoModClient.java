@@ -2,7 +2,6 @@ package com.raishxn.ufo;
 
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.client.render.layer.AstralNexusWingsLayer;
-import com.raishxn.ufo.client.renderer.ApocalypseTypeARenderer;
 import com.raishxn.ufo.event.ModKeyBindings;
 import com.raishxn.ufo.event.ModTooltipEventHandler;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -35,7 +34,6 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import com.raishxn.ufo.client.renderer.DimensionalMatterAssemblerRenderer;
 import com.raishxn.ufo.client.renderer.StellarNexusRenderer;
 import com.raishxn.ufo.init.ModBlockEntities;
-import com.raishxn.ufo.init.ModEntities;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 
 public class UfoModClient {
@@ -115,7 +113,6 @@ public class UfoModClient {
     private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.DIMENSIONAL_MATTER_ASSEMBLER_BE.get(), DimensionalMatterAssemblerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.STELLAR_NEXUS_CONTROLLER_BE.get(), StellarNexusRenderer::new);
-        event.registerEntityRenderer(ModEntities.APOCALYPSE_TYPE_A.get(), ApocalypseTypeARenderer::new);
     }
 
     private void onAddLayers(EntityRenderersEvent.AddLayers event) {
