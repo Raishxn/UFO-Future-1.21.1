@@ -24,6 +24,8 @@ import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.entity.pattern.InfinityFabricationSingularityPatternFactory;
 import com.raishxn.ufo.crafting.SingularityCraftingMode;
 import com.raishxn.ufo.crafting.SingularityPatternCapacity;
+import com.raishxn.ufo.diagnostic.MachineMetricKey;
+import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.screen.InfinityFabricationSingularityMenu;
 import com.raishxn.ufo.util.LoadedBlockEntityLookup;
@@ -64,7 +66,6 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
     public static final int PATTERNS_PER_PAGE = SingularityPatternCapacity.PATTERNS_PER_PAGE;
     public static final int MAX_PATTERN_SLOTS = SingularityPatternCapacity.MAX_PATTERN_SLOTS;
 
-    private static final int PERIODIC_RESCAN_TICKS = 20;
     private static final int ROUTING_REFRESH_TICKS = 10;
     private static final String TAG_MODE = "CraftingMode";
     private static final String TAG_PATTERNS = "Patterns";
@@ -82,7 +83,6 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
     private boolean formed;
     private boolean structureDirty = true;
     private boolean routingDirty = true;
-    private long nextPeriodicScan;
     private long nextRoutingRefresh;
     private long nextAutomaticCraft;
     @Nullable private BlockPos gridLinkPos;
@@ -102,6 +102,7 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
     private int storedPatternCount;
     private final Set<Integer> disabledPatternSlots = new HashSet<>();
     private final boolean[] occupiedPatternSlots = new boolean[MAX_PATTERN_SLOTS];
+    @Nullable private MachineMetricKey performanceMetricKey;
 
     private final ContainerData menuData = new ContainerData() {
         @Override
@@ -144,9 +145,8 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
     public void serverTick() {
         if (!(level instanceof ServerLevel serverLevel)) return;
         long gameTime = level.getGameTime();
-        if (structureDirty || gameTime >= nextPeriodicScan) {
+        if (structureDirty) {
             structureDirty = false;
-            nextPeriodicScan = gameTime + PERIODIC_RESCAN_TICKS;
             refreshStructure(serverLevel);
         }
         if (routingDirty || gameTime >= nextRoutingRefresh) {
@@ -164,11 +164,16 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
     public void scanStructure(Level scanLevel) {
         if (scanLevel instanceof ServerLevel serverLevel && scanLevel == level) {
             structureDirty = false;
-            nextPeriodicScan = scanLevel.getGameTime() + PERIODIC_RESCAN_TICKS;
             refreshStructure(serverLevel);
             refreshRoutingState();
             updateVisualState();
         }
+    }
+
+    @Override
+    public void onReady() {
+        super.onReady();
+        markStructureDirty();
     }
 
     @Override public void addPart(BlockPos partPos) { markStructureDirty(); }
@@ -181,64 +186,82 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
     @Override public BlockPos getControllerPos() { return worldPosition; }
 
     private void refreshStructure(ServerLevel serverLevel) {
-        Direction structureFacing = getStructureFacing();
         MultiblockPattern pattern = getDefinition().pattern();
-        indexCompleteFootprint(pattern, structureFacing);
-        MultiblockPattern.MatchResult match = pattern.matchFast(serverLevel, worldPosition, structureFacing);
-        if (match.hasUnloadedPositions()) return;
-        if (!match.isValid()) {
-            deform();
-            return;
-        }
+        long startedAt = System.nanoTime();
+        try {
+            Direction structureFacing = getStructureFacing();
+            indexRelevantFootprint(pattern, structureFacing);
+            MultiblockPattern.MatchResult match = pattern.matchFast(serverLevel, worldPosition, structureFacing);
+            if (match.hasUnloadedPositions()) return;
+            if (!match.isValid()) {
+                deform();
+                return;
+            }
 
-        List<BlockPos> links = pattern.getExpectedPositions(worldPosition, structureFacing, 'L');
-        if (links.size() != 1) {
-            deform();
-            return;
-        }
+            List<BlockPos> links = pattern.getExpectedPositions(worldPosition, structureFacing, 'L');
+            if (links.size() != 1) {
+                deform();
+                return;
+            }
 
-        List<BlockPos> discoveredEnergyHatches = match.partPositions().stream()
-                .filter(pos -> LoadedBlockEntityLookup.get(serverLevel, pos) instanceof MassiveOutputHatchBE hatch
-                        && hatch.supportsEnergyInput())
-                .map(BlockPos::immutable).toList();
-        if (discoveredEnergyHatches.isEmpty()) {
-            deform();
-            return;
-        }
-        detachEnergyHatchesNotIn(discoveredEnergyHatches);
-        energyHatchPositions = discoveredEnergyHatches;
-        for (BlockPos pos : energyHatchPositions) {
-            if (LoadedBlockEntityLookup.get(serverLevel, pos) instanceof MassiveOutputHatchBE hatch
-                    && !worldPosition.equals(hatch.getControllerPos())) hatch.linkToController(worldPosition);
-        }
+            List<BlockPos> discoveredEnergyHatches = match.partPositions().stream()
+                    .filter(pos -> LoadedBlockEntityLookup.get(serverLevel, pos) instanceof MassiveOutputHatchBE hatch
+                            && hatch.supportsEnergyInput())
+                    .map(BlockPos::immutable).toList();
+            if (discoveredEnergyHatches.isEmpty()) {
+                deform();
+                return;
+            }
+            detachEnergyHatchesNotIn(discoveredEnergyHatches);
+            energyHatchPositions = discoveredEnergyHatches;
+            for (BlockPos pos : energyHatchPositions) {
+                if (LoadedBlockEntityLookup.get(serverLevel, pos) instanceof MassiveOutputHatchBE hatch
+                        && !worldPosition.equals(hatch.getControllerPos())) hatch.linkToController(worldPosition);
+            }
 
-        int mk1 = 0;
-        int mk2 = 0;
-        int mk3 = 0;
-        for (BlockPos fieldPos : pattern.getExpectedPositions(worldPosition, structureFacing, 'F')) {
-            BlockState fieldState = serverLevel.getBlockState(fieldPos);
-            if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())) mk1++;
-            else if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())) mk2++;
-            else if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get())) mk3++;
-        }
+            int mk1 = 0;
+            int mk2 = 0;
+            int mk3 = 0;
+            for (BlockPos fieldPos : pattern.getExpectedPositions(worldPosition, structureFacing, 'F')) {
+                BlockState fieldState = serverLevel.getBlockState(fieldPos);
+                if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())) mk1++;
+                else if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())) mk2++;
+                else if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get())) mk3++;
+            }
 
-        BlockPos discoveredLink = links.getFirst().immutable();
-        if (gridLinkPos != null && !gridLinkPos.equals(discoveredLink)) detachGridLink();
-        gridLinkPos = discoveredLink;
-        tier1Fields = mk1;
-        tier2Fields = mk2;
-        tier3Fields = mk3;
-        applyCraftingMode(SingularityCraftingMode.forFieldTiers(mk1, mk2, mk3));
-        patternCapacity = calculatePatternCapacity(mk1, mk2, mk3);
-        formed = true;
-        if (serverLevel.getBlockEntity(discoveredLink) instanceof QuantumGridLinkBE link) {
-            link.linkToController(worldPosition);
-            IGridNode controllerNode = getMainNode().getNode();
-            link.synchronizeInternalNodes(controllerNode == null ? List.of() : List.of(controllerNode));
-            link.refreshGridConnection();
+            BlockPos discoveredLink = links.getFirst().immutable();
+            if (gridLinkPos != null && !gridLinkPos.equals(discoveredLink)) detachGridLink();
+            gridLinkPos = discoveredLink;
+            tier1Fields = mk1;
+            tier2Fields = mk2;
+            tier3Fields = mk3;
+            applyCraftingMode(SingularityCraftingMode.forFieldTiers(mk1, mk2, mk3));
+            patternCapacity = calculatePatternCapacity(mk1, mk2, mk3);
+            formed = true;
+            if (serverLevel.getBlockEntity(discoveredLink) instanceof QuantumGridLinkBE link) {
+                link.linkToController(worldPosition);
+                IGridNode controllerNode = getMainNode().getNode();
+                link.synchronizeInternalNodes(controllerNode == null ? List.of() : List.of(controllerNode));
+                link.refreshGridConnection();
+            }
+            routingDirty = true;
+            setChanged();
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordScan(performanceMetricKey(),
+                    System.nanoTime() - startedAt, pattern.getTestedPositionCount(), serverLevel.getGameTime());
         }
-        routingDirty = true;
-        setChanged();
+    }
+
+    private MachineMetricKey performanceMetricKey() {
+        if (performanceMetricKey == null) {
+            performanceMetricKey = new MachineMetricKey(serverDimension(), worldPosition.asLong(),
+                    getClass().getSimpleName());
+        }
+        return performanceMetricKey;
+    }
+
+    private String serverDimension() {
+        return level == null ? "unknown" : level.dimension().location().toString();
     }
 
     private void refreshRoutingState() {
@@ -316,10 +339,11 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
         setChanged();
     }
 
-    private void indexCompleteFootprint(MultiblockPattern pattern, Direction facing) {
+    private void indexRelevantFootprint(MultiblockPattern pattern, Direction facing) {
         if (level == null) return;
-        List<Long> footprint = pattern.getSymbols().stream()
-                .flatMap(symbol -> pattern.getExpectedPositions(worldPosition, facing, symbol).stream())
+        List<Long> footprint = java.util.stream.Stream.concat(
+                        java.util.stream.Stream.of(worldPosition),
+                        pattern.getTrackedPositions(worldPosition, facing).stream())
                 .map(BlockPos::asLong).toList();
         StructureMembershipIndex.INSTANCE.register(
                 level.dimension().location().toString(), worldPosition.asLong(), footprint);

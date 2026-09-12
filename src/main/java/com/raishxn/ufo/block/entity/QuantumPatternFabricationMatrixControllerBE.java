@@ -26,6 +26,8 @@ import com.raishxn.ufo.api.multiblock.StructureMembershipIndex;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.QuantumPatternFabricationMatrixControllerBlock;
 import com.raishxn.ufo.block.entity.pattern.QuantumPatternFabricationMatrixPatternFactory;
+import com.raishxn.ufo.diagnostic.MachineMetricKey;
+import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.screen.QuantumPatternFabricationMatrixMenu;
@@ -65,7 +67,6 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
     public static final int FIELD_POSITION_COUNT = 22;
     public static final int MAX_PATTERN_SLOTS = FIELD_POSITION_COUNT * SLOTS_PER_MK3_FIELD;
 
-    private static final int PERIODIC_RESCAN_TICKS = 20;
     private static final String TAG_PRIORITY = "PatternPriority";
     private static final String TAG_PATTERNS = "Patterns";
 
@@ -88,8 +89,8 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
     private List<IPatternDetails> availablePatterns = List.of();
     private boolean storedPatternCountDirty = true;
     private int storedPatternCount;
-    private long nextPeriodicScan;
     @Nullable private BlockPos gridLinkPos;
+    @Nullable private MachineMetricKey performanceMetricKey;
     private int patternPriority;
     private int tier1Fields;
     private int tier2Fields;
@@ -130,10 +131,8 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
 
     public void serverTick() {
         if (!(level instanceof ServerLevel serverLevel)) return;
-        long gameTime = level.getGameTime();
-        if (structureDirty || gameTime >= nextPeriodicScan) {
+        if (structureDirty) {
             structureDirty = false;
-            nextPeriodicScan = gameTime + PERIODIC_RESCAN_TICKS;
             refreshStructure(serverLevel);
         }
         if (patternUpdatePending) {
@@ -151,10 +150,15 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
     public void scanStructure(Level scanLevel) {
         if (scanLevel instanceof ServerLevel serverLevel && scanLevel == level) {
             structureDirty = false;
-            nextPeriodicScan = scanLevel.getGameTime() + PERIODIC_RESCAN_TICKS;
             refreshStructure(serverLevel);
             updateVisualState();
         }
+    }
+
+    @Override
+    public void onReady() {
+        super.onReady();
+        markStructureDirty();
     }
 
     @Override public void addPart(BlockPos partPos) { markStructureDirty(); }
@@ -163,52 +167,67 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
     @Override public BlockPos getControllerPos() { return worldPosition; }
 
     private void refreshStructure(ServerLevel serverLevel) {
-        Direction structureFacing = getStructureFacing();
         MultiblockPattern pattern = getDefinition().pattern();
-        indexCompleteFootprint(pattern, structureFacing);
-        MultiblockPattern.MatchResult match = pattern.matchFast(serverLevel, worldPosition, structureFacing);
-        if (match.hasUnloadedPositions()) return;
-        if (!match.isValid()) {
-            deform();
-            return;
-        }
+        long startedAt = System.nanoTime();
+        try {
+            Direction structureFacing = getStructureFacing();
+            indexRelevantFootprint(pattern, structureFacing);
+            MultiblockPattern.MatchResult match = pattern.matchFast(serverLevel, worldPosition, structureFacing);
+            if (match.hasUnloadedPositions()) return;
+            if (!match.isValid()) {
+                deform();
+                return;
+            }
 
-        List<BlockPos> links = pattern.getExpectedPositions(worldPosition, structureFacing, 'L');
-        if (links.size() != 1) {
-            deform();
-            return;
-        }
+            List<BlockPos> links = pattern.getExpectedPositions(worldPosition, structureFacing, 'L');
+            if (links.size() != 1) {
+                deform();
+                return;
+            }
 
-        int mk1 = 0;
-        int mk2 = 0;
-        int mk3 = 0;
-        for (BlockPos fieldPos : pattern.getExpectedPositions(worldPosition, structureFacing, 'F')) {
-            BlockState fieldState = serverLevel.getBlockState(fieldPos);
-            if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())) mk1++;
-            else if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())) mk2++;
-            else if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get())) mk3++;
-        }
+            int mk1 = 0;
+            int mk2 = 0;
+            int mk3 = 0;
+            for (BlockPos fieldPos : pattern.getExpectedPositions(worldPosition, structureFacing, 'F')) {
+                BlockState fieldState = serverLevel.getBlockState(fieldPos);
+                if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())) mk1++;
+                else if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())) mk2++;
+                else if (fieldState.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get())) mk3++;
+            }
 
-        BlockPos discoveredLink = links.getFirst().immutable();
-        if (gridLinkPos != null && !gridLinkPos.equals(discoveredLink)) detachGridLink();
-        gridLinkPos = discoveredLink;
-        tier1Fields = mk1;
-        tier2Fields = mk2;
-        tier3Fields = mk3;
-        patternCapacity = mk1 * SLOTS_PER_MK1_FIELD
-                + mk2 * SLOTS_PER_MK2_FIELD
-                + mk3 * SLOTS_PER_MK3_FIELD;
-        terminalPatternSlotsDirty = true;
+            BlockPos discoveredLink = links.getFirst().immutable();
+            if (gridLinkPos != null && !gridLinkPos.equals(discoveredLink)) detachGridLink();
+            gridLinkPos = discoveredLink;
+            tier1Fields = mk1;
+            tier2Fields = mk2;
+            tier3Fields = mk3;
+            patternCapacity = mk1 * SLOTS_PER_MK1_FIELD
+                    + mk2 * SLOTS_PER_MK2_FIELD
+                    + mk3 * SLOTS_PER_MK3_FIELD;
+            terminalPatternSlotsDirty = true;
 
-        // Ownership must be visible before the link refreshes its cable capability.
-        formed = true;
-        if (serverLevel.getBlockEntity(discoveredLink) instanceof QuantumGridLinkBE link) {
-            link.linkToController(worldPosition);
-            IGridNode controllerNode = getMainNode().getNode();
-            link.synchronizeInternalNodes(controllerNode == null ? List.of() : List.of(controllerNode));
-            link.refreshGridConnection();
+            // Ownership must be visible before the link refreshes its cable capability.
+            formed = true;
+            if (serverLevel.getBlockEntity(discoveredLink) instanceof QuantumGridLinkBE link) {
+                link.linkToController(worldPosition);
+                IGridNode controllerNode = getMainNode().getNode();
+                link.synchronizeInternalNodes(controllerNode == null ? List.of() : List.of(controllerNode));
+                link.refreshGridConnection();
+            }
+            setChanged();
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordScan(performanceMetricKey(),
+                    System.nanoTime() - startedAt, pattern.getTestedPositionCount(), serverLevel.getGameTime());
         }
-        setChanged();
+    }
+
+    private MachineMetricKey performanceMetricKey() {
+        if (performanceMetricKey == null) {
+            performanceMetricKey = new MachineMetricKey(
+                    level == null ? "unknown" : level.dimension().location().toString(),
+                    worldPosition.asLong(), getClass().getSimpleName());
+        }
+        return performanceMetricKey;
     }
 
     private void deform() {
@@ -224,10 +243,11 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
         setChanged();
     }
 
-    private void indexCompleteFootprint(MultiblockPattern pattern, Direction facing) {
+    private void indexRelevantFootprint(MultiblockPattern pattern, Direction facing) {
         if (level == null) return;
-        List<Long> footprint = pattern.getSymbols().stream()
-                .flatMap(symbol -> pattern.getExpectedPositions(worldPosition, facing, symbol).stream())
+        List<Long> footprint = java.util.stream.Stream.concat(
+                        java.util.stream.Stream.of(worldPosition),
+                        pattern.getTrackedPositions(worldPosition, facing).stream())
                 .map(BlockPos::asLong)
                 .toList();
         StructureMembershipIndex.INSTANCE.register(

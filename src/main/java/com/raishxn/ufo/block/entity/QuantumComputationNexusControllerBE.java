@@ -28,6 +28,8 @@ import com.raishxn.ufo.block.entity.pattern.QuantumComputationNexusPatternFactor
 import com.raishxn.ufo.crafting.NexusSharedCraftingCpuPool;
 import com.raishxn.ufo.core.MegaCoProcessorTier;
 import com.raishxn.ufo.core.MegaCraftingStorageTier;
+import com.raishxn.ufo.diagnostic.MachineMetricKey;
+import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModMenus;
 import com.raishxn.ufo.screen.QuantumComputationNexusMenu;
@@ -59,7 +61,6 @@ import org.jetbrains.annotations.Nullable;
 public final class QuantumComputationNexusControllerBE extends AENetworkedBlockEntity
         implements StructureInvalidationTarget, MenuProvider, IMultiblockController,
         QuantumGridLinkHost, NexusVirtualCpuHost, IPriorityHost {
-    private static final int PERIODIC_RESCAN_TICKS = 20;
     public static final int INFINITE_MODE_MODULE_THRESHOLD = 25;
     private static final String TAG_CPU_POOL = "NexusCpuPool";
     private static final String TAG_CPU_PRIORITY = "CpuPriority";
@@ -68,7 +69,6 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
     private final NexusSharedCraftingCpuPool cpuPool = new NexusSharedCraftingCpuPool(this);
     private boolean formed;
     private boolean structureDirty = true;
-    private long nextPeriodicScan;
     private List<BlockPos> modulePositions = List.of();
     private Set<BlockPos> moduleSpace = Set.of();
     @Nullable private BlockPos gridLinkPos;
@@ -77,6 +77,7 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
     private int coProcessorModuleCount;
     private boolean infiniteMode;
     private int cpuPriority;
+    @Nullable private MachineMetricKey performanceMetricKey;
 
     private final ContainerData menuData = new ContainerData() {
         @Override
@@ -107,10 +108,8 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
 
     public void serverTick() {
         if (!(level instanceof ServerLevel serverLevel)) return;
-        long gameTime = level.getGameTime();
-        if (structureDirty || gameTime >= nextPeriodicScan) {
+        if (structureDirty) {
             structureDirty = false;
-            nextPeriodicScan = gameTime + PERIODIC_RESCAN_TICKS;
             refreshStructure(serverLevel);
         }
         if (!cpuPool.hasPersistentState() && formed) configurePool();
@@ -121,11 +120,11 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
     @Override public void scanStructure(Level scanLevel) {
         if (scanLevel instanceof ServerLevel serverLevel && scanLevel == level) {
             structureDirty = false;
-            nextPeriodicScan = scanLevel.getGameTime() + PERIODIC_RESCAN_TICKS;
             refreshStructure(serverLevel);
             updateVisualState();
         }
     }
+    @Override public void onReady() { super.onReady(); markStructureDirty(); }
     @Override public void addPart(BlockPos partPos) { markStructureDirty(); }
     @Override public void removePart(BlockPos partPos) { markStructureDirty(); }
     @Override public List<BlockPos> getParts() {
@@ -136,66 +135,81 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
     @Override public BlockPos getControllerPos() { return worldPosition; }
 
     private void refreshStructure(ServerLevel serverLevel) {
-        Direction facing = getFacing();
         MultiblockPattern pattern = getDefinition().pattern();
-        indexCompleteFootprint(pattern, facing);
-        MultiblockPattern.MatchResult match = pattern.matchFast(serverLevel, worldPosition, facing);
-        if (match.hasUnloadedPositions()) return;
-        if (!match.isValid()) { deform(); return; }
+        long startedAt = System.nanoTime();
+        try {
+            Direction facing = getFacing();
+            indexRelevantFootprint(pattern, facing);
+            MultiblockPattern.MatchResult match = pattern.matchFast(serverLevel, worldPosition, facing);
+            if (match.hasUnloadedPositions()) return;
+            if (!match.isValid()) { deform(); return; }
 
-        List<BlockPos> links = pattern.getExpectedPositions(worldPosition, facing, 'L');
-        if (links.size() != 1 || !(serverLevel.getBlockEntity(links.getFirst()) instanceof QuantumGridLinkBE link)) {
-            deform();
-            return;
-        }
-        BlockPos discoveredLink = links.getFirst().immutable();
-        if (gridLinkPos != null && !gridLinkPos.equals(discoveredLink)) detachGridLink();
-        gridLinkPos = discoveredLink;
-
-        List<BlockPos> spaces = pattern.getExpectedPositions(worldPosition, facing, 'I');
-        moduleSpace = Set.copyOf(spaces);
-        List<CraftingBlockEntity> modules = new ArrayList<>();
-        CraftingComputeCapacity capacity = CraftingComputeCapacity.ZERO;
-        int storages = 0;
-        int coProcessors = 0;
-        int ultimateStorages = 0;
-        int ultimateCoProcessors = 0;
-        for (BlockPos pos : spaces) {
-            if (!serverLevel.isLoaded(pos)) return;
-            BlockState state = serverLevel.getBlockState(pos);
-            CraftingComputeCapacity contribution = contributionOf(state);
-            if (!contribution.storageBytes().isZero()) storages++;
-            if (!contribution.parallelLanes().isZero()) coProcessors++;
-            if (state.is(ModBlocks.CRAFTING_STORAGE_BLOCKS.get(MegaCraftingStorageTier.STORAGE_1QD).get())) {
-                ultimateStorages++;
+            List<BlockPos> links = pattern.getExpectedPositions(worldPosition, facing, 'L');
+            if (links.size() != 1 || !(serverLevel.getBlockEntity(links.getFirst()) instanceof QuantumGridLinkBE link)) {
+                deform();
+                return;
             }
-            if (state.is(ModBlocks.CO_PROCESSOR_BLOCKS.get(MegaCoProcessorTier.COPROCESSOR_2B).get())) {
-                ultimateCoProcessors++;
-            }
-            capacity = capacity.add(contribution);
-            if (serverLevel.getBlockEntity(pos) instanceof CraftingBlockEntity module) modules.add(module);
-        }
+            BlockPos discoveredLink = links.getFirst().immutable();
+            if (gridLinkPos != null && !gridLinkPos.equals(discoveredLink)) detachGridLink();
+            gridLinkPos = discoveredLink;
 
-        clearModuleOwnershipNotIn(modules);
-        for (CraftingBlockEntity module : modules) {
-            if (module.getCluster() != null) module.breakCluster();
-            ((NexusCraftingUnitOwnership) module).ufo$setNexusController(worldPosition);
+            List<BlockPos> spaces = pattern.getExpectedPositions(worldPosition, facing, 'I');
+            moduleSpace = Set.copyOf(spaces);
+            List<CraftingBlockEntity> modules = new ArrayList<>();
+            CraftingComputeCapacity capacity = CraftingComputeCapacity.ZERO;
+            int storages = 0;
+            int coProcessors = 0;
+            int ultimateStorages = 0;
+            int ultimateCoProcessors = 0;
+            for (BlockPos pos : spaces) {
+                if (!serverLevel.isLoaded(pos)) return;
+                BlockState state = serverLevel.getBlockState(pos);
+                CraftingComputeCapacity contribution = contributionOf(state);
+                if (!contribution.storageBytes().isZero()) storages++;
+                if (!contribution.parallelLanes().isZero()) coProcessors++;
+                if (state.is(ModBlocks.CRAFTING_STORAGE_BLOCKS.get(MegaCraftingStorageTier.STORAGE_1QD).get())) {
+                    ultimateStorages++;
+                }
+                if (state.is(ModBlocks.CO_PROCESSOR_BLOCKS.get(MegaCoProcessorTier.COPROCESSOR_2B).get())) {
+                    ultimateCoProcessors++;
+                }
+                capacity = capacity.add(contribution);
+                if (serverLevel.getBlockEntity(pos) instanceof CraftingBlockEntity module) modules.add(module);
+            }
+
+            clearModuleOwnershipNotIn(modules);
+            for (CraftingBlockEntity module : modules) {
+                if (module.getCluster() != null) module.breakCluster();
+                ((NexusCraftingUnitOwnership) module).ufo$setNexusController(worldPosition);
+            }
+            modulePositions = modules.stream().map(BlockEntity::getBlockPos).map(BlockPos::immutable).toList();
+            exactCapacity = capacity;
+            storageModuleCount = storages;
+            coProcessorModuleCount = coProcessors;
+            infiniteMode = ultimateStorages >= INFINITE_MODE_MODULE_THRESHOLD
+                    && ultimateCoProcessors >= INFINITE_MODE_MODULE_THRESHOLD;
+            // Formation describes the shell. Compute readiness is a separate state derived from the
+            // installed storage capacity, allowing an empty Nexus to connect and report exactly what
+            // it is missing instead of contradicting the structure scanner.
+            formed = true;
+            link.linkToController(worldPosition);
+            link.synchronizeInternalNodes(List.of());
+            configurePool();
+            onGridConnectableSidesChanged();
+            setChanged();
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordScan(performanceMetricKey(),
+                    System.nanoTime() - startedAt, pattern.getTestedPositionCount(), serverLevel.getGameTime());
         }
-        modulePositions = modules.stream().map(BlockEntity::getBlockPos).map(BlockPos::immutable).toList();
-        exactCapacity = capacity;
-        storageModuleCount = storages;
-        coProcessorModuleCount = coProcessors;
-        infiniteMode = ultimateStorages >= INFINITE_MODE_MODULE_THRESHOLD
-                && ultimateCoProcessors >= INFINITE_MODE_MODULE_THRESHOLD;
-        // Formation describes the shell. Compute readiness is a separate state derived from the
-        // installed storage capacity, allowing an empty Nexus to connect and report exactly what
-        // it is missing instead of contradicting the structure scanner.
-        formed = true;
-        link.linkToController(worldPosition);
-        link.synchronizeInternalNodes(List.of());
-        configurePool();
-        onGridConnectableSidesChanged();
-        setChanged();
+    }
+
+    private MachineMetricKey performanceMetricKey() {
+        if (performanceMetricKey == null) {
+            performanceMetricKey = new MachineMetricKey(
+                    level == null ? "unknown" : level.dimension().location().toString(),
+                    worldPosition.asLong(), getClass().getSimpleName());
+        }
+        return performanceMetricKey;
     }
 
     private void configurePool() {
@@ -242,9 +256,12 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
         }
     }
 
-    private void indexCompleteFootprint(MultiblockPattern pattern, Direction facing) {
-        List<Long> footprint = pattern.getSymbols().stream()
-                .flatMap(symbol -> pattern.getExpectedPositions(worldPosition, facing, symbol).stream())
+    private void indexRelevantFootprint(MultiblockPattern pattern, Direction facing) {
+        List<Long> footprint = java.util.stream.Stream.concat(
+                        java.util.stream.Stream.of(worldPosition),
+                        java.util.stream.Stream.concat(
+                                pattern.getTrackedPositions(worldPosition, facing).stream(),
+                                pattern.getExpectedPositions(worldPosition, facing, 'I').stream()))
                 .map(BlockPos::asLong).toList();
         StructureMembershipIndex.INSTANCE.register(
                 level.dimension().location().toString(), worldPosition.asLong(), footprint);
