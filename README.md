@@ -257,16 +257,20 @@ UFO Future is a Gradle composite build: it pulls **RaishxCore** from a sibling
 directory instead of a published artifact.
 
 ```bash
-git clone https://github.com/Raishxn/RaishxCore.git         UFO-Core-1.21.1
+git clone https://github.com/Raishxn/RaishxCore.git         RaishxCore
 git clone https://github.com/Raishxn/UFO-Future-1.21.1.git UFO-Future-1.21.1
 cd UFO-Future-1.21.1
+git -C ../RaishxCore checkout "$(sed -n 's/^raishxcore_revision=//p' gradle.properties)"
 ./gradlew build      # compiles, runs datagen and the unit test suite
 ./gradlew runClient  # launches a dev client with the test modpack
 ```
 
 Both checkouts must sit side by side — `settings.gradle` includes
-`../UFO-Core-1.21.1` and substitutes the `com.raishxn.ufocore:raishxcore`
-dependency with it.
+`../RaishxCore` and substitutes the `com.raishxn.ufocore:raishxcore`
+dependency with it. Build and release CI check out the exact Core commit in
+`raishxcore_revision`. Release artifacts include both UFO and Core JARs with
+checksums. The development GameTests run with `./gradlew runGameTestServer`
+and `./gradlew -p ../RaishxCore runGameTestServer`.
 
 ---
 

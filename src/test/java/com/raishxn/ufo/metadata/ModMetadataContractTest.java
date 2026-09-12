@@ -33,7 +33,7 @@ class ModMetadataContractTest {
         assertDependency(dependencies, "neoforge", "required", "[21.1.216,)", "NONE", "BOTH");
         assertDependency(dependencies, "minecraft", "required", "[1.21.1]", "NONE", "BOTH");
         assertDependency(dependencies, "ae2", "required", "[19.2.17,20)", "AFTER", "BOTH");
-        assertDependency(dependencies, "raishxcore", "required", "[0.1.0-alpha.1,0.2)", "AFTER", "BOTH");
+        assertDependency(dependencies, "raishxcore", "required", "[0.1.0-alpha.2,0.2)", "AFTER", "BOTH");
         assertDependency(dependencies, "ae2addonlib", "required", "[1.0.3-1.21.1,2)", "AFTER", "BOTH");
         assertDependency(dependencies, "geckolib", "required", "[4.8.2,5)", "AFTER", "BOTH");
         assertDependency(dependencies, "mekanism", "required", "[10.7.18,11)", "AFTER", "BOTH");

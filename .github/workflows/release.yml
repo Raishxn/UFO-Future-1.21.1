@@ -13,12 +13,33 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ufo
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          path: ufo
           fetch-depth: 0
           fetch-tags: true
+
+      - name: Read pinned RaishxCore revision
+        id: core
+        run: |
+          REVISION=$(sed -n 's/^raishxcore_revision=//p' gradle.properties)
+          if ! [[ "$REVISION" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "raishxcore_revision must be a full commit SHA"
+            exit 1
+          fi
+          echo "revision=$REVISION" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout RaishxCore
+        uses: actions/checkout@v4
+        with:
+          repository: Raishxn/RaishxCore
+          ref: ${{ steps.core.outputs.revision }}
+          path: RaishxCore
 
       - name: Setup JDK 21
         uses: actions/setup-java@v4
@@ -35,6 +56,9 @@ jobs:
           VERSION=$(grep '^mod_version=' gradle.properties | cut -d'=' -f2)
           echo "value=$VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Verify RaishxCore
+        run: ./gradlew -p ../RaishxCore build runGameTestServer --stacktrace
+
       - name: Run data generators
         run: ./gradlew runData --stacktrace
 
@@ -47,18 +71,23 @@ jobs:
           fi
 
       - name: Build with Gradle
-        run: ./gradlew build --stacktrace
+        run: ./gradlew build runGameTestServer --stacktrace
+
+      - name: Collect companion artifacts
+        run: cp ../RaishxCore/build/libs/*.jar build/libs/
 
       - name: Generate checksums
-        run: sha256sum build/libs/*.jar > build/libs/SHA256SUMS
+        run: |
+          cd build/libs
+          sha256sum *.jar > SHA256SUMS
 
       - name: Upload release artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ufo-future-${{ steps.version.outputs.value }}
           path: |
-            build/libs/*.jar
-            build/libs/SHA256SUMS
+            ufo/build/libs/*.jar
+            ufo/build/libs/SHA256SUMS
 
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/')
@@ -66,5 +95,5 @@ jobs:
         with:
           generate_release_notes: true
           files: |
-            build/libs/*.jar
-            build/libs/SHA256SUMS
+            ufo/build/libs/*.jar
+            ufo/build/libs/SHA256SUMS
