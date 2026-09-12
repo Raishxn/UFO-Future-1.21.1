@@ -302,14 +302,14 @@ public final class EndgameStructureLifecycleGameTests {
         });
     }
 
-    private static long scanCount(GameTestHelper helper, BlockPos controllerPos) {
+    static long scanCount(GameTestHelper helper, BlockPos controllerPos) {
         String dimension = helper.getLevel().dimension().location().toString();
         var snapshot = MachinePerformanceRegistry.INSTANCE.snapshot(dimension, controllerPos.asLong());
         helper.assertTrue(snapshot.isPresent(), "missing structure scan metrics for controller");
         return snapshot.orElseThrow().scanCount();
     }
 
-    private static void assertScanCount(GameTestHelper helper, BlockPos controllerPos, long expected, String message) {
+    static void assertScanCount(GameTestHelper helper, BlockPos controllerPos, long expected, String message) {
         long actual = scanCount(helper, controllerPos);
         helper.assertTrue(actual == expected, message + ": expected " + expected + ", got " + actual);
     }
