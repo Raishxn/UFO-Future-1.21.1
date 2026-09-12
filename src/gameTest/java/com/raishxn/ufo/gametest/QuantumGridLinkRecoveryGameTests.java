@@ -43,10 +43,37 @@ public final class QuantumGridLinkRecoveryGameTests {
         helper.assertTrue(chemicalCell.isBlackListed(cellStack,
                 appeng.api.stacks.AEFluidKey.of(net.minecraft.world.level.material.Fluids.WATER)),
                 "Chemical cell must reject ordinary fluids, including without Mekanism");
+        if (loaded) {
+            var hydrogen = com.raishxn.ufo.compat.mekanism.MekanismChemicalCompat.createAeKey(
+                    net.minecraft.resources.ResourceLocation.parse("mekanism:hydrogen"), 64);
+            var inventory = appeng.api.storage.StorageCells.getCellInventory(cellStack, null);
+            helper.assertTrue(hydrogen != null && inventory != null,
+                    "Pulsar cell must expose a chemical inventory when Mekanism is installed");
+            helper.assertTrue(inventory.insert(hydrogen, 64, Actionable.MODULATE, IActionSource.empty()) == 64,
+                    "Pulsar cell must store chemicals when Mekanism is installed");
+            helper.assertTrue(inventory.extract(hydrogen, 64, Actionable.MODULATE, IActionSource.empty()) == 64,
+                    "Pulsar cell must return its stored chemicals");
+        }
         var infinityCell = (com.raishxn.ufo.item.InfinityCell)
                 com.raishxn.ufo.item.ModCells.INFINITY_ANTIMATTER_PELLET_CELL.get();
         helper.assertTrue((infinityCell.getRecord() != null) == loaded,
                 "Mekanism Infinity cell must only supply resources when Mekanism is installed");
+        var tab = com.raishxn.ufo.item.ModCreativeModeTabs.UFO_ITEMS_TAB.get();
+        tab.buildContents(new net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters(
+                net.minecraft.world.flag.FeatureFlags.REGISTRY.allFlags(), true,
+                helper.getLevel().registryAccess()));
+        for (var item : com.raishxn.ufo.item.ModCellItems.chemicalStorageItems()) {
+            boolean visible = tab.getDisplayItems().stream().anyMatch(stack -> stack.is(item));
+            helper.assertTrue(visible == loaded,
+                    "Pulsar cells and housing must only appear in creative with Mekanism: "
+                            + net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item));
+            helper.assertTrue(helper.getLevel().getRecipeManager().byKey(
+                            net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item)).isPresent() == loaded,
+                    "Pulsar cell and housing recipes must only load with Mekanism");
+        }
+        helper.assertTrue(tab.getDisplayItems().stream().anyMatch(stack ->
+                        stack.is(com.raishxn.ufo.item.ModItems.PULSAR_FRAGMENT_INGOT.get())),
+                "Ordinary Pulsar progression materials must remain visible");
         helper.succeed();
     }
 

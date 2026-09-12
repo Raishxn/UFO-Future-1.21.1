@@ -182,10 +182,14 @@ dependencies {
         localRuntime "mekanism:Mekanism:${mekanism_version}:generators"
     }
     localRuntime "curse.maven:ex-pattern-provider-892005:${ex_pattern_file_id}"
-    localRuntime "curse.maven:jei-238222:${jei_file_id}"
+    if (!providers.gradleProperty('withoutJei').isPresent()) {
+        localRuntime "curse.maven:jei-238222:${jei_file_id}"
+        localRuntime "curse.maven:ae2-jei-integration-1074338:${ae2_jei_integration_file_id}"
+    }
     compileOnly "dev.emi:emi-neoforge:${emi_version}"
-    localRuntime "dev.emi:emi-neoforge:${emi_version}"
-    localRuntime "curse.maven:ae2-jei-integration-1074338:${ae2_jei_integration_file_id}"
+    if (!providers.gradleProperty('withoutEmi').isPresent()) {
+        localRuntime "dev.emi:emi-neoforge:${emi_version}"
+    }
     localRuntime "curse.maven:mmmmmmmmmmmm-225738:${mmmmmmmmmmmm_file_id}"
     localRuntime "curse.maven:selene-499980:${selene_file_id}"
     localRuntime "curse.maven:kubejs-238086:${kubejs_file_id}"
@@ -232,6 +236,23 @@ def prepareUfoGameTests = tasks.register('prepareUfoGameTests', Copy) {
     into 'run/gameteststructures'
 }
 tasks.named('runGameTestServer') { dependsOn prepareUfoGameTests }
+
+// Boot a disposable copy of the GameTest world and verify the real viewer indexes.
+neoForge.runs {
+    visibilityClient {
+        client()
+        loadedMods = [neoForge.mods.ufo, neoForge.mods.ufo_tests]
+        systemProperty 'ufo.visibilitySmoke', 'true'
+        programArguments.addAll '--quickPlaySingleplayer', 'ufo-visibility-smoke'
+    }
+}
+def prepareVisibilityWorld = tasks.register('prepareVisibilityWorld', Sync) {
+    dependsOn tasks.named('runGameTestServer')
+    from 'run/world'
+    exclude 'session.lock'
+    into 'run/saves/ufo-visibility-smoke'
+}
+tasks.named('runVisibilityClient') { dependsOn prepareVisibilityWorld }
 
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
@@ -284,7 +305,8 @@ tasks.withType(ProcessResources).configureEach {
 def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
     dependsOn tasks.named('runData'), generateModMetadata
     mustRunAfter tasks.named('compileTestJava'), tasks.named('test'),
-            tasks.named('compileGameTestJava'), tasks.named('runGameTestServer')
+            tasks.named('compileGameTestJava'), tasks.named('runGameTestServer'),
+            tasks.named('runVisibilityClient')
     from('src/generated/resources')
     from('src/main/resources')
     from(generateModMetadata)

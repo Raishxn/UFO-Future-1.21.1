@@ -154,6 +154,8 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
 
 Mekanism enables chemical processing and Mekanism-specific cells. Those cells
 remain inactive without it, and recipes that require its resources need Mekanism.
+Pulsar Chambers and their housing are hidden from creative and JEI/EMI when
+Mekanism is absent; their registered IDs remain available for existing saves.
 UFO no longer requires GeckoLib; other mods in your pack may still require it.
 
 ### Your First Steps
@@ -276,6 +278,10 @@ checksums. The development GameTests run with `./gradlew runGameTestServer`
 and `./gradlew -p ../RaishxCore runGameTestServer`. Use
 `./gradlew runGameTestServer -PwithoutMekanism` to test without Mekanism or
 Applied Mekanistics.
+`./gradlew runVisibilityClient -PwithoutMekanism` opens a disposable copy of the
+GameTest world, checks creative and JEI/EMI visibility, then closes the client.
+Add `-PwithoutJei` or `-PwithoutEmi` to check each viewer separately; omit
+`-PwithoutMekanism` to check visibility and chemical storage with the integration.
 
 ---
 

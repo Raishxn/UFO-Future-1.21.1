@@ -80,6 +80,17 @@ public final class ModCellItems {
         return ITEMS.register(id, () -> new StorageComponentItem(new Item.Properties(), kibiBytes));
     }
 
+    public static java.util.List<Item> chemicalStorageItems() {
+        return java.util.List.of(PULSAR_CELL_HOUSING.get(), CHEMICAL_CELL_40M.get(),
+                CHEMICAL_CELL_100M.get(), CHEMICAL_CELL_250M.get(),
+                CHEMICAL_CELL_750M.get(), CHEMICAL_CELL_SINGULARITY.get());
+    }
+
+    public static boolean hideWithoutMekanism(Item item) {
+        return !com.raishxn.ufo.compat.mekanism.UfoMekanismStorageCompat.isLoaded()
+                && chemicalStorageItems().contains(item);
+    }
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

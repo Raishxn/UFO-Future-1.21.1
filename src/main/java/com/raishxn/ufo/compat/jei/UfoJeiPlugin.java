@@ -59,6 +59,11 @@ public class UfoJeiPlugin implements IModPlugin {
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
         runtime = jeiRuntime;
+        if (!net.neoforged.fml.ModList.get().isLoaded("mekanism")) {
+            jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK,
+                    com.raishxn.ufo.item.ModCellItems.chemicalStorageItems().stream()
+                            .map(ItemStack::new).toList());
+        }
     }
 
     @Override

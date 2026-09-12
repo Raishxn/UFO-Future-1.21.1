@@ -535,7 +535,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('D', ModItems.PULSAR_FRAGMENT_DUST.get())
                 .define('I', ModItems.PULSAR_FRAGMENT_INGOT.get())
                 .unlockedBy("has_item", has(ModItems.PULSAR_FRAGMENT_INGOT.get()))
-                .save(c);
+                .save(c.withConditions(new ModLoadedCondition("mekanism")));
 
         this.buildCellAssembly(c, ModCellItems.ITEM_CELL_40M.get(), ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get(), ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
         this.buildCellAssembly(c, ModCellItems.ITEM_CELL_100M.get(), ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get(), ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());

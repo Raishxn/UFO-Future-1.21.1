@@ -27,7 +27,8 @@
     "MixinMEStorageScreen",
     "MixinModelBakery",
     "MixinJemiStructureRecipe",
-    "MixinEmiStructureInput"
+    "MixinEmiStructureInput",
+    "MixinEmiOptionalChemicalItems"
   ],
   "injectors": {
     "defaultRequire": 1

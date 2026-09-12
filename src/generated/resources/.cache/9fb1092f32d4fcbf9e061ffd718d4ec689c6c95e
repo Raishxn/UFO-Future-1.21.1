@@ -1,4 +1,4 @@
-// 1.21.1	2026-09-11T17:47:54.129604877	Recipes
+// 1.21.1	2026-09-12T15:13:12.042396657	Recipes
 1d246551720da7a4278e01eabd033d544a6bdb32 data/ufo/advancement/recipes/combat/ufo_abyssal_sight_card.json
 273fbc64cfd42799ed2e94dcd62220d18b0be8db data/ufo/advancement/recipes/combat/ufo_adaptive_biosphere_card.json
 2ac858c09ad8edb63ed3f1aa10865d0083affd12 data/ufo/advancement/recipes/combat/ufo_aegis_singularity_card.json
@@ -45,7 +45,7 @@ f0f5187d3b89b3804420ccad3d057a608c33373e data/ufo/advancement/recipes/misc/neutr
 fdd2616f64233f09f72bf38efadc448d43029b0a data/ufo/advancement/recipes/misc/neutron_star_reservoir_nexus.json
 9c56e75f798d0894437ce43991eba59c119ed981 data/ufo/advancement/recipes/misc/neutron_star_reservoir_singularity.json
 892e67e461bb915c2990426ca793e1b0ce90a197 data/ufo/advancement/recipes/misc/obsidian_matrix_vanilla.json
-4d90cd30787064314517fe20e30110d28efe8069 data/ufo/advancement/recipes/misc/pulsar_cell_housing.json
+589e7a29100d32a06651032db9c74a4b7c276ba0 data/ufo/advancement/recipes/misc/pulsar_cell_housing.json
 d6b46f26cf9943e49e42f9fd32fab82cadc48b51 data/ufo/advancement/recipes/misc/pulsar_chamber_beaco.json
 e0ff6f0a4883bed836198f0e5b129b00adaef07b data/ufo/advancement/recipes/misc/pulsar_chamber_core.json
 8c37d59ceb0ec03981a701b02a82448d18ef8766 data/ufo/advancement/recipes/misc/pulsar_chamber_echo.json
@@ -193,7 +193,7 @@ dd5702fea69d7994a6626efe04140b24a5b14e77 data/ufo/recipe/neutron_star_reservoir_
 e09c0154ae2e542f7d7e14a913220572e6932e2e data/ufo/recipe/neutron_star_reservoir_nexus.json
 82e15b58ca057193c55421c1f755df5017c269a2 data/ufo/recipe/neutron_star_reservoir_singularity.json
 cfa147a39e3822d6c884b5d9ae1e1ae8b2a53229 data/ufo/recipe/obsidian_matrix_vanilla.json
-b0744a1670a7ed5f5d38a3e8fb26ea62970d57df data/ufo/recipe/pulsar_cell_housing.json
+9fb4ccdb53e089c14152e8eb795da770da215b4d data/ufo/recipe/pulsar_cell_housing.json
 db0448722bee1bd7eea6f46e373db252fd507d04 data/ufo/recipe/pulsar_chamber_beaco.json
 6e2a12cf8fbdda2de322554307d5a261333e9587 data/ufo/recipe/pulsar_chamber_core.json
 7f7dd46f922c693646c734180804abe4501a6a71 data/ufo/recipe/pulsar_chamber_echo.json

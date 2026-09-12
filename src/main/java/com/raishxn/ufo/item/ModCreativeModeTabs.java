@@ -154,7 +154,9 @@ public class ModCreativeModeTabs {
                         // --- HOUSINGS DE CÉLULAS (de ModCellItems) ---
                         output.accept(ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get());
                         output.accept(ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get());
-                        output.accept(ModCellItems.PULSAR_CELL_HOUSING.get());
+                        if (!ModCellItems.hideWithoutMekanism(ModCellItems.PULSAR_CELL_HOUSING.get())) {
+                            output.accept(ModCellItems.PULSAR_CELL_HOUSING.get());
+                        }
 
                         // --- ITEM CELLS: WHITE DWARF (de ModCellItems) ---
                         output.accept(ModCellItems.ITEM_CELL_40M.get());
@@ -171,11 +173,13 @@ public class ModCreativeModeTabs {
                         output.accept(ModCellItems.FLUID_CELL_SINGULARITY.get());
 
                         // --- CHEMICAL CELLS: PULSAR CHAMBER (de ModCellItems) ---
-                        output.accept(ModCellItems.CHEMICAL_CELL_40M.get());
-                        output.accept(ModCellItems.CHEMICAL_CELL_100M.get());
-                        output.accept(ModCellItems.CHEMICAL_CELL_250M.get());
-                        output.accept(ModCellItems.CHEMICAL_CELL_750M.get());
-                        output.accept(ModCellItems.CHEMICAL_CELL_SINGULARITY.get());
+                        if (!ModCellItems.hideWithoutMekanism(ModCellItems.CHEMICAL_CELL_40M.get())) {
+                            output.accept(ModCellItems.CHEMICAL_CELL_40M.get());
+                            output.accept(ModCellItems.CHEMICAL_CELL_100M.get());
+                            output.accept(ModCellItems.CHEMICAL_CELL_250M.get());
+                            output.accept(ModCellItems.CHEMICAL_CELL_750M.get());
+                            output.accept(ModCellItems.CHEMICAL_CELL_SINGULARITY.get());
+                        }
 
 
 
