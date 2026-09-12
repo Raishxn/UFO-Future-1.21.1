@@ -83,7 +83,7 @@ import java.util.function.LongSupplier;
  * <p>
  * <b>Terminology:</b>
  * <ul>
- *   <li><b>Energy</b> (energyBuffer) = AE power charged passively from the AE grid</li>
+ *   <li><b>Energy</b> (energyBuffer) = externally supplied FE from energy hatches, accounted in AE units</li>
  *   <li><b>Fuel</b> = liquid combustible extracted from ME storage on start (e.g., Hydrogen)</li>
  *   <li><b>Coolant</b> = liquid refrigerant consumed during operation (e.g., Gelid Cryotheum)</li>
  * </ul>
@@ -117,7 +117,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private final long[] displayedRequirementAvailability = new long[DISPLAYED_REQUIREMENT_ROWS];
     private long requirementAvailabilityRefreshBucket = Long.MIN_VALUE;
 
-    // Energy buffer — AE power charged passively from AE2 network via Energy Input
+    // Energy buffer — locally stored FE supplied by Energy Input hatches, in AE units
     // Hatch
     private long energyBuffer = 0;
     private static final long GLOBAL_ENERGY_CAPACITY = 200_000_000_000L; // 200 Billion AE global buffer

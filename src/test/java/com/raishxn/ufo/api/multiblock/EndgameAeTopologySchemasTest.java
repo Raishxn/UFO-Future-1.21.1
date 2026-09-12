@@ -43,7 +43,7 @@ class EndgameAeTopologySchemasTest {
                 InfinityFabricationSingularityTopologySchema.layers(),
                 7, 7, 7,
                 0, 3, 3,
-                Map.of('A', 196L, 'C', 52L, 'F', 25L, 'G', 36L, 'H', 1L, 'L', 1L, 'Q', 12L, 'V', 8L, 'X', 12L));
+                Map.of('A', 196L, 'C', 51L, 'F', 25L, 'G', 36L, 'H', 1L, 'K', 1L, 'L', 1L, 'Q', 12L, 'V', 8L, 'X', 12L));
     }
 
     private static void assertSchema(java.util.List<String[]> layers,

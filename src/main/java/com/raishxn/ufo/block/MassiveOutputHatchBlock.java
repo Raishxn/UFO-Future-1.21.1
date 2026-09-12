@@ -74,7 +74,10 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof MassiveOutputHatchBE be) {
-            net.minecraft.network.chat.MutableComponent status = be.isNetworkReady()
+            net.minecraft.network.chat.MutableComponent status = be.supportsEnergyInput()
+                    ? net.minecraft.network.chat.Component.translatable("message.ufo.energy_hatch.external_only")
+                            .withStyle(net.minecraft.ChatFormatting.YELLOW)
+                    : be.isNetworkReady()
                     ? net.minecraft.network.chat.Component.literal(
                             be.isLinked() ? "Online — Linked to Controller" : "Online — Standalone")
                             .withStyle(net.minecraft.ChatFormatting.GREEN)
@@ -94,8 +97,12 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
 
     private static net.minecraft.network.chat.Component energyStatus(MassiveOutputHatchBE be) {
         if (!be.supportsEnergyInput()) return net.minecraft.network.chat.Component.empty();
-        return net.minecraft.network.chat.Component.literal(" — External energy: "
-                + be.getStoredExternalEnergyAE() + "/" + be.getExternalEnergyCapacityAE() + " AE")
+        long storedFe = (long) appeng.api.config.PowerUnit.AE.convertTo(
+                appeng.api.config.PowerUnit.FE, be.getStoredExternalEnergyAE());
+        long capacityFe = (long) appeng.api.config.PowerUnit.AE.convertTo(
+                appeng.api.config.PowerUnit.FE, be.getExternalEnergyCapacityAE());
+        return net.minecraft.network.chat.Component.literal(" — ").append(
+                net.minecraft.network.chat.Component.translatable("message.ufo.energy_hatch.stored", storedFe, capacityFe))
                 .withStyle(net.minecraft.ChatFormatting.AQUA);
     }
 

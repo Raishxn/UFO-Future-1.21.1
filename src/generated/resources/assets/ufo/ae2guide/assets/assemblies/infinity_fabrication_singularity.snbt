@@ -71,7 +71,7 @@
         {pos: [3, 3, 1], state: "ufo:stellar_field_generator_t1"},
         {pos: [5, 3, 1], state: "ae2:quartz_vibrant_glass"},
         {pos: [6, 3, 1], state: "ae2:fluix_block"},
-        {pos: [0, 3, 2], state: "ufo:quantum_hyper_mechanical_casing"},
+        {pos: [0, 3, 2], state: "ufo:ae_energy_input_hatch"},
         {pos: [6, 3, 2], state: "ufo:quantum_hyper_mechanical_casing"},
         {pos: [0, 3, 3], state: "ufo:infinity_fabrication_singularity_controller"},
         {pos: [1, 3, 3], state: "ufo:stellar_field_generator_t1"},
@@ -158,6 +158,7 @@
         "ae2:quartz_vibrant_glass",
         "ufo:graviton_plated_casing",
         "ufo:stellar_field_generator_t1",
+        "ufo:ae_energy_input_hatch",
         "ufo:infinity_fabrication_singularity_controller",
         "ufo:quantum_grid_link"
     ]

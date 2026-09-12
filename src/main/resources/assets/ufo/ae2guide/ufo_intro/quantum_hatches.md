@@ -35,7 +35,7 @@ The **Quantum Pattern Provider** is the cable-bus part version of the expanded p
 - **ME Massive Fluid Hatch** is also the shared coolant input: it combines a
   **16,000,000 mB local tank** for external coolant supply with ME recipe output support.
 - **ME Massive Input Hatch** feeds bulk item throughput into multiblocks.
-- **AE Energy Input Hatch** accepts AE2 grid power and external FE.
+- **FE Energy Input Hatch** stores externally supplied FE for the multiblock.
 
 ## AE2 Connection Rules
 
@@ -49,9 +49,12 @@ exposes a native NeoForge fluid input capability for coolant automation.
   Stable Coolant or Temporal Fluid; it cannot drain the tank or mix coolants.
 - Put recipe item and fluid inputs in ME storage; coolant must be delivered to the local tank.
 - Finished item and fluid outputs return to ME storage through the matching hatch.
-- The AE Energy Input Hatch accepts FE from any face and AE from its connected grid.
-  External energy is buffered, saved and consumed first; AE2 supplies any remainder.
-  Conversion and consumption follow the AE2 power configuration.
+- The FE Energy Input Hatch accepts FE from any face through an energy cable or
+  another explicitly configured FE output. It never pulls power from AE2,
+  Applied Flux storage or adjacent batteries. Only its saved local reservoir
+  supplies the multiblock; processing waits for a refill when fuel runs out.
+  An ME connection is not required to charge or consume this reservoir.
+  Internal conversion and consumption still follow the AE2 power configuration.
 - Use the hatch role the structure asks for: item input, item output, fluid output or AE energy.
 
 Stellar Nexus, QMF, QPA, Slicer and Cryoforge require one coolant hatch and one

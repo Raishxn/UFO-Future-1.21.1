@@ -47,6 +47,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashSet;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -85,6 +86,7 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
     private long nextRoutingRefresh;
     private long nextAutomaticCraft;
     @Nullable private BlockPos gridLinkPos;
+    private List<BlockPos> energyHatchPositions = List.of();
     private SingularityCraftingMode craftingMode = SingularityCraftingMode.BALANCED;
     private List<IPatternDetails> routedPatterns = List.of();
     private int patternProviderCount;
@@ -171,7 +173,11 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
 
     @Override public void addPart(BlockPos partPos) { markStructureDirty(); }
     @Override public void removePart(BlockPos partPos) { markStructureDirty(); }
-    @Override public List<BlockPos> getParts() { return gridLinkPos == null ? List.of() : List.of(gridLinkPos); }
+    @Override public List<BlockPos> getParts() {
+        List<BlockPos> parts = new ArrayList<>(energyHatchPositions);
+        if (gridLinkPos != null) parts.add(gridLinkPos);
+        return List.copyOf(parts);
+    }
     @Override public BlockPos getControllerPos() { return worldPosition; }
 
     private void refreshStructure(ServerLevel serverLevel) {
@@ -189,6 +195,21 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
         if (links.size() != 1) {
             deform();
             return;
+        }
+
+        List<BlockPos> discoveredEnergyHatches = match.partPositions().stream()
+                .filter(pos -> LoadedBlockEntityLookup.get(serverLevel, pos) instanceof MassiveOutputHatchBE hatch
+                        && hatch.supportsEnergyInput())
+                .map(BlockPos::immutable).toList();
+        if (discoveredEnergyHatches.isEmpty()) {
+            deform();
+            return;
+        }
+        detachEnergyHatchesNotIn(discoveredEnergyHatches);
+        energyHatchPositions = discoveredEnergyHatches;
+        for (BlockPos pos : energyHatchPositions) {
+            if (LoadedBlockEntityLookup.get(serverLevel, pos) instanceof MassiveOutputHatchBE hatch
+                    && !worldPosition.equals(hatch.getControllerPos())) hatch.linkToController(worldPosition);
         }
 
         int mk1 = 0;
@@ -283,6 +304,8 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
     private void deform() {
         boolean wasFormed = formed;
         detachGridLink();
+        detachEnergyHatchesNotIn(List.of());
+        energyHatchPositions = List.of();
         formed = false;
         tier1Fields = 0;
         tier2Fields = 0;
@@ -314,9 +337,33 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
         gridLinkPos = null;
     }
 
+    private void detachEnergyHatchesNotIn(List<BlockPos> retained) {
+        if (level == null) return;
+        for (BlockPos pos : energyHatchPositions) {
+            if (!retained.contains(pos) && LoadedBlockEntityLookup.get(level, pos) instanceof MassiveOutputHatchBE hatch
+                    && worldPosition.equals(hatch.getControllerPos())) hatch.unlinkFromController();
+        }
+    }
+
+    /** FE fuel is independent of ME grid power; no hatch or empty hatches means no paid craft. */
+    public double extractCraftingEnergy(double requested, boolean simulate) {
+        if (!formed || level == null || !Double.isFinite(requested) || requested <= 0D) return 0D;
+        double extracted = 0D;
+        for (BlockPos pos : energyHatchPositions) {
+            if (extracted >= requested) break;
+            if (LoadedBlockEntityLookup.get(level, pos) instanceof MassiveOutputHatchBE hatch
+                    && worldPosition.equals(hatch.getControllerPos())) {
+                extracted += hatch.extractBufferedExternalEnergyAE(requested - extracted, simulate);
+            }
+        }
+        return Math.min(requested, extracted);
+    }
+
     public void onControllerBroken() {
         if (level != null && !level.isClientSide()) {
             detachGridLink();
+            detachEnergyHatchesNotIn(List.of());
+            energyHatchPositions = List.of();
             StructureMembershipIndex.INSTANCE.unregister(
                     level.dimension().location().toString(), worldPosition.asLong());
         }

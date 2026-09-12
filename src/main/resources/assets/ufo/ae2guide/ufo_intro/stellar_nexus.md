@@ -22,9 +22,13 @@ The **Stellar Nexus** is the endgame stellar simulation multiblock.
 - Consumes fuel on start
 - Consumes coolant while running
 - Generates heat continuously during operation
-- Requires one item input hatch, one item output hatch, one fluid output hatch and one AE energy input hatch
+- Requires one item input hatch, one item output hatch, one fluid output hatch and one FE energy input hatch
 
-The **AE Energy Input Hatch** is the only port that charges the internal buffer. Every massive hatch connects to AE2 only through the face indicated by its orientation; the other five faces are electrically isolated, so neighboring hatches cannot create an invisible grid connection through the structure shell.
+The **FE Energy Input Hatch** is the only port that charges the internal buffer.
+Supply it with an FE energy cable: it consumes only its local reservoir, never
+AE2 grid power. Every massive hatch connects to AE2 only through the face indicated
+by its orientation; the other five faces are electrically isolated, so neighboring
+hatches cannot create an invisible grid connection through the structure shell.
 
 ## Field Tiers
 
@@ -76,7 +80,7 @@ disconnected, the controller pauses instead of discarding the active operation.
 
 ## Dedicated supply hatches
 
-Install at least one **ME Massive Fluid Hatch** and one **AE Energy Input Hatch** in any Singularity Casing position. Item input and item output hatches are also required. The preview shows an example layout; hatch positions are interchangeable. Core casings, matrices and field generators retain their own requirements.
+Install at least one **ME Massive Fluid Hatch** and one **FE Energy Input Hatch** in any Singularity Casing position. Item input and item output hatches are also required. The preview shows an example layout; hatch positions are interchangeable. Core casings, matrices and field generators retain their own requirements.
 
 Supply coolant to the fluid hatch using pipes or a player-configured ME Export Bus. The machine consumes only coolant already in that tank; it never searches ME storage for coolant. The tank holds 16,000,000 mB of one coolant. Recipe fluids and chemicals remain separate.
 

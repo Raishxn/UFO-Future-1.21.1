@@ -35,8 +35,9 @@ The structure is a **7 × 7 × 7** cube. It requires:
 
 - 1 Infinity Fabrication Singularity Controller;
 - 1 Quantum Grid Link;
-- 52 Quantum Hyper-Mechanical Casings;
-- 25 Stellar Field Generators, in any mixture of MK1, MK2 and MK3;
+- 51 Quantum Hyper-Mechanical Casings;
+- 1 FE Energy Input Hatch, replacing the casing next to the controller marked by the scanner;
+- 25 Stellar Field Generators, all of the same tier: MK1, MK2 or MK3;
 - 36 Quartz Vibrant Glass;
 - 12 Quartz Blocks;
 - 12 Fluix Blocks;
@@ -45,6 +46,14 @@ The structure is a **7 × 7 × 7** cube. It requires:
 The remaining 196 positions are ignored by validation and may be air. Connect an
 AE2 cable to the outward face of the Quantum Grid Link. The Link consumes one
 channel and at least 32 AE/t.
+
+Supply the energy hatch with an FE cable on any face. Its local reservoir is the
+only fabrication fuel source: the Singularity never draws crafting energy from
+AE2 grid power or Applied Flux storage. Additional energy hatches may replace
+Quantum Hyper-Mechanical Casings for more local storage and supply connections.
+An empty reservoir pauses new rounds until externally recharged; queued outputs
+are retained. Existing structures must replace the casing highlighted by Scan
+Structure with the required hatch.
 
 ## Pattern pages
 
@@ -66,7 +75,7 @@ in the terminal and cannot steal planning from your recipes. On-demand crafting
 for these items keeps flowing through your normal autocrafting chain.
 
 For each enabled pattern the Singularity validates one recipe copy, extracts
-every currently available copy from the network in bulk, and inserts the results
+as many copies as its ingredients and locally stored FE permit in bulk, and inserts the results
 as one bounded route. Amounts use 64-bit counters, so a single route can cover
 billions of copies without an item-by-item loop. Up to **128 routes** can be
 pending at once; routes and their outputs are persisted across world reloads.
@@ -74,26 +83,32 @@ Smithing and stonecutting crafting patterns are supported alongside normal
 crafting patterns; processing patterns continue to use their actual processing
 machines.
 
+Ingredients returned with the exact same item and components, such as the Master
+Infusion Crystal, are reserved once for the entire batch and returned once. A
+single reusable crystal can therefore process a full essence batch. Consumed
+ingredients and changed remainders, such as empty buckets or damaged tools, are
+still counted for every recipe copy.
+
 Duplicate patterns stored on different pages collapse into one deduplicated
 route.
 
 While a pattern is enabled, the Singularity repeats it continuously, like the
 Quantum Crafter: as long as ingredients remain in the network, each round
-consumes every available copy at once instead of iterating one copy at a time.
+consumes every copy affordable by its local FE supply at once instead of iterating one copy at a time.
 Disabling the pattern stops new rounds without discarding outputs that are
 already waiting for network space.
 
 ## Operating modes
 
-| Mode | Route budget | AE cost | Use case |
+| Mode | Route budget | Fuel cost (AE equivalent) | Use case |
 | --- | ---: | ---: | --- |
 | Balanced | 64/tick | 1× | General operation |
 | Speed | 128/tick | 2× | Maximum burst throughput |
 | Efficiency | 32/tick | 0.5× | Power-constrained networks |
 
 The fields select the mode automatically: **Mk.I uses Efficiency**, **Mk.II uses
-Balanced**, and **Mk.III uses Speed**. Mixed structures use their lowest installed
-tier, so Speed requires all 25 fields to be Mk.III. Replacing a field affects new
+Balanced**, and **Mk.III uses Speed**. Mixed tiers invalidate formation,
+so Speed requires all 25 fields to be Mk.III. Replacing fields affects new
 dispatches immediately without cancelling jobs or discarding queued outputs.
 
 ## Dashboard and troubleshooting
@@ -105,4 +120,5 @@ queued-route status. **Scan Structure** highlights mismatched blocks;
 - **Structure incomplete:** repair the position highlighted by the scanner.
 - **ME grid offline:** power the network, free one channel, and cable the Grid Link's outward face.
 - **Waiting for patterns:** insert a supported encoded pattern into one of the controller's pages.
+- **Patterns enabled but no new rounds:** check the FE stored in the energy hatch and its external energy supply.
 - **Routes remain queued:** ensure the ME network has storage space for the promised outputs.

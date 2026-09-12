@@ -13,7 +13,6 @@ import com.raishxn.ufo.compat.mekanism.MekanismChemicalStorage;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -211,7 +210,7 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  EnergyInputPort — explicit AE Energy Input Hatch role
+    //  EnergyInputPort — externally supplied FE reservoir (AE units internally)
     // ═══════════════════════════════════════════════════════════
 
     public double getStoredExternalEnergyAE() {
@@ -220,6 +219,14 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
 
     public long getExternalEnergyCapacityAE() {
         return this.externalEnergy.capacity();
+    }
+
+    /** Bulk crafting fuel, supplied exclusively by this hatch's saved FE reservoir. */
+    public double extractBufferedExternalEnergyAE(double requested, boolean simulate) {
+        if (!supportsEnergyInput()) return 0D;
+        double extracted = this.externalEnergy.extractAe(requested, PowerMultiplier.CONFIG.multiply(1D), simulate);
+        if (!simulate && extracted > 0D) setChanged();
+        return extracted;
     }
 
     public boolean supportsEnergyInput() {
@@ -232,39 +239,11 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
             return 0L;
         }
 
+        // Only energy explicitly delivered through the FE capability is fuel.
+        // Never pull from the ME grid, Applied Flux storage or adjacent providers.
         long buffered = this.externalEnergy.extract(maxAmount, PowerMultiplier.CONFIG.multiply(1D), simulate);
         if (!simulate && buffered > 0) setChanged();
-        long remaining = maxAmount - buffered;
-        if (remaining <= 0L || !isNetworkReady()) return buffered;
-
-        IGridNode node = this.getMainNode().getNode();
-        if (node == null || node.getGrid() == null) {
-            return buffered;
-        }
-
-        // Preferred over AE cells: FE stored inside the ME network by Applied Flux,
-        // exchanged to AE at the standard rate. AE network power stays as the last resort.
-        if (net.neoforged.fml.ModList.get().isLoaded("appflux")) {
-            long feNeeded = (long) appeng.api.config.PowerUnit.AE.convertTo(appeng.api.config.PowerUnit.FE, remaining);
-            double fromFlux = com.raishxn.ufo.compat.appflux.AppliedFluxPlugin.extractNetworkFeAsAe(
-                    node.getGrid(), feNeeded, IActionSource.ofMachine(this), simulate);
-            if (fromFlux > 0.0D) {
-                buffered += (long) Math.min(remaining, fromFlux);
-                remaining = Math.max(0L, remaining - (long) Math.min(remaining, fromFlux));
-                if (!simulate && fromFlux > 0.0D) setChanged();
-            }
-        }
-        if (remaining <= 0L) return buffered;
-
-        IEnergyService energy = node.getGrid().getEnergyService();
-        double extracted = energy.extractAEPower(
-                remaining,
-                simulate ? Actionable.SIMULATE : Actionable.MODULATE,
-                PowerMultiplier.CONFIG);
-        if (!Double.isFinite(extracted) || extracted <= 0.0D) {
-            return buffered;
-        }
-        return buffered + Math.min(remaining, (long) extracted);
+        return buffered;
     }
 
     // ═══════════════════════════════════════════════════════════

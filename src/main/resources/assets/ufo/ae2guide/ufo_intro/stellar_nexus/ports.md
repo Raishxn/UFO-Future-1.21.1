@@ -22,8 +22,10 @@ Formation requires exactly one of each operational role:
 - Massive Fluid Hatch is the coolant-input role. Its 16,000,000 mB local tank
   accepts coolant from NeoForge-compatible pipes, including Mekanism pipes, and
   retains its existing ME fluid access.
-- AE Energy Input Hatch charges the internal **200B AE** buffer and supplies the
-  controller's AE power connection.
+- FE Energy Input Hatch charges the internal **200B AE** buffer exclusively
+  from FE stored locally in the hatch. Supply it with an FE energy cable on any
+  face; no ME cable is required for energy transfer. It never drains grid power
+  or Applied Flux storage. The ME network remains separate for item/fluid access.
 
 Connect each hatch through the face indicated by its orientation. The remaining
 five faces are isolated; adjacency inside the shell does not create a hidden ME

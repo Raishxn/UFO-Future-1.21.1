@@ -31,6 +31,7 @@ public final class InfinityFabricationSingularityPatternFactory {
                     Map.of(
                             'H', MultiblockCellRole.CONTROLLER,
                             'L', MultiblockCellRole.STRUCTURE,
+                            'K', MultiblockCellRole.PORT,
                             'C', MultiblockCellRole.STRUCTURE,
                             'F', MultiblockCellRole.STRUCTURE,
                             'G', MultiblockCellRole.STRUCTURE,
@@ -59,9 +60,13 @@ public final class InfinityFabricationSingularityPatternFactory {
                 .where('L', (state, level, pos) -> QuantumPatternPredicates.isQuantumGridLink(state),
                         QuantumPatternPredicates.gridLinkName())
                 .candidates('L', MultiblockBlocks.QUANTUM_GRID_LINK.get().defaultBlockState())
-                .where('C', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasing(state),
-                        QuantumPatternPredicates.casingName())
-                .candidates('C', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get().defaultBlockState())
+                .where('C', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasing(state)
+                                || state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()),
+                        Component.literal("Quantum casing or FE Energy Input Hatch"))
+                .candidates('C', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get().defaultBlockState(),
+                        MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get().defaultBlockState())
+                .where('K', MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
+                .candidates('K', MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get().defaultBlockState())
                 .where('V', (state, level, pos) -> QuantumPatternPredicates.isGravitonCasing(state),
                         QuantumPatternPredicates.gravitonCasingName())
                 .candidates('V', ModBlocks.GRAVITON_PLATED_CASING.get().defaultBlockState())

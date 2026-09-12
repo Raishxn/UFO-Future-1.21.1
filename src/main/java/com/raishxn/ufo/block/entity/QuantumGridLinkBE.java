@@ -16,9 +16,7 @@ import appeng.api.implementations.blockentities.PatternContainerGroup;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
-import appeng.api.config.PowerMultiplier;
 import appeng.api.crafting.IPatternDetails;
-import appeng.api.networking.energy.IEnergyService;
 import appeng.api.orientation.BlockOrientation;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
@@ -39,7 +37,7 @@ import com.raishxn.ufo.block.QuantumGridLinkBlock;
 import com.raishxn.ufocore.api.crafting.SharedCraftingCpuPool;
 import com.raishxn.ufocore.api.crafting.SharedCraftingCpuPoolProvider;
 import com.raishxn.ufo.api.crafting.IAggregateCraftingProvider;
-import com.raishxn.ufo.crafting.SingularityCraftingMode;
+import com.raishxn.ufo.crafting.AggregateRecipeBatch;
 import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -409,7 +407,6 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         if (availableRoutes <= 0) return new AutoCraftResult(offset, 0);
 
         MEStorage storage = grid.getStorageService().getInventory();
-        IEnergyService energy = grid.getEnergyService();
         // Building the network-wide fuzzy-key snapshot is the expensive part. Reuse one snapshot
         // for the complete pass instead of rebuilding it once for every encoded pattern.
         NetworkCraftingInventory networkInventory = new NetworkCraftingInventory(storage);
@@ -418,8 +415,7 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         while (probedPatterns < probes && acceptedRoutes < availableRoutes) {
             IPatternDetails details = patterns.get((offset + probedPatterns) % patternCount);
             probedPatterns++;
-            if (tryAutoCraftRoute(details, storage, energy, networkInventory,
-                    singularity.getCraftingMode())) {
+            if (tryAutoCraftRoute(details, storage, networkInventory, singularity)) {
                 acceptedRoutes++;
             }
         }
@@ -432,8 +428,8 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     }
 
     private boolean tryAutoCraftRoute(IPatternDetails details, MEStorage storage,
-                                      IEnergyService energy, NetworkCraftingInventory networkInventory,
-                                      SingularityCraftingMode mode) {
+                                      NetworkCraftingInventory networkInventory,
+                                      InfinityFabricationSingularityControllerBE singularity) {
         KeyCounter expectedOutputs = new KeyCounter();
         KeyCounter expectedContainers = new KeyCounter();
         KeyCounter[] oneCopyInputs;
@@ -446,31 +442,28 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         if (oneCopyInputs == null) return false;
 
         Map<AEKey, Long> requirements = aggregateRequirements(oneCopyInputs);
-        Map<AEKey, Long> perCopyProducts = new LinkedHashMap<>();
-        addProducts(perCopyProducts, expectedOutputs, 1L);
-        addProducts(perCopyProducts, expectedContainers, 1L);
-        if (requirements.isEmpty() || perCopyProducts.isEmpty()) {
+        Map<AEKey, Long> outputs = new LinkedHashMap<>();
+        Map<AEKey, Long> containers = new LinkedHashMap<>();
+        addProducts(outputs, expectedOutputs, 1L);
+        addProducts(containers, expectedContainers, 1L);
+        if (requirements.isEmpty() || outputs.isEmpty()) {
             CraftingCpuHelper.reinjectPatternInputs(networkInventory, oneCopyInputs);
             return false;
         }
 
-        long copies = Long.MAX_VALUE;
-        for (Map.Entry<AEKey, Long> requirement : requirements.entrySet()) {
-            long perCopy = requirement.getValue();
-            long availableAfterFirst = storage.extract(
-                    requirement.getKey(), Long.MAX_VALUE, Actionable.SIMULATE, actionSource);
-            copies = Math.min(copies, saturatingAdd(1L, availableAfterFirst / perCopy));
-        }
-        for (long outputPerCopy : perCopyProducts.values()) {
-            copies = Math.min(copies, Long.MAX_VALUE / outputPerCopy);
-        }
+        AggregateRecipeBatch<AEKey> batch = AggregateRecipeBatch.of(requirements, outputs, containers);
+        long copies = batch.maximumCopies(key -> storage.extract(
+                key, Long.MAX_VALUE, Actionable.SIMULATE, actionSource));
 
         double powerPerCopy = CraftingCpuHelper.calculatePatternPower(oneCopyInputs)
-                * mode.energyMultiplier();
-        if (powerPerCopy > 0.0D && Double.isFinite(powerPerCopy)) {
-            double requestedPower = powerPerCopy * copies;
-            double availablePower = energy.extractAEPower(
-                    requestedPower, Actionable.SIMULATE, PowerMultiplier.CONFIG);
+                * singularity.getCraftingMode().energyMultiplier();
+        if (!Double.isFinite(powerPerCopy) || powerPerCopy < 0D) {
+            CraftingCpuHelper.reinjectPatternInputs(networkInventory, oneCopyInputs);
+            return false;
+        }
+        if (powerPerCopy > 0.0D) {
+            double requestedPower = Math.min(Double.MAX_VALUE, powerPerCopy * copies);
+            double availablePower = singularity.extractCraftingEnergy(requestedPower, true);
             if (availablePower < requestedPower - 0.01D) {
                 copies = Math.min(copies, floorPositive(availablePower / powerPerCopy));
             }
@@ -481,20 +474,21 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         }
 
         Map<AEKey, Long> additionallyExtracted = new LinkedHashMap<>();
-        if (!extractAdditionalCopies(storage, requirements, copies - 1L, additionallyExtracted)) {
+        if (!extractAdditionalCopies(storage, batch.consumedInputs(), copies - 1L, additionallyExtracted)) {
             reinject(storage, additionallyExtracted);
             CraftingCpuHelper.reinjectPatternInputs(networkInventory, oneCopyInputs);
             return false;
         }
 
-        Map<AEKey, Long> products = new LinkedHashMap<>();
-        for (Map.Entry<AEKey, Long> product : perCopyProducts.entrySet()) {
-            products.put(product.getKey(), product.getValue() * copies);
-        }
+        Map<AEKey, Long> products = batch.products(copies);
 
-        if (powerPerCopy > 0.0D && Double.isFinite(powerPerCopy)) {
-            energy.extractAEPower(powerPerCopy * copies, Actionable.MODULATE, PowerMultiplier.CONFIG);
+        double cost = powerPerCopy * copies;
+        if (cost > 0D && singularity.extractCraftingEnergy(cost, true) < cost - 0.000001D) {
+            reinject(storage, additionallyExtracted);
+            CraftingCpuHelper.reinjectPatternInputs(networkInventory, oneCopyInputs);
+            return false;
         }
+        if (cost > 0D) singularity.extractCraftingEnergy(cost, false);
         pendingCraftingRoutes.add(products);
         return true;
     }

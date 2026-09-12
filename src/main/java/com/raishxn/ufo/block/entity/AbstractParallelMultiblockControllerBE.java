@@ -345,7 +345,6 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         IStorageService storageService = grid.getStorageService();
         MEStorage inventory = storageService.getInventory();
         IActionSource src = IActionSource.ofMachine(nodeBE);
-        boolean relayedGrid = !this.parts.contains(nodeBE.getBlockPos());
         refreshProcessStates(recipeIndex);
         CatalystProfile catalystProfile = getCatalystProfile();
         boolean persistentActivityBefore = hasPersistentRuntimeActivity();
@@ -411,8 +410,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             ParallelProcessState processState = prepared.state();
             MultiblockProcessingRecipe recipe = prepared.recipe();
             processState.resizeBuffers(recipe.itemInputs().size(), recipe.fluidInputs().size(), recipe.chemicalInputs().size());
-            chargeEnergy(processState, requiredEnergyForNextProgress(processState, prepared),
-                    energyService, relayedGrid);
+            chargeEnergy(processState, requiredEnergyForNextProgress(processState, prepared));
             boolean materialsPlanned = planIngredientPulls(
                     processState, recipe, inventory, src, simulatedAvailability, inputBatch);
             if (materialsPlanned && hasEnergyForNextProgress(processState, prepared)) {
@@ -577,21 +575,12 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         return 1.0D;
     }
 
-    private void chargeEnergy(ParallelProcessState state, long targetEnergy,
-                              IEnergyService energyService, boolean allowGridRelay) {
+    private void chargeEnergy(ParallelProcessState state, long targetEnergy) {
         if (state.getEnergyBuffer() >= targetEnergy) {
             return;
         }
         long needed = targetEnergy - state.getEnergyBuffer();
         long extracted = this.energyPorts.extract(needed, false);
-        long remaining = needed - extracted;
-        if (allowGridRelay && remaining > 0L) {
-            double relayed = energyService.extractAEPower(
-                    remaining, Actionable.MODULATE, PowerMultiplier.CONFIG);
-            if (Double.isFinite(relayed) && relayed > 0.0D) {
-                extracted = saturatedAdd(extracted, Math.min(remaining, (long) relayed));
-            }
-        }
         state.setEnergyBuffer(saturatedAdd(state.getEnergyBuffer(), extracted));
     }
 

@@ -8,7 +8,7 @@ public final class InfinityFabricationSingularityTopologySchema {
             new String[]{"AAAAAAA", "AAAQAAA", "AACCCAA", "AXCCCXA", "AACCCAA", "AAAQAAA", "AAAAAAA"},
             new String[]{"AAAQAAA", "AGGVGGA", "AGAFAGA", "XVFFFVX", "AGAFAGA", "AGGVGGA", "AAAQAAA"},
             new String[]{"AACCCAA", "AGAFAGA", "CAAAAAC", "CFAFAFC", "CAAAAAC", "AGAFAGA", "AACCCAA"},
-            new String[]{"AQCCCQA", "XGAFAGX", "CAAAAAC", "HFAFAFL", "CAAAAAC", "XGAFAGX", "AQCCCQA"},
+            new String[]{"AQCCCQA", "XGAFAGX", "KAAAAAC", "HFAFAFL", "CAAAAAC", "XGAFAGX", "AQCCCQA"},
             new String[]{"AACCCAA", "AGAFAGA", "CAAAAAC", "CFAFAFC", "CAAAAAC", "AGAFAGA", "AACCCAA"},
             new String[]{"AAAQAAA", "AGGVGGA", "AGAFAGA", "XVFFFVX", "AGAFAGA", "AGGVGGA", "AAAQAAA"},
             new String[]{"AAAAAAA", "AAAQAAA", "AACCCAA", "AXCCCXA", "AACCCAA", "AAAQAAA", "AAAAAAA"});
@@ -17,7 +17,7 @@ public final class InfinityFabricationSingularityTopologySchema {
     }
 
     public static int schemaVersion() {
-        return 2;
+        return 3;
     }
 
     public static List<String[]> layers() {

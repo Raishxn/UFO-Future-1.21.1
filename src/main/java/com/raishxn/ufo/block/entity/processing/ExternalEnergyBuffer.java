@@ -29,6 +29,14 @@ public final class ExternalEnergyBuffer {
     }
 
     public double stored() { return stored; }
+    /** Exact AE accounting for aggregate batches, including fractional efficiency costs. */
+    public double extractAe(double requested, double multiplier, boolean simulate) {
+        if (!Double.isFinite(requested) || requested <= 0D
+                || !Double.isFinite(multiplier) || multiplier <= 0D) return 0D;
+        double accepted = Math.min(requested, stored / multiplier);
+        if (!simulate) stored = Math.max(0D, stored - accepted * multiplier);
+        return accepted;
+    }
     public long capacity() { return capacity; }
     public void restore(double value) { stored = Double.isFinite(value) ? Math.max(0, Math.min(capacity, value)) : 0; }
 }

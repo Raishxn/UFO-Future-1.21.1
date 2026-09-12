@@ -45,9 +45,12 @@ expected recipe tier.
 
 ## Dedicated supply hatches
 
-The assembly requires an **ME Massive Fluid Hatch** and an **AE Energy Input
+The assembly requires an **ME Massive Fluid Hatch** and an **FE Energy Input
 Hatch** in any compatible casing positions. The preview shows one example
 layout, not mandatory hatch locations. At least one of each is required.
+
+Supply FE through an energy cable to the energy hatch's local reservoir.
+Processing never draws its fuel from AE2 grid power.
 
 Coolant is consumed **only from the fluid hatch's local tank** (16,000,000 mB).
 Supply Gelid Cryotheum, Stable Coolant or Temporal Fluid using external fluid

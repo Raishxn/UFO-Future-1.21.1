@@ -16,7 +16,8 @@ update.
   core mod id changed from `ufocore` to `raishxcore` and the old jar no longer
   satisfies the dependency. The core registers no content, so there is nothing to
   migrate on the save side.
-- **GeckoLib** 4.9.x (as before).
+- **AE2 Addon Lib** 1.0.3 for Minecraft 1.21.1 or compatible.
+- **GeckoLib** 4.8.2+ within the declared 4.x range (as before).
 - **Mekanism** 10.7.x — **now required**. 2.1 treated Mekanism integration as
   optional; 3.0 machines consume Mekanism chemicals directly, so the mod must be
   present.
@@ -54,13 +55,21 @@ applies to every already-built **Stellar Nexus, QMF, QPA, Quantum Slicer and
 Quantum Cryoforge**:
 
 - Replace **two casing positions adjacent to the controller** with one
-  `ME Massive Fluid Hatch` and one `AE Energy Input Hatch`. The structure does not
+  `ME Massive Fluid Hatch` and one `FE Energy Input Hatch` (registry ID remains
+  `ufo:ae_energy_input_hatch`). The structure does not
   form until both are present, and the structure preview / Scan Structure highlight
   exactly which two positions to swap.
 - **Coolant** is inserted into the fluid hatch tank from outside (export bus,
   bucket, or another pipe). The network itself is no longer a coolant source.
-- The **energy hatch** accepts FE on any face and complements it from the AE2
-  network behind the hatch.
+- The **energy hatch** accepts FE on any face and consumes only its saved local
+  reservoir. Supply it continuously with an FE cable; neither AE2 grid energy nor
+  Applied Flux storage is used as an automatic fallback. The ME network still
+  needs its own power supply for nodes and crafting CPUs.
+
+Existing **Infinity Fabrication Singularity** structures from earlier 3.0 alphas
+also need one FE Energy Input Hatch in the casing position highlighted by the
+scanner next to the controller. Connect the outward face of its Quantum Grid Link
+to the ME network; supplying the hatch alone does not connect the machine to ME.
 
 Until the two hatches are placed, affected machines report `ESTRUTURA INCOMPLETA`
 / incomplete structure. This is expected after the update, not a corruption.
@@ -97,8 +106,9 @@ current recipe.
 - **Productive Bees integration** (optional): three custom bees (Matter Ball, Scrap,
   Scrap Box) whose only acquisition path is a QMF recipe. Without Productive Bees in
   the pack nothing bee-related loads.
-- Quantum Pattern Matrix buffer, wireless crafting resume and the Infinity
-  Fabrication Singularity modes are additive content with no migration steps.
+- Quantum Pattern Matrix buffer and wireless crafting resume are additive
+  content. For an existing 3.0-alpha Singularity, follow the hatch and Grid Link
+  instructions in section 3.
 
 ## Quick checklist for an existing world
 
