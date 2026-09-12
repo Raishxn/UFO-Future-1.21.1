@@ -56,6 +56,22 @@ repositories {
     }
 }
 
+
+// ModDev adds NeoForge's repository before these mod repositories. Do not query
+// its Maven Central proxy for external mods: a proxy error blocks resolution
+// before Gradle can reach the repository that actually publishes the artifact.
+repositories.configureEach { repository ->
+    if (repository instanceof MavenArtifactRepository &&
+            repository.url.host == 'maven.neoforged.net') {
+        repository.content {
+            ['org.appliedenergistics', 'io.github.pedroksl', 'curse.maven',
+             'mekanism', 'software.bernie.geckolib', 'dev.emi', 'maven.modrinth'].each {
+                excludeGroup it
+            }
+        }
+    }
+}
+
 base {
     archivesName = mod_id
 }
