@@ -262,7 +262,8 @@ tasks.withType(ProcessResources).configureEach {
 
 def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
     dependsOn tasks.named('runData'), generateModMetadata
-    mustRunAfter tasks.named('compileTestJava'), tasks.named('test')
+    mustRunAfter tasks.named('compileTestJava'), tasks.named('test'),
+            tasks.named('compileGameTestJava'), tasks.named('runGameTestServer')
     from('src/generated/resources')
     from('src/main/resources')
     from(generateModMetadata)
