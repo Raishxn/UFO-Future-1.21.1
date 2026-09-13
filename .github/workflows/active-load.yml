@@ -1,0 +1,91 @@
+name: Active load
+
+on:
+  workflow_dispatch:
+    inputs:
+      machines:
+        description: Simultaneous Singularity recipe processors (1-512)
+        required: true
+        default: '102'
+        type: string
+      ticks:
+        description: Active ticks after 700 ticks of blocked output (200-1000000)
+        required: true
+        default: '10000'
+        type: string
+      max_average_tick_millis:
+        description: Maximum wall milliseconds per accelerated GameTest tick
+        required: true
+        default: '50'
+        type: string
+
+jobs:
+  active-fleet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: ufo
+    steps:
+      - name: Checkout UFO
+        uses: actions/checkout@v7
+        with:
+          path: ufo
+      - name: Read pinned Core
+        id: core
+        run: |
+          REVISION=$(sed -n 's/^raishxcore_revision=//p' gradle.properties)
+          [[ "$REVISION" =~ ^[0-9a-f]{40}$ ]]
+          echo "revision=$REVISION" >> "$GITHUB_OUTPUT"
+      - name: Checkout Core
+        uses: actions/checkout@v7
+        with:
+          repository: Raishxn/RaishxCore
+          ref: ${{ steps.core.outputs.revision }}
+          path: RaishxCore
+      - name: Setup JDK 21
+        uses: actions/setup-java@v6
+        with:
+          java-version: '21'
+          distribution: temurin
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+      - name: Validate workload parameters
+        env:
+          LOAD_MACHINES: ${{ inputs.machines }}
+          LOAD_TICKS: ${{ inputs.ticks }}
+          LOAD_MAX_AVERAGE_TICK_MILLIS: ${{ inputs.max_average_tick_millis }}
+        run: |
+          [[ "$LOAD_MACHINES" =~ ^[1-9][0-9]*$ ]]
+          [[ "$LOAD_TICKS" =~ ^[1-9][0-9]*$ ]]
+          [[ "$LOAD_MAX_AVERAGE_TICK_MILLIS" =~ ^[0-9]+([.][0-9]+)?$ ]]
+          (( LOAD_MACHINES <= 512 ))
+          (( LOAD_TICKS >= 200 && LOAD_TICKS <= 1000000 ))
+      - name: Run real automatic recipes
+        env:
+          LOAD_MACHINES: ${{ inputs.machines }}
+          LOAD_TICKS: ${{ inputs.ticks }}
+          LOAD_MAX_AVERAGE_TICK_MILLIS: ${{ inputs.max_average_tick_millis }}
+        run: >-
+          ./gradlew runLoadGameTestServer
+          "-PloadMachines=$LOAD_MACHINES"
+          "-PloadTicks=$LOAD_TICKS"
+          "-PloadMaxAverageTickMillis=$LOAD_MAX_AVERAGE_TICK_MILLIS"
+          --stacktrace
+      - name: Summarize JFR
+        if: always()
+        run: |
+          if [ -f run-load/ufo-diagnostics/active-load.jfr ]; then
+            jfr summary run-load/ufo-diagnostics/active-load.jfr > run-load/ufo-diagnostics/jfr-summary.txt
+          fi
+      - name: Upload active workload evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ufo-active-load-${{ github.run_id }}
+          if-no-files-found: warn
+          path: |
+            ufo/run-load/ufo-diagnostics
+            ufo/run-load/debug/*.json
+            ufo/run-load/logs/latest.log
+            ufo/run-load/crash-reports

@@ -144,18 +144,24 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
 
     public void serverTick() {
         if (!(level instanceof ServerLevel serverLevel)) return;
-        long gameTime = level.getGameTime();
-        if (structureDirty) {
-            structureDirty = false;
-            refreshStructure(serverLevel);
+        long startedAt = System.nanoTime();
+        try {
+            long gameTime = level.getGameTime();
+            if (structureDirty) {
+                structureDirty = false;
+                refreshStructure(serverLevel);
+            }
+            if (routingDirty || gameTime >= nextRoutingRefresh) {
+                routingDirty = false;
+                nextRoutingRefresh = gameTime + ROUTING_REFRESH_TICKS;
+                refreshRoutingState();
+            }
+            runAutomaticCrafting(gameTime);
+            updateVisualState();
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordTick(performanceMetricKey(),
+                    System.nanoTime() - startedAt, serverLevel.getGameTime());
         }
-        if (routingDirty || gameTime >= nextRoutingRefresh) {
-            routingDirty = false;
-            nextRoutingRefresh = gameTime + ROUTING_REFRESH_TICKS;
-            refreshRoutingState();
-        }
-        runAutomaticCrafting(gameTime);
-        updateVisualState();
     }
 
     @Override public boolean isAssembled() { return formed; }

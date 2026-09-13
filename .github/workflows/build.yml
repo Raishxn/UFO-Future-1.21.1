@@ -64,3 +64,18 @@ jobs:
 
       - name: Verify idle soak startup
         run: ./gradlew runSoakGameTestServer -PsoakMachines=3 -PsoakTicks=200 --stacktrace
+
+      - name: Verify active recipes and recovery
+        run: ./gradlew runLoadGameTestServer -PloadMachines=3 -PloadTicks=200 --stacktrace
+
+      - name: Upload active workload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ufo-active-smoke-${{ github.run_id }}
+          if-no-files-found: warn
+          path: |
+            ufo/run-load/ufo-diagnostics
+            ufo/run-load/debug/*.json
+            ufo/run-load/logs/latest.log
+            ufo/run-load/crash-reports

@@ -1,10 +1,10 @@
 # Migrating saves from UFO Future 2.1 to 3.0
 
 This document describes what changes when an existing 2.1 (or 2.1-fix1..fix7) world
-is first loaded with UFO Future 3.0.0-alpha.x. World loading itself is safe: nothing
-renames player-facing block or item IDs except where explicitly listed below, and no
-chunk data is rewritten. The work below is what a player must do in-world after the
-update.
+is first loaded with UFO Future 3.0.0-alpha.x. The retained block/item IDs and legacy NBT reader contracts are described below.
+A complete player-world upgrade still requires testing on a copy: the automated
+fixtures cover serialized fields, not every old structure, recipe or modpack.
+Normal Minecraft saves rewrite loaded data; this is not a zero-rewrite migration.
 
 ## 1. New and changed required dependencies
 
@@ -17,9 +17,11 @@ update.
   satisfies the dependency. The core registers no content, so there is nothing to
   migrate on the save side.
 - **AE2 Addon Lib** 1.0.3 for Minecraft 1.21.1 or compatible.
-- **Mekanism** 10.7.x — optional; enables chemical storage and processing.
-  Chemical-dependent recipes require Mekanism. GeckoLib and the experimental
-  Apocalypse Type-A entity have been removed.
+
+**Mekanism** 10.7.x remains optional and enables chemical storage/processing.
+Chemical-dependent recipes require it. UFO no longer requires GeckoLib; keep
+GeckoLib installed when another mod, such as AdvancedAE, depends on it. The
+experimental Apocalypse Type-A entity was removed.
 
 JEI, EMI, Applied Flux, Applied Mekanistics and KubeJS remain optional integrations.
 
@@ -92,8 +94,10 @@ significantly cheaper after this change.
   as-is: no alias, no rename, no save migration. They display under their proper
   names.
 - The DMA recipe id `dma/event_horizon_energy_cell` was renamed to
-  `dma/ufo_energy_cell`. Recipe ids are not stored in AE2 processing patterns or
-  machines, so no in-world action is needed.
+  `dma/ufo_energy_cell`. AE2 processing patterns describe
+  inputs/outputs rather than this DMA recipe ID. This rename alone needs no pattern
+  conversion. Other controllers persist active recipe IDs; recipe changes still
+  need the separate compatibility check below.
 
 ## 6. Recipe rebalance
 
@@ -115,13 +119,41 @@ current recipe.
 
 ## Quick checklist for an existing world
 
-1. Update mods: add `raishxcore`, keep AE2 versions in range, optionally add Mekanism,
+1. Make a complete copy of the existing world, including its `data` directory
+   and `data/ae_universal_cell_data` UUID files. Test the copy first.
+2. Update mods: add `raishxcore`, keep AE2 versions in range, optionally add Mekanism,
    replace the UFO jar.
-2. Load the world; expect removed Entropic Assembler blocks/items to be gone.
-3. For each pre-existing processing multiblock, swap the two highlighted casings for
+3. Load the copied world; expect removed Entropic Assembler blocks/items to be gone.
+4. For each pre-existing processing multiblock, swap the two highlighted casings for
    the fluid and energy hatches; fill the coolant tank.
-4. Move any Stellar Nexus hatches that lived in free cells into real hatch slots.
-5. Re-encode autocraft patterns for rebalanced recipes where JEI shows changes.
-6. Optionally add Productive Bees to start the bee loop via the QMF.
+5. Move any Stellar Nexus hatches that lived in free cells into real hatch slots.
+6. Re-encode autocraft patterns for rebalanced recipes where JEI shows changes.
+7. Optionally add Productive Bees to start the bee loop via the QMF.
 
 No NBT edits, commands or manual save file surgery are required at any step.
+
+
+## Automated evidence and remaining world test
+
+`LegacySaveMigrationGameTests` loads literal, synthetic payloads matching the
+serializer contracts in tag `v2.1-fix7` (`db7a369`); fixture provenance is in
+`src/gameTest/resources/migration/v2.1-fix7/README.md`.
+
+- Four parallel-controller identifiers still resolve and retain long buffers,
+  process progress and unversioned/full-batch defaults through a 3.0 rewrite.
+- Stellar retains energy/thermal/recipe fields, reads older fuel aliases and
+  gives modern energy fields precedence; no pending outputs are invented.
+- The retained `white_dwarf_cell_beaco` item and `cell_uuid` component resolve;
+  the UUID opens a legacy-format SavedData file from disk. A 2^80-item balance
+  remains exact through extraction and reserialization while AE2's long view
+  saturates.
+
+These tests do not execute the historical recipe or import a whole world. For
+final release QA, open a copy of an actual 2.x save, check UUID-backed cell
+balances and inventories, replace the designated supply hatches, then process
+and save/reload representative machines. Check completed/pending resources and
+any in-flight old recipe before resuming it; recipe rebalance and untracked
+legacy buffers require world-specific verification. Keep the original 2.x
+world available until that comparison passes.
+
+The complete remaining human procedure is in [Release QA](RELEASE_QA_3.0.md).

@@ -131,17 +131,23 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
 
     public void serverTick() {
         if (!(level instanceof ServerLevel serverLevel)) return;
-        if (structureDirty) {
-            structureDirty = false;
-            refreshStructure(serverLevel);
+        long startedAt = System.nanoTime();
+        try {
+            if (structureDirty) {
+                structureDirty = false;
+                refreshStructure(serverLevel);
+            }
+            if (patternUpdatePending) {
+                patternUpdatePending = false;
+                setChanged();
+                QuantumGridLinkBE link = getGridLink();
+                if (link != null) link.patternsChanged();
+            }
+            updateVisualState();
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordTick(performanceMetricKey(),
+                    System.nanoTime() - startedAt, serverLevel.getGameTime());
         }
-        if (patternUpdatePending) {
-            patternUpdatePending = false;
-            setChanged();
-            QuantumGridLinkBE link = getGridLink();
-            if (link != null) link.patternsChanged();
-        }
-        updateVisualState();
     }
 
     @Override public boolean isAssembled() { return formed; }

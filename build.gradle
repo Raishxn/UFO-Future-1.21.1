@@ -227,6 +227,10 @@ sourceSets {
         compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
         runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
     }
+    loadTest {
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
     soakTest {
         compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
         runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
@@ -235,6 +239,7 @@ sourceSets {
 neoForge.mods {
     ufo_tests { sourceSet sourceSets.gameTest }
     ufo_soak_tests { sourceSet sourceSets.soakTest }
+    ufo_load_tests { sourceSet sourceSets.loadTest }
 }
 neoForge.runs.configureEach {
     loadedMods = [neoForge.mods.ufo]
@@ -269,7 +274,27 @@ def prepareUfoSoakTests = tasks.register('prepareUfoSoakTests', Copy) {
     into 'run-soak/gameteststructures'
 }
 tasks.named('runSoakGameTestServer') { dependsOn prepareUfoSoakTests }
-tasks.named('check') { dependsOn tasks.named('compileSoakTestJava') }
+tasks.named('check') { dependsOn tasks.named('compileSoakTestJava'), tasks.named('compileLoadTestJava') }
+
+// Active recipes, bounded blocked output and exact stock/energy accounting.
+// Separate world/source set; the idle soak's closed baseline is unchanged.
+neoForge.runs {
+    loadGameTestServer {
+        type = 'gameTestServer'
+        gameDirectory = project.file('run-load')
+        loadedMods = [neoForge.mods.ufo, neoForge.mods.ufo_load_tests]
+        systemProperty 'neoforge.enabledGameTestNamespaces', 'ufo_load_tests'
+        systemProperty 'ufo.load.machines', providers.gradleProperty('loadMachines').orElse('102').get()
+        systemProperty 'ufo.load.ticks', providers.gradleProperty('loadTicks').orElse('10000').get()
+        systemProperty 'ufo.load.maxAverageTickMillis', providers.gradleProperty('loadMaxAverageTickMillis').orElse('50').get()
+        logLevel = org.slf4j.event.Level.INFO
+    }
+}
+def prepareUfoLoadTests = tasks.register('prepareUfoLoadTests', Copy) {
+    from 'src/loadTest/templates'
+    into 'run-load/gameteststructures'
+}
+tasks.named('runLoadGameTestServer') { dependsOn prepareUfoLoadTests }
 
 // Boot a disposable copy of the GameTest world and verify the real viewer indexes.
 neoForge.runs {
@@ -340,7 +365,8 @@ def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
     dependsOn tasks.named('runData'), generateModMetadata
     mustRunAfter tasks.named('compileTestJava'), tasks.named('test'),
             tasks.named('compileGameTestJava'), tasks.named('compileSoakTestJava'),
-            tasks.named('runGameTestServer'),
+            tasks.named('compileLoadTestJava'), tasks.named('runLoadGameTestServer'),
+            tasks.named('runSoakGameTestServer'), tasks.named('runGameTestServer'),
             tasks.named('runVisibilityClient')
     from('src/generated/resources')
     from('src/main/resources')

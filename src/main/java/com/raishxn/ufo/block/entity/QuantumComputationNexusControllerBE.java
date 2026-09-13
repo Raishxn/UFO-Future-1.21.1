@@ -108,12 +108,18 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
 
     public void serverTick() {
         if (!(level instanceof ServerLevel serverLevel)) return;
-        if (structureDirty) {
-            structureDirty = false;
-            refreshStructure(serverLevel);
+        long startedAt = System.nanoTime();
+        try {
+            if (structureDirty) {
+                structureDirty = false;
+                refreshStructure(serverLevel);
+            }
+            if (!cpuPool.hasPersistentState() && formed) configurePool();
+            updateVisualState();
+        } finally {
+            MachinePerformanceRegistry.INSTANCE.recordTick(performanceMetricKey(),
+                    System.nanoTime() - startedAt, serverLevel.getGameTime());
         }
-        if (!cpuPool.hasPersistentState() && formed) configurePool();
-        updateVisualState();
     }
 
     @Override public boolean isAssembled() { return formed; }
