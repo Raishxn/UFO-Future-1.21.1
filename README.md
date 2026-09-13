@@ -295,14 +295,20 @@ the source of any external asset so the credits below stay accurate.
 
 ## 🙏 Credits
 
-UFO Future is built on other people's work. If anything below is attributed
-incorrectly or is missing, please open an issue and it will be fixed.
+Thank you to the **Applied Energistics 2**, **AE2 Lightning Tech**,
+**GregTech: New Horizons**, **GTO** and **AE2 Crystal Science** teams and
+contributors. Their code, structures, textures and tools helped make UFO Future
+possible. The specific contributions are credited below; original authors retain
+credit for their work.
+
+If anything below is attributed incorrectly or is missing, please open an issue
+and it will be fixed.
 
 ### Built on
 
 | Project | Role |
 |---------|------|
-| **[Applied Energistics 2](https://github.com/AppliedEnergistics/Applied-Energistics-2)** — AppliedEnergistics team | The network, storage and autocrafting foundation. UFO Future follows AE2's own license split (LGPLv3 code / CC BY-NC-SA 3.0 assets). |
+| **[Applied Energistics 2](https://github.com/AppliedEnergistics/Applied-Energistics-2)** — AppliedEnergistics team and contributors | The network, storage and autocrafting foundation, together with reused or adapted GUI visuals and assets. UFO Future follows AE2's own license split (LGPLv3 code / CC BY-NC-SA 3.0 assets). |
 | **[GuideME](https://github.com/AppliedEnergistics/guideme)** — AppliedEnergistics team | In-game guide pages and 3D structure previews |
 | **[NeoForge](https://github.com/neoforged/NeoForge)** | Mod loader. The project was bootstrapped from the NeoForge MDK, still covered by its MIT notice in [`TEMPLATE_LICENSE.txt`](TEMPLATE_LICENSE.txt). |
 | **[ParchmentMC](https://parchmentmc.org/)** | Parameter names and javadoc mappings used at build time |
@@ -325,16 +331,28 @@ incorrectly or is missing, please open an issue and it will be fixed.
   connected-texture geometry were ported and adapted for UFO Future under
   **LGPL-3.0**. The `quick_build.png` toolbar icon is redistributed under
   **CC BY-NC-SA 3.0** with attribution to the AE2 Lightning Tech contributors.
+  Quantum Wireless also adapts its two-state toolbar widget, interface layout
+  and link visualization, and reuses eight mode/import/export/speed icons.
+  See the [wireless attribution notice](src/main/resources/assets/ufo/AE2LT-WIRELESS-NOTICE.md)
+  for source revisions, adapted components and asset licenses.
 - **[AE2 Crystal Science](https://github.com/Frostbite-time/AE2-Crystal-Science)** —
   several UFO textures are based on or adapted from this project.
-- **[GT New Horizons Modpack](https://github.com/GTNewHorizons/GT-New-Horizons-Modpack)** —
-  texture basis and visual reference for the industrial material line.
-- **[GTO Project](https://github.com/GregTech-Odyssey)** — reference for the
-  compact connected-texture casing sheets (`entropy_singularity_casing_ctm.png`,
-  `quantum_hyper_mechanical_casing_ctm.png`). The Stellar Nexus renderer is
-  based on GTO Core's `EyeOfHarmonyRenderer`, as credited in its source.
-- **Applied Energistics 2** — the multiblock supply panel reuses AE2's own
+- **[GregTech: New Horizons](https://github.com/GTNewHorizons/GT-New-Horizons-Modpack)** —
+  the GTNH team and contributors are credited for the structure used as the
+  basis for the **Stellar Nexus**, the textures used or adapted for the
+  **Stellar Field Generators**, and texture references for the industrial
+  material line.
+- **[GTO / GregTech Odyssey](https://github.com/GregTech-Odyssey)** — the GTO
+  team and contributors are credited for textures used or adapted in UFO
+  Future, including references for the compact connected-texture casing sheets
+  (`entropy_singularity_casing_ctm.png`, `quantum_hyper_mechanical_casing_ctm.png`).
+  The Stellar Nexus renderer is based on GTO Core's `EyeOfHarmonyRenderer`,
+  as credited in its source.
+- **[Applied Energistics 2](https://github.com/AppliedEnergistics/Applied-Energistics-2)** —
+  the multiblock supply panel reuses AE2's own
   `ae2:textures/guis/resourcesrequirementswidget.png` at its original size.
+  The UFO Armor configuration also uses AE2's checkbox, cog, back and slider
+  visuals. Credit belongs to the AppliedEnergistics team and asset contributors.
 
 ### Documentation tooling
 
