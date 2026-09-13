@@ -148,7 +148,7 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
 ### Installation
 
 1. Download the latest build from the [Releases page](https://github.com/Raishxn/UFO-Future-1.21.1/releases)
-2. Drop `ufo-<version>.jar` **and** `raishxcore-<version>.jar` into your `mods/` folder
+2. Download the compatible Core JAR from [RaishxCore Releases](https://github.com/Raishxn/RaishxCore/releases), then drop `ufo-<version>.jar` **and** `raishxcore-<version>.jar` into your `mods/` folder
 3. Make sure AE2 and AE2 Addon Lib are installed too
 4. Launch the game
 
@@ -273,8 +273,9 @@ git -C ../RaishxCore checkout "$(sed -n 's/^raishxcore_revision=//p' gradle.prop
 Both checkouts must sit side by side — `settings.gradle` includes
 `../RaishxCore` and substitutes the `com.raishxn.ufocore:raishxcore`
 dependency with it. Build and release CI check out the exact Core commit in
-`raishxcore_revision`. Release artifacts include both UFO and Core JARs with
-checksums. The development GameTests run with `./gradlew runGameTestServer`
+`raishxcore_revision`. Each project's release publishes its own JAR and
+checksums; download Core from [RaishxCore Releases](https://github.com/Raishxn/RaishxCore/releases).
+The development GameTests run with `./gradlew runGameTestServer`
 and `./gradlew -p ../RaishxCore runGameTestServer`. Use
 `./gradlew runGameTestServer -PwithoutMekanism` to test without Mekanism or
 Applied Mekanistics.

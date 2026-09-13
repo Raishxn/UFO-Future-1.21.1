@@ -6,7 +6,7 @@ O primeiro alpha público da 3.0 traz um novo trio de fabricação endgame, abas
 
 ## Dependências
 
-- **Nova dependência obrigatória:** [RaishxCore](https://github.com/Raishxn/RaishxCore) `0.1.0-alpha.2` ou versão compatível. Quem usava alphas anteriores com o antigo `ufocore` deve substituir esse JAR.
+- **Nova dependência obrigatória:** [RaishxCore](https://github.com/Raishxn/RaishxCore/releases/tag/v0.1.0-alpha.2) `0.1.0-alpha.2` ou versão compatível, baixado no próprio repositório do Core. Quem usava alphas anteriores com o antigo `ufocore` deve substituir esse JAR.
 - **Applied Energistics 2:** 19.2.17 ou superior da linha 19.x.
 - **AE2 Addon Lib:** 1.0.3 para Minecraft 1.21.1 ou versão compatível da linha 1.x.
 - **Mekanism agora é opcional:** armazenamento e processamento químico ficam disponíveis com ele instalado.

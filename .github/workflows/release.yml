@@ -103,9 +103,6 @@ jobs:
       - name: Verify idle soak startup
         run: ./gradlew runSoakGameTestServer -PsoakMachines=3 -PsoakTicks=200 --stacktrace
 
-      - name: Collect companion artifacts
-        run: cp ../RaishxCore/build/libs/*.jar build/libs/
-
       - name: Generate checksums
         run: |
           cd build/libs
@@ -118,7 +115,6 @@ jobs:
           path: |
             ufo/build/libs/*.jar
             ufo/build/libs/SHA256SUMS
-            ufo/docs/releases/UPDATE_LOG_CURSEFORGE_${{ steps.version.outputs.value }}*.md
 
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/')
@@ -132,4 +128,3 @@ jobs:
           files: |
             ufo/build/libs/*.jar
             ufo/build/libs/SHA256SUMS
-            ufo/docs/releases/UPDATE_LOG_CURSEFORGE_${{ steps.version.outputs.value }}*.md

@@ -6,7 +6,7 @@ The first public 3.0 alpha brings a new endgame fabrication trio, dedicated ener
 
 ## Dependencies
 
-- **New required dependency:** [RaishxCore](https://github.com/Raishxn/RaishxCore) `0.1.0-alpha.2` or a compatible version. Players using earlier alphas with the old `ufocore` JAR must replace it.
+- **New required dependency:** [RaishxCore](https://github.com/Raishxn/RaishxCore/releases/tag/v0.1.0-alpha.2) `0.1.0-alpha.2` or a compatible version, downloaded from its own repository. Players using earlier alphas with the old `ufocore` JAR must replace it.
 - **Applied Energistics 2:** 19.2.17 or newer within the 19.x line.
 - **AE2 Addon Lib:** 1.0.3 for Minecraft 1.21.1 or a compatible 1.x version.
 - **Mekanism is now optional:** chemical storage and processing are available when it is installed.
