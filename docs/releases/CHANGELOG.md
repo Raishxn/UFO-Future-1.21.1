@@ -12,7 +12,7 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
-Resumo do ciclo 3.0 (marcos L-0001 a L-0059). O detalhe tecnico por marco esta
+Resumo do ciclo 3.0 (marcos L-0001 a L-0065). O detalhe tecnico por marco esta
 em [CHANGELOG_L0001_L0037.md](CHANGELOG_L0001_L0037.md) e no ledger interno do
 projeto. IDs, saves, receitas e progressao existentes foram preservados.
 
@@ -28,7 +28,7 @@ projeto. IDs, saves, receitas e progressao existentes foram preservados.
 - Lookups entre chunks sem tickets na thread do servidor, incluindo chunks materializados despromovidos para desvincular membros retidos durante teardown.
 - Mekanism tornou-se opcional real; Pulsar Chambers/caracacas ocultas no criativo, JEI e EMI sem Mekanism, com IDs e receitas preservadas.
 - GeckoLib removido do contrato runtime do UFO; mob Apocalypse Type-A removido.
-- Warnings javac em zero com `-Xlint:all` (excecao documentada: this-escape de registro NeoForge).
+- Warnings javac bloqueiam o build UFO/Core com `-Xlint:all -Werror` (excecao documentada: this-escape de registro NeoForge).
 
 ### Implementations
 
@@ -36,9 +36,10 @@ projeto. IDs, saves, receitas e progressao existentes foram preservados.
 - Ports explicitos de energia, fluido, itens e quimicos com planejamento simulate -> commit e ThermalSystem compartilhado entre familias.
 - Trio endgame: Quantum Computation Nexus (CPU de crafting compartilhada), Quantum Pattern Fabrication Matrix e Infinity Fabrication Singularity com Quantum Grid Link e lotes que reutilizam catalisadores intactos.
 - Diagnostico integrado: `/ufo debug machine` e `/ufo debug perf` com metricas de tick/scan/storage/sync.
-- Suite de GameTests de ciclo de vida (21 cenarios) e soak dedicado de 102 estruturas reais por 10.000 ticks, com workflow manual no CI.
+- Suite de GameTests de ciclo de vida (23 cenarios) e soak dedicado de 102 estruturas reais por 10.000 ticks, com workflow manual no CI.
 - Baseline do soak aguarda chunks ativos, inicializacao AE2 concluida e 40 ticks sem scans; regressao de inicializacao tardia e smoke curto executados no CI.
-- RaishxCore 0.1.0-alpha.2 como dependencia versionada (planner de crafting iterativo).
+- RaishxCore 0.1.0-alpha.2 como dependencia versionada (planner de crafting iterativo), com config COMMON testada no grid real e falhas assincronas deterministicas.
+- `planner.enabled` e config COMMON de instancia, lida a cada novo pedido: desligada, delega ao AE2; nao cancela calculos ja submetidos. Grafo nao suportado e fila cheia delegam antes da submissao; timeout, cancelamento cooperativo e erros posteriores propagam pelo Future sem retry automatico. Cancelar um Future na fila impede execucao sem diagnostico do worker.
 - GuideME reformulado e CTM nativo nos casings, sem dependencia runtime externa.
 
 ## [2.1-fix4] - 2026-05-09
