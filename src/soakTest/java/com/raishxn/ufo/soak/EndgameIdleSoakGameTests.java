@@ -57,6 +57,7 @@ public final class EndgameIdleSoakGameTests {
     private static final double MAX_AVERAGE_TICK_MILLIS = positiveDouble(
             "ufo.soak.maxAverageTickMillis", 50.0D);
     private static final int STARTUP_TIMEOUT_TICKS = 400;
+    private static final long CHUNK_PREPARATION_TIMEOUT_NANOS = 10_000_000_000L;
     // A restored 20-tick structural poll must prevent startup from settling, not get absorbed into the baseline.
     private static final int QUIET_TICKS = 40;
     private static final int DELAYED_START_TICKS = 40;
@@ -120,6 +121,10 @@ public final class EndgameIdleSoakGameTests {
     private static void exerciseFleet(GameTestHelper helper, int machines, int ticks, boolean delayLastMachine) {
         List<MachineProbe> fleet = buildFleet(helper, machines, delayLastMachine);
         var regression = delayLastMachine ? new StartupRegression(fleet.getLast()) : null;
+        Set<ChunkPos> initiallyTicking = new LinkedHashSet<>();
+        fleet.stream().filter(probe -> regression == null || probe != regression.probe)
+                .forEach(probe -> initiallyTicking.addAll(probe.chunks));
+        prepareTickingChunks(helper, initiallyTicking);
         if (regression != null) {
             helper.runAfterDelay(10, () -> {
                 var probe = regression.probe;
@@ -142,6 +147,7 @@ public final class EndgameIdleSoakGameTests {
                 }
                 LOGGER.info("Released delayed fixture to ENTITY_TICKING: machine={}, tick={}",
                         regression.probe.description, helper.getTick());
+                prepareTickingChunks(helper, regression.probe.chunks);
             });
         }
         awaitStartup(helper, fleet, ticks, regression, null, 0, STARTUP_TIMEOUT_TICKS);
@@ -194,8 +200,31 @@ public final class EndgameIdleSoakGameTests {
     }
 
     private static boolean chunksTicking(ServerLevel level, Set<ChunkPos> chunks) {
-        return chunks.stream().allMatch(chunk -> level.shouldTickBlocksAt(chunk.toLong())
+        return chunks.stream().allMatch(chunk -> level.getChunkSource().isPositionTicking(chunk.toLong())
                 && level.areEntitiesLoaded(chunk.toLong()));
+    }
+
+    private static void prepareTickingChunks(GameTestHelper helper, Set<ChunkPos> chunks) {
+        ServerLevel level = helper.getLevel();
+        if (tickingChunkFuturesReady(level, chunks)) return;
+        long startedAt = System.nanoTime();
+        LOGGER.info("Preparing ticking chunk futures for UFO soak: chunks={}, tick={}", chunks.size(), helper.getTick());
+        // Accelerated GameTest ticks can exhaust the server's time budget and starve chunk-source tasks.
+        // Drain their real executor until activation completes; this neither ticks machines nor invokes onReady.
+        // Entity loading and AE2 initialization need subsequent level ticks and are checked by awaitStartup.
+        level.getServer().managedBlock(() -> {
+            if (tickingChunkFuturesReady(level, chunks)
+                    || System.nanoTime() - startedAt >= CHUNK_PREPARATION_TIMEOUT_NANOS) return true;
+            level.getChunkSource().pollTask();
+            return false;
+        });
+        helper.assertTrue(tickingChunkFuturesReady(level, chunks), "ticking chunk futures did not finish within 10 seconds");
+        LOGGER.info("Ticking chunk futures ready for UFO soak: chunks={}, elapsedMs={}, tick={}",
+                chunks.size(), (System.nanoTime() - startedAt) / 1_000_000L, helper.getTick());
+    }
+
+    private static boolean tickingChunkFuturesReady(ServerLevel level, Set<ChunkPos> chunks) {
+        return chunks.stream().allMatch(chunk -> level.getChunkSource().isPositionTicking(chunk.toLong()));
     }
 
     private static boolean isReady(ServerLevel level, MachineProbe probe) {
