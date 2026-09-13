@@ -37,6 +37,7 @@ projeto. IDs, saves, receitas e progressao existentes foram preservados.
 - Trio endgame: Quantum Computation Nexus (CPU de crafting compartilhada), Quantum Pattern Fabrication Matrix e Infinity Fabrication Singularity com Quantum Grid Link e lotes que reutilizam catalisadores intactos.
 - Diagnostico integrado: `/ufo debug machine` e `/ufo debug perf` com metricas de tick/scan/storage/sync.
 - Suite de GameTests de ciclo de vida (21 cenarios) e soak dedicado de 102 estruturas reais por 10.000 ticks, com workflow manual no CI.
+- Baseline do soak aguarda chunks ativos, inicializacao AE2 concluida e 40 ticks sem scans; regressao de inicializacao tardia e smoke curto executados no CI.
 - RaishxCore 0.1.0-alpha.2 como dependencia versionada (planner de crafting iterativo).
 - GuideME reformulado e CTM nativo nos casings, sem dependencia runtime externa.
 

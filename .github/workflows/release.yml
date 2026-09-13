@@ -76,6 +76,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build runGameTestServer --stacktrace
 
+      - name: Verify idle soak startup
+        run: ./gradlew runSoakGameTestServer -PsoakMachines=3 -PsoakTicks=200 --stacktrace
+
       - name: Collect companion artifacts
         run: cp ../RaishxCore/build/libs/*.jar build/libs/
 

@@ -1,5 +1,6 @@
 package com.raishxn.ufo.soak;
 
+import appeng.blockentity.AEBaseBlockEntity;
 import com.mojang.logging.LogUtils;
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
 import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
@@ -23,6 +24,8 @@ import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.TicketType;
+import net.minecraft.util.Unit;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -38,13 +41,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-/** Dedicated fleet workload. It is not part of the release JAR or per-push suite. */
+/** Dedicated fleet workload and startup regression. Neither is part of the release JAR. */
 @Mod(EndgameIdleSoakGameTests.MOD_ID)
 @GameTestHolder(EndgameIdleSoakGameTests.MOD_ID)
 @PrefixGameTestTemplate(false)
 public final class EndgameIdleSoakGameTests {
     static final String MOD_ID = "ufo_soak_tests";
     private static final String BATCH = "ufo_idle_soak";
+    private static final String STARTUP_BATCH = "ufo_soak_startup";
     private static final String STRUCTURE = MOD_ID + ":event_driven_structure";
     private static final BlockPos FIRST_CONTROLLER = new BlockPos(20, 5, 20);
     private static final int MACHINE_SPACING = 48;
@@ -52,73 +56,201 @@ public final class EndgameIdleSoakGameTests {
     private static final int SOAK_TICKS = positiveInteger("ufo.soak.ticks", 10_000);
     private static final double MAX_AVERAGE_TICK_MILLIS = positiveDouble(
             "ufo.soak.maxAverageTickMillis", 50.0D);
-    private static final int TIMEOUT_TICKS = Math.addExact(SOAK_TICKS, 500);
+    private static final int STARTUP_TIMEOUT_TICKS = 400;
+    // A restored 20-tick structural poll must prevent startup from settling, not get absorbed into the baseline.
+    private static final int QUIET_TICKS = 40;
+    private static final int DELAYED_START_TICKS = 40;
+    private static final int TIMEOUT_TICKS = Math.addExact(SOAK_TICKS, STARTUP_TIMEOUT_TICKS + 20);
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Set<ChunkPos> FORCED_CHUNKS = new LinkedHashSet<>();
+    private static final Set<ChunkPos> HELD_CHUNKS = new LinkedHashSet<>();
 
     @BeforeBatch(batch = BATCH)
     public static void beforeBatch(ServerLevel level) {
-        MachinePerformanceRegistry.INSTANCE.reset();
-        StructureMembershipIndex.INSTANCE.reset();
-        FORCED_CHUNKS.clear();
+        resetBatch();
         LOGGER.info("Starting UFO idle soak: machines={}, ticks={}, maxAverageTickMs={}",
                 MACHINE_COUNT, SOAK_TICKS, MAX_AVERAGE_TICK_MILLIS);
     }
 
+    @BeforeBatch(batch = STARTUP_BATCH)
+    public static void beforeStartupBatch(ServerLevel level) {
+        resetBatch();
+        LOGGER.info("Starting UFO delayed initialization regression: machines=3, heldTicks={}", DELAYED_START_TICKS);
+    }
+
+    private static void resetBatch() {
+        MachinePerformanceRegistry.INSTANCE.reset();
+        StructureMembershipIndex.INSTANCE.reset();
+        FORCED_CHUNKS.clear();
+        HELD_CHUNKS.clear();
+    }
+
     @AfterBatch(batch = BATCH)
     public static void afterBatch(ServerLevel level) {
+        releaseTickets(level);
+    }
+
+    @AfterBatch(batch = STARTUP_BATCH)
+    public static void afterStartupBatch(ServerLevel level) {
+        releaseTickets(level);
+    }
+
+    private static void releaseTickets(ServerLevel level) {
         FORCED_CHUNKS.forEach(chunk -> level.setChunkForced(chunk.x, chunk.z, false));
-        LOGGER.info("Released {} forced chunks after UFO idle soak", FORCED_CHUNKS.size());
+        HELD_CHUNKS.forEach(chunk -> level.getChunkSource().removeRegionTicket(TicketType.START, chunk, 0, Unit.INSTANCE));
+        LOGGER.info("Released {} forced chunks and {} FULL holds after UFO soak batch", FORCED_CHUNKS.size(), HELD_CHUNKS.size());
         FORCED_CHUNKS.clear();
+        HELD_CHUNKS.clear();
     }
 
     @GameTestGenerator
     public static Collection<TestFunction> idleFleet() {
         return List.of(new TestFunction(BATCH, MOD_ID + ".idle_fleet", STRUCTURE, Rotation.NONE,
                 TIMEOUT_TICKS, 0L, true, false, 1, 1, false,
-                EndgameIdleSoakGameTests::exerciseFleet));
+                helper -> exerciseFleet(helper, MACHINE_COUNT, SOAK_TICKS, false)));
     }
 
-    private static void exerciseFleet(GameTestHelper helper) {
-        List<MachineProbe> fleet = buildFleet(helper);
-        helper.runAfterDelay(10, () -> {
-            List<MachineBaseline> baselines = fleet.stream().map(probe -> {
-                helper.assertTrue(probe.controller.isAssembled(), probe.description + " did not form");
-                return new MachineBaseline(probe, scanCount(helper, probe.controllerPos));
-            }).toList();
-            long startedAt = System.nanoTime();
-            helper.runAfterDelay(SOAK_TICKS, () -> {
-                long elapsedNanos = System.nanoTime() - startedAt;
-                for (MachineBaseline baseline : baselines) {
-                    helper.assertTrue(baseline.probe.controller.isAssembled(),
-                            baseline.probe.description + " deformed while idle");
-                    assertScanCount(helper, baseline.probe.controllerPos, baseline.scanCount,
-                            baseline.probe.description + " rescanned while idle");
-                }
-                double averageTickMillis = elapsedNanos / 1_000_000.0D / SOAK_TICKS;
-                helper.assertTrue(averageTickMillis <= MAX_AVERAGE_TICK_MILLIS,
-                        "fleet exceeded average tick budget: " + averageTickMillis
-                                + " ms > " + MAX_AVERAGE_TICK_MILLIS + " ms");
-                LOGGER.info("UFO idle soak result: machines={}, ticks={}, elapsedMs={}, averageTickMs={}, forcedChunks={}",
-                        MACHINE_COUNT, SOAK_TICKS, elapsedNanos / 1_000_000L,
-                        averageTickMillis, FORCED_CHUNKS.size());
-                helper.succeed();
+    @GameTestGenerator
+    public static Collection<TestFunction> delayedInitialization() {
+        return List.of(new TestFunction(STARTUP_BATCH, MOD_ID + ".delayed_initialization", STRUCTURE, Rotation.NONE,
+                STARTUP_TIMEOUT_TICKS + 220, 0L, true, false, 1, 1, false,
+                helper -> exerciseFleet(helper, 3, 200, true)));
+    }
+
+    private static void exerciseFleet(GameTestHelper helper, int machines, int ticks, boolean delayLastMachine) {
+        List<MachineProbe> fleet = buildFleet(helper, machines, delayLastMachine);
+        var regression = delayLastMachine ? new StartupRegression(fleet.getLast()) : null;
+        if (regression != null) {
+            helper.runAfterDelay(10, () -> {
+                var probe = regression.probe;
+                helper.assertTrue(probe.controller.isAssembled(), "delayed fixture did not form before the legacy baseline");
+                helper.assertTrue(probe.entity.getQueuedForReady() > probe.entity.getReadyInvoked(),
+                        "delayed fixture must still have a real AE2 onReady pending at tick 10");
+                helper.assertTrue(!chunksTicking(helper.getLevel(), probe.chunks),
+                        "delayed fixture unexpectedly became tickable before release");
+                regression.legacyScanCount = scanCount(helper, probe.controllerPos);
+                LOGGER.info("Legacy 10-tick baseline captured before onReady: machine={}, scans={}, queued={}, ready={}",
+                        probe.description, regression.legacyScanCount,
+                        probe.entity.getQueuedForReady(), probe.entity.getReadyInvoked());
             });
+            helper.runAfterDelay(DELAYED_START_TICKS, () -> {
+                var level = helper.getLevel();
+                for (ChunkPos chunk : regression.probe.chunks) {
+                    level.getChunkSource().removeRegionTicket(TicketType.START, chunk, 0, Unit.INSTANCE);
+                    HELD_CHUNKS.remove(chunk);
+                    if (FORCED_CHUNKS.add(chunk)) level.setChunkForced(chunk.x, chunk.z, true);
+                }
+                LOGGER.info("Released delayed fixture to ENTITY_TICKING: machine={}, tick={}",
+                        regression.probe.description, helper.getTick());
+            });
+        }
+        awaitStartup(helper, fleet, ticks, regression, null, 0, STARTUP_TIMEOUT_TICKS);
+    }
+
+    private static void awaitStartup(GameTestHelper helper, List<MachineProbe> fleet, int ticks,
+                                     StartupRegression regression, List<MachineBaseline> previous,
+                                     int quietTicks, int remainingTicks) {
+        helper.runAfterDelay(1, () -> {
+            List<MachineBaseline> current = fleet.stream().map(probe -> new MachineBaseline(
+                    probe, scanCount(helper, probe.controllerPos), probe.entity.getReadyInvoked())).toList();
+            boolean unchanged = previous != null;
+            if (previous != null) {
+                for (int index = 0; index < current.size(); index++) {
+                    var before = previous.get(index);
+                    var after = current.get(index);
+                    if (before.scanCount != after.scanCount) {
+                        unchanged = false;
+                        LOGGER.info("Startup scan changed: machine={}, tick={}, scans={}->{}, ready={}->{}, state={}",
+                                after.probe.description, helper.getTick(), before.scanCount, after.scanCount,
+                                before.readyInvoked, after.readyInvoked, readiness(helper.getLevel(), after.probe));
+                    }
+                }
+            }
+            MachineProbe pending = fleet.stream().filter(probe -> !isReady(helper.getLevel(), probe)).findFirst().orElse(null);
+            int nextQuietTicks = pending == null && unchanged ? quietTicks + 1 : 0;
+            if (nextQuietTicks >= QUIET_TICKS) {
+                if (regression != null) {
+                    long restoredScans = scanCount(helper, regression.probe.controllerPos);
+                    helper.assertTrue(regression.legacyScanCount >= 0 && restoredScans > regression.legacyScanCount,
+                            "real delayed onReady did not invalidate the legacy 10-tick scan baseline");
+                    LOGGER.info("Delayed initialization regression passed: legacyScans={}, settledScans={}, ready={}",
+                            regression.legacyScanCount, restoredScans, regression.probe.entity.getReadyInvoked());
+                }
+                LOGGER.info("UFO soak baseline ready: machines={}, tick={}, quietTicks={}, measuredTicks={}",
+                        fleet.size(), helper.getTick(), nextQuietTicks, ticks);
+                measureIdle(helper, current, ticks);
+            } else if (remainingTicks <= 1) {
+                helper.fail("fleet startup did not settle within " + STARTUP_TIMEOUT_TICKS + " ticks; quietTicks="
+                        + nextQuietTicks + "; pending=" + (pending == null ? "none (scans keep changing)"
+                        : pending.description + " " + readiness(helper.getLevel(), pending)));
+            } else {
+                if (previous == null || pending != null && remainingTicks % 20 == 0) {
+                    LOGGER.info("Waiting for UFO soak startup: tick={}, quietTicks={}, pending={}", helper.getTick(),
+                            nextQuietTicks, pending == null ? "none" : pending.description + " " + readiness(helper.getLevel(), pending));
+                }
+                awaitStartup(helper, fleet, ticks, regression, current, nextQuietTicks, remainingTicks - 1);
+            }
         });
     }
 
-    private static List<MachineProbe> buildFleet(GameTestHelper helper) {
+    private static boolean chunksTicking(ServerLevel level, Set<ChunkPos> chunks) {
+        return chunks.stream().allMatch(chunk -> level.shouldTickBlocksAt(chunk.toLong())
+                && level.areEntitiesLoaded(chunk.toLong()));
+    }
+
+    private static boolean isReady(ServerLevel level, MachineProbe probe) {
+        return !probe.entity.isRemoved() && probe.controller.isAssembled()
+                && probe.entity.getReadyInvoked() > 0 && chunksTicking(level, probe.chunks)
+                && probe.initEntities.stream().allMatch(entity -> !entity.isRemoved()
+                && entity.getQueuedForReady() == entity.getReadyInvoked());
+    }
+
+    private static String readiness(ServerLevel level, MachineProbe probe) {
+        long pendingEntities = probe.initEntities.stream().filter(entity -> entity.isRemoved()
+                || entity.getQueuedForReady() != entity.getReadyInvoked()).count();
+        return "formed=" + probe.controller.isAssembled() + ", removed=" + probe.entity.isRemoved()
+                + ", queued=" + probe.entity.getQueuedForReady() + ", ready=" + probe.entity.getReadyInvoked()
+                + ", chunksTicking=" + chunksTicking(level, probe.chunks) + ", pendingEntities=" + pendingEntities;
+    }
+
+    private static void measureIdle(GameTestHelper helper, List<MachineBaseline> baselines, int ticks) {
+        long startedAt = System.nanoTime();
+        helper.runAfterDelay(ticks, () -> {
+            long elapsedNanos = System.nanoTime() - startedAt;
+            for (MachineBaseline baseline : baselines) {
+                helper.assertTrue(isReady(helper.getLevel(), baseline.probe),
+                        baseline.probe.description + " stopped being ready while idle: "
+                                + readiness(helper.getLevel(), baseline.probe));
+                assertScanCount(helper, baseline.probe.controllerPos, baseline.scanCount,
+                        baseline.probe.description + " rescanned while idle");
+            }
+            double averageTickMillis = elapsedNanos / 1_000_000.0D / ticks;
+            helper.assertTrue(averageTickMillis <= MAX_AVERAGE_TICK_MILLIS,
+                    "fleet exceeded average tick budget: " + averageTickMillis
+                            + " ms > " + MAX_AVERAGE_TICK_MILLIS + " ms");
+            LOGGER.info("UFO idle soak result: machines={}, ticks={}, elapsedMs={}, averageTickMs={}, forcedChunks={}",
+                    baselines.size(), ticks, elapsedNanos / 1_000_000L,
+                    averageTickMillis, FORCED_CHUNKS.size());
+            helper.succeed();
+        });
+    }
+
+    private static List<MachineProbe> buildFleet(GameTestHelper helper, int machines, boolean delayLastMachine) {
         ServerLevel level = helper.getLevel();
         BlockPos origin = helper.absolutePos(FIRST_CONTROLLER);
-        int columns = (int) Math.ceil(Math.sqrt(MACHINE_COUNT));
-        List<MachineProbe> fleet = new ArrayList<>(MACHINE_COUNT);
+        // Separate batches share a world; put the regression away from the positive-Z fleet and template tickets.
+        if (delayLastMachine) origin = origin.offset(0, 0, -1024);
+        int columns = (int) Math.ceil(Math.sqrt(machines));
+        List<MachineProbe> fleet = new ArrayList<>(machines);
         MachineVariant[] variants = MachineVariant.values();
-        for (int index = 0; index < MACHINE_COUNT; index++) {
+        for (int index = 0; index < machines; index++) {
             MachineVariant variant = variants[index % variants.length];
+            boolean held = delayLastMachine && index == machines - 1;
             BlockPos controllerPos = origin.offset(
                     (index % columns) * MACHINE_SPACING, 0,
                     (index / columns) * MACHINE_SPACING);
-            forceFootprint(level, controllerPos, variant);
+            if (held) controllerPos = origin.offset(512, 0, -512);
+            Set<ChunkPos> chunks = forceFootprint(level, controllerPos, variant, held);
             level.setBlockAndUpdate(controllerPos, variant.controllerState());
             variant.definition().pattern().assembleAsCreative(
                     level, controllerPos, variant.patternFacing, variant.definition().defaultCreativeStates());
@@ -127,12 +259,19 @@ public final class EndgameIdleSoakGameTests {
                     variant.id + "[" + index + "] controller type mismatch");
             IMultiblockController controller = (IMultiblockController) controllerEntity;
             controller.scanStructure(level);
-            fleet.add(new MachineProbe(controllerPos.immutable(), controller, variant.id + "[" + index + "]"));
+            var initEntities = new LinkedHashSet<AEBaseBlockEntity>();
+            for (char symbol : variant.definition().pattern().getSymbols()) {
+                for (BlockPos pos : variant.definition().pattern().getExpectedPositions(controllerPos, variant.patternFacing, symbol)) {
+                    if (level.getBlockEntity(pos) instanceof AEBaseBlockEntity entity) initEntities.add(entity);
+                }
+            }
+            fleet.add(new MachineProbe(controllerPos.immutable(), controller, (AEBaseBlockEntity) controllerEntity,
+                    chunks, List.copyOf(initEntities), variant.id + "[" + index + "]"));
         }
         return List.copyOf(fleet);
     }
 
-    private static void forceFootprint(ServerLevel level, BlockPos controllerPos, MachineVariant variant) {
+    private static Set<ChunkPos> forceFootprint(ServerLevel level, BlockPos controllerPos, MachineVariant variant, boolean held) {
         Set<ChunkPos> machineChunks = new LinkedHashSet<>();
         machineChunks.add(new ChunkPos(controllerPos));
         var pattern = variant.definition().pattern();
@@ -141,8 +280,13 @@ public final class EndgameIdleSoakGameTests {
                     .map(ChunkPos::new).forEach(machineChunks::add);
         }
         for (ChunkPos chunk : machineChunks) {
-            if (FORCED_CHUNKS.add(chunk)) level.setChunkForced(chunk.x, chunk.z, true);
+            if (held) {
+                HELD_CHUNKS.add(chunk);
+                level.getChunkSource().addRegionTicket(TicketType.START, chunk, 0, Unit.INSTANCE);
+                level.getChunk(chunk.x, chunk.z);
+            } else if (FORCED_CHUNKS.add(chunk)) level.setChunkForced(chunk.x, chunk.z, true);
         }
+        return Set.copyOf(machineChunks);
     }
 
     private static long scanCount(GameTestHelper helper, BlockPos controllerPos) {
@@ -220,8 +364,15 @@ public final class EndgameIdleSoakGameTests {
         abstract MultiblockDefinition definition();
     }
 
-    private record MachineProbe(
-            BlockPos controllerPos, IMultiblockController controller, String description) { }
+    private record MachineProbe(BlockPos controllerPos, IMultiblockController controller, AEBaseBlockEntity entity,
+                                Set<ChunkPos> chunks, List<AEBaseBlockEntity> initEntities, String description) { }
 
-    private record MachineBaseline(MachineProbe probe, long scanCount) { }
+    private record MachineBaseline(MachineProbe probe, long scanCount, int readyInvoked) { }
+
+    private static final class StartupRegression {
+        private final MachineProbe probe;
+        private long legacyScanCount = -1;
+
+        private StartupRegression(MachineProbe probe) { this.probe = probe; }
+    }
 }
