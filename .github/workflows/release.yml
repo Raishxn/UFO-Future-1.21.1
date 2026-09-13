@@ -56,6 +56,30 @@ jobs:
           VERSION=$(grep '^mod_version=' gradle.properties | cut -d'=' -f2)
           echo "value=$VERSION" >> "$GITHUB_OUTPUT"
 
+      - name: Prepare release changelogs
+        id: notes
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          version = os.environ["RELEASE_VERSION"]
+          directory = Path("docs/releases")
+          english = directory / f"UPDATE_LOG_CURSEFORGE_{version}.md"
+          portuguese = directory / f"UPDATE_LOG_CURSEFORGE_{version}_PT-BR.md"
+          if english.is_file():
+              sections = ["# English\n\n" + english.read_text(encoding="utf-8")]
+              if portuguese.is_file():
+                  sections.append("# Português (Brasil)\n\n" + portuguese.read_text(encoding="utf-8"))
+              notes = Path("build/release-notes.md")
+              notes.parent.mkdir(parents=True, exist_ok=True)
+              notes.write_text("\n---\n\n".join(sections), encoding="utf-8")
+              with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+                  output.write(f"path=ufo/{notes}\n")
+          PY
+
       - name: Verify RaishxCore
         run: ./gradlew -p ../RaishxCore build runGameTestServer --stacktrace
 
@@ -94,12 +118,18 @@ jobs:
           path: |
             ufo/build/libs/*.jar
             ufo/build/libs/SHA256SUMS
+            ufo/docs/releases/UPDATE_LOG_CURSEFORGE_${{ steps.version.outputs.value }}*.md
 
       - name: Publish GitHub release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v3
         with:
-          generate_release_notes: true
+          name: UFO Future ${{ steps.version.outputs.value }}
+          prerelease: ${{ contains(steps.version.outputs.value, '-') }}
+          make_latest: ${{ contains(steps.version.outputs.value, '-') && 'false' || 'true' }}
+          body_path: ${{ steps.notes.outputs.path }}
+          generate_release_notes: ${{ steps.notes.outputs.path == '' }}
           files: |
             ufo/build/libs/*.jar
             ufo/build/libs/SHA256SUMS
+            ufo/docs/releases/UPDATE_LOG_CURSEFORGE_${{ steps.version.outputs.value }}*.md
