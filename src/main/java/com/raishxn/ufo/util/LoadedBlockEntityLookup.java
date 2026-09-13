@@ -18,11 +18,15 @@ import org.jetbrains.annotations.Nullable;
  * {@link Level#getBlockEntity(BlockPos)} there may add a new FULL chunk ticket
  * while the server is already tearing the world down.</p>
  *
- * <p>On the server the chunk holder is resolved directly instead of going through
- * {@link net.minecraft.server.level.ServerChunkCache#getChunkNow(int, int)}, which
- * consults only the four-entry last-access cache and therefore reports loaded
- * chunks as absent, silently dropping cross-chunk invalidations. The client keeps
- * the previous lookup because its chunk source has the same contract.</p>
+ * <p>Server lookups are restricted to the server thread, like
+ * {@link net.minecraft.server.level.ServerChunkCache#getChunkNow(int, int)}.
+ * That method checks both its cache and the visible holder, but the holder's
+ * checked FULL lookup rejects chunks whose allowed status has been demoted.
+ * We intentionally accept a completed, materialized FULL chunk still owned by
+ * a visible holder during demotion, so teardown can detach retained members.
+ * This does not wait, promote status, add tickets, or search pending unloads.
+ * Unavailable chunks and calls outside the server thread return {@code null}.
+ * The client retains its chunk source lookup.</p>
  */
 public final class LoadedBlockEntityLookup {
     private LoadedBlockEntityLookup() {
@@ -32,6 +36,7 @@ public final class LoadedBlockEntityLookup {
     public static BlockEntity get(Level level, BlockPos pos) {
         if (level == null || level.isOutsideBuildHeight(pos)) return null;
         if (level instanceof ServerLevel serverLevel) {
+            if (!serverLevel.getServer().isSameThread()) return null;
             ChunkHolder holder = serverLevel.getChunkSource().chunkMap.getVisibleChunkIfPresent(
                     ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.getX()),
                             SectionPos.blockToSectionCoord(pos.getZ())));

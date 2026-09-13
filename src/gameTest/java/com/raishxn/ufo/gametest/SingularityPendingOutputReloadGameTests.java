@@ -39,7 +39,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import static com.raishxn.ufo.gametest.EndgameStructureLifecycleGameTests.awaitCondition;
-import static com.raishxn.ufo.gametest.EndgameStructureLifecycleGameTests.awaitPhysicalUnload;
+import static com.raishxn.ufo.gametest.EndgameStructureLifecycleGameTests.releaseAndAwaitPhysicalUnload;
 import static com.raishxn.ufo.gametest.EndgameStructureLifecycleGameTests.footprintChunks;
 import static com.raishxn.ufo.gametest.EndgameStructureLifecycleGameTests.setChunksForced;
 
@@ -104,8 +104,7 @@ public final class SingularityPendingOutputReloadGameTests {
     private static void unloadWithPendingOutputs(GameTestHelper helper, Fixture fixture) {
         assertPending(helper, fixture.originalLink, OUTPUT_AMOUNT - fixture.initialRoom, fixture.storage.catalyst);
         helper.assertTrue(packages(helper, fixture.linkPos).isEmpty(), "blocked outputs were ejected before unload");
-        setChunksForced(helper.getLevel(), fixture.chunks, false);
-        awaitPhysicalUnload(helper, fixture.chunks, fixture.controller.getBlockPos(), fixture.controller, WAIT_TICKS, () ->
+        releaseAndAwaitPhysicalUnload(helper, fixture.chunks, fixture.controller.getBlockPos(), fixture.controller, WAIT_TICKS, () ->
                 awaitCondition(helper, WAIT_TICKS, fixture.originalLink::isRemoved,
                         "Grid Link did not physically unload", () -> reloadWithPendingOutputs(helper, fixture)));
     }

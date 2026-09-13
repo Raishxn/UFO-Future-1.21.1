@@ -21,6 +21,7 @@ import com.raishxn.ufo.block.entity.pattern.QuantumPatternFabricationMatrixPatte
 import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.AfterBatch;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -134,8 +135,7 @@ public final class EndgameStructureLifecycleGameTests {
             String machineName = controllerType.getSimpleName();
             helper.assertTrue(originalController.isAssembled(), machineName + " did not form before chunk unload");
             long scansBeforeUnload = scanCount(helper, controllerPos);
-            setChunksForced(level, footprintChunks, false);
-            awaitPhysicalUnload(helper, footprintChunks, controllerPos, originalController,
+            releaseAndAwaitPhysicalUnload(helper, footprintChunks, controllerPos, originalController,
                     UNLOAD_WAIT_TICKS, () -> reloadAndVerify(helper, footprintChunks, controllerPos,
                             originalController, controllerType, definition, patternFacing, scansBeforeUnload));
         });
@@ -217,29 +217,51 @@ public final class EndgameStructureLifecycleGameTests {
         chunks.forEach(chunk -> level.setChunkForced(chunk.x, chunk.z, forced));
     }
 
-    static void awaitPhysicalUnload(
+    @AfterBatch(batch = "defaultBatch")
+    public static void cleanUpUnloadObservers(ServerLevel level) {
+        ChunkUnloadObservation.closeAll();
+        LoadedBlockEntityLookupGameTests.releaseFixtures(level);
+    }
+
+    static void releaseAndAwaitPhysicalUnload(
             GameTestHelper helper, Set<ChunkPos> chunks, BlockPos controllerPos,
             BlockEntity originalController, int ticksRemaining, Runnable continuation) {
+        // Capture every instantiated BE and subscribe BEFORE dropping tickets.
+        ChunkUnloadObservation observation = new ChunkUnloadObservation(helper, chunks);
+        setChunksForced(helper.getLevel(), chunks, false);
+        awaitPhysicalUnload(helper, chunks, controllerPos, originalController,
+                observation, ticksRemaining, continuation);
+    }
+
+    private static void awaitPhysicalUnload(
+            GameTestHelper helper, Set<ChunkPos> chunks, BlockPos controllerPos,
+            BlockEntity originalController, ChunkUnloadObservation observation,
+            int ticksRemaining, Runnable continuation) {
         helper.runAfterDelay(1, () -> {
             ServerLevel level = helper.getLevel();
-            String dimension = level.dimension().location().toString();
-            boolean chunksUnavailable = chunks.stream()
-                    .allMatch(chunk -> helper.getLevel().getChunkSource().getChunkNow(chunk.x, chunk.z) == null);
+            boolean holdersInvisible = chunks.stream().allMatch(chunk ->
+                    level.getChunkSource().chunkMap.getVisibleChunkIfPresent(chunk.toLong()) == null);
             boolean controllerUnindexed = !StructureMembershipIndex.INSTANCE.controllersInChunk(
-                    dimension, new ChunkPos(controllerPos).toLong()).contains(controllerPos.asLong());
-            // Leaving the visible chunk map alone does not prove completion of the asynchronous unload queue.
-            if (chunksUnavailable && originalController.isRemoved() && controllerUnindexed) {
-                LOGGER.info("Physical chunk unload observed: machine={}, footprintChunks={}, tick={}",
-                        originalController.getClass().getSimpleName(), chunks.size(), helper.getTick());
+                    level.dimension().location().toString(), new ChunkPos(controllerPos).toLong())
+                    .contains(controllerPos.asLong());
+            // Unload is posted before ServerLevel.unload removes BEs: require both.
+            if (holdersInvisible && observation.allUnloadedAndRemoved()
+                    && originalController.isRemoved() && controllerUnindexed) {
+                LOGGER.info("Physical chunk unload observed: machine={}, footprintChunks={}, {}, tick={}",
+                        originalController.getClass().getSimpleName(), chunks.size(),
+                        observation.diagnostic(), helper.getTick());
+                observation.close();
                 continuation.run();
             } else if (ticksRemaining <= 1) {
-                helper.fail("physical structure unload did not finish within " + UNLOAD_WAIT_TICKS + " ticks"
-                        + " (chunksUnavailable=" + chunksUnavailable
+                observation.close();
+                helper.fail("physical structure unload did not finish"
+                        + " (holdersInvisible=" + holdersInvisible
+                        + ", " + observation.diagnostic()
                         + ", controllerRemoved=" + originalController.isRemoved()
                         + ", controllerUnindexed=" + controllerUnindexed + ")");
             } else {
                 awaitPhysicalUnload(helper, chunks, controllerPos, originalController,
-                        ticksRemaining - 1, continuation);
+                        observation, ticksRemaining - 1, continuation);
             }
         });
     }

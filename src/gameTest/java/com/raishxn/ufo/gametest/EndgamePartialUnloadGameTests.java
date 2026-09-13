@@ -38,15 +38,17 @@ import java.util.Set;
 
 /**
  * Partial chunk lifecycle for the endgame trio. Vanilla releases a chunk holder only
- * when its ticket level reaches MAX_LEVEL (41), which is eight rings beyond the FULL
+ * when its ticket level exceeds MAX_LEVEL (41); the band 34..41 is beyond the FULL
  * window, and every trio footprint sits inside ring one of its controller chunk.
  * Keeping the controller chunk loaded with any region ticket therefore also keeps
  * the members above the unload threshold: the reachable "controller loaded, members
  * gone" state is a demotion (chunks leave the FULL window, holders survive, no
  * unload events fire), not a physical unload. These tests observe exactly that state
  * and prove it neither deforms nor polls the machines. Physical unload coverage lives
- * in the controller-first and controller-last reload-order tests, where every fixture
- * chunk is fully released and reloaded from disk. The build positions are fixed
+ * in the two QCN ticket-request recovery tests, where every fixture chunk is
+ * physically unloaded before reload. These vary which tickets are requested;
+ * propagation does not guarantee the effective Load/onReady order.
+ * The build positions are fixed
  * absolute world coordinates aligned to chunk borders, far from every other distant
  * fixture and 512 blocks apart from each other.
  */
@@ -89,19 +91,19 @@ public final class EndgamePartialUnloadGameTests {
     }
 
     @GameTest(template = "event_driven_structure", timeoutTicks = 2400)
-    public static void computationNexusRecoversWhenControllerChunkReloadsFirst(GameTestHelper helper) {
+    public static void computationNexusRecoversAfterControllerTicketRequest(GameTestHelper helper) {
         BlockState state = MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get()
                 .defaultBlockState().setValue(QuantumComputationNexusControllerBlock.FACING, Direction.NORTH);
-        exerciseControllerReloadsFirst(helper, new BlockPos(5648, 5, 16), state,
+        exerciseControllerTicketRequest(helper, new BlockPos(5648, 5, 16), state,
                 QuantumComputationNexusPatternFactory.getDefinition(), Direction.NORTH,
                 QuantumComputationNexusControllerBE.class);
     }
 
     @GameTest(template = "event_driven_structure", timeoutTicks = 2400)
-    public static void computationNexusRecoversWhenControllerChunkReloadsLast(GameTestHelper helper) {
+    public static void computationNexusRecoversAfterMemberTicketRequests(GameTestHelper helper) {
         BlockState state = MultiblockBlocks.QUANTUM_COMPUTATION_NEXUS_CONTROLLER.get()
                 .defaultBlockState().setValue(QuantumComputationNexusControllerBlock.FACING, Direction.NORTH);
-        exerciseControllerReloadsLast(helper, new BlockPos(6160, 5, 16), state,
+        exerciseMemberTicketRequests(helper, new BlockPos(6160, 5, 16), state,
                 QuantumComputationNexusPatternFactory.getDefinition(), Direction.NORTH,
                 QuantumComputationNexusControllerBE.class);
     }
@@ -128,6 +130,7 @@ public final class EndgamePartialUnloadGameTests {
             // FULL-level hold on the controller chunk; dropping the FORCED tickets demotes
             // the ring-one members out of the FULL window without releasing their holders.
             level.getChunkSource().addRegionTicket(TicketType.START, new ChunkPos(controllerPos), 0, Unit.INSTANCE);
+            ChunkUnloadObservation observation = new ChunkUnloadObservation(helper, footprintChunks);
             EndgameStructureLifecycleGameTests.setChunksForced(level, footprintChunks, false);
             awaitMemberDemotion(helper, memberChunks, controllerPos, UNLOAD_WAIT_TICKS, () -> {
                 long scansWhileDemoted = EndgameStructureLifecycleGameTests.scanCount(helper, controllerPos);
@@ -144,6 +147,9 @@ public final class EndgamePartialUnloadGameTests {
                             machineName + " scanned while its controller chunk could not tick");
                     assertMembersDemoted(helper, memberChunks,
                             machineName + " member chunks left the unload grace band");
+                    helper.assertTrue(observation.noUnloadsAndAllRetained(),
+                            machineName + " emitted unload events or removed BEs during demotion: " + observation.diagnostic());
+                    observation.close();
                     LOGGER.info("Member chunk demotion tolerated: machine={}, memberChunks={}, scansWhileDemoted={}, idleTicks={}",
                             machineName, memberChunks.size(), scansWhileDemoted, IDLE_TICKS);
                     // Bring the members back into the FULL window and resume ticking; the
@@ -179,13 +185,9 @@ public final class EndgamePartialUnloadGameTests {
         });
     }
 
-    /**
-     * Full physical unload, then the controller chunk returns FIRST. Its forced ticket
-     * pulls the released member chunks back through a real disk reload, so the first
-     * scans may legitimately see absent members and later scans must reform the
-     * machine without any manual rescan.
-     */
-    private static <T extends BlockEntity & IMultiblockController> void exerciseControllerReloadsFirst(
+    /** Physical unload followed by a ticket request for the controller chunk.
+     * Ticket propagation may also load members; no effective Load/ready order is asserted. */
+    private static <T extends BlockEntity & IMultiblockController> void exerciseControllerTicketRequest(
             GameTestHelper helper, BlockPos controllerPos, BlockState controllerState,
             MultiblockDefinition definition, Direction patternFacing, Class<T> controllerType) {
         ServerLevel level = helper.getLevel();
@@ -198,8 +200,7 @@ public final class EndgamePartialUnloadGameTests {
         helper.runAfterDelay(10, () -> {
             String machineName = controllerType.getSimpleName();
             helper.assertTrue(controller.isAssembled(), machineName + " did not form before chunk unload");
-            EndgameStructureLifecycleGameTests.setChunksForced(level, footprintChunks, false);
-            EndgameStructureLifecycleGameTests.awaitPhysicalUnload(helper, footprintChunks, controllerPos,
+            EndgameStructureLifecycleGameTests.releaseAndAwaitPhysicalUnload(helper, footprintChunks, controllerPos,
                     controller, UNLOAD_WAIT_TICKS, () -> {
                         ChunkPos controllerChunk = new ChunkPos(controllerPos);
                         EndgameStructureLifecycleGameTests.setChunksForced(level, Set.of(controllerChunk), true);
@@ -210,7 +211,7 @@ public final class EndgamePartialUnloadGameTests {
                                                 instanceof IMultiblockController reloaded
                                         && reloaded.isAssembled()
                                         && memberChunks.stream().allMatch(chunk -> isChunkMaterialized(level, chunk)),
-                                machineName + " did not reform when its controller chunk reloaded first",
+                                machineName + " did not reform after the controller ticket request",
                                 () -> helper.runAfterDelay(SETTLE_TICKS, () -> {
                                     T reloadedController = controllerType.cast(
                                             LoadedBlockEntityLookup.get(level, controllerPos));
@@ -223,12 +224,9 @@ public final class EndgamePartialUnloadGameTests {
         });
     }
 
-    /**
-     * Full physical unload, then every member chunk returns BEFORE the controller chunk.
-     * The forced members pull their unloaded ring-one neighbour (the controller chunk)
-     * back to ENTITY_TICKING, so the controller returns last and must recover on its own.
-     */
-    private static <T extends BlockEntity & IMultiblockController> void exerciseControllerReloadsLast(
+    /** Physical unload followed by ticket requests for member chunks.
+     * Ticket propagation may also load the controller; no effective Load/ready order is asserted. */
+    private static <T extends BlockEntity & IMultiblockController> void exerciseMemberTicketRequests(
             GameTestHelper helper, BlockPos controllerPos, BlockState controllerState,
             MultiblockDefinition definition, Direction patternFacing, Class<T> controllerType) {
         ServerLevel level = helper.getLevel();
@@ -242,8 +240,7 @@ public final class EndgamePartialUnloadGameTests {
             String machineName = controllerType.getSimpleName();
             helper.assertTrue(controller.isAssembled(), machineName + " did not form before chunk unload");
             long scansBeforeUnload = EndgameStructureLifecycleGameTests.scanCount(helper, controllerPos);
-            EndgameStructureLifecycleGameTests.setChunksForced(level, footprintChunks, false);
-            EndgameStructureLifecycleGameTests.awaitPhysicalUnload(helper, footprintChunks, controllerPos,
+            EndgameStructureLifecycleGameTests.releaseAndAwaitPhysicalUnload(helper, footprintChunks, controllerPos,
                     controller, UNLOAD_WAIT_TICKS, () -> {
                         EndgameStructureLifecycleGameTests.setChunksForced(level, memberChunks, true);
                         memberChunks.forEach(chunk -> level.getChunk(chunk.x, chunk.z));
@@ -254,7 +251,7 @@ public final class EndgamePartialUnloadGameTests {
                                         && reloaded.isAssembled()
                                         && EndgameStructureLifecycleGameTests.scanCount(helper, controllerPos)
                                                 > scansBeforeUnload,
-                                machineName + " did not recover after its controller chunk returned last",
+                                machineName + " did not recover after member ticket requests",
                                 () -> helper.runAfterDelay(SETTLE_TICKS, () -> {
                                     T reloadedController = controllerType.cast(
                                             LoadedBlockEntityLookup.get(level, controllerPos));
@@ -287,8 +284,9 @@ public final class EndgamePartialUnloadGameTests {
 
     /**
      * Demotion observation: every member chunk left the FULL window (the scanners see
-     * it as absent) while its holder survives inside the unload grace band, proving no
-     * physical unload or unload event happened. The controller chunk must stay
+     * it as absent) while its holder remains visible inside the unload grace band.
+     * This gate alone does not observe unload events or BE removal.
+     * The controller chunk must stay
      * materialized with its BE intact.
      */
     private static void awaitMemberDemotion(GameTestHelper helper, Set<ChunkPos> memberChunks,
@@ -296,10 +294,10 @@ public final class EndgamePartialUnloadGameTests {
         helper.runAfterDelay(1, () -> {
             ServerLevel level = helper.getLevel();
             boolean membersDemoted = memberChunks.stream().allMatch(chunk ->
-                    !isChunkLoadedForScanners(level, chunk) && !isChunkFullyReleased(level, chunk));
+                    !isChunkLoadedForScanners(level, chunk) && !isHolderInvisible(level, chunk));
             boolean controllerVisible = isChunkLoadedForScanners(level, new ChunkPos(controllerPos));
-            boolean controllerIntact = !(LoadedBlockEntityLookup.get(level, controllerPos) instanceof BlockEntity removed)
-                    || !removed.isRemoved();
+            boolean controllerIntact = LoadedBlockEntityLookup.get(level, controllerPos) instanceof BlockEntity retained
+                    && !retained.isRemoved();
             if (membersDemoted && controllerVisible && controllerIntact) {
                 LOGGER.info("Member chunk demotion observed: controller={}, memberChunks={}, tick={}",
                         controllerPos, memberChunks.size(), helper.getTick());
@@ -353,13 +351,9 @@ public final class EndgamePartialUnloadGameTests {
         });
     }
 
-    /**
-     * True while the chunk holder still exists. A chunk leaving the visible chunk map
-     * only means it left the FULL window; its holder (and therefore its unload event)
-     * survives until the whole unload pipeline finishes, so {@code holder == null} is
-     * the observable "fully unloaded" signal.
-     */
-    private static boolean isChunkFullyReleased(ServerLevel level, ChunkPos chunk) {
+    /** Visible-holder absence only; pendingUnloads may still contain the chunk.
+     * This is not a physical-unload completion check. */
+    private static boolean isHolderInvisible(ServerLevel level, ChunkPos chunk) {
         return level.getChunkSource().chunkMap.getVisibleChunkIfPresent(chunk.toLong()) == null;
     }
 
@@ -381,7 +375,7 @@ public final class EndgamePartialUnloadGameTests {
     private static void assertMembersDemoted(GameTestHelper helper, Set<ChunkPos> memberChunks, String message) {
         ServerLevel level = helper.getLevel();
         Set<ChunkPos> unexpected = memberChunks.stream().filter(chunk ->
-                isChunkLoadedForScanners(level, chunk) || isChunkFullyReleased(level, chunk))
+                isChunkLoadedForScanners(level, chunk) || isHolderInvisible(level, chunk))
                 .collect(java.util.stream.Collectors.toSet());
         helper.assertTrue(unexpected.isEmpty(), message + ": " + unexpected);
     }

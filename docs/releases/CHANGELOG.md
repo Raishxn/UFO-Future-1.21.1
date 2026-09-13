@@ -24,8 +24,8 @@ projeto. IDs, saves, receitas e progressao existentes foram preservados.
 - Stellar Nexus: outputs aguardam espaco na rede sem perda, falha termica segura por padrao (grief opt-in), coolant e energia restritos aos ports dedicados.
 - State machine explicita nos controllers e invalidacao estrutural por eventos: sem polling periodico em idle, com scans orientados a invalidacao.
 - Quantum Grid Link: outputs pendentes sobrevivem a quebra e ao reload fisico de chunk; quebra recupera o saldo exato em pacotes AE2, sem duplicar.
-- Unload/reload fisico de chunks e despromocao parcial: as maquinas do trio pausam sem deformar, sem scans e sem perder conteudo; a recuperacao e automatica.
-- Lookups entre chunks exatos (sem cache de quatro entradas), eliminando invalidacoes estruturais silenciosamente descartadas.
+- Ciclo de chunks do trio: despromocao preserva a estrutura com controller sem ticking; unload/reload completo reconstroi o indice e recupera a formacao automaticamente.
+- Lookups entre chunks sem tickets na thread do servidor, incluindo chunks materializados despromovidos para desvincular membros retidos durante teardown.
 - Mekanism tornou-se opcional real; Pulsar Chambers/caracacas ocultas no criativo, JEI e EMI sem Mekanism, com IDs e receitas preservadas.
 - GeckoLib removido do contrato runtime do UFO; mob Apocalypse Type-A removido.
 - Warnings javac em zero com `-Xlint:all` (excecao documentada: this-escape de registro NeoForge).
