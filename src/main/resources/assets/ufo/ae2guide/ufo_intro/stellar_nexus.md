@@ -32,7 +32,7 @@ hatches cannot create an invisible grid connection through the structure shell.
 
 ## Field Tiers
 
-The four field generator positions must all match the same tier:
+All **138 field generator positions** must match the same tier:
 
 - **MK1**
 - **MK2**
@@ -67,7 +67,7 @@ The values **1/4/8** are server-configurable under `stellar.coolant`; zero disab
 
 ## Safe Startup Procedure
 
-1. Form the structure with four identical field generators.
+1. Form the structure with all 138 field generators at the same tier.
 2. Connect every massive hatch on its indicated face.
 3. Wait for the internal buffer to charge and verify fuel/coolant availability.
 4. Keep Safe Mode enabled for the first cycle.

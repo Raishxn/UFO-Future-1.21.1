@@ -20,8 +20,8 @@ Formation requires exactly one of each operational role:
 - Massive Item Input supplies recipe items.
 - Massive Item Output returns item products.
 - Massive Fluid Hatch is the coolant-input role. Its 16,000,000 mB local tank
-  accepts coolant from NeoForge-compatible pipes, including Mekanism pipes, and
-  retains its existing ME fluid access.
+  accepts coolant from NeoForge-compatible pipes, including Mekanism pipes.
+  Cooling consumes only fluid already stored in this local tank.
 - FE Energy Input Hatch charges the internal **200B AE** buffer exclusively
   from FE stored locally in the hatch. Supply it with an FE energy cable on any
   face; no ME cable is required for energy transfer. It never drains grid power
@@ -32,9 +32,8 @@ five faces are isolated; adjacency inside the shell does not create a hidden ME
 connection.
 
 Fluid pipes are independent of those ME-facing rules and may fill coolant from
-any face. The Nexus drains the local tank first and ME storage second. Only
-Gelid Cryotheum, Stable Coolant and Temporal Fluid pass the filter; external
-drain is disabled.
+any face. Only Gelid Cryotheum, Stable Coolant and Temporal Fluid pass the
+filter; external drain is disabled.
 
 All **138** field positions must be filled with a single tier: MK1, MK2 or MK3.
 Mixed or missing fields invalidate formation rather than averaging performance.

@@ -212,20 +212,20 @@ consumir.
 README credita o GTO Project pelas folhas CTM; LICENSE.md não. Correção
 aditiva de uma linha.
 
-### 4.8 GuideME em chinês simplificado **[em andamento — 14/48 páginas]**
+### 4.8 GuideME em chinês simplificado **[em andamento — 27/48 páginas]**
 
-Dois recortes concluídos para `zh_cn`: índice, entrada, navegação principal,
+Três recortes concluídos para `zh_cn`: índice, entrada, navegação principal,
 diagnóstico, QMF, Quantum Slicer, Quantum Processor Assembler, Stellar Nexus,
-mega crafting, containment e ferramentas. Essas páginas usam terminologia
-consistente com `zh_cn.json` e possuem teste contra regressão para placeholders
-sem texto Han. Links de capítulos ainda não traduzidos usam o fallback da
-página-base até o lote correspondente ser concluído.
+suas 13 subpáginas operacionais, mega crafting, containment e ferramentas.
+Essas páginas usam terminologia consistente com `zh_cn.json` e possuem teste
+contra regressão para placeholders sem texto Han. Links de capítulos ainda não
+traduzidos usam o fallback da página-base até o lote correspondente ser concluído.
 
 Próximos lotes, nesta ordem:
 
-1. subpáginas de construção/operação/controles das máquinas já traduzidas;
-2. DMA, hatches, células, armaduras, materiais, catalisadores e fragmentos;
-3. trio de autocrafting endgame;
+1. DMA, Cryoforge, hatches, células, armaduras, materiais, catalisadores e fragmentos;
+2. trio de autocrafting endgame;
+3. sistemas complementares (campos, abelhas e wireless);
 4. revisão terminológica e navegação final dentro do jogo.
 
 ---

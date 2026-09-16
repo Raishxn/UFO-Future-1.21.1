@@ -1212,7 +1212,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     private static final long COOLANT_CONSUMPTION_PER_TICK = 100;
 
     /**
-     * Tries to extract coolant fluid from the ME network.
+     * Tries to extract coolant fluid from the linked hatches' physical tanks.
      * Returns the cooling power applied this tick (heat units to subtract).
      * <p>
      * Prioritizes the intended coolant ladder without falling back to water.
@@ -1296,7 +1296,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         return extracted;
     }
 
-    /** Keeps every linked hatch supplied from ME storage, best coolant first. */
+    /** Orders supported coolants by efficiency so the best buffered fluid is tried first. */
     private static int[] coolantPriority(CoolantDefinition[] definitions) {
         long[] efficiencies = new long[definitions.length];
         for (int index = 0; index < definitions.length; index++) {

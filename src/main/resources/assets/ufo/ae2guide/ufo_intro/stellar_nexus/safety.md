@@ -22,7 +22,7 @@ block budget and dimension allowlist.
 | Symptom | Likely cause | Recovery |
 |---|---|---|
 | Structure invalid | Missing/mixed field or wrong hatch count | Scan, repair exact highlighted position |
-| Energy does not rise | Energy hatch face/grid offline | Correct orientation, power and cabling |
+| Energy does not rise | Energy hatch has no external FE supply | Check the FE cable, source and hatch storage |
 | Start rejected | Recipe gate, fuel, AE or output unavailable | Read the controller's validation lines |
 | Heat rises too fast | Weak/no coolant or Overclock | Disable Overclock, improve coolant, keep Safe Mode |
 | Output remains pending | ME capacity/partition rejects key | Restore matching capacity; do not restart recipe |

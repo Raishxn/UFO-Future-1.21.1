@@ -47,9 +47,22 @@ class GuideContentIntegrityTest {
                 "mega_storage.md",
                 "materials.md",
                 "qmf.md",
+                "qmf/automation.md",
+                "qmf/construction.md",
+                "qmf/operation.md",
                 "quantum_processor_assembler.md",
+                "quantum_processor_assembler/construction.md",
+                "quantum_processor_assembler/controls.md",
+                "quantum_processor_assembler/operation.md",
                 "quantum_slicer.md",
+                "quantum_slicer/construction.md",
+                "quantum_slicer/controls.md",
+                "quantum_slicer/operation.md",
                 "stellar_nexus.md",
+                "stellar_nexus/construction.md",
+                "stellar_nexus/operation.md",
+                "stellar_nexus/ports.md",
+                "stellar_nexus/safety.md",
                 "tools.md",
                 "troubleshooting.md");
         List<String> errors = new ArrayList<>();
@@ -110,6 +123,14 @@ class GuideContentIntegrityTest {
             var structures = IMPORTED_STRUCTURE.matcher(content);
             while (structures.find()) {
                 Path mainTarget = page.getParent().resolve(structures.group(1)).normalize();
+                if (!Files.isRegularFile(mainTarget)) {
+                    Path localizedRelative = GUIDE_ROOT.relativize(mainTarget);
+                    if (localizedRelative.getNameCount() > 1
+                            && localizedRelative.getName(0).toString().matches("_[a-z]{2}_[a-z]{2}")) {
+                        mainTarget = GUIDE_ROOT.resolve(
+                                localizedRelative.subpath(1, localizedRelative.getNameCount()));
+                    }
+                }
                 Path relative = GUIDE_ROOT.relativize(mainTarget);
                 Path generatedTarget = Path.of("src/generated/resources/assets/ufo/ae2guide").resolve(relative);
                 if (!Files.isRegularFile(mainTarget) && !Files.isRegularFile(generatedTarget)) {

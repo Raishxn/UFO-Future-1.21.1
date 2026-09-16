@@ -9,9 +9,9 @@ navigation:
 # Slicer Controls, Heat, and Recovery
 
 An ME Massive Fluid Hatch may replace any casing and accept coolant from external
-fluid pipes. Its local tank has priority over the existing ME storage source. The
-single Quantum Pattern Buffer or Proxy may move to any casing, while Vibrant Glass remains
-strictly glass-only.
+fluid pipes. Only its local tank is consumed; there is no automatic ME storage
+fallback. The single Quantum Pattern Buffer or Proxy may move to any casing,
+while Vibrant Glass remains strictly glass-only.
 
 - **Scan** revalidates the canonical 13×5×5 topology and reports mismatches.
 - **Safe Mode** limits admission to nine jobs and locks progress at maximum heat.
