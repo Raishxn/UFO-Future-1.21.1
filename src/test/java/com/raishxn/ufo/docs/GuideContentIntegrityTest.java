@@ -40,12 +40,18 @@ class GuideContentIntegrityTest {
         Set<String> requiredPages = Set.of(
                 "index.md",
                 "containment.md",
+                "equipment.md",
+                "getting_started.md",
+                "infrastructure.md",
+                "machines.md",
                 "mega_storage.md",
+                "materials.md",
                 "qmf.md",
                 "quantum_processor_assembler.md",
                 "quantum_slicer.md",
                 "stellar_nexus.md",
-                "tools.md");
+                "tools.md",
+                "troubleshooting.md");
         List<String> errors = new ArrayList<>();
 
         for (String fileName : requiredPages) {
@@ -89,6 +95,13 @@ class GuideContentIntegrityTest {
             var links = LOCAL_MARKDOWN_LINK.matcher(content);
             while (links.find()) {
                 Path target = page.getParent().resolve(links.group(1)).normalize();
+                if (!Files.isRegularFile(target)) {
+                    Path relative = GUIDE_ROOT.relativize(target);
+                    if (relative.getNameCount() > 1
+                            && relative.getName(0).toString().matches("_[a-z]{2}_[a-z]{2}")) {
+                        target = GUIDE_ROOT.resolve(relative.subpath(1, relative.getNameCount()));
+                    }
+                }
                 if (!Files.isRegularFile(target)) {
                     errors.add("broken link " + links.group(1) + " in " + page);
                 }
