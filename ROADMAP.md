@@ -190,11 +190,11 @@ Hatches de coolant/energia externos + `MultiblockSupplyWidget` implementados em
 qualquer multibloco novo deve nascer já dentro do runtime unificado.
 
 ### 4.4 GameTests **[em evolução]**
-Em 2026-09-16, 228 testes unitários e 26 GameTests passaram localmente. A suíte
+Em 2026-09-16, 229 testes unitários e 28 GameTests passaram localmente. A suíte
 cobre unload/reload físico, unload parcial, recuperação do Grid Link, outputs
-pendentes e migração de saves. Movimento por pistão e sobreposição de estruturas
-continuam descobertos. Novos multiblocos devem entrar com GameTests desde o
-primeiro recorte.
+pendentes, migração de saves e isolamento da Thermal Suit em relação a energia
+e módulos UFO. Movimento por pistão e sobreposição de estruturas continuam
+descobertos. Novos multiblocos devem entrar com GameTests desde o primeiro recorte.
 
 ### 4.5 Extração completa do ME Addon Toolkit para o RaishxCore **[próxima prioridade]**
 Concluir a extração da infraestrutura genérica: definição/matcher compilado e
@@ -211,6 +211,21 @@ consumir.
 ### 4.7 Crédito GTO Project no LICENSE.md **[pendente — apontado no ledger]**
 README credita o GTO Project pelas folhas CTM; LICENSE.md não. Correção
 aditiva de uma linha.
+
+### 4.8 GuideME em chinês simplificado **[em andamento — 8/48 páginas]**
+
+Primeiro recorte concluído para `zh_cn`: índice, QMF, Quantum Slicer, Quantum
+Processor Assembler, Stellar Nexus, mega crafting, containment e ferramentas.
+Essas páginas usam terminologia consistente com `zh_cn.json` e possuem teste
+contra regressão para placeholders sem texto Han.
+
+Próximos lotes, nesta ordem:
+
+1. navegação e entrada (`getting_started`, `machines`, `infrastructure`,
+   `materials`, `equipment`, `troubleshooting`);
+2. subpáginas de construção/operação/controles das máquinas já traduzidas;
+3. DMA, hatches, células, armaduras, materiais, catalisadores e fragmentos;
+4. trio de autocrafting endgame e revisão final dentro do jogo.
 
 ---
 

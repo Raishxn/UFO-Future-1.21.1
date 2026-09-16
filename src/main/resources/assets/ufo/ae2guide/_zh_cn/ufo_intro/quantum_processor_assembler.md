@@ -1,18 +1,58 @@
 ---
 navigation:
   parent: ufo_intro/machines.md
-  title: Quantum Processor Assembler
+  title: 量子处理器组装机
   position: 44
 ---
 
-# Quantum Processor Assembler
+# 量子处理器组装机
 
-The **Quantum Processor Assembler** is the finishing multiblock for processor production.
+<BlockImage id="ufo:quantum_processor_assembler_controller" scale="4"></BlockImage>
 
-## Features
+**量子处理器组装机**是用于批量完成处理器装配的多方块机器。
 
-- Up to **27 parallel jobs** in standard mode
-- **9 parallel jobs** in Safe Mode
-- AE2 pattern support through the **Quantum Pattern Hatch**
-- Direct ME pull and push for items and fluids
-- The hatch stores **72 encoded patterns**
+<SubPages />
+
+## 特性
+
+- 标准模式最多同时运行 **27 个任务**
+- 安全模式最多同时运行 **9 个任务**
+- 通过**量子样板缓存器或代理**支持 AE2 样板
+- 支持处理器系列的通用多方块配方
+- 直接通过 ME 网络输入和输出物品与流体
+
+## 样板缓存器 / 代理
+
+- 本地**量子样板缓存器**可存放 **72 个已编码样板**
+- **量子样板代理**使用其所链接缓存器中的样板
+- 两者都能将控制器作为合成机器提供给缓存器
+- 每个被推送的样板会占用一个空闲线程
+
+## 在生产线中的作用
+
+让切片机样板和最终装配样板同时对同一个合成网络可见。这样，AE2 就能把压印部件作为依赖项请求，
+再将最终处理器步骤派发到这里。如果 27 个线程全部被占用，新任务会等待某个流程完成且产物被接收。
+
+## 热量参数
+
+- 基础产热：每个活跃线程每 tick **1 HU**。
+- 超频产热：每个活跃线程每 tick **5 HU**。
+- 空闲被动散热：每 40 tick **-1 HU**。
+- 冷却液舱使用通用多方块机器的统一冷却等级：
+- 凝滞冷却剂：每 **120 mB** 移除 **1 HU**，每 tick 最多消耗 **1000 mB**。
+- 稳定冷却剂：每 **1 mB** 移除 **50 HU**，每 tick 最多消耗 **10 mB**。
+- 时间流体：每 **1 mB** 移除 **100 HU**，每 tick 最多消耗 **10 mB**。
+
+## 专用供应舱口
+
+结构必须在任意兼容外壳位置安装一个 **ME 大型流体舱口**和一个 **FE 能量输入舱口**。
+预览只展示一种示例布局，并不限定舱口位置；两种舱口都至少需要一个。
+
+使用能量线缆将 FE 输入能量舱口的本地储能槽。机器加工不会从 AE2 网络抽取生产能量。
+
+冷却液**只会从流体舱口的本地储罐中消耗**（容量 16,000,000 mB）。请使用外部流体管道
+或明确配置的输出设备供应凝滞冷却剂、稳定冷却剂或时间流体。控制器不会自动从 ME 存储中提取冷却液。
+
+能量舱口只接受**外部 FE**。FE 会按 AE2 配置的换算比例进入可持久保存、
+容量为 1,000,000,000 AE 等值的缓存。添加更多能量舱口不会提高控制器的总充能上限。
+物品与流体自动化仍然需要 ME 网络连接及其自身的供电。

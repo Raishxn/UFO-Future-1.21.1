@@ -1,24 +1,70 @@
 ---
 navigation:
   parent: ufo_intro/machines.md
-  title: Quantum Matter Fabricator
+  title: 量子物质制造机
   position: 42
 ---
 
-# Quantum Matter Fabricator
+# 量子物质制造机
 
-The **QMF** is the multiblock evolution of the DMA for heavy automation and AE2 autocrafting.
+<BlockImage id="ufo:quantum_matter_fabricator_controller" scale="4"></BlockImage>
 
-## Main Benefits
+**量子物质制造机（QMF）**是 DMA 的多方块进阶形态，适合大规模自动化、批量生产和 AE2 样板工作流。
 
-- Up to **27 parallel threads** in standard mode
-- **9 parallel threads** in Safe Mode
-- Accepts **QMF** recipes and **DMA** recipes
-- Reads ingredients directly from the ME network
-- Returns outputs automatically
+<SubPages />
 
-## Quantum Pattern Hatch
+## 主要优势
 
-- Stores **72 encoded patterns**
-- Links to the controller after assembly
-- Exposes the multiblock to AE2 as a crafting machine
+- 标准模式最多同时运行 **27 个线程**
+- 安全模式最多同时运行 **9 个线程**
+- 同时支持原生 **QMF 配方**和 **DMA 配方**
+- 通过**量子样板缓存器或代理**支持 AE2 自动合成
+- 直接从相连的 ME 网络读取原料
+- 自动将产物送回 ME 网络
+
+## 量子样板缓存器 / 代理
+
+<BlockImage id="ufo:quantum_pattern_buffer" scale="3"></BlockImage>
+
+- 本地缓存器最多可保存 **72 个已编码样板**，并连接至 AE2
+- 代理使用其所链接缓存器中的样板
+- 结构成型时，缓存器或代理都会链接到控制器
+- 控制器因此能够并行执行多个任务
+
+## 第一次自动生产
+
+1. 确认控制器显示 `IDLE`，而不是 `UNFORMED` 或 `PAUSED_NO_GRID`。
+2. 按照 JEI 显示的确定性基础产物，编码一个处理样板。
+3. 将它放入本地量子样板缓存器，然后从 ME 终端请求一次合成。
+4. 确认控制器界面中出现一个处理单元。
+5. 仅在输入、冷却液、能量和输出通道均稳定后，才扩大到 27 个任务。
+
+样板随附的物品不会被再次从 ME 网络提取。若存储系统拒收产物，产物会被持久化缓存，
+控制器状态将变为 `OUTPUT_BLOCKED`，直到重新出现可用容量。
+
+## 热量参数
+
+- 基础产热：每个活跃线程每 tick **1 HU**。
+- 超频产热：每个活跃线程每 tick **5 HU**。
+- 空闲被动散热：每 40 tick **-1 HU**。
+- 冷却液舱使用通用多方块机器的统一冷却等级：
+- 凝滞冷却剂：每 **120 mB** 移除 **1 HU**，每 tick 最多消耗 **1000 mB**。
+- 稳定冷却剂：每 **1 mB** 移除 **50 HU**，每 tick 最多消耗 **10 mB**。
+- 时间流体：每 **1 mB** 移除 **100 HU**，每 tick 最多消耗 **10 mB**。
+
+达到温度上限时，安全模式会停止推进，并将并行上限限制为 9 个线程。
+超频会将处理进度和基础产热都提高至五倍。
+
+## 专用供应舱口
+
+结构必须在任意兼容外壳位置安装一个 **ME 大型流体舱口**和一个 **FE 能量输入舱口**。
+预览只展示一种示例布局，并不限定舱口位置；两种舱口都至少需要一个。
+
+使用能量线缆将 FE 输入能量舱口的本地储能槽。机器加工不会从 AE2 网络抽取生产能量。
+
+冷却液**只会从流体舱口的本地储罐中消耗**（容量 16,000,000 mB）。请使用外部流体管道
+或明确配置的输出设备供应凝滞冷却剂、稳定冷却剂或时间流体。控制器不会自动从 ME 存储中提取冷却液。
+
+能量舱口只接受**外部 FE**。FE 会按 AE2 配置的换算比例进入可持久保存、
+容量为 1,000,000,000 AE 等值的缓存。添加更多能量舱口不会提高控制器的总充能上限。
+物品与流体自动化仍然需要 ME 网络连接及其自身的供电。

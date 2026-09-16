@@ -61,8 +61,8 @@ Supply Gelid Cryotheum, Stable Coolant or Temporal Fluid using external fluid
 pipes or an explicitly configured export device. Controllers never fetch coolant
 from ME storage automatically.
 
-The energy hatch accepts **external FE and AE2 grid power**. FE enters a persistent
+The energy hatch accepts **external FE only**. FE enters a persistent
 1,000,000,000 AE-equivalent buffer using AE2's configured conversion ratio.
-Buffered external energy is used first; the connected AE2 grid supplies any
-remainder. Both paths respect AE2's configured consumption multiplier.
-ME connections are still needed for recipe automation.
+Adding more energy hatches does not multiply the controller's total charging
+limit. ME connections and their own power are still needed for item and fluid
+automation.

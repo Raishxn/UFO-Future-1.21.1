@@ -84,4 +84,4 @@ Install at least one **ME Massive Fluid Hatch** and one **FE Energy Input Hatch*
 
 Supply coolant to the fluid hatch using pipes or a player-configured ME Export Bus. The machine consumes only coolant already in that tank; it never searches ME storage for coolant. The tank holds 16,000,000 mB of one coolant. Recipe fluids and chemicals remain separate.
 
-The energy hatch accepts external **FE** cables and **AE2 grid energy**. FE is converted using the AE2 server conversion setting and stored locally (up to 1,000,000,000 AE equivalent); the local buffer is consumed first, then the hatch requests any remainder from its AE2 grid. Adding hatches does not multiply the controller's charging limit. The recipe network still needs power for item/fluid automation.
+The energy hatch accepts external **FE cables only**. FE is converted using the AE2 server conversion setting and stored locally (up to 1,000,000,000 AE equivalent). Adding hatches does not multiply the controller's charging limit. The recipe network still needs its own power for item/fluid automation.

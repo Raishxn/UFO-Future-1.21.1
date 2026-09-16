@@ -1,17 +1,58 @@
 ---
 navigation:
   parent: ufo_intro/machines.md
-  title: Quantum Slicer
+  title: 量子切片机
   position: 43
 ---
 
-# Quantum Slicer
+# 量子切片机
 
-The **Quantum Slicer** prepares printed parts for large processor lines.
+<BlockImage id="ufo:quantum_slicer_controller" scale="4"></BlockImage>
 
-## What It Does
+**量子切片机**为大规模处理器和电路生产线制作压印部件。
 
-- Supports up to **27 parallel jobs** in standard mode
-- Drops to **9 parallel jobs** in Safe Mode
-- Accepts AE2 patterns through the **Quantum Pattern Hatch**
-- Pulls ingredients from ME and returns outputs automatically
+<SubPages />
+
+## 功能
+
+- 使用通用多方块配方系统
+- 标准模式最多同时运行 **27 个任务**
+- 安全模式降低至 **9 个任务**
+- 通过**量子样板缓存器或代理**接收 AE2 编码样板
+- 从 ME 网络提取原料，并自动送回产物
+
+## 样板缓存器 / 代理
+
+- 本地**量子样板缓存器**可存放 **72 个已编码样板**
+- **量子样板代理**使用其所链接缓存器中的样板
+- 结构成型后，缓存器或代理都会链接至控制器
+- AE2 可以直接推送任务，无需手动搬运库存
+
+## 在生产线中的作用
+
+将切片机的产物编码为量子处理器组装机所需的输入。先请求一个产物，确认 AE2 能正常收回压印部件，
+再开始大批量处理器生产。输出受阻时，产物会保存在对应线程中，不会被重复生产。
+
+## 热量参数
+
+- 基础产热：每个活跃线程每 tick **1 HU**。
+- 超频产热：每个活跃线程每 tick **5 HU**。
+- 空闲被动散热：每 40 tick **-1 HU**。
+- 冷却液舱使用通用多方块机器的统一冷却等级：
+- 凝滞冷却剂：每 **120 mB** 移除 **1 HU**，每 tick 最多消耗 **1000 mB**。
+- 稳定冷却剂：每 **1 mB** 移除 **50 HU**，每 tick 最多消耗 **10 mB**。
+- 时间流体：每 **1 mB** 移除 **100 HU**，每 tick 最多消耗 **10 mB**。
+
+## 专用供应舱口
+
+结构必须在任意兼容外壳位置安装一个 **ME 大型流体舱口**和一个 **FE 能量输入舱口**。
+预览只展示一种示例布局，并不限定舱口位置；两种舱口都至少需要一个。
+
+使用能量线缆将 FE 输入能量舱口的本地储能槽。机器加工不会从 AE2 网络抽取生产能量。
+
+冷却液**只会从流体舱口的本地储罐中消耗**（容量 16,000,000 mB）。请使用外部流体管道
+或明确配置的输出设备供应凝滞冷却剂、稳定冷却剂或时间流体。控制器不会自动从 ME 存储中提取冷却液。
+
+能量舱口只接受**外部 FE**。FE 会按 AE2 配置的换算比例进入可持久保存、
+容量为 1,000,000,000 AE 等值的缓存。添加更多能量舱口不会提高控制器的总充能上限。
+物品与流体自动化仍然需要 ME 网络连接及其自身的供电。

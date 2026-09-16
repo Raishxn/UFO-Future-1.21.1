@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GuideContentIntegrityTest {
     private static final Path GUIDE_ROOT = Path.of("src/main/resources/assets/ufo/ae2guide");
+    private static final Path SIMPLIFIED_CHINESE_ROOT = GUIDE_ROOT.resolve("_zh_cn/ufo_intro");
     private static final Pattern PARENT = Pattern.compile("(?m)^\\s*parent:\\s*([^\\s]+)\\s*$");
     private static final Pattern LOCAL_MARKDOWN_LINK = Pattern.compile("\\[[^]]+]\\((?!https?://)([^)#]+\\.md)(?:#[^)]*)?\\)");
     private static final Pattern IMPORTED_STRUCTURE = Pattern.compile("<ImportStructure\\s+src=\\\"([^\\\"]+\\.snbt)\\\"");
@@ -32,6 +33,41 @@ class GuideContentIntegrityTest {
             "(?m)^item_ids:[ \\t]*\\R((?:[ \\t]+-[ \\t]+ufo:[a-z0-9_./-]+[ \\t]*(?:\\R|$))+)");
     private static final Pattern ITEM_ID_LINE = Pattern.compile(
             "(?m)^[ \\t]+-[ \\t]+(ufo:[a-z0-9_./-]+)[ \\t]*$");
+    private static final Pattern HAN_CHARACTER = Pattern.compile("[\\p{IsHan}]");
+
+    @Test
+    void simplifiedChineseCoreGuideIsActuallyLocalized() throws IOException {
+        Set<String> requiredPages = Set.of(
+                "index.md",
+                "containment.md",
+                "mega_storage.md",
+                "qmf.md",
+                "quantum_processor_assembler.md",
+                "quantum_slicer.md",
+                "stellar_nexus.md",
+                "tools.md");
+        List<String> errors = new ArrayList<>();
+
+        for (String fileName : requiredPages) {
+            Path localized = SIMPLIFIED_CHINESE_ROOT.resolve(fileName);
+            Path source = GUIDE_ROOT.resolve("ufo_intro").resolve(fileName);
+            if (!Files.isRegularFile(localized)) {
+                errors.add("missing Simplified Chinese core page: " + localized);
+                continue;
+            }
+            if (!Files.isRegularFile(source)) {
+                errors.add("Simplified Chinese page has no source page: " + localized);
+                continue;
+            }
+
+            String content = Files.readString(localized);
+            if (!HAN_CHARACTER.matcher(content).find()) {
+                errors.add("Simplified Chinese page contains no Han text: " + localized);
+            }
+        }
+
+        assertTrue(errors.isEmpty(), String.join("\n", errors));
+    }
 
     @Test
     void guideHasNoEmptyPagesOrBrokenParentsAndLinks() throws IOException {
