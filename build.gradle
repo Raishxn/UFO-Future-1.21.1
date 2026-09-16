@@ -74,7 +74,10 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
 
 // Release lint: javac warnings fail every JavaCompile task. NeoForge registration
 // intentionally passes partially constructed objects to nodes/capabilities, so
@@ -163,12 +166,6 @@ dependencies {
     compileOnly "curse.maven:kubejs-238086:${kubejs_file_id}"
     compileOnly "curse.maven:rhino-416294:${rhino_file_id}"
     compileOnly "curse.maven:applied-flux-965012:${applied_flux_file_id}"
-
-    // ===========================================
-    // RuntimeOnly - Optional integrations
-    // ===========================================
-    runtimeOnly "curse.maven:applied-flux-965012:${applied_flux_file_id}"
-    runtimeOnly "curse.maven:mega-cells-622112:${mega_file_id}"
 
     // ===========================================
     // Local Runtime - Dev test mods
@@ -343,6 +340,34 @@ publishing {
     publications {
         register('mavenJava', MavenPublication) {
             from components.java
+            artifactId = mod_id
+            pom {
+                name = mod_name
+                description = project.mod_description
+                url = 'https://github.com/Raishxn/UFO-Future-1.21.1'
+                licenses {
+                    license {
+                        name = 'LGPL-3.0-or-later for code; CC-BY-NC-SA-3.0 for art and textures'
+                        url = 'https://github.com/Raishxn/UFO-Future-1.21.1/blob/main/LICENSE.md'
+                        distribution = 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'Raishxn'
+                        name = 'Raishxn'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/Raishxn/UFO-Future-1.21.1.git'
+                    developerConnection = 'scm:git:ssh://git@github.com/Raishxn/UFO-Future-1.21.1.git'
+                    url = 'https://github.com/Raishxn/UFO-Future-1.21.1'
+                }
+                issueManagement {
+                    system = 'GitHub Issues'
+                    url = 'https://github.com/Raishxn/UFO-Future-1.21.1/issues'
+                }
+            }
         }
     }
     repositories {
@@ -359,6 +384,8 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.withType(ProcessResources).configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    // NeoForge's datagen hash cache is an implementation detail, not a runtime resource.
+    exclude '.cache/**'
 }
 
 def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
@@ -371,12 +398,21 @@ def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
     from('src/generated/resources')
     from('src/main/resources')
     from(generateModMetadata)
+    exclude '.cache/**'
     into layout.buildDirectory.dir('resources/main')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.named('jar').configure {
     dependsOn syncReleaseResources
+    from('LICENSE.md') {
+        into 'META-INF'
+        rename { 'LICENSE-ufo.md' }
+    }
+    from('CREDITS.md') {
+        into 'META-INF'
+        rename { 'CREDITS-ufo.md' }
+    }
     // SecureJarHandler/Java zipfs intermittently failed to inflate this large mod JAR
     // after loading hundreds of resources. Stored entries avoid runtime inflater
     // corruption while keeping the artifact a standard, verifiable ZIP/JAR.

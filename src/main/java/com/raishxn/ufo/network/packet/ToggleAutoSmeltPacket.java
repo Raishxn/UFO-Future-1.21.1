@@ -4,6 +4,7 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.item.custom.HammerItem;
 import com.raishxn.ufo.item.custom.UfoEnergyPickaxeItem;
+import com.raishxn.ufo.network.MachinePacketGuard;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -29,6 +30,7 @@ public record ToggleAutoSmeltPacket() implements CustomPacketPayload {
 
     public static void handle(ToggleAutoSmeltPacket payload, IPayloadContext context) {
         context.enqueueWork(() -> {
+            if (!MachinePacketGuard.allow(context, MachinePacketGuard.Action.TOGGLE_AUTO_SMELT)) return;
             if (context.player() instanceof ServerPlayer player) {
                 ItemStack stack = player.getMainHandItem();
 

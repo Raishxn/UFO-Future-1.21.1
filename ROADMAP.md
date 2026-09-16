@@ -32,11 +32,12 @@ existente.
 
 ## 2. Rede ME e integrações
 
-### 2.1 Side config real dos hatches **[pendente]**
+### 2.1 Side config real dos hatches **[adiada; superfície incompleta removida]**
 
-`PacketChangeSideConfig` existe, está protegido pela `MachinePacketGuard`, mas
-continua no-op — a mecânica de lados nunca foi implementada. É a pendência de
-UX mais antiga do core.
+O antigo `PacketChangeSideConfig` era um no-op sem UI chamadora nem estado
+persistente e foi removido no hardening pós-3.0-alpha.1. A mecânica deve voltar
+somente como um recorte completo: contrato por port, persistência, sync, UI,
+capability filtering e GameTests.
 
 ### 2.2 Ownership/claims nos controllers **[pendente]**
 
@@ -83,11 +84,14 @@ Aproveita a cadeia de matéria existente (Neutronium → Proto → Dark Matter).
 ### 3.6 Tools/scanner **[pendente]** — melhorias do multi-tool e do scanner de
 estrutura citadas como fora de escopo do rebalance, pendentes de recorte.
 
-### 3.7 Armadura modular UFO + remoção da Astral Nexus **[novo — proposta em discussão]**
+### 3.7 Armadura modular UFO + remoção da Astral Nexus **[implementada; hardening pendente]**
 
-Transformar a UFO Armor na armadura modular do mod (padrão AdvancedAE/AE2
-Lightning Tech: peça base + slots + cartões de módulo + energia) e remover a
-Astral Nexus, cujos poderes viram módulos top-tier pagos.
+A UFO Armor já foi transformada em armadura modular: peça base, slots, 16
+cartões craftáveis, configuração server-authoritative e consumo de energia. A
+remoção/deprecação definitiva da Astral Nexus continua pendente. Antes do
+próximo release, o sistema modular ainda precisa de testes por módulo, limites
+configuráveis pelo servidor e profiling multiplayer dos módulos que pesquisam
+entidades em área.
 
 **Estado atual verificado no código (2026-09-06)**
 
@@ -185,10 +189,12 @@ Hatches de coolant/energia externos + `MultiblockSupplyWidget` implementados em
 14,90 µs/tick medidos → alvo exploratório de 5 µs. Não bloqueia conteúdo, mas
 qualquer multibloco novo deve nascer já dentro do runtime unificado.
 
-### 4.4 GameTests **[pendente — risco conhecido]**
-175 testes puros, zero GameTests. Movimento por pistão, unload de chunk e
-sobreposição de estruturas estão descobertos. Novos multiblocos devem entrar
-com GameTests desde o primeiro recorte.
+### 4.4 GameTests **[em evolução]**
+Em 2026-09-16, 228 testes unitários e 26 GameTests passaram localmente. A suíte
+cobre unload/reload físico, unload parcial, recuperação do Grid Link, outputs
+pendentes e migração de saves. Movimento por pistão e sobreposição de estruturas
+continuam descobertos. Novos multiblocos devem entrar com GameTests desde o
+primeiro recorte.
 
 ### 4.5 Extração completa do ME Addon Toolkit para o RaishxCore **[próxima prioridade]**
 Concluir a extração da infraestrutura genérica: definição/matcher compilado e

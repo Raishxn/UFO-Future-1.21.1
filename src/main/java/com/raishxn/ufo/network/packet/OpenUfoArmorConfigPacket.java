@@ -2,6 +2,7 @@ package com.raishxn.ufo.network.packet;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.item.custom.UfoArmorItem;
+import com.raishxn.ufo.network.MachinePacketGuard;
 import com.raishxn.ufo.screen.UfoArmorConfigMenu;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
@@ -22,6 +23,7 @@ public record OpenUfoArmorConfigPacket() implements CustomPacketPayload {
 
     public static void handle(OpenUfoArmorConfigPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
+            if (!MachinePacketGuard.allow(context, MachinePacketGuard.Action.OPEN_ARMOR_CONFIG)) return;
             if (!(context.player() instanceof ServerPlayer player)) return;
             boolean hasArmor = false;
             for (int index = 36; index < 40; index++) {

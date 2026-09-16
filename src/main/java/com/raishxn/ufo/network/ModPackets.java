@@ -32,11 +32,6 @@ public class ModPackets {
         registrar.playToServer(SetUfoArmorModuleSettingPacket.TYPE, SetUfoArmorModuleSettingPacket.STREAM_CODEC,
                 SetUfoArmorModuleSettingPacket::handle);
         registrar.playToServer(
-                PacketChangeSideConfig.TYPE,
-                PacketChangeSideConfig.STREAM_CODEC,
-                PacketChangeSideConfig::handle
-        );
-        registrar.playToServer(
                 PacketChangeStellarRecipe.TYPE,
                 PacketChangeStellarRecipe.STREAM_CODEC,
                 PacketChangeStellarRecipe::handle
@@ -115,6 +110,7 @@ public class ModPackets {
 
     private static void handleCycleToolKey(final CycleToolKeyPacket packet, final IPayloadContext context) {
         context.enqueueWork(() -> {
+            if (!MachinePacketGuard.allow(context, MachinePacketGuard.Action.CYCLE_TOOL)) return;
             ServerPlayer player = (ServerPlayer) context.player();
             if (player.getMainHandItem().getItem() instanceof IEnergyTool tool) {
                 tool.transformTool(player.level(), player, InteractionHand.MAIN_HAND, packet.forward());
@@ -124,6 +120,7 @@ public class ModPackets {
 
     private static void handleCycleModeKey(final CycleModeKeyPacket packet, final IPayloadContext context) {
         context.enqueueWork(() -> {
+            if (!MachinePacketGuard.allow(context, MachinePacketGuard.Action.CYCLE_MODE)) return;
             ServerPlayer player = (ServerPlayer) context.player();
             ItemStack stack = player.getMainHandItem();
             if (stack.getItem() instanceof IHasCycleableModes tool) {

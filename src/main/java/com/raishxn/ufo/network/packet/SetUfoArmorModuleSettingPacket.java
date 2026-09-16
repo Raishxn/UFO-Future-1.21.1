@@ -4,6 +4,7 @@ import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.armor.UfoArmorModule;
 import com.raishxn.ufo.armor.UfoArmorSetting;
 import com.raishxn.ufo.item.custom.UfoArmorItem;
+import com.raishxn.ufo.network.MachinePacketGuard;
 import com.raishxn.ufo.screen.UfoArmorConfigMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -29,6 +30,7 @@ public record SetUfoArmorModuleSettingPacket(int moduleOrdinal, int settingOrdin
 
     public static void handle(SetUfoArmorModuleSettingPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
+            if (!MachinePacketGuard.allow(context, MachinePacketGuard.Action.SET_ARMOR_SETTING)) return;
             if (!(context.player().containerMenu instanceof UfoArmorConfigMenu menu)) return;
             if (packet.moduleOrdinal < 0 || packet.moduleOrdinal >= UfoArmorModule.values().length
                     || packet.settingOrdinal < 0 || packet.settingOrdinal >= UfoArmorSetting.values().length) return;

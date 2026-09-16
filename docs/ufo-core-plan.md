@@ -7,8 +7,8 @@ multiblocos, ports, widgets, preview, sync e progressão de escala extrema. O Co
 deve permitir máquinas próprias sem copiar controllers, telas ou lógica de
 transação a cada addon.
 
-Desde `0.1.0-alpha.1`, ele é um mod separado em `UFO-Core-1.21.1`, com modid
-`ufocore`. O UFO Future é o primeiro consumidor real e declara o Core como
+Desde `0.1.0-alpha.1`, ele é um mod separado em `RaishxCore`, com modid
+`raishxcore`. O UFO Future é o primeiro consumidor real e declara o Core como
 dependência obrigatória. A API permanece alpha até um segundo addon validar os
 contratos sem precisar de forks.
 
@@ -30,7 +30,7 @@ contratos sem precisar de forks.
 ## Estrutura implementada
 
 ```text
-UFO-Core-1.21.1
+RaishxCore
   api.amount       números exatos, ratios, encoding e formatação
   api.tier         tiers data-oriented
   api.multiblock   definição, roles e estados/resultados puros
@@ -42,7 +42,7 @@ UFO-Core-1.21.1
 UFO-Future-1.21.1  máquinas, recipes, progressão e assets do addon atual
 ```
 
-O Core produz `ufocore-0.1.0-alpha.1.jar`; o addon produz seu artefato separado.
+O Core produz `raishxcore-0.1.0-alpha.2.jar`; o addon produz seu artefato separado.
 No desenvolvimento, um composite build substitui a coordenada Maven do Core
 pelo projeto irmão automaticamente.
 

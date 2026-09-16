@@ -35,17 +35,26 @@ public final class MachinePacketGuard {
         TOGGLE_OVERCLOCK(4L),
         TOGGLE_STELLAR_PAUSE(2L),
         TOGGLE_PROCESS_PAUSE(2L),
-        CHANGE_SIDE_CONFIG(2L),
         SCAN_STRUCTURE(20L),
         AUTO_BUILD(20L),
         OPEN_PATTERN_MANAGEMENT(2L),
-        SET_CRAFTING_MODE(2L);
+        SET_CRAFTING_MODE(2L),
+        CYCLE_TOOL(2L),
+        CYCLE_MODE(2L),
+        TOGGLE_AUTO_SMELT(2L),
+        OPEN_ARMOR_CONFIG(10L),
+        SET_ARMOR_SETTING(1L);
 
         private final MachineAction coreAction;
 
         Action(long minimumIntervalTicks) {
             this.coreAction = new MachineAction("ufo:" + name().toLowerCase(Locale.ROOT), minimumIntervalTicks);
         }
+    }
+
+    /** Rate-limits a server-bound action whose target is the player or held item. */
+    public static boolean allow(IPayloadContext context, Action action) {
+        return UfoMachinePacketGuard.allow(context, action.coreAction);
     }
 
     public static @Nullable StellarNexusControllerBE requireStellar(

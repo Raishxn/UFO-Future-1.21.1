@@ -7,8 +7,6 @@ import com.raishxn.ufo.item.ModItems;
 import com.raishxn.ufo.item.ModArmor;
 import com.raishxn.ufo.item.ModTools;
 import com.raishxn.ufo.item.custom.AetherContainmentCapsuleItem;
-import com.raishxn.ufo.util.ConfigType;
-import com.raishxn.ufo.util.IOMode;
 import com.raishxn.ufo.util.UfoPersistentEnergyStorage;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
