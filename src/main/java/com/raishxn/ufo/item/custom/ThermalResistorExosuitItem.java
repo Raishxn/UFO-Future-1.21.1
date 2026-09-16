@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.event.ArmorEffectRefreshPolicy;
 import com.raishxn.ufo.item.ModArmorMaterials;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -32,7 +31,7 @@ public class ThermalResistorExosuitItem extends ArmorItem implements IThermalArm
     private final Multimap<Holder<Attribute>, AttributeModifier> customAttributeModifiers;
 
     public ThermalResistorExosuitItem(ArmorItem.Type type, Properties properties) {
-        super(ModArmorMaterials.UFO_ARMOR, type, properties.fireResistant());
+        super(ModArmorMaterials.THERMAL_EXOSUIT, type, properties.fireResistant());
 
         ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> builder = ImmutableMultimap.builder();
 
@@ -108,16 +107,11 @@ public class ThermalResistorExosuitItem extends ArmorItem implements IThermalArm
         tooltip.add(Component.empty());
 
         if (Screen.hasShiftDown()) {
-            Player player = Minecraft.getInstance().player;
-            if (player != null && hasFullSet(player)) {
-                tooltip.add(Component.literal("§5[Conjunto Completo Ativo]"));
-                tooltip.add(Component.literal("§bImune a Fogo e Lava"));
-                tooltip.add(Component.literal("§bImune a Calor Industrial"));
-                tooltip.add(Component.literal("§bRemoção Instantânea de Queimaduras"));
-                tooltip.add(Component.literal("§bEstabilidade Térmica Total"));
-            } else {
-                tooltip.add(Component.literal("§8Equipe o conjunto completo para bônus."));
-            }
+            tooltip.add(Component.literal("§5[Bônus do Conjunto Completo]"));
+            tooltip.add(Component.literal("§bImune a Fogo e Lava"));
+            tooltip.add(Component.literal("§bImune a Calor Industrial"));
+            tooltip.add(Component.literal("§bRemoção Instantânea de Queimaduras"));
+            tooltip.add(Component.literal("§bEstabilidade Térmica Total"));
         } else {
             tooltip.add(Component.literal("§8Pressione <SHIFT> para detalhes."));
         }

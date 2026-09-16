@@ -2,6 +2,7 @@ package com.raishxn.ufo.item;
 
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.item.custom.AstralNexusArmorItem;
+import com.raishxn.ufo.item.custom.ThermalResistorExosuitItem;
 import com.raishxn.ufo.item.custom.UfoArmorItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
@@ -57,16 +58,16 @@ public class ModArmor {
     );
 
     public static final Supplier<Item> THERMAL_RESISTOR_MASK = ITEMS.register("thermal_resistor_mask",
-            () -> new UfoArmorItem(ModArmorMaterials.THERMAL_EXOSUIT, ArmorItem.Type.HELMET, new Item.Properties()));
+            () -> new ThermalResistorExosuitItem(ArmorItem.Type.HELMET, new Item.Properties()));
 
     public static final Supplier<Item> THERMAL_RESISTOR_CHEST = ITEMS.register("thermal_resistor_chest",
-            () -> new UfoArmorItem(ModArmorMaterials.THERMAL_EXOSUIT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+            () -> new ThermalResistorExosuitItem(ArmorItem.Type.CHESTPLATE, new Item.Properties()));
 
     public static final Supplier<Item> THERMAL_RESISTOR_PANTS = ITEMS.register("thermal_resistor_pants",
-            () -> new UfoArmorItem(ModArmorMaterials.THERMAL_EXOSUIT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+            () -> new ThermalResistorExosuitItem(ArmorItem.Type.LEGGINGS, new Item.Properties()));
 
     public static final Supplier<Item> THERMAL_RESISTOR_BOOTS = ITEMS.register("thermal_resistor_boots",
-            () -> new UfoArmorItem(ModArmorMaterials.THERMAL_EXOSUIT, ArmorItem.Type.BOOTS, new Item.Properties()));
+            () -> new ThermalResistorExosuitItem(ArmorItem.Type.BOOTS, new Item.Properties()));
 
     public static void register(IEventBus eventBus) {
         // Armor is registered through ModItems.ITEMS
