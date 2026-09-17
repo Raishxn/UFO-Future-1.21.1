@@ -72,6 +72,16 @@ jobs:
           "-PloadTicks=$LOAD_TICKS"
           "-PloadMaxAverageTickMillis=$LOAD_MAX_AVERAGE_TICK_MILLIS"
           --stacktrace
+
+      # runLoadGameTestServer exits 0 when the mod fails to load, so the workload would otherwise
+      # report a passing fleet without ever starting one.
+      - name: Assert the active-load GameTests actually ran
+        run: |
+          if ! grep -q "GAME TESTS COMPLETE" run-load/logs/latest.log; then
+            echo "::error::runLoadGameTestServer completed no GameTest"
+            tail -n 120 run-load/logs/latest.log
+            exit 1
+          fi
       - name: Summarize JFR
         if: always()
         run: |

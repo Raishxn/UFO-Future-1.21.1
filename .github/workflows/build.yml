@@ -59,14 +59,48 @@ jobs:
       - name: Verify without Mekanism
         run: ./gradlew runGameTestServer -PwithoutMekanism --stacktrace
 
+      # runGameTestServer exits 0 when the mod fails to load, so a loading crash would otherwise
+      # sail through every step below. Require the banner the GameTest server prints on completion.
+      - name: Assert the without-Mekanism GameTests actually ran
+        run: |
+          if ! grep -q "GAME TESTS COMPLETE" run/logs/latest.log; then
+            echo "::error::runGameTestServer -PwithoutMekanism completed no GameTest"
+            tail -n 120 run/logs/latest.log
+            exit 1
+          fi
+
       - name: Build with Gradle
         run: ./gradlew build runGameTestServer --stacktrace
+
+      - name: Assert the GameTests actually ran
+        run: |
+          if ! grep -q "GAME TESTS COMPLETE" run/logs/latest.log; then
+            echo "::error::runGameTestServer completed no GameTest"
+            tail -n 120 run/logs/latest.log
+            exit 1
+          fi
 
       - name: Verify idle soak startup
         run: ./gradlew runSoakGameTestServer -PsoakMachines=3 -PsoakTicks=200 --stacktrace
 
+      - name: Assert the soak GameTests actually ran
+        run: |
+          if ! grep -q "GAME TESTS COMPLETE" run-soak/logs/latest.log; then
+            echo "::error::runSoakGameTestServer completed no GameTest"
+            tail -n 120 run-soak/logs/latest.log
+            exit 1
+          fi
+
       - name: Verify active recipes and recovery
         run: ./gradlew runLoadGameTestServer -PloadMachines=3 -PloadTicks=200 --stacktrace
+
+      - name: Assert the active-load GameTests actually ran
+        run: |
+          if ! grep -q "GAME TESTS COMPLETE" run-load/logs/latest.log; then
+            echo "::error::runLoadGameTestServer completed no GameTest"
+            tail -n 120 run-load/logs/latest.log
+            exit 1
+          fi
 
       - name: Upload active workload diagnostics
         if: always()
