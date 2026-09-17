@@ -33,7 +33,7 @@ class ModMetadataContractTest {
         assertDependency(dependencies, "neoforge", "required", "[21.1.216,)", "NONE", "BOTH");
         assertDependency(dependencies, "minecraft", "required", "[1.21.1]", "NONE", "BOTH");
         assertDependency(dependencies, "ae2", "required", "[19.2.17,20)", "AFTER", "BOTH");
-        assertDependency(dependencies, "raishxcore", "required", "[0.1.0-alpha.2,0.2)", "AFTER", "BOTH");
+        assertDependency(dependencies, "raishxcore", "required", raishxcoreRange(), "AFTER", "BOTH");
         assertDependency(dependencies, "ae2addonlib", "required", "[1.0.3-1.21.1,2)", "AFTER", "BOTH");
         assertDependency(dependencies, "mekanism", "optional", "[10.7.18,11)", "AFTER", "BOTH");
     }
@@ -77,6 +77,13 @@ class ModMetadataContractTest {
             result.put(dependency.modId(), dependency);
         }
         return result;
+    }
+
+    /** The RaishxCore range this build declares, passed in by the Gradle test task. */
+    private static String raishxcoreRange() {
+        String range = System.getProperty("ufo.raishxcoreVersionRange");
+        assertNotNull(range, "the Gradle test task must pass ufo.raishxcoreVersionRange");
+        return range;
     }
 
     private static void assertDependency(Map<String, Dependency> dependencies, String modId, String type,

@@ -216,6 +216,9 @@ dependencies {
 
 tasks.named('test', Test).configure {
     useJUnitPlatform()
+    // The metadata contract test compares the generated mods.toml against the range this build
+    // actually declares, so a RaishxCore bump never needs a second edit in a test.
+    systemProperty 'ufo.raishxcoreVersionRange', raishxcore_version_range
 }
 
 // Development-only integration tests; these classes are never packaged in the UFO jar.
