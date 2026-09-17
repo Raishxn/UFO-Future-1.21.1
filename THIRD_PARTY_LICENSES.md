@@ -58,6 +58,15 @@ src/main/java/com/raishxn/ufo/fluid/ModFluidTypes.java. New, original art must b
 dropped at the same resource locations (plus the matching .mcmeta when animated)
 before the next release.
 
+Separately, seven entropy component textures had no consumer anywhere in the mod
+(no block, model, blockstate or renderer, only stale language keys) and were removed
+as dead weight on 2026-09-17:
+entropy_catalyst_bank_components.png and its _active/_active_emissive variants,
+entropy_containment_chamber_components.png, and entropy_coolant_matrix_components.png
+and its _active/_active_emissive variants, each with its .mcmeta. The
+entropy_computer_condensation_matrix and entropy_assembler_core_casing textures are
+still in use and are not affected.
+
 ## Checking the provenance
 
     python3 tools/check-texture-provenance.py
