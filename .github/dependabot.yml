@@ -1,0 +1,25 @@
+version: 2
+updates:
+  # Actions are pinned by commit SHA, so nothing updates them unless something does it
+  # deliberately. Keeping this grouped means one reviewable PR per week.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns: ["*"]
+
+  # Most gameplay dependencies are pinned by CurseForge file id rather than by version, so
+  # Dependabot can only see the Maven-resolved ones. Every bump still has to clear the build,
+  # GameTest, soak and active-load workflows before it is worth reviewing.
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      gradle-dependencies:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
