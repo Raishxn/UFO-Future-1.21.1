@@ -73,8 +73,7 @@ public enum UfoArmorSetting {
     }
 
     public int clamp(int value) {
-        int snapped = min + Math.round((value - min) / (float) step) * step;
-        return Math.max(min, Math.min(max, snapped));
+        return ArmorSettingMath.clamp(min, max, step, value);
     }
 
     public static List<UfoArmorSetting> forModule(UfoArmorModule module) {

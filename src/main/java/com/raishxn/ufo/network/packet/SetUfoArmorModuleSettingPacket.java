@@ -1,5 +1,6 @@
 package com.raishxn.ufo.network.packet;
 
+import com.raishxn.ufo.UFOConfig;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.armor.UfoArmorModule;
 import com.raishxn.ufo.armor.UfoArmorSetting;
@@ -37,7 +38,9 @@ public record SetUfoArmorModuleSettingPacket(int moduleOrdinal, int settingOrdin
             UfoArmorModule module = UfoArmorModule.values()[packet.moduleOrdinal];
             UfoArmorSetting setting = UfoArmorSetting.values()[packet.settingOrdinal];
             if (setting.module() != module) return;
-            if (UfoArmorItem.setModuleSetting(menu.selectedArmor(), setting, packet.value)) {
+            // The server grants the operator cap, not whatever the client asked for.
+            int capped = UFOConfig.clampArmorSetting(setting, packet.value);
+            if (UfoArmorItem.setModuleSetting(menu.selectedArmor(), setting, capped)) {
                 menu.broadcastChanges();
             }
         });

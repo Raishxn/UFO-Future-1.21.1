@@ -1,10 +1,13 @@
 package com.raishxn.ufo;
 
+import com.raishxn.ufo.armor.UfoArmorSetting;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public class UFOConfig {
 
@@ -60,6 +63,25 @@ public class UFOConfig {
             .comment("Ticks between coolant attempts while the Stellar Nexus is idle. Zero disables idle coolant use.")
             .defineInRange("stellar.thermal.idleCoolantIntervalTicks", 20, 0, 1_200);
 
+    /**
+     * Operator caps for the armor module settings. The enum maximum stays the design limit the
+     * client may offer; this cap is what the server actually grants, so a server or modpack can
+     * tighten reach, speed, magnet and cloak range without editing the mod. Caps can only lower the
+     * design maximum, never raise it.
+     */
+    private static final Map<UfoArmorSetting, ModConfigSpec.IntValue> ARMOR_CAPS =
+            new EnumMap<>(UfoArmorSetting.class);
+
+    static {
+        ModConfigSpec.Builder armor = SERVER_BUILDER.push("armor.moduleCaps");
+        for (UfoArmorSetting setting : UfoArmorSetting.values()) {
+            armor.comment("Server cap for " + setting.id() + ". Design maximum is " + setting.max() + ".");
+            ARMOR_CAPS.put(setting,
+                    armor.defineInRange(setting.id(), setting.max(), setting.min(), setting.max()));
+        }
+        armor.pop();
+    }
+
     private static final ModConfigSpec.Builder WIRELESS_BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec.IntValue WIRELESS_RANGE = WIRELESS_BUILDER
             .comment("Quantum wireless range in blocks, same dimension. Zero disables the distance limit.")
@@ -87,6 +109,25 @@ public class UFOConfig {
     // Cached INFINITY_CELL_ENERGY value, refreshed whenever the config reloads.
     public static double infCellCost;
 
+    /**
+     * The value the server grants for an armor setting: the design clamp, further limited by the
+     * operator cap. Server-side callers use this; the client keeps reading the uncapped design range
+     * so the configuration UI can still show what the item is capable of.
+     */
+    public static int clampArmorSetting(UfoArmorSetting setting, int value) {
+        return Math.min(setting.clamp(value), armorCap(setting));
+    }
+
+    /** The operator cap in force for a setting: always within the design range. */
+    public static int armorCap(UfoArmorSetting setting) {
+        ModConfigSpec.IntValue cap = ARMOR_CAPS.get(setting);
+        // Reading a spec value before its config is loaded throws; fall back to the design maximum.
+        if (cap == null || !armorCapsLoaded) return setting.max();
+        return cap.get();
+    }
+
+    private static volatile boolean armorCapsLoaded;
+
     private static boolean isResourceLocation(Object value) {
         return value instanceof String text && net.minecraft.resources.ResourceLocation.tryParse(text) != null;
     }
@@ -96,6 +137,9 @@ public class UFOConfig {
         if (event.getConfig().getSpec() == SPEC) {
             // Refresh the cached value from the loaded config file.
             infCellCost = INFINITY_CELL_ENERGY.get();
+        }
+        if (event.getConfig().getSpec() == SERVER_SPEC) {
+            armorCapsLoaded = true;
         }
     }
 }

@@ -39,6 +39,12 @@ public final class UfoArmorModuleEvents {
     private static final int EFFECT_DURATION = 720;
     private static final int EFFECT_REFRESH_THRESHOLD = 600;
     private static final String TRANSLOCATOR_COOLDOWN = "ufoMatterTranslocatorCooldown";
+    /**
+     * How often the cloak re-scans for mobs that are targeting its wearer. Between intervals the
+     * scan is skipped: at the maximum configured range it is a 128-block entity query, and running
+     * one per wearer per tick is not affordable in multiplayer.
+     */
+    private static final int CLOAK_SCAN_INTERVAL_TICKS = 5;
     private static final ThreadLocal<Boolean> REFLECTING = ThreadLocal.withInitial(() -> false);
     private static final net.minecraft.resources.ResourceLocation STEP_HEIGHT_MODIFIER = UfoMod.id("phase_step_height");
     private static final net.minecraft.resources.ResourceLocation BLOCK_REACH_MODIFIER = UfoMod.id("phase_block_reach");
@@ -55,9 +61,7 @@ public final class UfoArmorModuleEvents {
         if (event.getSource().getEntity() instanceof Player attacker
                 && UfoArmorModules.active(attacker, UfoArmorModule.SINGULARITY_STRIKE)
                 && UfoArmorModules.consume(attacker, UfoArmorModule.SINGULARITY_STRIKE)) {
-            int multiplier = UfoArmorItem.moduleSetting(
-                    UfoArmorModules.stack(attacker, UfoArmorModule.SINGULARITY_STRIKE),
-                    UfoArmorSetting.STRIKE_MULTIPLIER);
+            int multiplier = UfoArmorModules.cappedSetting(attacker, UfoArmorModule.SINGULARITY_STRIKE, UfoArmorSetting.STRIKE_MULTIPLIER);
             event.setAmount(Math.min(Float.MAX_VALUE, event.getAmount() * multiplier));
         }
 
@@ -70,9 +74,7 @@ public final class UfoArmorModuleEvents {
             try {
                 REFLECTING.set(true);
                 attacker.invulnerableTime = 0;
-                int multiplier = UfoArmorItem.moduleSetting(
-                        UfoArmorModules.stack(player, UfoArmorModule.REPRISAL_MATRIX),
-                        UfoArmorSetting.REPRISAL_MULTIPLIER);
+                int multiplier = UfoArmorModules.cappedSetting(player, UfoArmorModule.REPRISAL_MATRIX, UfoArmorSetting.REPRISAL_MULTIPLIER);
                 attacker.hurt(player.damageSources().thorns(player),
                         Math.min(Float.MAX_VALUE, event.getAmount() * multiplier));
             } finally {
@@ -121,8 +123,7 @@ public final class UfoArmorModuleEvents {
     public static void onLivingDrops(LivingDropsEvent event) {
         if (!(event.getSource().getEntity() instanceof Player player)
                 || !UfoArmorModules.active(player, UfoArmorModule.LOOT_SINGULARITY)) return;
-        int luck = UfoArmorItem.moduleSetting(
-                UfoArmorModules.stack(player, UfoArmorModule.LOOT_SINGULARITY), UfoArmorSetting.LUCK_LEVEL);
+        int luck = UfoArmorModules.cappedSetting(player, UfoArmorModule.LOOT_SINGULARITY, UfoArmorSetting.LUCK_LEVEL);
         for (ItemEntity drop : event.getDrops()) {
             ItemStack stack = drop.getItem();
             long multiplied = (long) stack.getCount() * (luck + 1L);
@@ -134,8 +135,7 @@ public final class UfoArmorModuleEvents {
     public static void onExperienceDrop(LivingExperienceDropEvent event) {
         Player player = event.getAttackingPlayer();
         if (player == null || !UfoArmorModules.active(player, UfoArmorModule.LOOT_SINGULARITY)) return;
-        int luck = UfoArmorItem.moduleSetting(
-                UfoArmorModules.stack(player, UfoArmorModule.LOOT_SINGULARITY), UfoArmorSetting.LUCK_LEVEL);
+        int luck = UfoArmorModules.cappedSetting(player, UfoArmorModule.LOOT_SINGULARITY, UfoArmorSetting.LUCK_LEVEL);
         long multiplied = (long) event.getDroppedExperience() * (luck + 1L);
         event.setDroppedExperience((int) Math.min(Integer.MAX_VALUE, multiplied));
     }
@@ -164,12 +164,14 @@ public final class UfoArmorModuleEvents {
         if (player.level().isClientSide()) return;
         syncModuleAttributes(player);
         if (!UfoArmorItem.hasFullUfoSet(player)) return;
-        long tick = player.level().getGameTime();
+        // A single dimension's game time is not a global clock: a player who changes dimension
+        // would see cadences and cooldowns jump. The overworld clock is the shared, persisted one.
+        var server = player.getServer();
+        if (server == null) return;
+        long tick = server.overworld().getGameTime();
 
         if (UfoArmorModules.active(player, UfoArmorModule.CHRONO_REGENERATOR)) {
-            int regeneration = UfoArmorItem.moduleSetting(
-                    UfoArmorModules.stack(player, UfoArmorModule.CHRONO_REGENERATOR),
-                    UfoArmorSetting.REGENERATION_LEVEL);
+            int regeneration = UfoArmorModules.cappedSetting(player, UfoArmorModule.CHRONO_REGENERATOR, UfoArmorSetting.REGENERATION_LEVEL);
             refresh(player, MobEffects.REGENERATION, regeneration - 1);
             if (tick % 20 == 0) {
                 player.getFoodData().setFoodLevel(20);
@@ -192,12 +194,8 @@ public final class UfoArmorModuleEvents {
             if (tick % 20 == 0) UfoArmorModules.consume(player, UfoArmorModule.ADAPTIVE_BIOSPHERE);
         }
         if (UfoArmorModules.active(player, UfoArmorModule.KINETIC_OVERDRIVE)) {
-            int speed = UfoArmorItem.moduleSetting(
-                    UfoArmorModules.stack(player, UfoArmorModule.KINETIC_OVERDRIVE),
-                    UfoArmorSetting.KINETIC_SPEED);
-            int jump = UfoArmorItem.moduleSetting(
-                    UfoArmorModules.stack(player, UfoArmorModule.KINETIC_OVERDRIVE),
-                    UfoArmorSetting.KINETIC_JUMP);
+            int speed = UfoArmorModules.cappedSetting(player, UfoArmorModule.KINETIC_OVERDRIVE, UfoArmorSetting.KINETIC_SPEED);
+            int jump = UfoArmorModules.cappedSetting(player, UfoArmorModule.KINETIC_OVERDRIVE, UfoArmorSetting.KINETIC_JUMP);
             refresh(player, MobEffects.JUMP, jump - 1);
             int speedTier = Math.max(1, Math.min(10, (speed + 99) / 100));
             refresh(player, MobEffects.DIG_SPEED, speedTier - 1);
@@ -208,7 +206,7 @@ public final class UfoArmorModuleEvents {
             if (tick % 20 == 0) UfoArmorModules.consume(player, UfoArmorModule.LOOT_SINGULARITY);
         }
         if (UfoArmorModules.active(player, UfoArmorModule.CLOAKING_FIELD)) {
-            clearHostileTargets(player);
+            if (tick % CLOAK_SCAN_INTERVAL_TICKS == 0) clearHostileTargets(player);
             if (tick % 20 == 0) UfoArmorModules.consume(player, UfoArmorModule.CLOAKING_FIELD);
         }
         if (UfoArmorModules.active(player, UfoArmorModule.VOID_FLIGHT)
@@ -223,16 +221,12 @@ public final class UfoArmorModuleEvents {
             rechargeInventory(player);
         }
         if (tick % 20 == 0 && UfoArmorModules.active(player, UfoArmorModule.MATTER_TRANSLOCATOR)) {
-            int threshold = UfoArmorItem.moduleSetting(
-                    UfoArmorModules.stack(player, UfoArmorModule.MATTER_TRANSLOCATOR),
-                    UfoArmorSetting.TRANSLOCATOR_THRESHOLD);
+            int threshold = UfoArmorModules.cappedSetting(player, UfoArmorModule.MATTER_TRANSLOCATOR, UfoArmorSetting.TRANSLOCATOR_THRESHOLD);
             if (player.getHealth() <= player.getMaxHealth() * threshold / 100.0F) {
                 long cooldown = player.getPersistentData().getLong(TRANSLOCATOR_COOLDOWN);
                 if (tick >= cooldown && UfoArmorModules.consume(player, UfoArmorModule.MATTER_TRANSLOCATOR)) {
                     player.getPersistentData().putLong(TRANSLOCATOR_COOLDOWN, tick + 200);
-                    int heal = UfoArmorItem.moduleSetting(
-                            UfoArmorModules.stack(player, UfoArmorModule.MATTER_TRANSLOCATOR),
-                            UfoArmorSetting.TRANSLOCATOR_HEAL);
+                    int heal = UfoArmorModules.cappedSetting(player, UfoArmorModule.MATTER_TRANSLOCATOR, UfoArmorSetting.TRANSLOCATOR_HEAL);
                     player.setHealth(Math.max(player.getHealth(), player.getMaxHealth() * heal / 100.0F));
                     teleportToSafety((ServerPlayer) player);
                 }
@@ -248,8 +242,7 @@ public final class UfoArmorModuleEvents {
     }
 
     private static void magnet(Player player) {
-        int range = UfoArmorItem.moduleSetting(
-                UfoArmorModules.stack(player, UfoArmorModule.ENTROPY_MAGNET), UfoArmorSetting.MAGNET_RANGE);
+        int range = UfoArmorModules.cappedSetting(player, UfoArmorModule.ENTROPY_MAGNET, UfoArmorSetting.MAGNET_RANGE);
         var area = player.getBoundingBox().inflate(range);
         for (ItemEntity item : player.level().getEntitiesOfClass(ItemEntity.class, area)) {
             if (!item.hasPickUpDelay()) item.playerTouch(player);
@@ -260,8 +253,7 @@ public final class UfoArmorModuleEvents {
     }
 
     private static void clearHostileTargets(Player player) {
-        int range = UfoArmorItem.moduleSetting(
-                UfoArmorModules.stack(player, UfoArmorModule.CLOAKING_FIELD), UfoArmorSetting.CLOAKING_RANGE);
+        int range = UfoArmorModules.cappedSetting(player, UfoArmorModule.CLOAKING_FIELD, UfoArmorSetting.CLOAKING_RANGE);
         for (Mob mob : player.level().getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(range),
                 mob -> mob instanceof Enemy && mob.getTarget() == player)) {
             mob.setTarget(null);
@@ -275,7 +267,7 @@ public final class UfoArmorModuleEvents {
         for (ItemStack target : player.getInventory().items) {
             IEnergyStorage storage = target.getCapability(Capabilities.EnergyStorage.ITEM);
             if (storage == null || !storage.canReceive()) continue;
-            int rate = UfoArmorItem.moduleSetting(source, UfoArmorSetting.RELAY_TRANSFER_RATE);
+            int rate = UfoArmorModules.cappedSetting(source, UfoArmorSetting.RELAY_TRANSFER_RATE);
             int offered = Math.min(rate, available - UfoArmorModule.QUANTUM_RELAY.energyCost());
             int accepted = storage.receiveEnergy(offered, false);
             if (accepted > 0) {
@@ -288,8 +280,8 @@ public final class UfoArmorModuleEvents {
     private static void syncModuleAttributes(Player player) {
         if (UfoArmorModules.active(player, UfoArmorModule.PHASE_STEP)) {
             ItemStack boots = UfoArmorModules.stack(player, UfoArmorModule.PHASE_STEP);
-            int stepHeight = UfoArmorItem.moduleSetting(boots, UfoArmorSetting.STEP_HEIGHT);
-            int reach = UfoArmorItem.moduleSetting(boots, UfoArmorSetting.REACH_DISTANCE);
+            int stepHeight = UfoArmorModules.cappedSetting(boots, UfoArmorSetting.STEP_HEIGHT);
+            int reach = UfoArmorModules.cappedSetting(boots, UfoArmorSetting.REACH_DISTANCE);
             setAttribute(player, Attributes.STEP_HEIGHT, STEP_HEIGHT_MODIFIER, Math.max(0.0, stepHeight - 0.6));
             setAttribute(player, Attributes.BLOCK_INTERACTION_RANGE, BLOCK_REACH_MODIFIER, reach);
             setAttribute(player, Attributes.ENTITY_INTERACTION_RANGE, ENTITY_REACH_MODIFIER, reach);
@@ -300,16 +292,14 @@ public final class UfoArmorModuleEvents {
         }
 
         if (UfoArmorModules.active(player, UfoArmorModule.LOOT_SINGULARITY)) {
-            int luck = UfoArmorItem.moduleSetting(
-                    UfoArmorModules.stack(player, UfoArmorModule.LOOT_SINGULARITY), UfoArmorSetting.LUCK_LEVEL);
+            int luck = UfoArmorModules.cappedSetting(player, UfoArmorModule.LOOT_SINGULARITY, UfoArmorSetting.LUCK_LEVEL);
             setAttribute(player, Attributes.LUCK, LUCK_MODIFIER, luck);
         } else {
             removeAttribute(player, Attributes.LUCK, LUCK_MODIFIER);
         }
 
         if (UfoArmorModules.active(player, UfoArmorModule.KINETIC_OVERDRIVE)) {
-            int speedPercent = UfoArmorItem.moduleSetting(
-                    UfoArmorModules.stack(player, UfoArmorModule.KINETIC_OVERDRIVE), UfoArmorSetting.KINETIC_SPEED);
+            int speedPercent = UfoArmorModules.cappedSetting(player, UfoArmorModule.KINETIC_OVERDRIVE, UfoArmorSetting.KINETIC_SPEED);
             setAttribute(player, Attributes.MOVEMENT_SPEED, MOVEMENT_SPEED_MODIFIER,
                     speedPercent / 100.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
         } else {
