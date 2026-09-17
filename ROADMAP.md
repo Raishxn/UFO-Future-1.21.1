@@ -105,19 +105,52 @@ entidades em área.
 - Migração: manter os IDs da UFO Armor (zero save-migration); Astral sai da
   creative tab imediatamente e os 4 IDs podem ficar uma versão sem efeito.
 
-**Regras do sistema**
+**Regras do sistema implementadas** (conferidas no código)
 
-- Slots por peça: capacete 2, peitoral 3, calça 2, botas 2 (9 base) +
-  Expansion Frame (+1 slot, cap de 4 por peça). Um módulo não stacka na mesma
-  peça; pares exclusivos declarados (ex.: Aegis ↔ Thorns Field).
-- Configuração: defaults na bancada; toggles/valores in-game por keybind +
-  scroll (mesmo padrão do multi-tool), com clamp server-side; custos e caps
-  expostos no `ufo-common.toml` para modpack developers.
-- Gating: MK1 = White Dwarf, MK2 = Neutron Star, MK3 = Pulsar/Dark Matter;
-  top-tier usa o material Supermassive do item 3.5 e processores
-  Tesseract/Event Horizon/Cosmic como custo.
+- Capacidade por peça: capacete 5, peitoral 8, calça 5, botas 4
+  (`UfoArmorModule.capacity`). Não existe Expansion Frame nem slot extra.
+- Cada card pertence a uma peça fixa (`armorType`) e tem custo de energia
+  próprio (`energyCost`), ambos definidos no enum `UfoArmorModule`.
+- Não há regra de exclusividade nem stacking declarativo entre módulos: cada
+  card ocupa um slot, e a validação do servidor é por peça, ordinal e binding do
+  módulo.
+- 15 módulos expõem um valor numérico ajustável pelo jogador
+  (`UfoArmorSetting`), com min/max/step/default fixos no enum e clamp
+  server-side aplicado no `SetUfoArmorModuleSettingPacket`.
+- Pendente (ver Marco 1): os limites min/max **não** são configuráveis pelo
+  servidor/modpack — não existe nenhuma chave de armadura no `UFOConfig`.
+- Pendente: não existe sistema de MK/tier por card nem conflito entre módulos.
 
-**Catálogo de módulos (proposta)**
+**Catálogo de módulos implementado** — 16 cards em `UfoArmorModule`
+(id de item `ufo_<id>_card`, chave de tradução `module.ufo.<id>`)
+
+| Módulo | Peça | Energia | Valor ajustável |
+|---|---|---|---|
+| `aegis_singularity` | peitoral | 2.000 | — |
+| `reality_anchor` | peitoral | 100.000 | — |
+| `chrono_regenerator` | peitoral | 400 | `regeneration_level` 1–10 |
+| `void_flight` | peitoral | 200 | `flight_speed` 25–400 %, `flight_inertia` 0–100 % |
+| `phase_step` | botas | 40 | `step_height` 1–8 m, `reach_distance` 0–32 m |
+| `entropy_magnet` | calça | 80 | `magnet_range` 4–32 m |
+| `quantum_relay` | capacete | 120 | `relay_transfer_rate` 50k–1M RF |
+| `matter_translocator` | calça | 25.000 | `translocator_threshold` 5–50 %, `translocator_heal` 25–100 % |
+| `abyssal_sight` | capacete | 20 | — |
+| `adaptive_biosphere` | capacete | 40 | — |
+| `kinetic_overdrive` | botas | 100 | `kinetic_speed` 25–1000 %, `kinetic_jump` 1–10 |
+| `singularity_strike` | calça | 500 | `strike_multiplier` 2–100× |
+| `reprisal_matrix` | peitoral | 1.000 | `reprisal_multiplier` 10–1000× |
+| `loot_singularity` | calça | 100 | `luck_level` 1–20 |
+| `cloaking_field` | peitoral | 100 | `cloaking_range` 16–128 m |
+| `astral_wings` | peitoral | 0 | — |
+
+Os 16 cards têm receita em datagen, além do `ufo_upgrade_card` base.
+
+**Catálogo anterior (rascunho, não implementado)**
+
+A tabela abaixo é um rascunho com nomes e mecânicas **diferentes** dos 16
+módulos realmente implementados; nenhum desses nomes existe no código. Fica
+registrada como banco de ideias — o que voltar precisa de receita, teste e
+entrada no catálogo real acima.
 
 | Família | Módulo | Peça | MKs | Efeito / configurável |
 |---------|--------|------|-----|------------------------|

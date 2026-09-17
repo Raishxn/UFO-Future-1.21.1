@@ -1,4 +1,4 @@
-package com.raishxn.ufo; // Corrija o pacote para o seu mod
+package com.raishxn.ufo;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.config.ModConfigEvent;
@@ -10,7 +10,6 @@ public class UFOConfig {
 
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    // Apenas a configuração que precisamos
     private static final ModConfigSpec.DoubleValue INFINITY_CELL_ENERGY = BUILDER
             .comment("ME Infinity Cell idle energy cost (unit: AE/t)")
             .defineInRange("item.infinity_cell_energy_cost", 8.0, 0.1, 64.0);
@@ -85,7 +84,7 @@ public class UFOConfig {
     public static final ModConfigSpec WIRELESS_SPEC = WIRELESS_BUILDER.build();
     public static final ModConfigSpec SERVER_SPEC = SERVER_BUILDER.build();
 
-    // Variável que vamos usar no nosso código
+    // Cached INFINITY_CELL_ENERGY value, refreshed whenever the config reloads.
     public static double infCellCost;
 
     private static boolean isResourceLocation(Object value) {
@@ -95,7 +94,7 @@ public class UFOConfig {
     @SubscribeEvent
     public static void onLoad(final ModConfigEvent event) {
         if (event.getConfig().getSpec() == SPEC) {
-            // Carrega o valor do arquivo de configuração para a nossa variável
+            // Refresh the cached value from the loaded config file.
             infCellCost = INFINITY_CELL_ENERGY.get();
         }
     }

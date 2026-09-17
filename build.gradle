@@ -403,6 +403,12 @@ def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+// The datagen hash cache is an implementation detail, not a source input. withSourcesJar
+// copies src/generated/resources verbatim, so ProcessResources' exclusion does not reach it.
+tasks.named('sourcesJar').configure {
+    exclude '.cache/**'
+}
+
 tasks.named('jar').configure {
     dependsOn syncReleaseResources
     from('LICENSE.md') {
@@ -412,6 +418,10 @@ tasks.named('jar').configure {
     from('CREDITS.md') {
         into 'META-INF'
         rename { 'CREDITS-ufo.md' }
+    }
+    from('README.md') {
+        into 'META-INF'
+        rename { 'README-ufo.md' }
     }
     // SecureJarHandler/Java zipfs intermittently failed to inflate this large mod JAR
     // after loading hundreds of resources. Stored entries avoid runtime inflater
