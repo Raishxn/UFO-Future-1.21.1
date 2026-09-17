@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.115'
+    id 'net.neoforged.moddev' version '2.0.147'
     id 'idea'
 }
 
@@ -210,7 +210,7 @@ dependencies {
     // Pure unit tests for infrastructure that does not require a running game.
     testImplementation platform("org.junit:junit-bom:5.10.2")
     testImplementation "org.junit.jupiter:junit-jupiter"
-    testImplementation "com.google.code.gson:gson:2.10.1"
+    testImplementation "com.google.code.gson:gson:2.14.0"
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }
 
