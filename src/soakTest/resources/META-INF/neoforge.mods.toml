@@ -10,6 +10,6 @@ displayName="UFO soak tests"
 [[dependencies.ufo_soak_tests]]
 modId="ufo"
 type="required"
-versionRange="[3.0.0-alpha.1,)"
+versionRange="[3.0.0-alpha.2,)"
 ordering="AFTER"
 side="BOTH"

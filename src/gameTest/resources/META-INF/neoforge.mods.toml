@@ -8,6 +8,6 @@ displayName="UFO development tests"
 [[dependencies.ufo_tests]]
 modId="ufo"
 type="required"
-versionRange="[3.0.0-alpha.1,)"
+versionRange="[3.0.0-alpha.2,)"
 ordering="AFTER"
 side="BOTH"
