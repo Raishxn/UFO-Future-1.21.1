@@ -1,0 +1,1027 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://raishxn.github.io/UFO-Future-1.21.1/es/quantum-wireless-implementation/">
+      
+      
+      
+      
+        
+          <link rel="alternate" href="../../quantum-wireless-implementation/" hreflang="en">
+        
+          <link rel="alternate" href="../../pt/quantum-wireless-implementation/" hreflang="pt">
+        
+          <link rel="alternate" href="./" hreflang="es">
+        
+          <link rel="alternate" href="../../zh/quantum-wireless-implementation/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Quantum Wireless — primeira etapa - UFO Future Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quantum-wireless-primeira-etapa" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="../" title="UFO Future Documentation" class="md-header__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UFO Future Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Quantum Wireless — primeira etapa
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Seleccionar idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../quantum-wireless-implementation/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../pt/quantum-wireless-implementation/" hreflang="pt" class="md-select__link">
+              Portugues
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="es" class="md-select__link">
+              Espanol
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../zh/quantum-wireless-implementation/" hreflang="zh" class="md-select__link">
+              Zhongwen
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Búsqueda" placeholder="Búsqueda" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Buscar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpiar" aria-label="Limpiar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Pestañas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../mega-storage/" class="md-tabs__link">
+          
+  
+  
+  Wiki
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../" title="UFO Future Documentation" class="md-nav__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UFO Future Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wiki
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Wiki
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mega-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mega Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../containment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contencion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stellar-nexus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stellar Nexus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ensamblador de Materia Dimensional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-matter-fabricator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Matter Fabricator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-slicer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Slicer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quantum-processor-assembler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Processor Assembler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multiblock-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Niveles de Multibloque
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../catalysts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalizadores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kubejs-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Recetas KubeJS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Herramientas y Armas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../armor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conjuntos de Armadura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage-cells/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Celdas de Almacenamiento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../materials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Materiales y Fluidos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../progression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Progresion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recipe-balance-audit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auditoria de Balance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#implementado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-experimentar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Como experimentar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ainda-pendente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ainda pendente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verificacao-automatizada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verificação automatizada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buffs-implementados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffs implementados
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="quantum-wireless-primeira-etapa">Quantum Wireless — primeira etapa</h1>
+<p>Esta é a primeira implementação jogável da infraestrutura. Não representa paridade completa com a Overloaded ME Interface, nem conclusão de todos os itens da proposta.</p>
+<h2 id="implementado">Implementado</h2>
+<ul>
+<li>Quantum Interface registrada com a textura quantum_interface.png do usuário, receita, loot e aba criativa.</li>
+<li>36 slots de configuração/armazenamento, em duas páginas de 18; quantidade configurada via menu AE2.</li>
+<li>Fornecimento contínuo por slot: Shift+clique no botão de quantidade. Retira do estoque real da rede, preservando material rejeitado e a capacidade do destino.</li>
+<li>Modo local/wireless, auto-import/export OFF/AUTO e velocidade de I/O normal/rápida.</li>
+<li>Reposição dos slots pelo InterfaceLogic do AE2 e transferência de itens/fluidos pelas estratégias de armazenamento.</li>
+<li>Retenção persistente de material rejeitado após uma simulação de transferência; novas transferências aguardam o retorno pendente.</li>
+<li>Ferramenta de vínculos por face, seleção da origem e alternância de modo com agachar.</li>
+<li>Vínculos persistentes com identidade do bloco, alcance de 128 configurável, até 1.024 faces; chunks não são carregados.</li>
+<li>Wireless na Quantum Pattern Hatch existente, encaminhando planos a ICraftingMachine e patterns de processamento a inventários/fluidos remotos (incluindo o caminho de entrada do DMA). O vínculo estrutural permanece separado.</li>
+<li>Entregas parciais usam a fila persistente do AE2, com destino fixado por posição/face/identidade; mudar o modo não redireciona insumos pendentes.</li>
+<li>Capacidade por slot de 1024 bytes do tipo de recurso, incluindo 8.192 B de fluido, equivalente ao limite do Overloaded Interface.</li>
+<li>Tooltips sem duplicação, toolbar externa e abertura do menu expandido corrigida na versão de cabo.</li>
+<li>HUD da ferramenta com origem, coordenadas, dimensão e última contagem registrada; páginas GuideME em inglês/português e ferramenta também na aba de itens.</li>
+<li>Preservação das travas AE2 na entrega remota e distribuição com cursor entre destinos.</li>
+<li>Widgets e ícones AE2LT com créditos e licenças incluídos no JAR.</li>
+</ul>
+<h2 id="como-experimentar">Como experimentar</h2>
+<ol>
+<li>Conectar a Quantum Interface à rede ME com recursos e energia.</li>
+<li>Usar Quantum Wireless Tool na interface para selecionar a origem.</li>
+<li>Usar a ferramenta na face do DMA ou na hatch física de coolant do multiblock para adicionar/remover o vínculo.</li>
+<li>Ativar wireless pela tela ou agachando e usando a ferramenta na origem.</li>
+<li>Configurar coolant nos slots da interface e habilitar auto-export. O fluido deve existir na rede.</li>
+<li>Para padrões, selecionar a Quantum Pattern Hatch como origem, vincular controladores que aceitam planos e habilitar wireless.</li>
+</ol>
+<p>Destinos AE já conectados a outra rede com mais de um nó são recusados. Dispositivos AE isolados podem ser vinculados; isso não fornece energia à máquina nem integra seu nó ao grid.</p>
+<h2 id="ainda-pendente">Ainda pendente</h2>
+<ul>
+<li>Wireless na variante de cabo do provider e adaptador dedicado de planos para o DMA (o caminho de inventário de processamento já está disponível).</li>
+<li>Vincular controlador para resolver automaticamente suas hatches de coolant: nesta etapa selecionar a hatch física.</li>
+<li>EJECT remoto, filtros de importação, FE/AppFlux e paridade completa de UI/agendamento.</li>
+<li>Lista editável de destinos, diagnóstico detalhado, vínculos em lote e ajustes de distribuição por ocupação.</li>
+<li>Retorno remoto de crafting coordenado com a hatch: usar os caminhos de saída existentes ou a interface, evitando dois caminhos concorrentes.</li>
+<li>Validação visual e funcional em mundo com 10+ máquinas, reinícios, chunks descarregados e rede cheia.</li>
+</ul>
+<p>A ferramenta utiliza a textura original <code>quantum_wireless_tool.png</code>, exatamente 16×16 com transparência. Mockup e prompts estão em <code>docs/art/</code>. Nenhuma textura da ferramenta AE2LT foi copiada.</p>
+<h2 id="verificacao-automatizada">Verificação automatizada</h2>
+<h2 id="buffs-implementados">Buffs implementados</h2>
+<p>Apenas a Pattern Hatch concede buffs. Os três efeitos são automáticos, definidos uma vez em config/ufo/wireless.toml: tetos padrão +20% velocidade, -10% energia e -15% calor, escalando de 1 a 10 DMAs ou de 1 a 4 multiblocos distintos (contagens separadas por família) que avançaram receitas nos últimos 20 ticks. Patterns diferentes e insumos wired/manuais também contam, desde que a máquina esteja vinculada a uma hatch wireless ativa. Não existem perfis nem pontos. Tetos independentes por família DMA/multiblocos.</p>
+<p>Multiblocos paralelos salvam fatores em cada ParallelProcessState; o DMA salva seu trabalho atual. Não existem autorizações por inputs/outputs nem contexto de dispatch. Os fatores são fixados antes de processar/reservar energia e mantidos até concluir. Energia é descontada por execução, calor produtivo é compensado pela velocidade e preserva frações. O painel da hatch mostra conexões e atividade/fatores DMA / Multi; os controllers incluem os fatores médios dos trabalhos ativos. Os detalhes estão no GuideME em quantum_wireless_buffs.md.</p>
+<p>Esta etapa cobre DMA, QMF, Slicer, Processor Assembler e Cryoforge; Stellar Nexus não recebe bônus. A janela de atividade é transitória e reinicia após reload; fatores dos trabalhos existentes são persistentes. Cada avanço renova atividade, inclusive em receitas longas. Destinos descarregados, fora do alcance, criativos ou apenas aguardando deixam de contar. Faces/threads não multiplicam contagem; hatches não acumulam efeitos. A primeira rodada após inatividade pode ser neutra; receitas seguintes usam a atividade construída.</p>
+<p>WirelessBonusTest cobre efeitos automáticos simultâneos, saturação, energia/calor por receita e receitas mínimas. WirelessActivityWindowTest cobre inatividade, expiração, renovação, reload e dez DMAs produtivos sem tickets. Testes automáticos não substituem a verificação de crafting em um mundo real.</p>
+<p>QuantumTransferTest verifica destino cheio, aceitação menor após simulação, extração menor que o solicitado e quantidades bulk acima de Integer.MAX_VALUE. Compilação, testes e geração de dados também verificam o registro de conteúdo e carregamento do mixin durante datagen. Isso não substitui a validação dentro do jogo.</p>
+<p>Alcance local salvo por origem: 32 blocos por padrão, ajustável na UI (+1 / Shift -1), limitado por wireless.range (128 por padrão; 0 remove teto global). Reduzir suspende transferências fora do alcance sem apagar vínculos. Configurações wireless antigas em ufo-server.toml não são mais lidas; fonte autoritativa é config/ufo/wireless.toml no servidor. Os snapshots dos jobs existentes são mantidos.</p>
+<p>O antigo wireless.buffs.saturationMachines foi substituído por wireless.buffs.dma.saturationMachines (10) e wireless.buffs.multiblock.saturationMachines (4). Valores antigos personalizados devem ser movidos explicitamente para as famílias desejadas.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
