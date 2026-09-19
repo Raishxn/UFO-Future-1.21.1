@@ -50,13 +50,12 @@ claim.
 | --- | --- | --- | --- |
 | Thermal Foundation / CoFH | All rights reserved | textures/block/fluid/gelid_cryotheum_flow.png and ..._still.png | Removed on 2026-09-17 |
 | Astral Sorcery | All rights reserved | textures/block/fluid/liquid_starlight.png | Removed on 2026-09-17 |
-| GT New Horizons (GT5-Unofficial, TecTech) | Asset license to verify | the entries with origin gtnh in texture-provenance.md | Verify license, attribute or replace |
-| GTOCore items still unconfirmed | Unknown until the GTO authors confirm | the entries with origin unconfirmed in texture-provenance.md | Confirm, attribute or replace |
+| GT New Horizons (GT5-Unofficial, TecTech) | Historical audit source | all formerly matching runtime assets were replaced or removed | No matching asset remains |
+| GTOCore items formerly unconfirmed | Historical audit source | all formerly matching runtime assets were replaced or removed | No matching asset remains |
 
-The three removed fluid textures are still referenced by
-src/main/java/com/raishxn/ufo/fluid/ModFluidTypes.java. New, original art must be
-dropped at the same resource locations (plus the matching .mcmeta when animated)
-before the next release.
+The three fluid resource locations remain referenced by
+src/main/java/com/raishxn/ufo/fluid/ModFluidTypes.java and now contain original
+replacement art supplied for the 3.0 release.
 
 Separately, seven entropy component textures had no consumer anywhere in the mod
 (no block, model, blockstate or renderer, only stale language keys) and were removed

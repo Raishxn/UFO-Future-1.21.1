@@ -6,15 +6,12 @@ import com.raishxn.ufo.client.render.QuantumWirelessRenderTypes;
 import com.raishxn.ufo.item.ModArmor;
 import com.raishxn.ufo.armor.UfoArmorModule;
 import com.raishxn.ufo.item.custom.UfoArmorItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -31,34 +28,15 @@ public class AstralNexusWingsLayer extends RenderLayer<AbstractClientPlayer, Pla
                        float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks,
                        float netHeadYaw, float headPitch) {
         ItemStack chestStack = player.getItemBySlot(EquipmentSlot.CHEST);
-        boolean legacyNexus = chestStack.is(ModArmor.ASTRAL_NEXUS_CHESTPLATE.get());
         boolean modularWings = chestStack.is(ModArmor.UFO_CHESTPLATE.get())
                 && UfoArmorItem.hasFullUfoSet(player)
                 && player.getAbilities().flying
                 && UfoArmorItem.isModuleEnabled(chestStack, UfoArmorModule.ASTRAL_WINGS);
-        if (!legacyNexus && !modularWings) {
+        if (!modularWings) {
             return;
         }
 
-        if (modularWings) {
-            renderUfoThrusters(poseStack, buffer, player, ageInTicks);
-            return;
-        }
-
-        poseStack.pushPose();
-        this.getParentModel().body.translateAndRotate(poseStack);
-        poseStack.translate(0.0F, -0.05F, 0.16F);
-        Minecraft.getInstance().getItemRenderer().renderStatic(
-                chestStack,
-                ItemDisplayContext.HEAD,
-                packedLight,
-                OverlayTexture.NO_OVERLAY,
-                poseStack,
-                buffer,
-                player.level(),
-                player.getId()
-        );
-        poseStack.popPose();
+        renderUfoThrusters(poseStack, buffer, player, ageInTicks);
     }
 
     private void renderUfoThrusters(PoseStack poseStack, MultiBufferSource buffer,

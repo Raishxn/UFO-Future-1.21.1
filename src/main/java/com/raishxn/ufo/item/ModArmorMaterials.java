@@ -48,21 +48,6 @@ public class ModArmorMaterials {
             3.0f
     );
 
-    public static final Holder<ArmorMaterial> ASTRAL_NEXUS = register(
-            "astral_nexus",
-            new EnumMap<>(ArmorItem.Type.class) {{
-                put(ArmorItem.Type.BOOTS, 4);
-                put(ArmorItem.Type.LEGGINGS, 7);
-                put(ArmorItem.Type.CHESTPLATE, 9);
-                put(ArmorItem.Type.HELMET, 4);
-            }},
-            42,
-            SoundEvents.ARMOR_EQUIP_NETHERITE,
-            Ingredient.of(Items.NETHER_STAR),
-            2.2f,
-            3.4f
-    );
-
     private static Holder<ArmorMaterial> register(
             String name,
             EnumMap<ArmorItem.Type, Integer> defense,

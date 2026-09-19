@@ -14,7 +14,7 @@
       "origin_detail": "GT5-Unofficial (climber)",
       "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
       "action": "replace-or-attribute",
-      "status": "IDENTICAL"
+      "status": "REMOVED"
     },
     {
       "id": 2,
@@ -24,7 +24,7 @@
       "origin_detail": "GT5-Unofficial (climber)",
       "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
       "action": "replace-or-attribute",
-      "status": "IDENTICAL"
+      "status": "REMOVED"
     },
     {
       "id": 3,
@@ -34,7 +34,7 @@
       "origin_detail": "TecTech (space/star)",
       "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
       "action": "replace-or-attribute",
-      "status": "IDENTICAL"
+      "status": "CHANGED"
     },
     {
       "id": 4,
@@ -44,7 +44,7 @@
       "origin_detail": "TecTech (space/star)",
       "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
       "action": "replace-or-attribute",
-      "status": "IDENTICAL"
+      "status": "CHANGED"
     },
     {
       "id": 5,
@@ -54,7 +54,7 @@
       "origin_detail": "TecTech (space/star)",
       "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
       "action": "replace-or-attribute",
-      "status": "IDENTICAL"
+      "status": "CHANGED"
     },
     {
       "id": 6,
@@ -64,7 +64,7 @@
       "origin_detail": "TecTech (space/star)",
       "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
       "action": "replace-or-attribute",
-      "status": "IDENTICAL"
+      "status": "CHANGED"
     },
     {
       "id": 7,
@@ -144,7 +144,7 @@
       "origin_detail": "GTOCore",
       "license": "CC BY-NC-SA 4.0 (GTO original)",
       "action": "attribute",
-      "status": "IDENTICAL"
+      "status": "CHANGED"
     },
     {
       "id": 15,
@@ -154,7 +154,7 @@
       "origin_detail": "GTOCore",
       "license": "CC BY-NC-SA 4.0 (GTO original)",
       "action": "attribute",
-      "status": "IDENTICAL"
+      "status": "CHANGED"
     },
     {
       "id": 16,
@@ -164,7 +164,7 @@
       "origin_detail": "GTOCore (unconfirmed)",
       "license": "Unknown until the GTO authors confirm",
       "action": "confirm-or-replace",
-      "status": "IDENTICAL"
+      "status": "REMOVED"
     },
     {
       "id": 17,
@@ -174,7 +174,7 @@
       "origin_detail": "GTOCore (unconfirmed)",
       "license": "Unknown until the GTO authors confirm",
       "action": "confirm-or-replace",
-      "status": "IDENTICAL"
+      "status": "REMOVED"
     },
     {
       "id": 18,
@@ -184,7 +184,7 @@
       "origin_detail": "GTOCore (unconfirmed)",
       "license": "Unknown until the GTO authors confirm",
       "action": "confirm-or-replace",
-      "status": "IDENTICAL"
+      "status": "REMOVED"
     },
     {
       "id": 19,
@@ -194,7 +194,7 @@
       "origin_detail": "GTOCore (unconfirmed)",
       "license": "Unknown until the GTO authors confirm",
       "action": "confirm-or-replace",
-      "status": "IDENTICAL"
+      "status": "REMOVED"
     },
     {
       "id": 20,
@@ -314,7 +314,7 @@
       "origin_detail": "GTOCore (unconfirmed)",
       "license": "Unknown until the GTO authors confirm",
       "action": "confirm-or-replace",
-      "status": "IDENTICAL"
+      "status": "REMOVED"
     },
     {
       "id": 32,
@@ -444,7 +444,7 @@
       "origin_detail": "GTOCore (unconfirmed)",
       "license": "Unknown until the GTO authors confirm",
       "action": "confirm-or-replace",
-      "status": "IDENTICAL"
+      "status": "REMOVED"
     },
     {
       "id": 45,
@@ -454,7 +454,7 @@
       "origin_detail": "GT5-Unofficial (climber overlay)",
       "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
       "action": "replace-or-attribute",
-      "status": "IDENTICAL"
+      "status": "REMOVED"
     },
     {
       "id": 46,

@@ -7,6 +7,7 @@ import appeng.me.cluster.implementations.CraftingCPUCluster;
 import com.raishxn.ufo.api.multiblock.FieldTieredCubeValidator;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.mixin.InvokerCraftingCPUCluster;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -73,7 +74,7 @@ public final class EntropicConvergenceCalculator {
 
         if (cluster != null) {
             recheck = isWithinBounds(changedPos, cluster.getBoundsMin(), cluster.getBoundsMax())
-                    || this.isRelevantBlock(level.getBlockEntity(changedPos));
+                    || this.isRelevantBlock(LoadedBlockEntityLookup.get(level, changedPos));
         } else {
             recheck = true;
         }
@@ -86,7 +87,7 @@ public final class EntropicConvergenceCalculator {
     private void updateBlockEntities(CraftingCPUCluster cluster, ServerLevel level,
             FieldTieredCubeValidator.ValidationResult validation) {
         for (BlockPos shellPos : validation.shellPositions()) {
-            BlockEntity blockEntity = level.getBlockEntity(shellPos);
+            BlockEntity blockEntity = LoadedBlockEntityLookup.get(level, shellPos);
             if (blockEntity instanceof EntropicConvergenceEngineBE convergence) {
                 convergence.applyCalculatedStructure(cluster, validation);
                 ((InvokerCraftingCPUCluster) (Object) cluster).ufo$addBlockEntity(convergence);
@@ -100,7 +101,7 @@ public final class EntropicConvergenceCalculator {
     private void refreshBlockEntities(CraftingCPUCluster cluster, ServerLevel level,
             FieldTieredCubeValidator.ValidationResult validation) {
         for (BlockPos shellPos : validation.shellPositions()) {
-            BlockEntity blockEntity = level.getBlockEntity(shellPos);
+            BlockEntity blockEntity = LoadedBlockEntityLookup.get(level, shellPos);
             if (blockEntity instanceof EntropicConvergenceEngineBE convergence) {
                 convergence.applyCalculatedStructure(cluster, validation);
             }
@@ -130,7 +131,7 @@ public final class EntropicConvergenceCalculator {
         for (BlockPos pos : BlockPos.betweenClosed(
                 origin.offset(-SEARCH_RADIUS, -SEARCH_RADIUS, -SEARCH_RADIUS),
                 origin.offset(SEARCH_RADIUS, SEARCH_RADIUS, SEARCH_RADIUS))) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
+            BlockEntity blockEntity = LoadedBlockEntityLookup.get(level, pos);
             if (blockEntity instanceof EntropicConvergenceEngineBE convergence) {
                 convergence.scanStructure(level);
             }

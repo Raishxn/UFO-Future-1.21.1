@@ -32,7 +32,7 @@ five faces are isolated; adjacency inside the shell does not create a hidden ME
 connection.
 
 Fluid pipes are independent of those ME-facing rules and may fill coolant from
-any face. Only Gelid Cryotheum, Stable Coolant and Temporal Fluid pass the
+any face. Only Gelid Cryotheum, Stable Coolant and Bose-Einstein Condensate pass the
 filter; external drain is disabled.
 
 All **138** field positions must be filled with a single tier: MK1, MK2 or MK3.

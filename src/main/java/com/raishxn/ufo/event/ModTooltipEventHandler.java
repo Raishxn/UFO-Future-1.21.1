@@ -82,7 +82,7 @@ public class ModTooltipEventHandler {
         else if (stack.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get().asItem())) {
             event.getToolTip().add(Component.literal("Hybrid coolant hatch: 16,000,000 mB local tank + ME fallback.").withStyle(ChatFormatting.GRAY));
             event.getToolTip().add(Component.literal("External fluid pipes may fill it from any side; connect ME cable to the indicated face.").withStyle(ChatFormatting.DARK_GRAY));
-            event.getToolTip().add(Component.literal("Accepts Gelid Cryotheum, Stable Coolant, or Temporal Fluid only.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(Component.literal("Accepts Gelid Cryotheum, Stable Coolant, or Bose-Einstein Condensate only.").withStyle(ChatFormatting.DARK_GRAY));
         }
         else if (isAeHatch(stack)) {
             event.getToolTip().add(Component.literal("AE2 grid hatch: connect ME cable to the indicated face.").withStyle(ChatFormatting.GRAY));
@@ -91,6 +91,10 @@ public class ModTooltipEventHandler {
         else if (stack.is(ModItems.STABLE_COOLANT_BUCKET.get())) {
             event.getToolTip().add(Component.literal("Stable Coolant: 50 HU/mB, up to 10 mB/tick.").withStyle(ChatFormatting.GRAY));
             event.getToolTip().add(Component.literal("Crafted in the Quantum Cryoforge at machine tier MK3.").withStyle(ChatFormatting.DARK_GRAY));
+        }
+        else if (stack.is(ModItems.BOSE_EINSTEIN_CONDENSATE_BUCKET.get())) {
+            event.getToolTip().add(Component.literal("Bose-Einstein Condensate: 200 HU/mB, up to 10 mB/tick.").withStyle(ChatFormatting.AQUA));
+            event.getToolTip().add(Component.literal("Extreme-tier coolant for MK3 thermal systems.").withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 

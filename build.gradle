@@ -389,6 +389,8 @@ tasks.withType(ProcessResources).configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     // NeoForge's datagen hash cache is an implementation detail, not a runtime resource.
     exclude '.cache/**'
+    // Local source-art backups must never leak into distributable artifacts.
+    exclude '**/*_backup_original/**'
 }
 
 def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
@@ -402,6 +404,7 @@ def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
     from('src/main/resources')
     from(generateModMetadata)
     exclude '.cache/**'
+    exclude '**/*_backup_original/**'
     into layout.buildDirectory.dir('resources/main')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
@@ -410,6 +413,7 @@ def syncReleaseResources = tasks.register('syncReleaseResources', Sync) {
 // copies src/generated/resources verbatim, so ProcessResources' exclusion does not reach it.
 tasks.named('sourcesJar').configure {
     exclude '.cache/**'
+    exclude '**/*_backup_original/**'
 }
 
 tasks.named('jar').configure {
@@ -440,6 +444,9 @@ def verifyReleaseJar = tasks.register('verifyReleaseJar') {
         def artifact = inputs.files.singleFile
         new java.util.zip.ZipFile(artifact).withCloseable { zip ->
             zip.entries().each { entry ->
+                if (entry.name.contains('_backup_original/')) {
+                    throw new GradleException("Local texture backup leaked into release JAR: ${entry.name}")
+                }
                 if (!entry.directory) zip.getInputStream(entry).withCloseable { it.transferTo(java.io.OutputStream.nullOutputStream()) }
             }
         }

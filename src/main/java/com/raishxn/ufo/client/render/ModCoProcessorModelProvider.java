@@ -32,7 +32,7 @@ public class ModCoProcessorModelProvider extends AbstractCraftingUnitModelProvid
     protected static final Material LIGHT_BASE = texture("light_base");
 
     // Novas texturas de luz para os co-processadores
-    // IMPORTANTE: Você precisará criar essas texturas em 'assets/ufo/textures/block/'
+    // Tier lights live beside the shared crafting-unit materials.
     protected static final Material COPROCESSOR_50M_LIGHT = texture("50m_mega_co_processor_light");
     protected static final Material COPROCESSOR_150M_LIGHT = texture("150m_mega_co_processor_light");
     protected static final Material COPROCESSOR_300M_LIGHT = texture("300m_mega_co_processor_light");
@@ -74,8 +74,7 @@ public class ModCoProcessorModelProvider extends AbstractCraftingUnitModelProvid
     }
 
     private static Material texture(String name) {
-        // Linha corrigida
-        var material = new Material(InventoryMenu.BLOCK_ATLAS, UfoMod.id("block/" + name));
+        var material = new Material(InventoryMenu.BLOCK_ATLAS, UfoMod.id("block/crafting/" + name));
         if (!MATERIALS.contains(material)) {
             MATERIALS.add(material);
         }

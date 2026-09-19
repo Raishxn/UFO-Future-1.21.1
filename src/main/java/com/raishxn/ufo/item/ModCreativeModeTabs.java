@@ -60,6 +60,18 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.PULSAR_FRAGMENT_NUGGET.get());
                         output.accept(ModItems.PULSAR_FRAGMENT_BUCKET.get());
 
+                        output.accept(ModItems.LIQUID_STARLIGHT_BUCKET.get());
+                        output.accept(ModItems.PRIMORDIAL_MATTER_BUCKET.get());
+                        output.accept(ModItems.RAW_STAR_MATTER_PLASMA_BUCKET.get());
+                        output.accept(ModItems.TRANSCENDING_MATTER_BUCKET.get());
+                        output.accept(ModItems.UU_MATTER_BUCKET.get());
+                        output.accept(ModItems.UU_AMPLIFIER_BUCKET.get());
+                        output.accept(ModItems.GELID_CRYOTHEUM_BUCKET.get());
+                        output.accept(ModItems.STABLE_COOLANT_BUCKET.get());
+                        output.accept(ModItems.BOSE_EINSTEIN_CONDENSATE_BUCKET.get());
+                        output.accept(ModItems.TEMPORAL_FLUID_BUCKET.get());
+                        output.accept(ModItems.SPATIAL_FLUID_BUCKET.get());
+
 
                         output.accept(ModItems.CHRONO_CATALYST_T1.get());
                         output.accept(ModItems.CHRONO_CATALYST_T2.get());
@@ -228,7 +240,10 @@ public class ModCreativeModeTabs {
                         // --- ENTROPY MULTIBLOCK ---
                         output.accept(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get());
                         output.accept(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get());
+                        output.accept(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
                         output.accept(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get());
+                        output.accept(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get());
+                        output.accept(MultiblockBlocks.QUANTUM_ENTROPY_CASING.get());
 
                     }).build());
 

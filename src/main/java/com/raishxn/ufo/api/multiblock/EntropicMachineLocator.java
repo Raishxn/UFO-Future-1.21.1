@@ -1,6 +1,7 @@
 package com.raishxn.ufo.api.multiblock;
 
 import com.raishxn.ufo.block.entity.AbstractEntropicMachineBE;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,7 +26,7 @@ public final class EntropicMachineLocator {
         for (BlockPos pos : BlockPos.betweenClosed(
                 origin.offset(-SEARCH_RADIUS, -SEARCH_RADIUS, -SEARCH_RADIUS),
                 origin.offset(SEARCH_RADIUS, SEARCH_RADIUS, SEARCH_RADIUS))) {
-            BlockEntity be = level.getBlockEntity(pos);
+            BlockEntity be = LoadedBlockEntityLookup.get(level, pos);
             if (!(be instanceof IEntropicMachineController controller) || !controller.canProxyInteract(origin)) {
                 continue;
             }
@@ -48,7 +49,7 @@ public final class EntropicMachineLocator {
         for (BlockPos pos : BlockPos.betweenClosed(
                 origin.offset(-SEARCH_RADIUS, -SEARCH_RADIUS, -SEARCH_RADIUS),
                 origin.offset(SEARCH_RADIUS, SEARCH_RADIUS, SEARCH_RADIUS))) {
-            BlockEntity be = level.getBlockEntity(pos);
+            BlockEntity be = LoadedBlockEntityLookup.get(level, pos);
             if (be instanceof AbstractEntropicMachineBE machine) {
                 nearbyMachines.add(machine);
             }

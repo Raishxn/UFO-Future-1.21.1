@@ -23,6 +23,6 @@ Atualização da primeira implementação: `QuantumWirelessToggleButton.java` j�
 
 Na implementação, completar a lista com os caminhos individuais efetivamente copiados/adaptados, destino no UFO, licença, autoria indicada na origem e alterações feitas. Preservar avisos nos arquivos derivados e disponibilizar os textos de licença e avisos com a distribuição correspondente.
 
-A textura `assets/ufo/textures/block/quantum_interface.png` foi fornecida pelo usuário para o UFO. Ela não faz parte dos assets AE2LT copiados por esta tarefa.
+A textura `assets/ufo/textures/block/machines/quantum_interface.png` foi fornecida pelo usuário para o UFO. Ela não faz parte dos assets AE2LT copiados por esta tarefa.
 
 Crédito público proposto após a adaptação: “Os widgets wireless e as funcionalidades de importação/exportação da Quantum Interface foram adaptados de AE2 Lightning Tech. Agradecimentos aos autores e contribuidores do projeto.” Até a implementação, descrever o trabalho como referência planejada, não como port concluído.

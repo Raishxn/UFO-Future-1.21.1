@@ -43,6 +43,7 @@ import com.raishxn.ufo.fluid.ModFluids;
 import com.raishxn.ufo.init.ModSounds;
 import com.raishxn.ufo.item.custom.BaseCatalystItem;
 import com.raishxn.ufo.item.custom.DimensionalCatalystItem;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.BlockPos;
@@ -140,7 +141,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         List<FluidInputPort<AEFluidKey>> detectedPorts = new ArrayList<>();
         List<MassiveOutputHatchBE> detectedHatches = new ArrayList<>();
         for (BlockPos partPos : this.parts) {
-            if (level.getBlockEntity(partPos) instanceof MassiveOutputHatchBE hatch) {
+            if (LoadedBlockEntityLookup.get(level, partPos) instanceof MassiveOutputHatchBE hatch) {
                 if (hatch.supportsEnergyInput()) energyInputs.add(hatch);
                 if (hatch.supportsFluidInput()) {
                     detectedPorts.add(hatch);
@@ -244,7 +245,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
         List<ChemicalPort<ResourceLocation>> detectedPorts = new ArrayList<>();
         for (BlockPos partPos : this.parts) {
-            if (level.getBlockEntity(partPos) instanceof MekanismChemicalStorage storage
+            if (LoadedBlockEntityLookup.get(level, partPos) instanceof MekanismChemicalStorage storage
                     && storage.supportsChemicalIO()) {
                 detectedPorts.add(storage);
             }
@@ -263,7 +264,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         }
         List<AENetworkedBlockEntity> candidates = new ArrayList<>();
         for (BlockPos partPos : this.parts) {
-            if (level.getBlockEntity(partPos) instanceof AENetworkedBlockEntity nodeBE) {
+            if (LoadedBlockEntityLookup.get(level, partPos) instanceof AENetworkedBlockEntity nodeBE) {
                 candidates.add(nodeBE);
             }
         }
@@ -1038,7 +1039,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         if (this.coolantPriorityByTier == null) {
             AEFluidKey tier1 = AEFluidKey.of(ModFluids.SOURCE_GELID_CRYOTHEUM.get());
             AEFluidKey tier2 = AEFluidKey.of(ModFluids.SOURCE_STABLE_COOLANT.get());
-            AEFluidKey tier3 = AEFluidKey.of(ModFluids.SOURCE_TEMPORAL_FLUID.get());
+            AEFluidKey tier3 = AEFluidKey.of(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get());
             this.coolantPriorityByTier = new AEFluidKey[][]{
                     {tier1, tier2, tier3},
                     {tier1, tier2, tier3},
@@ -1082,7 +1083,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             return;
         }
 
-        if (this.level.getBlockEntity(this.worldPosition) != this) {
+        if (LoadedBlockEntityLookup.get(this.level, this.worldPosition) != this) {
             return;
         }
 
@@ -1097,7 +1098,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         // reciprocal Buffer link is the authoritative network for processing,
         // energy reservation and returning promised crafting outputs.
         for (BlockPos partPos : this.parts) {
-            if (this.level.getBlockEntity(partPos) instanceof QuantumPatternProxyBE proxy) {
+            if (LoadedBlockEntityLookup.get(this.level, partPos) instanceof QuantumPatternProxyBE proxy) {
                 QuantumPatternHatchBE buffer = proxy.getLinkedPatternBuffer();
                 IGridNode node = buffer != null ? buffer.getActionableNode() : null;
                 if (buffer != null && Ae2NodeAvailability.isUsable(
@@ -1717,7 +1718,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                     this.worldPosition.getX() + 0.5D,
                     this.worldPosition.getY() + 0.5D,
                     this.worldPosition.getZ() + 0.5D,
-                    GenericStack.wrapInItemStack(stack));
+                    com.raishxn.ufo.util.RecoveryStackItems.wrap(stack));
         }
     }
 

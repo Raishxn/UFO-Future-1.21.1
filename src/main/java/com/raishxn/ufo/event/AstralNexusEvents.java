@@ -1,6 +1,7 @@
 package com.raishxn.ufo.event;
 
 import com.raishxn.ufo.UfoMod;
+import com.raishxn.ufo.armor.UfoArmorModules;
 import com.raishxn.ufo.item.custom.UfoArmorItem;
 import com.raishxn.ufo.armor.UfoArmorSetting;
 import net.minecraft.world.entity.player.Player;
@@ -61,7 +62,7 @@ public class AstralNexusEvents {
 
         if (ufoSourceActive) {
             var chest = player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST);
-            float desiredSpeed = 0.05F * UfoArmorItem.moduleSetting(chest, UfoArmorSetting.FLIGHT_SPEED) / 100.0F;
+            float desiredSpeed = 0.05F * UfoArmorModules.cappedSetting(chest, UfoArmorSetting.FLIGHT_SPEED) / 100.0F;
             if (Math.abs(abilities.getFlyingSpeed() - desiredSpeed) > 0.0001F) {
                 abilities.setFlyingSpeed(desiredSpeed);
                 player.onUpdateAbilities();

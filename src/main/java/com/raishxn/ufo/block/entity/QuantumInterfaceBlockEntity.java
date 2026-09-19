@@ -183,7 +183,7 @@ public class QuantumInterfaceBlockEntity extends InterfaceBlockEntity implements
 
     @Override public void addAdditionalDrops(net.minecraft.world.level.Level level, BlockPos pos, List<ItemStack> drops) {
         super.addAdditionalDrops(level, pos, drops);
-        if (pendingReturn != null) drops.add(GenericStack.wrapInItemStack(pendingReturn));
+        if (pendingReturn != null) drops.add(com.raishxn.ufo.util.RecoveryStackItems.wrap(pendingReturn));
     }
 
     @Override public void clearContent() { super.clearContent(); pendingReturn = null; }

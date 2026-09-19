@@ -1,4 +1,4 @@
-// 1.21.1	2026-09-12T15:13:12.042396657	Recipes
+// 1.21.1	2026-09-18T12:58:57.216390273	Recipes
 1d246551720da7a4278e01eabd033d544a6bdb32 data/ufo/advancement/recipes/combat/ufo_abyssal_sight_card.json
 273fbc64cfd42799ed2e94dcd62220d18b0be8db data/ufo/advancement/recipes/combat/ufo_adaptive_biosphere_card.json
 2ac858c09ad8edb63ed3f1aa10865d0083affd12 data/ufo/advancement/recipes/combat/ufo_aegis_singularity_card.json
@@ -17,7 +17,6 @@ d3f848130dc49b879b330225b18091e8807564c3 data/ufo/advancement/recipes/combat/ufo
 1b4de355e0f17319cce2c974bed66404f2d0f34e data/ufo/advancement/recipes/combat/ufo_upgrade_card.json
 e47a097c70202dbcf94d82a3e2414d5a9ab2e8cc data/ufo/advancement/recipes/combat/ufo_void_flight_card.json
 623466a712bf2b54aad620b471840892932161d4 data/ufo/advancement/recipes/misc/ae_energy_input_hatch.json
-a25a6bd915843952e3b74014247693fdda691447 data/ufo/advancement/recipes/misc/bismuth.json
 a1f0792f9fc46d8107fb77d82b3129e97aec9e05 data/ufo/advancement/recipes/misc/coprocessor_150m.json
 eb7866de442289af9a906bdbf371421bb9e18e5a data/ufo/advancement/recipes/misc/coprocessor_2b.json
 2da6c174cfadc6187c64a460466526bf7370f743 data/ufo/advancement/recipes/misc/coprocessor_300m.json
@@ -103,7 +102,6 @@ b1d951052c5562bfdab7e66b98d1df10e8abc207 data/ufo/advancement/recipes/tools/ufo_
 a2c02578fe975672df457518aa88fb25a138d397 data/ufo/advancement/recipes/tools/ufo_shovel.json
 74c37445372a53f077033b79ec69d08a18d392b3 data/ufo/advancement/recipes/tools/ufo_sword.json
 469bdd1d3a8e5f83fd539b619351c3a401b9e635 data/ufo/recipe/ae_energy_input_hatch.json
-7295706f32dd23569f2bea75bef304c34d70f34b data/ufo/recipe/bismuth.json
 a1ecf1720a92c2db00eda06f221457eb0dfe670e data/ufo/recipe/coprocessor_150m.json
 c5ab167c71773215a725831e3692cd4c71b2c0cf data/ufo/recipe/coprocessor_2b.json
 3acc3d9438aad89540279b65eab2dca7ffe8a403 data/ufo/recipe/coprocessor_300m.json
@@ -270,6 +268,7 @@ f46709bcf853cf39bf5b9847d0d25a900713263f data/ufo/recipe/ufo_reality_anchor_card
 166c248fa45a1c6c580e34673d5cc04a79d71384 data/ufo/recipe/ufo_sword.json
 05127791a0aea96d88a4b04a73d6ead0f94a601a data/ufo/recipe/ufo_upgrade_card.json
 1f126b316fcd34758463a2cad27fc0d44f0de5b8 data/ufo/recipe/ufo_void_flight_card.json
+9f987624d4d82cbbdd77fe956d8e8cff91d9e2dd data/ufo/recipe/universal/qmf/bose_einstein_condensate.json
 28e3b89d7725722b13a48b484aa862b4ff269318 data/ufo/recipe/universal/qmf/bulk/aether_containment_capsule.json
 1882d1ed4400bd5d8d1523b4aaecb2f79d55f65c data/ufo/recipe/universal/qmf/bulk/charged_enriched_neutronium_sphere.json
 29f8adc1513f6b9c87d256f670c7a8481c47932f data/ufo/recipe/universal/qmf/bulk/chrono_catalyst_t1.json
@@ -379,6 +378,7 @@ e4e118022f3bdd61b8098937bcd62d158edd86b5 data/ufo/recipe/universal/qmf/ufo_chest
 f2c7824b6dc988e99766209f6015a09682e0a443 data/ufo/recipe/universal/qmf/ufo_leggings.json
 2f1a3578fa2521ad91ee9ad702871a33996e3b85 data/ufo/recipe/universal/qmf/ufo_staff.json
 6f071bc5f58509b9ab0dc4b21a151065077daa3a data/ufo/recipe/universal/qmf/white_dwarf_matter_batch.json
+2f774820d5d3748ab6bb3e5dfab2d19f56cf783f data/ufo/recipe/universal/quantum_cryoforge/bose_einstein_condensate.json
 a637bbb0d045d7059f74755878d6e58dc2b813f2 data/ufo/recipe/universal/quantum_cryoforge/gelid_cryotheum_massive.json
 2280fcb8d19beed4d0fb77b4379dd3ee7a646b00 data/ufo/recipe/universal/quantum_cryoforge/stable_coolant_t3.json
 3928f765a3d3d324af9b5ca899136ae016605a52 data/ufo/recipe/universal/quantum_processor_assembler/dimensional_processor.json

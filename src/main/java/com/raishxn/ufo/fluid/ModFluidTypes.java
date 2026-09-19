@@ -46,10 +46,10 @@ public class ModFluidTypes {
 
     public static final DeferredHolder<FluidType, FluidType> UU_AMPLIFIER_FLUID_TYPE = registerBasic(
             "uu_amplifier_fluid", "uuamplifier", 300, 1000, 0);
-    public static final DeferredHolder<FluidType, FluidType> TEMPORAL_FLUID_TYPE = registerCoolant(
+    public static final DeferredHolder<FluidType, FluidType> TEMPORAL_FLUID_TYPE = registerSpecialFluid(
             "temporal_fluid", "temporal_fluid", -300);
 
-    public static final DeferredHolder<FluidType, FluidType> SPATIAL_FLUID_TYPE = registerCoolant(
+    public static final DeferredHolder<FluidType, FluidType> SPATIAL_FLUID_TYPE = registerSpecialFluid(
             "spatial_fluid", "spatial_fluid", -300);
 
 
@@ -81,6 +81,20 @@ public class ModFluidTypes {
                     .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_POWDER_SNOW)
     ));
 
+    public static final DeferredHolder<FluidType, FluidType> BOSE_EINSTEIN_CONDENSATE_TYPE = FLUID_TYPES.register("bose_einstein_condensate", () -> new BaseFluidType(
+            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/bose_einstein_condensate"),
+            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/bose_einstein_condensate_flow"),
+            ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/bose_einstein_condensate"),
+            0xFFFFFFFF,
+            new Vector3f(0.45f, 0.85f, 1.0f),
+            FluidType.Properties.create()
+                    .temperature(-273)
+                    .density(4000)
+                    .viscosity(7000)
+                    .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_POWDER_SNOW)
+                    .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_POWDER_SNOW)
+    ));
+
 
 
     private static DeferredHolder<FluidType, FluidType> registerBasic(String name, String textureName, int temp, int density, int lightLevel) {
@@ -99,7 +113,7 @@ public class ModFluidTypes {
         ));
     }
 
-    private static DeferredHolder<FluidType, FluidType> registerCoolant(String name, String textureName, int temperature) {
+    private static DeferredHolder<FluidType, FluidType> registerSpecialFluid(String name, String textureName, int temperature) {
         ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "block/fluid/" + textureName);
         return FLUID_TYPES.register(name, () -> new BaseFluidType(
                 texture, texture, texture,
@@ -107,7 +121,7 @@ public class ModFluidTypes {
                 new Vector3f(0.5f, 0.8f, 1.0f), // Neblina azulada
                 FluidType.Properties.create()
                         .temperature(temperature)
-                        .density(3000)     // Densidade padrão para seus coolants
+                        .density(3000)
                         .viscosity(6000)   // Viscosidade padrão para seus coolants
                         .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL_POWDER_SNOW)
                         .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY_POWDER_SNOW)

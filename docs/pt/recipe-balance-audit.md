@@ -79,13 +79,11 @@ Os IDs abaixo aparecem registrados, mas não aparecem como outputs nas receitas 
 - `ufo:ufo_greatsword`
 - `ufo:ufo_bow`
 - `ufo:ufo_fishing_rod`
-- `ufo:bismuth`
 
 Recomendação:
 
 - adicionar receitas reais para todas as partes estruturais e hatches do Stellar Nexus
 - ou adicionar receitas para as ferramentas de energia, ou convertê-las em transformações ou upgrades a partir da `ufo:ufo_staff`
-- ou implementar uma fonte de gameplay para `bismuth`, ou removê-lo da progressão do jogador
 
 ### IDs Provavelmente Intencionais Sem Crafting Direto
 

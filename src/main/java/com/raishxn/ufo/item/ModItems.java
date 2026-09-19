@@ -94,9 +94,6 @@ public class ModItems {
     public static final DeferredItem<Item> QUANTUM_WIRELESS_TOOL = ITEMS.register("quantum_wireless_tool",
             () -> new QuantumWirelessToolItem(new Item.Properties()));
 
-    public static final DeferredItem<Item> BISMUTH = ITEMS.register("bismuth",
-            () -> new Item(new Item.Properties()));
-
     public static final DeferredItem<Item> DIMENSIONAL_PROCESSOR_PRESS = ITEMS.register("dimensional_processor_press",
             () -> new AnimatedNameItem(new Item.Properties(),
                     ChatFormatting.WHITE,
@@ -384,6 +381,9 @@ public class ModItems {
 
     public static final DeferredItem<Item> STABLE_COOLANT_BUCKET = ITEMS.register("stable_coolant_bucket",
             () -> new BucketItem(ModFluids.SOURCE_STABLE_COOLANT.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    public static final DeferredItem<Item> BOSE_EINSTEIN_CONDENSATE_BUCKET = ITEMS.register("bose_einstein_condensate_bucket",
+            () -> new BucketItem(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     public static final DeferredItem<Item> TEMPORAL_FLUID_BUCKET = ITEMS.register("temporal_fluid_bucket",
             () -> new BucketItem(ModFluids.SOURCE_TEMPORAL_FLUID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));

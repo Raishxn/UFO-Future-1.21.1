@@ -4,7 +4,7 @@
     "ufo:flowing_gelid_cryotheum",
     "ufo:source_stable_coolant",
     "ufo:flowing_stable_coolant",
-    "ufo:source_temporal_fluid",
-    "ufo:flowing_temporal_fluid"
+    "ufo:source_bose_einstein_condensate",
+    "ufo:flowing_bose_einstein_condensate"
   ]
 }

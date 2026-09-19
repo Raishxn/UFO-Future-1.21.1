@@ -5,6 +5,7 @@ import appeng.api.config.YesNo;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.implementations.blockentities.ICraftingMachine;
 import appeng.helpers.patternprovider.PatternProviderLogic;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -78,7 +79,7 @@ public class QuantumPatternProviderLogic extends PatternProviderLogic {
         // A legacy Hatch never becomes a multiblock endpoint again. Keep this
         // stale-world guard so an old controller link cannot eject elsewhere.
         if (level != null && controllerPos != null) {
-            var controllerBe = level.getBlockEntity(controllerPos);
+            var controllerBe = LoadedBlockEntityLookup.get(level, controllerPos);
             if (controllerBe instanceof ICraftingMachine machine && machine.acceptsPlans()) {
                 Direction direction = hatch.getPushDirectionForController();
                 if (machine.pushPattern(patternDetails, inputHolder, direction)) {
@@ -163,7 +164,7 @@ public class QuantumPatternProviderLogic extends PatternProviderLogic {
         }
 
         List<MultiblockRoute> routes = new ArrayList<>();
-        if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof ICraftingMachine localMachine) {
+        if (controllerPos != null && LoadedBlockEntityLookup.get(level, controllerPos) instanceof ICraftingMachine localMachine) {
             routes.add(new MultiblockRoute(localMachine, hatch.getPushDirectionForController()));
         }
 

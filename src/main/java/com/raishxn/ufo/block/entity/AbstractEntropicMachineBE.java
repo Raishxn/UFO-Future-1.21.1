@@ -407,7 +407,8 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         if (LoadedBlockEntityLookup.get(this.level, this.worldPosition) != this) {
             return;
         }
-        BlockState current = this.getBlockState();
+        BlockState current = LoadedBlockEntityLookup.getBlockState(this.level, this.worldPosition);
+        if (current == null) return;
         if (current.getBlock() instanceof com.raishxn.ufo.block.AbstractEntropicMachineBlock<?> block) {
             BlockState updated = current
                     .setValue(com.raishxn.ufo.block.AbstractEntropicMachineBlock.FORMED, this.assembled)
@@ -432,7 +433,7 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         }
 
         for (BlockPos partPos : this.parts) {
-            var part = this.level.getBlockEntity(partPos);
+            var part = LoadedBlockEntityLookup.get(this.level, partPos);
             if (part instanceof AbstractEntropicMachineBE machine
                     && machine.isAssembled()
                     && machine.getClass() == this.getClass()

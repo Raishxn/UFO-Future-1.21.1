@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "ufo:block/graviton_plated_casing"
+    "all": "ufo:block/casings/graviton_plated_casing"
   }
 }

@@ -30,7 +30,7 @@ Overclock multiplies the result by five.
 |---|---:|
 | Gelid Cryotheum | 1 cooling / mB |
 | Stable Coolant | 4 cooling / mB |
-| Temporal Fluid | 8 cooling / mB |
+| Bose-Einstein Condensate | 16 cooling / mB |
 
 Field tier multiplies effective cooling. Server configuration may change each
 efficiency or disable a fluid by setting it to zero.

@@ -12,8 +12,8 @@ package com.raishxn.ufo.block.entity.processing;
  * energy/thermal metrics milestone first.</p>
  */
 public final class CoolantTuning {
-    private static final ThermalSystem.CoolantProfile TEMPORAL_PROFILE =
-            new ThermalSystem.CoolantProfile(100L, 1L, 10L);
+    private static final ThermalSystem.CoolantProfile BOSE_EINSTEIN_PROFILE =
+            new ThermalSystem.CoolantProfile(200L, 1L, 10L);
     private static final ThermalSystem.CoolantProfile STABLE_PROFILE =
             new ThermalSystem.CoolantProfile(50L, 1L, 10L);
     private static final ThermalSystem.CoolantProfile GELID_PARALLEL_PROFILE =
@@ -30,13 +30,13 @@ public final class CoolantTuning {
 
     /** Coolant families resolved by exact fluid identity. */
     public enum CoolantKind {
-        TEMPORAL, STABLE, STARLIGHT, GELID, GENERIC
+        BOSE_EINSTEIN, STABLE, STARLIGHT, GELID, GENERIC
     }
 
     /** Profiles used by the parallel controllers (and the Stellar facade). */
     public static ThermalSystem.CoolantProfile parallelProfile(CoolantKind kind) {
         return switch (kind) {
-            case TEMPORAL -> TEMPORAL_PROFILE;
+            case BOSE_EINSTEIN -> BOSE_EINSTEIN_PROFILE;
             case STABLE -> STABLE_PROFILE;
             case GELID -> GELID_PARALLEL_PROFILE;
             case STARLIGHT, GENERIC -> FALLBACK_PROFILE;
@@ -46,7 +46,7 @@ public final class CoolantTuning {
     /** Profiles preserved from the DMA's own balance table. */
     public static ThermalSystem.CoolantProfile dmaProfile(CoolantKind kind) {
         return switch (kind) {
-            case TEMPORAL -> TEMPORAL_PROFILE;
+            case BOSE_EINSTEIN -> BOSE_EINSTEIN_PROFILE;
             case STABLE -> STABLE_PROFILE;
             case STARLIGHT -> STARLIGHT_DMA_PROFILE;
             case GELID -> GELID_DMA_PROFILE;

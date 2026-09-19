@@ -210,8 +210,5 @@ public class ModCapabilityEvents {
                         new UfoPersistentEnergyStorage(stack, ModDataComponents.ENERGY.get(), 1_000_000_000, 1000000, 0),
                 ModArmor.UFO_BOOTS.get()
         );
-        if (ModList.get().isLoaded("mekanism")) {
-            com.raishxn.ufo.compat.mekanism.MekanismArmorCompat.registerCapabilities(event);
-        }
     }
 }

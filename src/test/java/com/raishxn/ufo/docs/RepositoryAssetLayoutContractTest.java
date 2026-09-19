@@ -62,15 +62,24 @@ class RepositoryAssetLayoutContractTest {
     }
 
     @Test
-    void legacyTextureTreesStayRemoved() {
+    void textureTreesStayOrganized() throws IOException {
         List<Path> forbidden = List.of(
-                UFO_TEXTURES.resolve("block/crafting"),
                 UFO_TEXTURES.resolve("block/quantum_processor_assembler"),
                 UFO_TEXTURES.resolve("block/quantum_slicer"),
                 UFO_TEXTURES.resolve("ufoset"),
                 UFO_TEXTURES.resolve("item/ufoset/armors"));
         for (Path path : forbidden) {
             assertFalse(Files.exists(path), "legacy texture tree returned: " + path);
+        }
+
+        for (String directory : List.of("block/casings", "block/crafting", "block/machines")) {
+            assertTrue(Files.isDirectory(UFO_TEXTURES.resolve(directory)),
+                    "canonical texture tree missing: " + directory);
+        }
+
+        try (Stream<Path> blockRoot = Files.list(UFO_TEXTURES.resolve("block"))) {
+            assertTrue(blockRoot.noneMatch(Files::isRegularFile),
+                    "block textures must be grouped in named subdirectories");
         }
     }
 
@@ -99,10 +108,8 @@ class RepositoryAssetLayoutContractTest {
                 UFO_TEXTURES.resolve("block/multiblock/entropy_singularity_casing_ctm.png"),
                 UFO_TEXTURES.resolve("block/multiblock/quantum_hyper_mechanical_casing.png"),
                 UFO_TEXTURES.resolve("block/multiblock/quantum_hyper_mechanical_casing_ctm.png"),
-                UFO_TEXTURES.resolve("block/multiblock/coolant_fluid_hatch_overlay.png"),
                 UFO_TEXTURES.resolve("item/ufoset/axe.png"),
                 UFO_TEXTURES.resolve("item/ufoset/animations/animations_ufo.png"),
-                UFO_TEXTURES.resolve("models/armor/astral_nexus_layer_1.png"),
                 UFO_TEXTURES.resolve("gui/universalguipages.png"));
         for (Path path : required) {
             assertTrue(Files.isRegularFile(path), "required asset moved or removed: " + path);

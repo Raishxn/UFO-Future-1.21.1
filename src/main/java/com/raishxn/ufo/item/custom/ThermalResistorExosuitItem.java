@@ -7,6 +7,7 @@ import com.raishxn.ufo.event.ArmorEffectRefreshPolicy;
 import com.raishxn.ufo.item.ModArmorMaterials;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -97,23 +98,23 @@ public class ThermalResistorExosuitItem extends ArmorItem implements IThermalArm
     // --- TOOLTIPS COMPLETAMENTE ATUALIZADOS ---
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("§6Thermal Resistor Exosuit"));
-        tooltip.add(Component.literal("§7Projetada para resistir ao impossível."));
-        tooltip.add(Component.literal("§8Camadas de matéria densa dissipam calor extremo."));
+        tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.title").withStyle(ChatFormatting.GOLD));
+        tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.description").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.layers").withStyle(ChatFormatting.DARK_GRAY));
         tooltip.add(Component.empty());
-        tooltip.add(Component.literal("§b+100% Resistência Térmica"));
-        tooltip.add(Component.literal("§cImune ao Calor do DMA"));
-        tooltip.add(Component.literal("§9Refrigeração Integrada"));
+        tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.resistance").withStyle(ChatFormatting.AQUA));
+        tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.dma_immunity").withStyle(ChatFormatting.RED));
+        tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.cooling").withStyle(ChatFormatting.BLUE));
         tooltip.add(Component.empty());
 
         if (Screen.hasShiftDown()) {
-            tooltip.add(Component.literal("§5[Bônus do Conjunto Completo]"));
-            tooltip.add(Component.literal("§bImune a Fogo e Lava"));
-            tooltip.add(Component.literal("§bImune a Calor Industrial"));
-            tooltip.add(Component.literal("§bRemoção Instantânea de Queimaduras"));
-            tooltip.add(Component.literal("§bEstabilidade Térmica Total"));
+            tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.full_set").withStyle(ChatFormatting.DARK_PURPLE));
+            tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.fire_lava").withStyle(ChatFormatting.AQUA));
+            tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.industrial_heat").withStyle(ChatFormatting.AQUA));
+            tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.extinguish").withStyle(ChatFormatting.AQUA));
+            tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.stability").withStyle(ChatFormatting.AQUA));
         } else {
-            tooltip.add(Component.literal("§8Pressione <SHIFT> para detalhes."));
+            tooltip.add(Component.translatable("tooltip.ufo.thermal_exosuit.shift").withStyle(ChatFormatting.DARK_GRAY));
         }
 
         super.appendHoverText(stack, context, tooltip, flag);

@@ -79,13 +79,11 @@ These IDs appear registered but do not appear as outputs in the audited recipes:
 - `ufo:ufo_greatsword`
 - `ufo:ufo_bow`
 - `ufo:ufo_fishing_rod`
-- `ufo:bismuth`
 
 Recommendation:
 
 - add real recipes for all Stellar Nexus structural parts and hatches
 - either add recipes for the energy tools or convert them into transforms or upgrades from `ufo:ufo_staff`
-- either implement a gameplay source for `bismuth` or remove it from player-facing progression
 
 ### Likely Intentional Non-Crafting IDs
 

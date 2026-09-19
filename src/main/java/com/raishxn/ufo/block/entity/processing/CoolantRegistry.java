@@ -17,8 +17,8 @@ public final class CoolantRegistry {
     private static final Map<Fluid, CoolantTuning.CoolantKind> KIND_BY_FLUID = new IdentityHashMap<>();
 
     static {
-        register(CoolantTuning.CoolantKind.TEMPORAL,
-                ModFluids.SOURCE_TEMPORAL_FLUID, ModFluids.FLOWING_TEMPORAL_FLUID);
+        register(CoolantTuning.CoolantKind.BOSE_EINSTEIN,
+                ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE, ModFluids.FLOWING_BOSE_EINSTEIN_CONDENSATE);
         register(CoolantTuning.CoolantKind.STABLE,
                 ModFluids.SOURCE_STABLE_COOLANT, ModFluids.FLOWING_STABLE_COOLANT);
         register(CoolantTuning.CoolantKind.STARLIGHT,

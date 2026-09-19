@@ -13,12 +13,16 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.level.PistonEvent;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @EventBusSubscriber(modid = UfoMod.MOD_ID)
 public final class MultiblockStructureEvents {
+    private static volatile boolean acceptingChunkCallbacks;
+
     private MultiblockStructureEvents() {
     }
 
@@ -62,17 +66,38 @@ public final class MultiblockStructureEvents {
 
     @SubscribeEvent
     public static void onChunkLoaded(ChunkEvent.Load event) {
-        if (!(event.getLevel() instanceof ServerLevel level)) return;
+        if (!acceptingChunkCallbacks || !(event.getLevel() instanceof ServerLevel level)) return;
         long chunkPos = event.getChunk().getPos().toLong();
         // ChunkEvent.Load fires before FULL promotion; defer every level/BE access.
-        level.getServer().execute(() -> invalidateChunk(level, chunkPos, false));
+        level.getServer().execute(() -> {
+            if (acceptingChunkCallbacks) invalidateChunk(level, chunkPos, false);
+        });
     }
 
     @SubscribeEvent
     public static void onChunkUnloaded(ChunkEvent.Unload event) {
-        if (!(event.getLevel() instanceof ServerLevel level)) return;
+        if (!acceptingChunkCallbacks || !(event.getLevel() instanceof ServerLevel level)) return;
         long chunkPos = event.getChunk().getPos().toLong();
-        level.getServer().execute(() -> invalidateChunk(level, chunkPos, true));
+        level.getServer().execute(() -> {
+            if (acceptingChunkCallbacks) invalidateChunk(level, chunkPos, true);
+        });
+    }
+
+    @SubscribeEvent
+    public static void onServerAboutToStart(ServerAboutToStartEvent event) {
+        StructureMembershipIndex.INSTANCE.reset();
+        acceptingChunkCallbacks = true;
+    }
+
+    @SubscribeEvent
+    public static void onServerStopping(ServerStoppingEvent event) {
+        // stopServer drains ChunkMap unload work until its queue becomes empty. Cross-chunk
+        // invalidations scheduled from an unload can mutate AE2 nodes/chunk holders and append more
+        // work to that same queue, making the "Saving World" screen spin for minutes. Clearing the
+        // transient index and closing both the event and already-enqueued callback paths makes
+        // shutdown teardown read-only. A fresh server lifecycle rebuilds the index from chunk loads.
+        acceptingChunkCallbacks = false;
+        StructureMembershipIndex.INSTANCE.reset();
     }
 
     private static void invalidate(ServerLevel level, BlockPos changedPos) {

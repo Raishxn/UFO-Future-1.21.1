@@ -23,7 +23,7 @@ Field generators are the stabilization blocks used throughout the advanced UFO m
 
 - **MK1** prefers Gelid Cryotheum: **1 HU per 120 mB**, up to **1000 mB/tick**.
 - **MK2** prefers Stable Coolant: **50 HU per mB**, up to **10 mB/tick**.
-- **MK3** prefers Temporal Fluid: **100 HU per mB**, up to **10 mB/tick**.
+- **MK3** prefers Bose-Einstein Condensate: **200 HU per mB**, up to **10 mB/tick**.
 
 ## Stellar Nexus Fields
 

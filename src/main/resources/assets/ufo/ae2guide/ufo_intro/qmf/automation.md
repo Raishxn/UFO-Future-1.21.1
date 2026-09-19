@@ -39,7 +39,7 @@ Base load is **1 HU per active thread per tick**; Overclock raises the base to
 |---|---:|---:|
 | Gelid Cryotheum | 1 HU / 120 mB | 1000 mB/t |
 | Stable Coolant | 50 HU / mB | 10 mB/t |
-| Temporal Fluid | 100 HU / mB | 10 mB/t |
+| Bose-Einstein Condensate | 200 HU / mB | 10 mB/t |
 
 Safe Mode stops progress at the thermal ceiling and limits concurrency to nine.
 Catalysts can alter speed, AE cost, bonus output and heat; consult

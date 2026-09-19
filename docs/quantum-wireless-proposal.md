@@ -6,7 +6,7 @@ Status: especificação alvo; primeira etapa de infraestrutura implementada. Con
 
 - Adicionar wireless à Quantum Pattern Hatch já existente. Não criar outra hatch/provider.
 - Criar a Quantum Interface com a funcionalidade da Overloaded ME Interface do AE2 Lightning Tech, incluindo os widgets de auto-import, auto-export e wireless.
-- Usar a textura fornecida pelo usuário: `src/main/resources/assets/ufo/textures/block/quantum_interface.png`, PNG RGBA de 16 × 16.
+- Usar a textura fornecida pelo usuário: `src/main/resources/assets/ufo/textures/block/machines/quantum_interface.png`, PNG RGBA de 16 × 16.
 - Dar créditos ao AE2 Lightning Tech pelos widgets e pelas funcionalidades adaptadas.
 - Desenvolver a proposta de escolha entre speed, energy discount e heat discount para DMA e multiblocos, com personalização para modpacks.
 

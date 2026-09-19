@@ -22,7 +22,7 @@ progress at the thermal ceiling.
 |---|---:|---:|
 | Gelid Cryotheum | 1 HU / 120 mB | 1000 mB/t |
 | Stable Coolant | 50 HU / mB | 10 mB/t |
-| Temporal Fluid | 100 HU / mB | 10 mB/t |
+| Bose-Einstein Condensate | 200 HU / mB | 10 mB/t |
 
 Use per-thread pause when diagnosing one recipe without stopping unrelated
 work. Scan only concerns structure state; it does not cancel or reconstruct

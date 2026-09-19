@@ -1,7 +1,6 @@
-// 1.21.1	2026-09-08T16:54:58.592146394	Item Models: ufo
+// 1.21.1	2026-09-18T21:09:12.77907813	Item Models: ufo
 65bffe38993ea67d3302816b93f2d718431de59b assets/ufo/models/item/aether_containment_capsule.json
-d37e20c86896b1b87b1b885afa9094da5be12df5 assets/ufo/models/item/astral_nexus_helmet.json
-5b7661e3ed5dba7c93228705294756443e065fb3 assets/ufo/models/item/bismuth.json
+bda156454fde435e471bc9c381e9c83e5a416280 assets/ufo/models/item/bose_einstein_condensate_bucket.json
 c41f2c84703caa2f3a67fc73bfdb9ac21eea6eec assets/ufo/models/item/charged_enriched_neutronium_sphere.json
 86d9de77936ae4a0cbcaec6708dc4b7a7192352d assets/ufo/models/item/chrono_catalyst_t1.json
 a58b7eb61d1ee2da3b6cddfba8b58e278bc4d1de assets/ufo/models/item/chrono_catalyst_t2.json
@@ -58,10 +57,10 @@ f036495a7f5263bce8b5ef02e301c2b936904ffa assets/ufo/models/item/infinity_water_c
 5e570a403a9c85476f688a4bc63bf7afed0c2c9c assets/ufo/models/item/matterflow_catalyst_t3.json
 b17f6d9797d31d38617409394711e054d4ec4949 assets/ufo/models/item/neutron_fluid_cell_housing.json
 c5cc48f94dd3fb449cd709959ac598fe2f5bf42b assets/ufo/models/item/neutron_star_fragment_bucket.json
-72a471f184f85062616274b6bb1311f04db05bfe assets/ufo/models/item/neutron_star_fragment_dust.json
-60686a7fb6629fbd4029cd82b4b592fd579b8261 assets/ufo/models/item/neutron_star_fragment_ingot.json
-cb0f2b4a8982ab127038831ff315a0aee30c566a assets/ufo/models/item/neutron_star_fragment_nugget.json
-73d348d87c10ac29bec67afe2cf7b189ccf1c72a assets/ufo/models/item/neutron_star_fragment_rod.json
+f14791eba22ad88ddd1dd741dd054552a4a2b101 assets/ufo/models/item/neutron_star_fragment_dust.json
+f5043530c22c2f3ebfc8ab090c0b8eca07d8472d assets/ufo/models/item/neutron_star_fragment_ingot.json
+1528ee10a7dd38a8897fccc546938238696b518e assets/ufo/models/item/neutron_star_fragment_nugget.json
+198788ebdec2fdf723529758e15575621cc82891 assets/ufo/models/item/neutron_star_fragment_rod.json
 c72d19f3499381071d483fddb689d1a4b2f51473 assets/ufo/models/item/neutron_star_matter.json
 3280887d2a7d6edec7d31ffbbf94f7fd6ce4d8a2 assets/ufo/models/item/neutron_star_reservoir_beaco.json
 49112301be3851558d5c96167a8b2121a3c81113 assets/ufo/models/item/neutron_star_reservoir_core.json

@@ -87,10 +87,10 @@ estrutura citadas como fora de escopo do rebalance, pendentes de recorte.
 ### 3.7 Armadura modular UFO + remoção da Astral Nexus **[implementada; hardening pendente]**
 
 A UFO Armor já foi transformada em armadura modular: peça base, slots, 16
-cartões craftáveis, configuração server-authoritative e consumo de energia. A
+cartões craftáveis, limites server-authoritative e consumo de energia. A
 remoção/deprecação definitiva da Astral Nexus continua pendente. Antes do
-próximo release, o sistema modular ainda precisa de testes por módulo, limites
-configuráveis pelo servidor e profiling multiplayer dos módulos que pesquisam
+próximo release, o sistema modular ainda precisa de testes por módulo e
+profiling multiplayer dos módulos que pesquisam
 entidades em área.
 
 **Estado atual verificado no código (2026-09-06)**
@@ -117,8 +117,9 @@ entidades em área.
 - 15 módulos expõem um valor numérico ajustável pelo jogador
   (`UfoArmorSetting`), com min/max/step/default fixos no enum e clamp
   server-side aplicado no `SetUfoArmorModuleSettingPacket`.
-- Pendente (ver Marco 1): os limites min/max **não** são configuráveis pelo
-  servidor/modpack — não existe nenhuma chave de armadura no `UFOConfig`.
+- Os máximos dos 15 ajustes podem ser reduzidos pelo servidor/modpack em
+  `armor.moduleCaps.*` no `ufo-server.toml`; o clamp é reaplicado em cada uso,
+  inclusive velocidade e inércia de voo.
 - Pendente: não existe sistema de MK/tier por card nem conflito entre módulos.
 
 **Catálogo de módulos implementado** — 16 cards em `UfoArmorModule`

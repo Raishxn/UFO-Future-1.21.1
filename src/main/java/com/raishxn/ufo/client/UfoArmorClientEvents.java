@@ -2,6 +2,7 @@ package com.raishxn.ufo.client;
 
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.armor.UfoArmorModule;
+import com.raishxn.ufo.armor.UfoArmorModules;
 import com.raishxn.ufo.armor.UfoArmorSetting;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.item.custom.UfoArmorItem;
@@ -29,7 +30,7 @@ public final class UfoArmorClientEvents {
         boolean noHorizontalInput = !options.keyUp.isDown() && !options.keyDown.isDown()
                 && !options.keyLeft.isDown() && !options.keyRight.isDown();
         if (!noHorizontalInput) return;
-        float inertia = UfoArmorItem.moduleSetting(chest, UfoArmorSetting.FLIGHT_INERTIA) / 100.0F;
+        float inertia = UfoArmorModules.cappedSetting(chest, UfoArmorSetting.FLIGHT_INERTIA) / 100.0F;
         var movement = minecraft.player.getDeltaMovement();
         minecraft.player.setDeltaMovement(movement.x * inertia, movement.y, movement.z * inertia);
     }

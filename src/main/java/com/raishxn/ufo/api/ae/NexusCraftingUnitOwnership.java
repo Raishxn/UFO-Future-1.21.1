@@ -2,6 +2,7 @@ package com.raishxn.ufo.api.ae;
 
 import appeng.blockentity.crafting.CraftingBlockEntity;
 import com.raishxn.ufo.block.entity.QuantumComputationNexusControllerBE;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,8 +16,7 @@ public interface NexusCraftingUnitOwnership {
         NexusCraftingUnitOwnership ownership = (NexusCraftingUnitOwnership) unit;
         BlockPos controllerPos = ownership.ufo$getNexusController();
         if (controllerPos == null || unit.getLevel() == null) return false;
-        if (!unit.getLevel().isLoaded(controllerPos)) return true;
-        if (unit.getLevel().getBlockEntity(controllerPos) instanceof QuantumComputationNexusControllerBE controller
+        if (LoadedBlockEntityLookup.get(unit.getLevel(), controllerPos) instanceof QuantumComputationNexusControllerBE controller
                 && controller.canOwnModuleAt(unit.getBlockPos())) {
             return true;
         }

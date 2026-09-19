@@ -32,4 +32,13 @@ class EnergyHatchIsolationContractTest {
         assertFalse(source.contains("allowGridRelay"));
         assertTrue(source.contains("this.energyPorts.extract(needed, false)"));
     }
+
+    @Test
+    void aeHatchesExposeEveryFaceToCables() throws IOException {
+        String massiveHatch = Files.readString(ENTITIES.resolve("MassiveOutputHatchBE.java"));
+        String patternBuffer = Files.readString(ENTITIES.resolve("QuantumPatternHatchBE.java"));
+        assertTrue(massiveHatch.contains("return EnumSet.allOf(Direction.class);"));
+        assertTrue(patternBuffer.contains("return EnumSet.allOf(Direction.class);"));
+        assertFalse(massiveHatch.contains("return EnumSet.of(facing);"));
+    }
 }

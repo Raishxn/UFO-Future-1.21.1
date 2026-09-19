@@ -28,8 +28,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         // --- Blocos Simples Originais ---
-        simpleBlockWithItem(ModBlocks.QUANTUM_LATTICE_FRAME);
-        simpleBlockWithItem(ModBlocks.GRAVITON_PLATED_CASING);
+        casingBlockWithItem(ModBlocks.QUANTUM_LATTICE_FRAME);
+        casingBlockWithItem(ModBlocks.GRAVITON_PLATED_CASING);
         blockWithFluidTexture(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK, "white_dwarf_fragment");
         blockWithFluidTexture(ModBlocks.PULSAR_FRAGMENT_BLOCK, "pulsar_fragment");
         blockWithFluidTexture(ModBlocks.NEUTRON_STAR_FRAGMENT_BLOCK, "neutron_star_fragment");
@@ -73,7 +73,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         for (var tier : MegaCraftingStorageTier.values()) {
             var block = ModBlocks.CRAFTING_STORAGE_BLOCKS.get(tier);
             String registryName = block.getId().getPath();
-            ModelFile unformedModel = models().cubeAll(registryName, modLoc("block/" + registryName));
+            ModelFile unformedModel = models().cubeAll(registryName, modLoc("block/crafting/" + registryName));
             ModelFile formedModel = models().getBuilder(registryName + "_formed")
                     .customLoader(CraftingModelBuilder::new).tier(tier, false).end();
 
@@ -89,7 +89,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         for (var tier : MegaCoProcessorTier.values()) {
             var block = ModBlocks.CO_PROCESSOR_BLOCKS.get(tier);
             String registryName = block.getId().getPath();
-            ModelFile unformedModel = models().cubeAll(registryName, modLoc("block/" + registryName));
+            ModelFile unformedModel = models().cubeAll(registryName, modLoc("block/crafting/" + registryName));
             ModelFile formedModel = models().getBuilder(registryName + "_formed")
                     .customLoader(CraftingModelBuilder::new).tier(tier, true).end();
 
@@ -103,9 +103,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         }
     }
 
-    private void simpleBlockWithItem(DeferredBlock<Block> blockHolder) {
+    private void casingBlockWithItem(DeferredBlock<Block> blockHolder) {
         String registryName = blockHolder.getId().getPath();
-        ModelFile model = models().cubeAll(registryName, modLoc("block/" + registryName));
+        ModelFile model = models().cubeAll(registryName, modLoc("block/casings/" + registryName));
         simpleBlock(blockHolder.get(), model);
         simpleBlockItem(blockHolder.get(), model);
     }

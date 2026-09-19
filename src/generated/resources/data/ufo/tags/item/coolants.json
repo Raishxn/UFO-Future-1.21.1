@@ -1,7 +1,7 @@
 {
   "values": [
     "ufo:gelid_cryotheum_bucket",
-    "ufo:temporal_fluid_bucket",
-    "ufo:spatial_fluid_bucket"
+    "ufo:stable_coolant_bucket",
+    "ufo:bose_einstein_condensate_bucket"
   ]
 }

@@ -9,6 +9,7 @@ import com.raishxn.ufocore.api.port.FluidInputPort;
 import com.raishxn.ufocore.api.port.ItemPort;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.compat.mekanism.MekanismChemicalStorage;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -31,7 +32,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -107,9 +107,9 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
 
     public MassiveOutputHatchBE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        // The block model's facing is the physical AE2 connector. Keeping the
-        // other five faces closed prevents neighboring multiblock hatches from
-        // silently joining the same grid through the structure shell.
+        // All faces are valid AE2 connectors. Restricting this to the block's
+        // facing made the visible connector disagree with placement/model
+        // orientation and left the fluid hatch unable to join a grid.
         this.getMainNode()
                 .setExposedOnSides(exposedSides(state))
                 .setFlags()                          // No special flags
@@ -267,9 +267,9 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
                 || fluid == com.raishxn.ufo.fluid.ModFluids.FLOWING_STABLE_COOLANT.get()) {
             return com.raishxn.ufo.fluid.ModFluids.SOURCE_STABLE_COOLANT.get();
         }
-        if (fluid == com.raishxn.ufo.fluid.ModFluids.SOURCE_TEMPORAL_FLUID.get()
-                || fluid == com.raishxn.ufo.fluid.ModFluids.FLOWING_TEMPORAL_FLUID.get()) {
-            return com.raishxn.ufo.fluid.ModFluids.SOURCE_TEMPORAL_FLUID.get();
+        if (fluid == com.raishxn.ufo.fluid.ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get()
+                || fluid == com.raishxn.ufo.fluid.ModFluids.FLOWING_BOSE_EINSTEIN_CONDENSATE.get()) {
+            return com.raishxn.ufo.fluid.ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get();
         }
         return Fluids.EMPTY;
     }
@@ -368,20 +368,23 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
     }
 
     private MultiblockCasingStyle casingStyleFor(BlockPos controllerPos) {
-        if (this.level != null && this.level.getBlockEntity(controllerPos) instanceof StellarNexusControllerBE) {
+        if (this.level != null
+                && LoadedBlockEntityLookup.get(this.level, controllerPos) instanceof StellarNexusControllerBE) {
             return MultiblockCasingStyle.ENTROPY;
         }
         return MultiblockCasingStyle.QUANTUM;
     }
 
     private void updateCasingStyle(MultiblockCasingStyle style) {
-        if (this.level == null || this.level.isClientSide()
-                || !this.getBlockState().hasProperty(com.raishxn.ufo.block.MassiveOutputHatchBlock.CASING_STYLE)
-                || this.getBlockState().getValue(com.raishxn.ufo.block.MassiveOutputHatchBlock.CASING_STYLE) == style) {
+        if (this.level == null || this.level.isClientSide()) return;
+        BlockState state = LoadedBlockEntityLookup.getBlockState(this.level, this.worldPosition);
+        if (state == null
+                || !state.hasProperty(com.raishxn.ufo.block.MassiveOutputHatchBlock.CASING_STYLE)
+                || state.getValue(com.raishxn.ufo.block.MassiveOutputHatchBlock.CASING_STYLE) == style) {
             return;
         }
         this.level.setBlock(this.worldPosition,
-                this.getBlockState().setValue(com.raishxn.ufo.block.MassiveOutputHatchBlock.CASING_STYLE, style),
+                state.setValue(com.raishxn.ufo.block.MassiveOutputHatchBlock.CASING_STYLE, style),
                 net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
     }
 
@@ -417,10 +420,7 @@ public class MassiveOutputHatchBE extends AENetworkedBlockEntity
     }
 
     static Set<Direction> exposedSides(BlockState state) {
-        Direction facing = state.hasProperty(DirectionalBlock.FACING)
-                ? state.getValue(DirectionalBlock.FACING)
-                : Direction.NORTH;
-        return EnumSet.of(facing);
+        return EnumSet.allOf(Direction.class);
     }
 
     public void refreshGridConnection() {

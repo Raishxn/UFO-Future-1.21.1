@@ -7,6 +7,7 @@ import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
 import com.raishxn.ufo.block.entity.QuantumPatternHatchBE;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -50,7 +51,8 @@ public class QuantumPatternHatchBlock extends PatternProviderBlock {
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof QuantumPatternHatchBE hatch) {
             var controllerPos = hatch.getControllerPos();
-            if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
+            if (controllerPos != null
+                    && LoadedBlockEntityLookup.get(level, controllerPos) instanceof IMultiblockController controller) {
                 controller.removePart(pos);
             }
             // Do not change CASING_STYLE here: this hook runs inside the
@@ -74,7 +76,7 @@ public class QuantumPatternHatchBlock extends PatternProviderBlock {
     }
 
     private static void markControllerDirty(Level level, BlockPos controllerPos) {
-        BlockEntity entity = level.getBlockEntity(controllerPos);
+        BlockEntity entity = LoadedBlockEntityLookup.get(level, controllerPos);
         if (entity instanceof AbstractSimpleMultiblockControllerBE controller) {
             controller.markStructureDirty();
         } else if (entity instanceof StellarNexusControllerBE controller) {

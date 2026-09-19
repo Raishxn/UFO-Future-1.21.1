@@ -45,7 +45,7 @@ break and replace the controller while output is pending.
 ## Machine Overheats
 
 - Verify coolant is in the coolant path, not the recipe-fluid path.
-- Upgrade from Gelid Cryotheum to Stable Coolant or Temporal Fluid.
+- Upgrade from Gelid Cryotheum to Stable Coolant or Bose-Einstein Condensate.
 - Reduce active threads or disable Overclock.
 - Enable Safe Mode while tuning the installation.
 - Review catalyst heat multipliers.

@@ -16,7 +16,6 @@ public class StellarModelRegistry {
     public static final ResourceLocation BLUE_STAR = UfoMod.id("obj/blue_star");
     public static final ResourceLocation NEUTRON_STAR = UfoMod.id("obj/neutron_star");
     public static final ResourceLocation SPACE = UfoMod.id("obj/space");
-    public static final ResourceLocation CLIMBER = UfoMod.id("obj/climber");
     public static final ResourceLocation OVERWORLD = UfoMod.id("obj/overworld");
     public static final ResourceLocation THE_NETHER = UfoMod.id("obj/the_nether");
     public static final ResourceLocation THE_END = UfoMod.id("obj/the_end");
@@ -40,7 +39,6 @@ public class StellarModelRegistry {
         event.register(new ModelResourceLocation(BLUE_STAR, "standalone"));
         event.register(new ModelResourceLocation(NEUTRON_STAR, "standalone"));
         event.register(new ModelResourceLocation(SPACE, "standalone"));
-        event.register(new ModelResourceLocation(CLIMBER, "standalone"));
         event.register(new ModelResourceLocation(OVERWORLD, "standalone"));
         event.register(new ModelResourceLocation(THE_NETHER, "standalone"));
         event.register(new ModelResourceLocation(THE_END, "standalone"));

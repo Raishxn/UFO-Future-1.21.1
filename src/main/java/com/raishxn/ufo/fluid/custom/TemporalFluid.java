@@ -13,7 +13,7 @@ public abstract class TemporalFluid extends BaseFlowingFluid {
     protected TemporalFluid() {
         super(new Properties(
                 ModFluidTypes.TEMPORAL_FLUID_TYPE,
-                ModFluids.FLOWING_TEMPORAL_FLUID,
+                ModFluids.SOURCE_TEMPORAL_FLUID,
                 ModFluids.FLOWING_TEMPORAL_FLUID)
                 .bucket(ModItems.TEMPORAL_FLUID_BUCKET)
                 .block(ModBlocks.TEMPORAL_FLUID_BLOCK));

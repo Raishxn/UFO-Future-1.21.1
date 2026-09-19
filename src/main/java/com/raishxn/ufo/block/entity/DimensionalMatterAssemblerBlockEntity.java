@@ -40,6 +40,7 @@ import com.raishxn.ufo.diagnostic.MachineMetricKey;
 import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
 import com.raishxn.ufo.recipe.DimensionalMatterAssemblerRecipe;
 import com.raishxn.ufo.init.ModRecipes;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 
 import appeng.api.behaviors.ExternalStorageStrategy;
 import appeng.api.config.*;
@@ -412,7 +413,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     }
 
     private void removeBlockAfterCatastrophicExplosion() {
-        if (this.level == null || this.level.getBlockEntity(this.worldPosition) != this) {
+        if (this.level == null || LoadedBlockEntityLookup.get(this.level, this.worldPosition) != this) {
             return;
         }
 
@@ -424,7 +425,8 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             return;
         }
 
-        final BlockState current = this.level.getBlockState(this.worldPosition);
+        final BlockState current = LoadedBlockEntityLookup.getBlockState(this.level, this.worldPosition);
+        if (current == null) return;
         if (current.getBlock() instanceof DimensionalMatterAssemblerBlock) {
             final BlockState newState = current.setValue(DimensionalMatterAssemblerBlock.WORKING, working);
 

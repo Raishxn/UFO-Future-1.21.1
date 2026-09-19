@@ -46,7 +46,7 @@ exposes a native NeoForge fluid input capability for coolant automation.
   five faces are intentionally isolated from the ME grid.
 - Fluid pipes may fill the Massive Fluid Hatch from any face, including the face
   used by an ME cable. Pipe access is input-only and accepts Gelid Cryotheum,
-  Stable Coolant or Temporal Fluid; it cannot drain the tank or mix coolants.
+  Stable Coolant or Bose-Einstein Condensate; it cannot drain the tank or mix coolants.
 - Put recipe item and fluid inputs in ME storage; coolant must be delivered to the local tank.
 - Finished item and fluid outputs return to ME storage through the matching hatch.
 - The FE Energy Input Hatch accepts FE from any face through an energy cable or

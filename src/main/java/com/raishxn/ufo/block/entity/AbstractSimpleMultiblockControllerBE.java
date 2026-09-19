@@ -13,6 +13,7 @@ import com.raishxn.ufo.api.multiblock.MultiblockPattern;
 import com.raishxn.ufo.diagnostic.MachineMetricKey;
 import com.raishxn.ufo.diagnostic.MachinePerformanceRegistry;
 import com.raishxn.ufo.block.entity.processing.ParallelViewerSnapshotBudget;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
@@ -220,7 +221,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
             Set<BlockPos> matchedPartSet = new HashSet<>(matchedParts);
             for (BlockPos existingPart : this.parts) {
                 if (!matchedPartSet.contains(existingPart)
-                        && level.getBlockEntity(existingPart) instanceof IMultiblockPart part) {
+                        && LoadedBlockEntityLookup.get(level, existingPart) instanceof IMultiblockPart part) {
                     part.unlinkFromController();
                 }
             }
@@ -233,7 +234,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
                 this.parts.addAll(matchedParts);
             }
             for (BlockPos partPos : matchedParts) {
-                if (level.getBlockEntity(partPos) instanceof IMultiblockPart part
+                if (LoadedBlockEntityLookup.get(level, partPos) instanceof IMultiblockPart part
                         && !this.worldPosition.equals(part.getControllerPos())) {
                     part.linkToController(this.worldPosition);
                 }
@@ -319,7 +320,7 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         this.indexedFootprintFacing = null;
 
         for (BlockPos partPos : this.parts) {
-            if (this.level.getBlockEntity(partPos) instanceof IMultiblockPart part) {
+            if (LoadedBlockEntityLookup.get(this.level, partPos) instanceof IMultiblockPart part) {
                 part.unlinkFromController();
             }
         }

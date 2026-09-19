@@ -67,6 +67,9 @@ __pycache__/
 /docs/art/
 /docs/mockups/
 
+# Local copies retained while replacing art; never publish or commit them.
+**/*_backup_original/
+
 # Local project audits, human test scripts and internal control notes
 /.project-control/
 /CONTINUITY_LEDGER.md

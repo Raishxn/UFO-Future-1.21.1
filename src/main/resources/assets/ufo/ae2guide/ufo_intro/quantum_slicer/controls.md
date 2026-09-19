@@ -20,7 +20,7 @@ while Vibrant Glass remains strictly glass-only.
 
 Heat is 1 HU per active thread per tick normally and 5 HU while overclocked.
 Coolant follows the common ladder: Gelid Cryotheum (1 HU/120 mB), Stable
-Coolant (50 HU/mB) and Temporal Fluid (100 HU/mB). Idle cooling removes 1 HU
+Coolant (50 HU/mB) and Bose-Einstein Condensate (200 HU/mB). Idle cooling removes 1 HU
 every 40 ticks.
 
 Disconnecting AE2, reloading the world or blocking output is recoverable. Restore

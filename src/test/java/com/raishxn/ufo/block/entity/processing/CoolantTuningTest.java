@@ -31,9 +31,9 @@ class CoolantTuningTest {
 
     @Test
     void parallelTablePreservesLegacyBalance() {
-        assertEquals(100L, CoolantTuning.parallelProfile(CoolantTuning.CoolantKind.TEMPORAL).heatNumerator());
-        assertEquals(1L, CoolantTuning.parallelProfile(CoolantTuning.CoolantKind.TEMPORAL).millibucketDenominator());
-        assertEquals(10L, CoolantTuning.parallelProfile(CoolantTuning.CoolantKind.TEMPORAL).maxFlowPerTick());
+        assertEquals(200L, CoolantTuning.parallelProfile(CoolantTuning.CoolantKind.BOSE_EINSTEIN).heatNumerator());
+        assertEquals(1L, CoolantTuning.parallelProfile(CoolantTuning.CoolantKind.BOSE_EINSTEIN).millibucketDenominator());
+        assertEquals(10L, CoolantTuning.parallelProfile(CoolantTuning.CoolantKind.BOSE_EINSTEIN).maxFlowPerTick());
 
         assertEquals(50L, CoolantTuning.parallelProfile(CoolantTuning.CoolantKind.STABLE).heatNumerator());
 
@@ -50,6 +50,7 @@ class CoolantTuningTest {
 
     @Test
     void dmaTablePreservesLegacyBalance() {
+        assertEquals(200L, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.BOSE_EINSTEIN).heatNumerator());
         assertEquals(30L, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.STARLIGHT).heatNumerator());
         assertEquals(1L, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.STARLIGHT).millibucketDenominator());
         assertEquals(10L, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.STARLIGHT).maxFlowPerTick());
@@ -59,7 +60,6 @@ class CoolantTuningTest {
         assertEquals(24L, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.GELID).millibucketDenominator());
         assertEquals(1000L, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.GELID).maxFlowPerTick());
 
-        assertEquals(100L, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.TEMPORAL).heatNumerator());
         assertEquals(50L, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.STABLE).heatNumerator());
         assertEquals(15L, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.GENERIC).heatNumerator());
     }
@@ -69,8 +69,8 @@ class CoolantTuningTest {
         long[][] cases = {
                 {100, 1000}, // gelid boundary: full bucket
                 {100, 500}, // gelid: available limits cooling
-                {99, 10}, // temporal: legacy floor rounds to one mB
-                {150, 10}, // temporal: legacy leaves residue
+                {99, 10}, // stable: legacy floor rounds to one mB
+                {150, 10}, // stable: exact multiple
                 {7, 10}, // generic: legacy overshoots by rounding up to one mB
                 {60, 10}, // stable: exact multiple
                 {1, 10}, // minimum heat
@@ -79,11 +79,11 @@ class CoolantTuningTest {
         CoolantTuning.CoolantKind[] kinds = {
                 CoolantTuning.CoolantKind.GELID,
                 CoolantTuning.CoolantKind.GELID,
-                CoolantTuning.CoolantKind.TEMPORAL,
-                CoolantTuning.CoolantKind.TEMPORAL,
+                CoolantTuning.CoolantKind.STABLE,
+                CoolantTuning.CoolantKind.STABLE,
                 CoolantTuning.CoolantKind.GENERIC,
                 CoolantTuning.CoolantKind.STABLE,
-                CoolantTuning.CoolantKind.TEMPORAL,
+                CoolantTuning.CoolantKind.STABLE,
                 CoolantTuning.CoolantKind.STABLE,
         };
 
@@ -114,8 +114,8 @@ class CoolantTuningTest {
         // Legacy math subtracted amount * heatPerMB even when it exceeded the
         // temperature (clamped afterwards); the shared planner removes exactly the
         // planned heat with the same mB cost.
-        var plan = ThermalSystem.planCooling(99, 10, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.TEMPORAL));
-        assertEquals(1L, plan.requestedMillibuckets());
+        var plan = ThermalSystem.planCooling(99, 10, CoolantTuning.dmaProfile(CoolantTuning.CoolantKind.STABLE));
+        assertEquals(2L, plan.requestedMillibuckets());
         assertEquals(99L, plan.heatRemoved());
     }
 }

@@ -29,7 +29,6 @@ public class ModItemModelProvider extends ItemModelProvider {
     private static final ResourceLocation GENERATED_PARENT = ResourceLocation.withDefaultNamespace("item/generated");
     @Override
         protected void registerModels() {
-        basicItem(ModItems.BISMUTH.get());
         basicItem(ModItems.UFO_UPGRADE_CARD.get());
         ModItems.UFO_ARMOR_MODULE_CARDS.forEach(card -> basicItem(card.get()));
         basicItem(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
@@ -44,18 +43,10 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.WHITE_DWARF_FRAGMENT_ROD.get());
         basicItem(ModItems.WHITE_DWARF_FRAGMENT_DUST.get());
         basicItem(ModItems.WHITE_DWARF_FRAGMENT_NUGGET.get());
-        withExistingParent(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.getId().getPath(), GENERATED_PARENT)
-                .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_ingot"))
-                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_ingot_overlay"));
-        withExistingParent(ModItems.NEUTRON_STAR_FRAGMENT_NUGGET.getId().getPath(), GENERATED_PARENT)
-                .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_nugget"))
-                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_nugget_overlay"));
-        withExistingParent(ModItems.NEUTRON_STAR_FRAGMENT_ROD.getId().getPath(), GENERATED_PARENT)
-                .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_rod"))
-                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_rod_overlay"));
-        withExistingParent(ModItems.NEUTRON_STAR_FRAGMENT_DUST.getId().getPath(), GENERATED_PARENT)
-                .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_dust"))
-                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/neutron_star_fragment_dust_overlay"));
+        basicItem(ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get());
+        basicItem(ModItems.NEUTRON_STAR_FRAGMENT_NUGGET.get());
+        basicItem(ModItems.NEUTRON_STAR_FRAGMENT_ROD.get());
+        basicItem(ModItems.NEUTRON_STAR_FRAGMENT_DUST.get());
         basicItem(ModItems.PULSAR_FRAGMENT_INGOT.get());
         basicItem(ModItems.PULSAR_FRAGMENT_DUST.get());
         basicItem(ModItems.PULSAR_FRAGMENT_NUGGET.get());
@@ -117,7 +108,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModArmor.UFO_CHESTPLATE.get());
         basicItem(ModArmor.UFO_LEGGINGS.get());
         basicItem(ModArmor.UFO_BOOTS.get());
-        basicItem(ModArmor.ASTRAL_NEXUS_HELMET.get());
         basicItem(ModArmor.THERMAL_RESISTOR_BOOTS.get());
         basicItem(ModArmor.THERMAL_RESISTOR_CHEST.get());
         basicItem(ModArmor.THERMAL_RESISTOR_MASK.get());
@@ -210,6 +200,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         dynamicBucketItem(ModItems.UU_AMPLIFIER_BUCKET, ModFluids.SOURCE_UU_AMPLIFIER_FLUID);
         dynamicBucketItem(ModItems.GELID_CRYOTHEUM_BUCKET, ModFluids.SOURCE_GELID_CRYOTHEUM);
         dynamicBucketItem(ModItems.STABLE_COOLANT_BUCKET, ModFluids.SOURCE_STABLE_COOLANT);
+        dynamicBucketItem(ModItems.BOSE_EINSTEIN_CONDENSATE_BUCKET, ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE);
         dynamicBucketItem(ModItems.TEMPORAL_FLUID_BUCKET, ModFluids.SOURCE_TEMPORAL_FLUID);
         dynamicBucketItem(ModItems.SPATIAL_FLUID_BUCKET, ModFluids.SOURCE_SPATIAL_FLUID);
 

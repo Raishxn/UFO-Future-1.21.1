@@ -31,7 +31,7 @@ The **Quantum Cryoforge** is the universal multiblock dedicated to large-scale c
 
 - **Gelid Cryotheum** removes **1 HU per 120 mB**, up to **1000 mB/tick**.
 - **Stable Coolant** removes **50 HU per mB**, up to **10 mB/tick**.
-- **Temporal Fluid** removes **100 HU per mB**, up to **10 mB/tick**.
+- **Bose-Einstein Condensate** removes **200 HU per mB**, up to **10 mB/tick**.
 
 ## Stable Coolant Gate
 
@@ -53,7 +53,7 @@ Supply FE through an energy cable to the energy hatch's local reservoir.
 Processing never draws its fuel from AE2 grid power.
 
 Coolant is consumed **only from the fluid hatch's local tank** (16,000,000 mB).
-Supply Gelid Cryotheum, Stable Coolant or Temporal Fluid using external fluid
+Supply Gelid Cryotheum, Stable Coolant or Bose-Einstein Condensate using external fluid
 pipes or an explicitly configured export device. Controllers never fetch coolant
 from ME storage automatically.
 

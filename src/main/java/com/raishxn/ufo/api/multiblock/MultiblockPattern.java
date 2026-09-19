@@ -1,5 +1,7 @@
 package com.raishxn.ufo.api.multiblock;
 
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
@@ -172,7 +174,8 @@ public class MultiblockPattern {
             LocalOffset offset = cell.offset();
             BlockPos worldPos = getRotatedPos(controllerPos, offset.x(), offset.y(), offset.z(), facing);
 
-            if (!level.isLoaded(worldPos)) {
+            BlockState state = LoadedBlockEntityLookup.getBlockState(level, worldPos);
+            if (state == null) {
                 valid = false;
                 hasUnloadedPositions = true;
                 PatternError err = new PatternError(worldPos, Component.literal("Chunk not loaded"));
@@ -184,7 +187,6 @@ public class MultiblockPattern {
                 continue;
             }
 
-            BlockState state = level.getBlockState(worldPos);
             if (!cell.predicate().test(state, level, worldPos)) {
                 valid = false;
                 PatternError err = new PatternError(worldPos, cell.expected());
@@ -254,13 +256,13 @@ public class MultiblockPattern {
                     if (worldPos.equals(controllerPos)) continue;
 
                     if (!level.isInWorldBounds(worldPos)) continue;
-                    if (!level.hasChunk(SectionPos.blockToSectionCoord(worldPos.getX()), SectionPos.blockToSectionCoord(worldPos.getZ()))) continue;
+                    BlockState currentState = LoadedBlockEntityLookup.getBlockState(level, worldPos);
+                    if (currentState == null) continue;
 
                     BlockPredicate predicate = legend.get(c);
                     BlockState targetState = defaultStates.get(c);
 
                     if (predicate != null && targetState != null) {
-                        BlockState currentState = level.getBlockState(worldPos);
                         if (!predicate.test(currentState, level, worldPos)) {
                             level.setBlockAndUpdate(worldPos, targetState);
                         }

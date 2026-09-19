@@ -34,13 +34,11 @@ Some UFO Future textures are based on, adapted from, or inspired by work from th
 - AE2 Lightning Tech: its interactive multiblock preview, auto-build architecture, and compact connected-texture geometry were ported and adapted for UFO Future under LGPL-3.0. The `quick_build.png` toolbar icon is redistributed under CC BY-NC-SA 3.0 with attribution to the AE2 Lightning Tech contributors: https://github.com/ae2lt/AE2-Lightning-Tech
 
 Assets that the provenance audit traced to all-rights-reserved projects — Thermal
-Foundation's `gelid_cryotheum_flow.png` and `gelid_cryotheum_still.png`, and
-Astral Sorcery's `liquid_starlight.png` — were removed from the repository on
-2026-09-17. Their resource locations are still consumed by
-`src/main/java/com/raishxn/ufo/fluid/ModFluidTypes.java` and must be re-created with
-original art. Never reintroduce a third-party texture without a license that permits
-redistribution; [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) is the
-authoritative list and `tools/check-texture-provenance.py` checks it.
+Foundation's former cryotheum sprites and Astral Sorcery's former liquid-starlight
+sprite — were removed and replaced with original art for 3.0. Never reintroduce a
+third-party texture without a license that permits redistribution;
+[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) is the authoritative list and
+`tools/check-texture-provenance.py` checks it.
 
 The Quantum Wireless two-state toolbar widget adapts AE2 Lightning Tech's TextureToggleButton. Eight associated mode/import/export/speed icons are redistributed unchanged under CC BY-NC-SA 3.0. See [the provenance inventory](docs/credits/ae2-lightning-wireless.md) and the bundled `assets/ufo/AE2LT-WIRELESS-NOTICE.md` for the source revision, file list and licenses. Quantum Interface functional parity is still in progress.
 

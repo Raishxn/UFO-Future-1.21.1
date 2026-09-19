@@ -92,6 +92,9 @@ public class ModBlocks extends BlockRegistry {
     public static final DeferredBlock<LiquidBlock> STABLE_COOLANT_BLOCK = BLOCKS.register("stable_coolant_block",
             () -> new LiquidBlock(ModFluids.SOURCE_STABLE_COOLANT.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 
+    public static final DeferredBlock<LiquidBlock> BOSE_EINSTEIN_CONDENSATE_BLOCK = BLOCKS.register("bose_einstein_condensate_block",
+            () -> new LiquidBlock(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
+
     public static final DeferredBlock<LiquidBlock> TEMPORAL_FLUID_BLOCK = BLOCKS.register("temporal_fluid_block",
             () -> new LiquidBlock(ModFluids.SOURCE_TEMPORAL_FLUID.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()));
 

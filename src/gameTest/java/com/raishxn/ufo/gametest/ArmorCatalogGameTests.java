@@ -86,8 +86,23 @@ public final class ArmorCatalogGameTests {
             // A crafted packet carries a VAR_INT, so the clamp has to hold at the wire extremes.
             helper.assertTrue(UFOConfig.clampArmorSetting(setting, Integer.MIN_VALUE) == setting.min(),
                     setting + " does not clamp the smallest wire value to its minimum");
-            helper.assertTrue(UFOConfig.clampArmorSetting(setting, Integer.MAX_VALUE) == setting.max(),
-                    setting + " does not clamp the largest wire value to its maximum");
+            helper.assertTrue(UFOConfig.clampArmorSetting(setting, Integer.MAX_VALUE) == cap,
+                    setting + " does not clamp the largest wire value to its server cap");
+        }
+
+        Object configured = UFOConfig.SERVER_SPEC.getValues().get("armor.moduleCaps.flight_speed");
+        helper.assertTrue(configured instanceof net.neoforged.neoforge.common.ModConfigSpec.IntValue,
+                "flight_speed has no server config value");
+        var flightSpeed = (net.neoforged.neoforge.common.ModConfigSpec.IntValue) configured;
+        int original = flightSpeed.get();
+        try {
+            flightSpeed.set(25);
+            helper.assertTrue(UFOConfig.armorCap(UfoArmorSetting.FLIGHT_SPEED) == 25,
+                    "the loaded server config does not control the flight speed cap");
+            helper.assertTrue(UFOConfig.clampArmorSetting(UfoArmorSetting.FLIGHT_SPEED, Integer.MAX_VALUE) == 25,
+                    "flight speed bypasses its configured server cap");
+        } finally {
+            flightSpeed.set(original);
         }
         helper.succeed();
     }

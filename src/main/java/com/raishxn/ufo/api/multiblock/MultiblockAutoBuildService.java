@@ -1,5 +1,7 @@
 package com.raishxn.ufo.api.multiblock;
 
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
+
 /*
  * Auto-build flow adapted from AE2 Lightning Tech's Matrix/Tianshu auto-build.
  * Copyright AE2 Lightning Tech contributors. Licensed under LGPL-3.0.
@@ -122,7 +124,7 @@ public final class MultiblockAutoBuildService {
             ServerLevel level = server.getLevel(key.dimension());
             ServerPlayer player = server.getPlayerList().getPlayer(session.playerId());
             if (level == null || player == null || player.level() != level
-                    || !(level.getBlockEntity(key.controllerPos()) instanceof IMultiblockController)) {
+                    || !(LoadedBlockEntityLookup.get(level, key.controllerPos()) instanceof IMultiblockController)) {
                 iterator.remove();
                 continue;
             }
@@ -178,7 +180,9 @@ public final class MultiblockAutoBuildService {
     }
 
     private static void refresh(ServerLevel level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof IMultiblockController controller) controller.scanStructure(level);
+        if (LoadedBlockEntityLookup.get(level, pos) instanceof IMultiblockController controller) {
+            controller.scanStructure(level);
+        }
     }
 
     private static BlockPos worldPos(MultiblockPattern pattern, BlockPos controller,

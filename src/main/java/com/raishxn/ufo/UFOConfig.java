@@ -1,7 +1,6 @@
 package com.raishxn.ufo;
 
 import com.raishxn.ufo.armor.UfoArmorSetting;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -53,9 +52,9 @@ public class UFOConfig {
     public static final ModConfigSpec.LongValue STELLAR_COOLANT_STABLE_EFFICIENCY = SERVER_BUILDER
             .comment("Stable Coolant efficiency in the Stellar Nexus coolant formula. Zero disables this coolant for the Nexus.")
             .defineInRange("stellar.coolant.stableCoolantEfficiency", 4L, 0L, 1_000_000L);
-    public static final ModConfigSpec.LongValue STELLAR_COOLANT_TEMPORAL_EFFICIENCY = SERVER_BUILDER
-            .comment("Temporal Fluid efficiency in the Stellar Nexus coolant formula. Zero disables this coolant for the Nexus.")
-            .defineInRange("stellar.coolant.temporalFluidEfficiency", 8L, 0L, 1_000_000L);
+    public static final ModConfigSpec.LongValue STELLAR_COOLANT_BOSE_EINSTEIN_EFFICIENCY = SERVER_BUILDER
+            .comment("Bose-Einstein Condensate efficiency in the Stellar Nexus coolant formula. Zero disables this coolant for the Nexus.")
+            .defineInRange("stellar.coolant.boseEinsteinCondensateEfficiency", 16L, 0L, 1_000_000L);
     public static final ModConfigSpec.IntValue STELLAR_PASSIVE_DISSIPATION_PER_SECOND = SERVER_BUILDER
             .comment("Heat units passively dissipated by an idle Stellar Nexus each second. Zero disables passive dissipation.")
             .defineInRange("stellar.thermal.passiveDissipationPerSecond", 1, 0, 1_000);
@@ -122,24 +121,18 @@ public class UFOConfig {
     public static int armorCap(UfoArmorSetting setting) {
         ModConfigSpec.IntValue cap = ARMOR_CAPS.get(setting);
         // Reading a spec value before its config is loaded throws; fall back to the design maximum.
-        if (cap == null || !armorCapsLoaded) return setting.max();
+        if (cap == null || !SERVER_SPEC.isLoaded()) return setting.max();
         return cap.get();
     }
-
-    private static volatile boolean armorCapsLoaded;
 
     private static boolean isResourceLocation(Object value) {
         return value instanceof String text && net.minecraft.resources.ResourceLocation.tryParse(text) != null;
     }
 
-    @SubscribeEvent
     public static void onLoad(final ModConfigEvent event) {
         if (event.getConfig().getSpec() == SPEC) {
             // Refresh the cached value from the loaded config file.
             infCellCost = INFINITY_CELL_ENERGY.get();
-        }
-        if (event.getConfig().getSpec() == SERVER_SPEC) {
-            armorCapsLoaded = true;
         }
     }
 }

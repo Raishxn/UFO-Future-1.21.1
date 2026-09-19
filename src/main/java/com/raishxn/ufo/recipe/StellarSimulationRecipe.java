@@ -39,7 +39,7 @@ import appeng.api.stacks.GenericStack;
  * <ul>
  *   <li>1 = Gelid Cryotheum (ufo:source_gelid_cryotheum)</li>
  *   <li>2 = Stable Coolant (ufo:source_stable_coolant)</li>
- *   <li>3 = Temporal Fluid (ufo:source_temporal_fluid)</li>
+ *   <li>3 = Bose-Einstein Condensate (ufo:source_bose_einstein_condensate)</li>
  * </ul>
  */
 public class StellarSimulationRecipe implements Recipe<RecipeInput> {

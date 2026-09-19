@@ -1,0 +1,5 @@
+{
+  "parent": "neoforge:item/bucket",
+  "fluid": "ufo:source_bose_einstein_condensate",
+  "loader": "neoforge:fluid_container"
+}

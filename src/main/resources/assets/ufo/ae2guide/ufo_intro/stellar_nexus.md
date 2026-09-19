@@ -60,7 +60,7 @@ With Safe Mode disabled, overheat causes a local containment blast by default. D
 - **Overclock** multiplies coolant draw by **5x** on top of that.
 - **Gelid Cryotheum**: **1 cooling per mB**.
 - **Stable Coolant**: **4 cooling per mB**.
-- **Temporal Fluid**: **8 cooling per mB**.
+- **Bose-Einstein Condensate**: **16 cooling per mB**.
 - Final cooling is multiplied by your field tier bonus, so better field generators make the same coolant stronger.
 
 The values **1/4/8** are server-configurable under `stellar.coolant`; zero disables that coolant for the Stellar Nexus. The listed values are the defaults used by UFO progression.

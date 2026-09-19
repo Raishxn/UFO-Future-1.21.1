@@ -13,6 +13,7 @@ import appeng.blockentity.grid.AENetworkedBlockEntity;
 import appeng.helpers.IPriorityHost;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
+import appeng.me.cluster.implementations.CraftingCPUCalculator;
 import appeng.me.helpers.MachineSource;
 import com.raishxn.ufo.api.ae.NexusCraftingUnitOwnership;
 import com.raishxn.ufo.api.ae.NexusVirtualCpuHost;
@@ -36,6 +37,7 @@ import com.raishxn.ufo.screen.QuantumComputationNexusMenu;
 import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import com.raishxn.ufocore.api.crafting.CraftingComputeCapacity;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
@@ -151,7 +153,8 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
             if (!match.isValid()) { deform(); return; }
 
             List<BlockPos> links = pattern.getExpectedPositions(worldPosition, facing, 'L');
-            if (links.size() != 1 || !(serverLevel.getBlockEntity(links.getFirst()) instanceof QuantumGridLinkBE link)) {
+            if (links.size() != 1
+                    || !(LoadedBlockEntityLookup.get(serverLevel, links.getFirst()) instanceof QuantumGridLinkBE link)) {
                 deform();
                 return;
             }
@@ -167,9 +170,11 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
             int coProcessors = 0;
             int ultimateStorages = 0;
             int ultimateCoProcessors = 0;
+            List<CraftingBlockEntity> foreignModules = new ArrayList<>();
             for (BlockPos pos : spaces) {
                 if (!serverLevel.isLoaded(pos)) return;
                 BlockState state = serverLevel.getBlockState(pos);
+                boolean supportedModule = isSupportedComputeModule(state);
                 CraftingComputeCapacity contribution = contributionOf(state);
                 if (!contribution.storageBytes().isZero()) storages++;
                 if (!contribution.parallelLanes().isZero()) coProcessors++;
@@ -180,10 +185,16 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
                     ultimateCoProcessors++;
                 }
                 capacity = capacity.add(contribution);
-                if (serverLevel.getBlockEntity(pos) instanceof CraftingBlockEntity module) modules.add(module);
+                if (LoadedBlockEntityLookup.get(serverLevel, pos) instanceof CraftingBlockEntity module) {
+                    if (supportedModule) modules.add(module);
+                    else foreignModules.add(module);
+                }
             }
 
             clearModuleOwnershipNotIn(modules);
+            // Older versions claimed every AE2-compatible crafting block in an ignored interior
+            // position. Release those foreign CPUs so AE2 (or its addon) can form them normally.
+            releaseOwnedModules(foreignModules);
             for (CraftingBlockEntity module : modules) {
                 if (module.getCluster() != null) module.breakCluster();
                 ((NexusCraftingUnitOwnership) module).ufo$setNexusController(worldPosition);
@@ -231,11 +242,14 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
         Set<BlockPos> keep = retained.stream().map(BlockEntity::getBlockPos)
                 .collect(java.util.stream.Collectors.toSet());
         if (level == null) return;
+        List<CraftingBlockEntity> released = new ArrayList<>();
         for (BlockPos pos : modulePositions) {
-            if (!keep.contains(pos) && level.getBlockEntity(pos) instanceof CraftingBlockEntity module) {
-                ((NexusCraftingUnitOwnership) module).ufo$setNexusController(null);
+            if (!keep.contains(pos)
+                    && LoadedBlockEntityLookup.get(level, pos) instanceof CraftingBlockEntity module) {
+                released.add(module);
             }
         }
+        releaseOwnedModules(released);
     }
 
     private void deform() {
@@ -255,9 +269,30 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
 
     private void clearAllModuleOwnership() {
         if (level == null) return;
+        List<CraftingBlockEntity> released = new ArrayList<>();
         for (BlockPos pos : modulePositions) {
             if (LoadedBlockEntityLookup.get(level, pos) instanceof CraftingBlockEntity module) {
-                ((NexusCraftingUnitOwnership) module).ufo$setNexusController(null);
+                released.add(module);
+            }
+        }
+        releaseOwnedModules(released);
+    }
+
+    private void releaseOwnedModules(Collection<CraftingBlockEntity> candidates) {
+        if (!(level instanceof ServerLevel serverLevel)) return;
+        List<CraftingBlockEntity> released = new ArrayList<>();
+        for (CraftingBlockEntity module : candidates) {
+            NexusCraftingUnitOwnership ownership = (NexusCraftingUnitOwnership) module;
+            if (worldPosition.equals(ownership.ufo$getNexusController())) {
+                ownership.ufo$setNexusController(null);
+                released.add(module);
+            }
+        }
+        // Clear every ownership marker first; otherwise adjacent released blocks can still be
+        // rejected by the onReady guard while AE2 rebuilds their normal CPU cluster.
+        for (CraftingBlockEntity module : released) {
+            if (!module.isRemoved() && module.getCluster() == null) {
+                new CraftingCPUCalculator(module).calculateMultiblock(serverLevel, module.getBlockPos());
             }
         }
     }
@@ -283,6 +318,11 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
         return CraftingComputeCapacity.ZERO;
     }
 
+    private static boolean isSupportedComputeModule(BlockState state) {
+        return ModBlocks.CRAFTING_STORAGE_BLOCKS.values().stream().anyMatch(block -> state.is(block.get()))
+                || ModBlocks.CO_PROCESSOR_BLOCKS.values().stream().anyMatch(block -> state.is(block.get()));
+    }
+
     @Nullable private QuantumGridLinkBE getGridLink() {
         if (level == null || gridLinkPos == null) return null;
         return LoadedBlockEntityLookup.get(level, gridLinkPos) instanceof QuantumGridLinkBE link ? link : null;
@@ -298,8 +338,10 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
     }
 
     public boolean canOwnModuleAt(BlockPos pos) {
-        return moduleSpace.contains(pos)
+        boolean isModulePosition = moduleSpace.contains(pos)
                 || getDefinition().pattern().getExpectedPositions(worldPosition, getFacing(), 'I').contains(pos);
+        return isModulePosition && level != null && level.isLoaded(pos)
+                && isSupportedComputeModule(level.getBlockState(pos));
     }
     public void onControllerBroken() {
         if (level != null && !level.isClientSide()) {
@@ -327,7 +369,8 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
     private void updateVisualState() {
         if (level == null || level.isClientSide() || isRemoved()) return;
         if (LoadedBlockEntityLookup.get(level, worldPosition) != this) return;
-        BlockState current = getBlockState();
+        BlockState current = LoadedBlockEntityLookup.getBlockState(level, worldPosition);
+        if (current == null) return;
         if (!(current.getBlock() instanceof QuantumComputationNexusControllerBlock)) return;
         boolean powered = formed && isGridLinkActive();
         BlockState updated = current.setValue(QuantumComputationNexusControllerBlock.FORMED, formed)

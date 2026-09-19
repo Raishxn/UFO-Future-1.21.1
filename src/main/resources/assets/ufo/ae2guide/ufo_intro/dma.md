@@ -29,7 +29,7 @@ DMA recipes should not ask for coolant in their normal fluid inputs. Coolants be
 ## Coolant Progression
 - **Gelid Cryotheum**: removes **1 HU per 24 mB**, up to **1000 mB/tick**.
 - **Stable Coolant**: removes **50 HU per mB**, up to **10 mB/tick**.
-- **Temporal Fluid**: removes **100 HU per mB**, up to **10 mB/tick**.
+- **Bose-Einstein Condensate**: removes **200 HU per mB**, up to **10 mB/tick**.
 - **Liquid Starlight**: utility coolant that removes **30 HU per mB**, up to **10 mB/tick**.
 
 The intended path is **Gelid -> Stable -> Temporal**. If you push Chrono-heavy catalyst setups too early, Gelid Cryotheum will not keep up for long.

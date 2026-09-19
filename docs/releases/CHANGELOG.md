@@ -18,6 +18,17 @@ projeto. IDs, saves, receitas e progressao existentes foram preservados.
 
 ### Bug Fixes
 
+- Cabos AE2 agora conectam em todas as faces do Quantum Pattern Buffer e do ME Massive Fluid Hatch, inclusive na face frontal visível.
+- Pacotes de recuperação de recursos agora mostram o recurso e a quantidade, em vez do nome interno `Wrapped Generic Stack`.
+- Corrigida a codificação UTF-8 de nomes e tooltips em português brasileiro.
+- Encerramento do mundo deixa de reprogramar invalidacoes multibloco ou estados visuais durante o drain de chunks; callbacks de rede AE2 nao promovem mais controllers em despromocao, eliminando a permanencia na tela `Saving World` ao sair de saves com estruturas endgame carregadas.
+- Baldes de Liquid Starlight, Primordial Matter, Raw Star Matter Plasma, Transcending Matter, UU Matter, UU Amplifier, Temporal Fluid e Spatial Fluid agora exibem nomes traduzidos em vez das chaves `item.ufo.*_bucket`.
+- Itens legados Astral Nexus e Bismuth removidos por completo, incluindo registros, receitas, modelos, traducoes e integracoes obsoletas; o modulo Astral Wings da armadura UFO permanece funcional.
+- Quantum Computation Nexus nao captura mais CPUs AE2/de addons colocados no espaco interno; mundos afetados limpam a ownership legada e remontam o cluster normal, inclusive ao desmontar o Nexus.
+- Configuracao do UFO agora recebe os eventos de load/reload no mod bus: o custo da Infinity Cell e
+  os limites `armor.moduleCaps.*` passam a usar os valores realmente carregados do arquivo.
+- Velocidade e inercia de voo agora reaplicam o cap do servidor durante o uso, como os outros 13
+  ajustes da armadura; um GameTest reduz `flight_speed` em runtime e prova o clamp efetivo.
 - Processos paralelos transacionais: inputs, energia e outputs persistem e sao recuperados apos rede cheia, reload ou quebra, sem perda nem duplicacao.
 - Celulas BigInteger: partition/inverter/fuzzy corrigidos, contagem de bytes coerente com o AE2, limites/NBT endurecidos e suporte completo ao Cell Workbench.
 - DMA: multiplos requisitos de fluido agora reservam e consomem a soma correta.
@@ -32,6 +43,12 @@ projeto. IDs, saves, receitas e progressao existentes foram preservados.
 
 ### Implementations
 
+- Atualizados os overlays de `general1`, Infinity Fabrication Singularity, multiblocos, QMF e Quantum Computation Nexus com o novo pacote visual e suas animacoes.
+- Atualizadas as texturas de `scrap`, `scrap_box`, `quantum_wireless_tool` e das 17 cartas de upgrade UFO; as cartas agora usam tiras animadas autorais de 11 frames.
+- Substituidas 26 texturas ativas por arte autoral nova; `dust_blizz` e `dust_cryotheum` agora são tiras animadas autorais de 16x176. Os quatro overlays antigos de nêutrons foram removidos e os sprites-base autorais passaram a ser usados diretamente.
+- Removido por completo o conjunto 3D Climber sem consumidor; os modelos `space` e `star` foram substituídos por geometria UV procedural original do UFO.
+- Recursos locais `*_backup_original` foram excluídos dos JARs de runtime e sources sem apagar os backups de trabalho.
+- Organizadas as texturas de bloco em subpastas por função (`casings`, `crafting` e `machines`), com models, providers e contratos atualizados e sem PNGs soltos na raiz de `textures/block`.
 - Runtime multibloco 3.0: definitions compiladas compartilhadas por scan/holograma/JEI, indice estrutural por chunk e fast scan server-side.
 - Ports explicitos de energia, fluido, itens e quimicos com planejamento simulate -> commit e ThermalSystem compartilhado entre familias.
 - Trio endgame: Quantum Computation Nexus (CPU de crafting compartilhada), Quantum Pattern Fabrication Matrix e Infinity Fabrication Singularity com Quantum Grid Link e lotes que reutilizam catalisadores intactos.

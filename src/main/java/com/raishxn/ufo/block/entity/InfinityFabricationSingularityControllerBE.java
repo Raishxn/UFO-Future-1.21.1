@@ -244,7 +244,7 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
             applyCraftingMode(SingularityCraftingMode.forFieldTiers(mk1, mk2, mk3));
             patternCapacity = calculatePatternCapacity(mk1, mk2, mk3);
             formed = true;
-            if (serverLevel.getBlockEntity(discoveredLink) instanceof QuantumGridLinkBE link) {
+            if (LoadedBlockEntityLookup.get(serverLevel, discoveredLink) instanceof QuantumGridLinkBE link) {
                 link.linkToController(worldPosition);
                 IGridNode controllerNode = getMainNode().getNode();
                 link.synchronizeInternalNodes(controllerNode == null ? List.of() : List.of(controllerNode));
@@ -426,7 +426,8 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
     private void updateVisualState() {
         if (level == null || level.isClientSide() || isRemoved()) return;
         if (LoadedBlockEntityLookup.get(level, worldPosition) != this) return;
-        BlockState current = getBlockState();
+        BlockState current = LoadedBlockEntityLookup.getBlockState(level, worldPosition);
+        if (current == null) return;
         if (!(current.getBlock() instanceof InfinityFabricationSingularityControllerBlock)) return;
         BlockState updated = current
                 .setValue(InfinityFabricationSingularityControllerBlock.FORMED, formed)

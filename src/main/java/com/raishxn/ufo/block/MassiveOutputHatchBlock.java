@@ -6,6 +6,7 @@ import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
 import com.raishxn.ufo.block.entity.MassiveOutputHatchBE;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
 import com.raishxn.ufo.init.ModBlockEntities;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -129,7 +130,8 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
         if (!state.is(newState.getBlock())) {
             if (level.getBlockEntity(pos) instanceof MassiveOutputHatchBE hatch) {
                 BlockPos controllerPos = hatch.getControllerPos();
-                if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
+                if (controllerPos != null
+                        && LoadedBlockEntityLookup.get(level, controllerPos) instanceof IMultiblockController controller) {
                     controller.removePart(pos);
                     // Defer the re-scan: scanning here relinks/unlinks parts and
                     // writes block states while this removal is still in flight.
@@ -155,7 +157,7 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
     }
 
     private static void markControllerDirty(Level level, BlockPos controllerPos) {
-        BlockEntity entity = level.getBlockEntity(controllerPos);
+        BlockEntity entity = LoadedBlockEntityLookup.get(level, controllerPos);
         if (entity instanceof AbstractSimpleMultiblockControllerBE controller) {
             controller.markStructureDirty();
         } else if (entity instanceof StellarNexusControllerBE controller) {

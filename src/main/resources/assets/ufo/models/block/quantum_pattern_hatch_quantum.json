@@ -4,7 +4,7 @@
   "textures": {
     "particle": "ufo:block/multiblock/quantum_hyper_mechanical_casing",
     "base": "ufo:block/multiblock/quantum_hyper_mechanical_casing",
-    "overlay": "ufo:block/quantum_pattern_hatch"
+    "overlay": "ufo:block/machines/quantum_pattern_hatch"
   },
   "elements": [
     {

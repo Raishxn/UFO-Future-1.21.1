@@ -356,7 +356,7 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         return switch (recipe.getCoolingLevel()) {
             case 1 -> getFluidDisplayName(ResourceLocation.parse("ufo:source_gelid_cryotheum"));
             case 2 -> getFluidDisplayName(ResourceLocation.parse("ufo:source_stable_coolant"));
-            case 3 -> getFluidDisplayName(ResourceLocation.parse("ufo:source_temporal_fluid"));
+            case 3 -> getFluidDisplayName(ResourceLocation.parse("ufo:source_bose_einstein_condensate"));
             default -> "None";
         };
     }

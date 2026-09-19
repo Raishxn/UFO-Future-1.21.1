@@ -29,7 +29,6 @@ public class ModItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(ModTags.Items.TRANSFORMABLE_ITEMS)
-                .add(ModItems.BISMUTH.get())
                 .add(Items.COAL)
                 .add(Items.STICK)
                 .add(Items.COMPASS);
@@ -70,8 +69,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
         );
         tag(ModTags.Items.COOLANTS).add(
                 ModItems.GELID_CRYOTHEUM_BUCKET.get(),
-                ModItems.TEMPORAL_FLUID_BUCKET.get(),
-                ModItems.SPATIAL_FLUID_BUCKET.get()
+                ModItems.STABLE_COOLANT_BUCKET.get(),
+                ModItems.BOSE_EINSTEIN_CONDENSATE_BUCKET.get()
         );
         tag(ModTags.Items.CONTAINMENT_DEVICE).add(
                 ModItems.AETHER_CONTAINMENT_CAPSULE.get(),
@@ -132,4 +131,3 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 );
     }
 }
-

@@ -66,6 +66,7 @@ public class UfoMod {
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, UFOConfig.SERVER_SPEC);
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.WIRELESS_SPEC, "ufo/wireless.toml");
+        modEventBus.addListener(UFOConfig::onLoad);
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::loadComplete);
         modEventBus.addListener(this::registerPackets);

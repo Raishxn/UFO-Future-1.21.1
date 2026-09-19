@@ -2,11 +2,10 @@
 
 ## Árvore oficial
 
-- `textures/block/`: texturas usadas por models e renderers de blocos. Famílias
-  com contrato próprio ficam em subpastas (`dma/`, `drive/`, `energycell/`,
-  `fluid/`, `multiblock/`, `obj/` e `qmf/`); as texturas do renderer de crafting
-  do AE2 permanecem diretamente em `block/` porque esse é o path resolvido pelo
-  provider em runtime.
+- `textures/block/`: texturas usadas por models e renderers de blocos. Não há
+  PNGs soltos na raiz. Além das famílias específicas, `casings/` reúne casings
+  simples, `crafting/` reúne cubos de crafting e seus anéis/luzes, e `machines/`
+  reúne faces de máquinas independentes.
 - `textures/item/`: texturas usadas por models de itens. O conjunto de ferramentas
   UFO possui um único owner em `textures/item/ufoset/`; animações ficam em
   `textures/item/ufoset/animations/`.
@@ -31,31 +30,31 @@
 5. Um caminho não pode existir simultaneamente em `src/main/resources` e
    `src/generated/resources`. O datagen é o owner de recipes, loot tables e models
    simples; arquivos manuais são reservados a geometrias e telas que ele não gera.
-6. `textures/block/crafting/`, `textures/ufoset/` e animações soltas diretamente
-   em `textures/item/` são layouts legados e não devem voltar.
+6. `textures/ufoset/`, `textures/block/quantum_processor_assembler/`,
+   `textures/block/quantum_slicer/` e animações soltas diretamente em
+   `textures/item/` são layouts legados e não devem voltar.
 
 ## Limpeza L-0037
 
-- Foram removidas somente duplicatas e exportações sem consumidor. Nenhuma
-  textura runtime ativa foi movida, portanto os resource locations publicados
-  continuam válidos.
-- A árvore antiga `block/crafting/` duplicava o material realmente requisitado
-  em `block/`; a árvore `textures/ufoset/` duplicava o owner canônico
-  `textures/item/ufoset/`.
+- Duplicatas e exportações sem consumidor foram removidas. As texturas ativas de
+  bloco foram agrupadas em subpastas e todos os models/providers consumidores
+  foram atualizados para os novos resource locations.
+- A árvore `textures/ufoset/` duplicava o owner canônico
+  `textures/item/ufoset/` e continua proibida.
 - Models manuais ocultos por models gerados e recipes/loot tables manuais ocultos
   pela precedência do datagen foram removidos. Cada resource agora possui um
   único owner.
-- O asset `block/multiblock/coolant_fluid_hatch_overlay.png` foi preservado para
-  o marco de coolant hatch já planejado, mesmo ainda sem consumidor runtime.
+- O conjunto Climber (`json`, `obj`, `mtl`, overlay e cable) foi removido porque
+  não possuía consumidor. Os modelos `space` e `star` foram mantidos.
 
 ## Decisão visual L-0038
 
 - O coolant externo reutiliza o ID, bloco, model e overlay já publicados do
   `ME Massive Fluid Hatch`; não foi criado um segundo hatch.
-- `coolant_fluid_hatch_overlay.png` continua reservado e sem consumidor. Ele não
-  é replacement correto para um bloco que preserva simultaneamente suas funções
-  ME, química e de coolant, portanto substituir o overlay existente seria uma
-  mudança visual enganosa e desnecessária.
+- O antigo `coolant_fluid_hatch_overlay.png`, reservado mas sem consumidor, foi
+  removido. Ele não era um replacement correto para um bloco que preserva
+  simultaneamente suas funções ME, química e de coolant, portanto substituir o
+  overlay existente seria uma mudança visual enganosa e desnecessária.
 
 ## Contrato CTM integrado em 2026-09-03
 

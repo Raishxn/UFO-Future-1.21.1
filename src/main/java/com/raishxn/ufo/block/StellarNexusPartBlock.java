@@ -17,6 +17,7 @@ import com.raishxn.ufo.block.entity.EntropicConvergenceCalculator;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
 import com.raishxn.ufo.block.entity.StellarNexusPartBE;
 import com.raishxn.ufo.init.ModBlockEntities;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 
 /**
  * Generic structural block for the Stellar Nexus multiblock.
@@ -56,7 +57,8 @@ public class StellarNexusPartBlock extends Block implements net.minecraft.world.
         if (!state.is(newState.getBlock())) {
             if (level.getBlockEntity(pos) instanceof StellarNexusPartBE part) {
                 BlockPos controllerPos = part.getControllerPos();
-                if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
+                if (controllerPos != null
+                        && LoadedBlockEntityLookup.get(level, controllerPos) instanceof IMultiblockController controller) {
                     controller.removePart(pos);
                     // Deferred: a scan inside the removal transaction relinks other
                     // parts and writes their block states mid-removal.
@@ -90,7 +92,7 @@ public class StellarNexusPartBlock extends Block implements net.minecraft.world.
     }
 
     private static void markControllerDirty(Level level, BlockPos controllerPos) {
-        BlockEntity entity = level.getBlockEntity(controllerPos);
+        BlockEntity entity = LoadedBlockEntityLookup.get(level, controllerPos);
         if (entity instanceof StellarNexusControllerBE controller) {
             controller.markStructureDirty();
         } else if (entity instanceof IMultiblockController controller) {

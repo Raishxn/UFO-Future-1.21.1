@@ -138,6 +138,10 @@ public final class QuantumGridLinkRecoveryGameTests {
         helper.assertTrue(packages.size() == 2, "maximum routes must not merge or overflow");
         helper.assertTrue(packages.stream().allMatch(stack -> stack.what().equals(OUTPUT)
                 && stack.amount() == Long.MAX_VALUE), "64-bit route balances were changed");
+        helper.assertTrue(recoveryItems(helper).stream().map(ItemEntity::getItem)
+                        .filter(GenericStack::isWrapped)
+                        .allMatch(stack -> stack.get(DataComponents.CUSTOM_NAME) != null),
+                "recovery packages must identify their contents instead of showing Wrapped Generic Stack");
         helper.succeed();
     }
 
@@ -213,10 +217,14 @@ public final class QuantumGridLinkRecoveryGameTests {
     }
 
     private static List<GenericStack> packages(GameTestHelper helper) {
-        return helper.getLevel().getEntitiesOfClass(ItemEntity.class,
-                        new AABB(helper.absolutePos(LINK)).inflate(1.5D)).stream()
+        return recoveryItems(helper).stream()
                 .map(entity -> GenericStack.unwrapItemStack(entity.getItem()))
                 .filter(java.util.Objects::nonNull).toList();
+    }
+
+    private static List<ItemEntity> recoveryItems(GameTestHelper helper) {
+        return helper.getLevel().getEntitiesOfClass(ItemEntity.class,
+                new AABB(helper.absolutePos(LINK)).inflate(1.5D));
     }
 
     private static void assertRecovered(GameTestHelper helper, AEKey key, long amount) {

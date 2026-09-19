@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +35,19 @@ public final class LoadedBlockEntityLookup {
 
     @Nullable
     public static BlockEntity get(Level level, BlockPos pos) {
+        LevelChunk chunk = getChunk(level, pos, true);
+        return chunk == null ? null : chunk.getBlockEntity(pos, LevelChunk.EntityCreationType.CHECK);
+    }
+
+    /** Returns a block state without promoting, generating, or ticketing its chunk. */
+    @Nullable
+    public static BlockState getBlockState(Level level, BlockPos pos) {
+        LevelChunk chunk = getChunk(level, pos, false);
+        return chunk == null ? null : chunk.getBlockState(pos);
+    }
+
+    @Nullable
+    private static LevelChunk getChunk(Level level, BlockPos pos, boolean acceptDemoted) {
         if (level == null || level.isOutsideBuildHeight(pos)) return null;
         if (level instanceof ServerLevel serverLevel) {
             if (!serverLevel.getServer().isSameThread()) return null;
@@ -41,13 +55,15 @@ public final class LoadedBlockEntityLookup {
                     ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.getX()),
                             SectionPos.blockToSectionCoord(pos.getZ())));
             if (holder == null) return null;
-            if (!(holder.getChunkIfPresentUnchecked(ChunkStatus.FULL) instanceof LevelChunk chunk)) return null;
-            return chunk.getBlockEntity(pos, LevelChunk.EntityCreationType.CHECK);
+            var present = acceptDemoted
+                    ? holder.getChunkIfPresentUnchecked(ChunkStatus.FULL)
+                    : holder.getChunkIfPresent(ChunkStatus.FULL);
+            if (!(present instanceof LevelChunk chunk)) return null;
+            return chunk;
         }
-        LevelChunk chunk = level.getChunkSource().getChunkNow(
+        return level.getChunkSource().getChunkNow(
                 SectionPos.blockToSectionCoord(pos.getX()),
                 SectionPos.blockToSectionCoord(pos.getZ())
         );
-        return chunk == null ? null : chunk.getBlockEntity(pos, LevelChunk.EntityCreationType.CHECK);
     }
 }

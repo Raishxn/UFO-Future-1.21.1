@@ -25,6 +25,7 @@ import com.raishxn.ufo.block.entity.processing.StellarExplosionPolicy;
 import com.raishxn.ufo.block.entity.processing.ThermalSystem;
 import com.raishxn.ufo.block.entity.processing.TransactionalAmountLedger;
 import com.raishxn.ufo.recipe.StellarSimulationRecipe;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.pedroksl.ae2addonlib.recipes.IngredientStack;
 
 import appeng.api.config.Actionable;
@@ -422,23 +423,23 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             // Link all parts to this controller
             for (BlockPos partPos : this.parts) {
                 BlockState partState = level.getBlockState(partPos);
-                if (level.getBlockEntity(partPos) instanceof IMultiblockPart part) {
+                if (LoadedBlockEntityLookup.get(level, partPos) instanceof IMultiblockPart part) {
                     part.linkToController(this.worldPosition);
                     if (part instanceof MassiveOutputHatchBE hatch) {
                         hatch.refreshGridConnection();
                     }
                 }
                 if (partState.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
-                        && level.getBlockEntity(partPos) instanceof EnergyInputPort energyPort) {
+                        && LoadedBlockEntityLookup.get(level, partPos) instanceof EnergyInputPort energyPort) {
                     detectedEnergyPorts.add(energyPort);
                 }
                 if (partState.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
-                    && level.getBlockEntity(partPos) instanceof MassiveOutputHatchBE fluidPort
+                    && LoadedBlockEntityLookup.get(level, partPos) instanceof MassiveOutputHatchBE fluidPort
                     && fluidPort.supportsFluidInput()) {
                     detectedCoolantPorts.add(fluidPort);
                     detectedCoolantHatches.add(fluidPort);
                 }
-                if (level.getBlockEntity(partPos) instanceof MassiveOutputHatchBE itemPort) {
+                if (LoadedBlockEntityLookup.get(level, partPos) instanceof MassiveOutputHatchBE itemPort) {
                     if (partState.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
                             && itemPort.supportsItemInput()) {
                         detectedItemInputPorts.add(itemPort);
@@ -1172,7 +1173,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     }
 
     private void removeControllerBlockAfterExplosion() {
-        if (this.level == null || this.level.getBlockEntity(this.worldPosition) != this) {
+        if (this.level == null || LoadedBlockEntityLookup.get(this.level, this.worldPosition) != this) {
             return;
         }
 
@@ -1184,7 +1185,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             return null;
 
         for (BlockPos position : this.networkNodeCandidates) {
-            if (this.level.getBlockEntity(position) instanceof AENetworkedBlockEntity nodeBE) {
+            if (LoadedBlockEntityLookup.get(this.level, position) instanceof AENetworkedBlockEntity nodeBE) {
                 IGridNode node = nodeBE.getActionableNode();
                 if (Ae2NodeAvailability.isUsable(
                         node != null,
@@ -1221,7 +1222,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
      * <ul>
      * <li>Gelid Cryotheum (T1): 1 cooling/mB</li>
      * <li>Stable Coolant (T2): 4 cooling/mB</li>
-     * <li>Temporal Fluid (T3): 8 cooling/mB</li>
+     * <li>Bose-Einstein Condensate (T3): 16 cooling/mB</li>
      * </ul>
      */
     private boolean coolWhileIdle() {
@@ -1310,7 +1311,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         if (coolant.isEmpty()) return 0;
         if (coolant.getFluid() == ModFluids.SOURCE_GELID_CRYOTHEUM.get()) return 1;
         if (coolant.getFluid() == ModFluids.SOURCE_STABLE_COOLANT.get()) return 2;
-        if (coolant.getFluid() == ModFluids.SOURCE_TEMPORAL_FLUID.get()) return 3;
+        if (coolant.getFluid() == ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get()) return 3;
         return 0;
     }
 
@@ -1332,8 +1333,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         if (this.coolantDefinitions == null) {
             this.coolantDefinitions = new CoolantDefinition[]{
                     new CoolantDefinition(
-                            AEFluidKey.of(ModFluids.SOURCE_TEMPORAL_FLUID.get()),
-                            UFOConfig.STELLAR_COOLANT_TEMPORAL_EFFICIENCY::get),
+                            AEFluidKey.of(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get()),
+                            UFOConfig.STELLAR_COOLANT_BOSE_EINSTEIN_EFFICIENCY::get),
                     new CoolantDefinition(
                             AEFluidKey.of(ModFluids.SOURCE_STABLE_COOLANT.get()),
                             UFOConfig.STELLAR_COOLANT_STABLE_EFFICIENCY::get),
@@ -1553,7 +1554,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                             this.worldPosition.getX() + 0.5D,
                             this.worldPosition.getY() + 0.5D,
                             this.worldPosition.getZ() + 0.5D,
-                            GenericStack.wrapInItemStack(new GenericStack(entry.getKey(), remaining)));
+                            com.raishxn.ufo.util.RecoveryStackItems.wrap(entry.getKey(), remaining));
                 }
             }
         }
@@ -1752,7 +1753,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             return;
         recoverPendingOutputsBeforeRemoval();
         for (BlockPos partPos : this.parts) {
-            if (this.level.getBlockEntity(partPos) instanceof IMultiblockPart part) {
+            if (LoadedBlockEntityLookup.get(this.level, partPos) instanceof IMultiblockPart part) {
                 part.unlinkFromController();
             }
         }
@@ -1778,7 +1779,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                     this.worldPosition.getX() + 0.5D,
                     this.worldPosition.getY() + 0.5D,
                     this.worldPosition.getZ() + 0.5D,
-                    GenericStack.wrapInItemStack(new GenericStack(output.key(), output.amount())));
+                    com.raishxn.ufo.util.RecoveryStackItems.wrap(output.key(), output.amount()));
         }
         this.pendingOutputs.clear();
     }

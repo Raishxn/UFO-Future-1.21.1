@@ -155,7 +155,7 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
                             worldPosition.getX() + 0.5D,
                             worldPosition.getY() + 0.5D,
                             worldPosition.getZ() + 0.5D,
-                            GenericStack.wrapInItemStack(output.getKey(), remaining));
+                            com.raishxn.ufo.util.RecoveryStackItems.wrap(output.getKey(), remaining));
                 }
                 outputs.remove();
             }
@@ -727,7 +727,9 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     }
 
     private void updateFacingAwayFromController(BlockPos controllerPos) {
-        if (level == null || level.isClientSide() || !getBlockState().hasProperty(DirectionalBlock.FACING)) return;
+        if (level == null || level.isClientSide()) return;
+        BlockState current = LoadedBlockEntityLookup.getBlockState(level, worldPosition);
+        if (current == null || !current.hasProperty(DirectionalBlock.FACING)) return;
         int dx = worldPosition.getX() - controllerPos.getX();
         int dy = worldPosition.getY() - controllerPos.getY();
         int dz = worldPosition.getZ() - controllerPos.getZ();
@@ -739,15 +741,15 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         } else {
             outward = dz >= 0 ? Direction.SOUTH : Direction.NORTH;
         }
-        BlockState current = getBlockState();
         if (current.getValue(DirectionalBlock.FACING) != outward) {
             level.setBlock(worldPosition, current.setValue(DirectionalBlock.FACING, outward), Block.UPDATE_CLIENTS);
         }
     }
 
     private void updateCasingStyle(MultiblockCasingStyle style) {
-        BlockState state = getBlockState();
-        if (level == null || level.isClientSide() || !state.hasProperty(QuantumGridLinkBlock.CASING_STYLE)
+        if (level == null || level.isClientSide()) return;
+        BlockState state = LoadedBlockEntityLookup.getBlockState(level, worldPosition);
+        if (state == null || !state.hasProperty(QuantumGridLinkBlock.CASING_STYLE)
                 || state.getValue(QuantumGridLinkBlock.CASING_STYLE) == style) return;
         level.setBlock(worldPosition, state.setValue(QuantumGridLinkBlock.CASING_STYLE, style), Block.UPDATE_CLIENTS);
     }

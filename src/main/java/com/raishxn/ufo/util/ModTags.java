@@ -46,12 +46,12 @@ public class ModTags {
     }
     public static class Fluids {
         public static final TagKey<Fluid> COOLANTS = tag("coolants");
+        public static final TagKey<Fluid> COOLANT_EXTREME = tag("coolant_extreme");
         public static final TagKey<Fluid> SYNTHETIC_FLUID = tag("synthetic_fluid");
         public static final TagKey<Fluid> ENERGY_FLUID = tag("energy_fluid");
         public static final TagKey<Fluid> PLASMA = tag("plasma");
         public static final TagKey<Fluid> MATTER_FLUID = tag("matter_fluid");
         public static final TagKey<Fluid> COOLANT = tag("coolant");
-        public static final TagKey<Fluid> COOLANT_EXTREME = tag("coolant_extreme");
         public static final TagKey<Fluid> HAZARDOUS = tag("hazardous");
         private static TagKey<Fluid> tag(String name) {
             return FluidTags.create(ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, name));

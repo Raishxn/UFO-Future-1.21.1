@@ -1,6 +1,7 @@
 package com.raishxn.ufo.block.entity;
 
 import appeng.api.stacks.AEItemKey;
+import appeng.api.orientation.BlockOrientation;
 import appeng.blockentity.crafting.PatternProviderBlockEntity;
 import appeng.block.crafting.PatternProviderBlock;
 import appeng.helpers.patternprovider.PatternProviderLogic;
@@ -10,6 +11,7 @@ import appeng.menu.locator.MenuHostLocator;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
 import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.QuantumPatternHatchBlock;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.init.ModBlockEntities;
 import com.raishxn.ufo.init.ModMenus;
@@ -28,6 +30,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements IMultiblockPart, MenuProvider, com.raishxn.ufo.wireless.QuantumWirelessHost {
     private final com.raishxn.ufo.wireless.QuantumWirelessLinks wirelessLinks = new com.raishxn.ufo.wireless.QuantumWirelessLinks();
@@ -70,7 +75,7 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
             if (!this.level.hasChunk(SectionPos.blockToSectionCoord(target.pos().getX()), SectionPos.blockToSectionCoord(target.pos().getZ()))) {
                 continue;
             }
-            var targetBe = this.level.getBlockEntity(target.pos());
+            var targetBe = LoadedBlockEntityLookup.get(this.level, target.pos());
             if (targetBe instanceof QuantumPatternProxyBE proxy
                     && com.raishxn.ufo.wireless.QuantumWirelessLinks.matches(proxy, target.identity())) {
                 proxy.bindPatternBuffer(this);
@@ -92,6 +97,17 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     @Override
     public ItemStack getMainMenuIcon() {
         return new ItemStack(this.getBlockState().getBlock());
+    }
+
+    /**
+     * AE2's regular pattern provider deliberately reserves its push face and
+     * excludes it from cable connections. The Quantum Pattern Buffer routes
+     * patterns internally, so reserving that face only makes the visible front
+     * connector unusable. Keep every face available to the ME network.
+     */
+    @Override
+    public Set<Direction> getGridConnectableSides(BlockOrientation orientation) {
+        return EnumSet.allOf(Direction.class);
     }
 
     @Override
@@ -135,18 +151,19 @@ public class QuantumPatternHatchBE extends PatternProviderBlockEntity implements
     }
 
     private void updateCasingStyle(MultiblockCasingStyle style) {
-        if (this.level == null || this.level.isClientSide()
-                || !this.getBlockState().hasProperty(QuantumPatternHatchBlock.CASING_STYLE)
-                || this.getBlockState().getValue(QuantumPatternHatchBlock.CASING_STYLE) == style) {
+        if (this.level == null || this.level.isClientSide()) return;
+        BlockState state = LoadedBlockEntityLookup.getBlockState(this.level, this.worldPosition);
+        if (state == null || !state.hasProperty(QuantumPatternHatchBlock.CASING_STYLE)
+                || state.getValue(QuantumPatternHatchBlock.CASING_STYLE) == style) {
             return;
         }
         this.level.setBlock(this.worldPosition,
-                this.getBlockState().setValue(QuantumPatternHatchBlock.CASING_STYLE, style),
+                state.setValue(QuantumPatternHatchBlock.CASING_STYLE, style),
                 net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
     }
 
     private MultiblockCasingStyle casingStyleFor(BlockPos controllerPos) {
-        return this.level != null && this.level.getBlockEntity(controllerPos) instanceof StellarNexusControllerBE
+        return this.level != null && LoadedBlockEntityLookup.get(this.level, controllerPos) instanceof StellarNexusControllerBE
                 ? MultiblockCasingStyle.ENTROPY
                 : MultiblockCasingStyle.QUANTUM;
     }

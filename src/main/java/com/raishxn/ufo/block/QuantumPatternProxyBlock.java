@@ -7,6 +7,7 @@ import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
 import com.raishxn.ufo.block.entity.QuantumPatternProxyBE;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
 import com.raishxn.ufo.init.ModBlockEntities;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -74,7 +75,8 @@ public final class QuantumPatternProxyBlock extends DirectionalBlock implements 
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof QuantumPatternProxyBE proxy) {
             BlockPos controllerPos = proxy.getControllerPos();
-            if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
+            if (controllerPos != null
+                    && LoadedBlockEntityLookup.get(level, controllerPos) instanceof IMultiblockController controller) {
                 controller.removePart(pos);
                 markControllerDirty(level, controllerPos);
             }
@@ -94,7 +96,7 @@ public final class QuantumPatternProxyBlock extends DirectionalBlock implements 
     }
 
     private static void markControllerDirty(Level level, BlockPos controllerPos) {
-        BlockEntity entity = level.getBlockEntity(controllerPos);
+        BlockEntity entity = LoadedBlockEntityLookup.get(level, controllerPos);
         if (entity instanceof AbstractSimpleMultiblockControllerBE controller) {
             controller.markStructureDirty();
         } else if (entity instanceof StellarNexusControllerBE controller) {

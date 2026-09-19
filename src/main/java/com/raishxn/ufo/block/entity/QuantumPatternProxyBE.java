@@ -9,6 +9,7 @@ import com.raishxn.ufo.api.multiblock.IMultiblockPart;
 import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.QuantumPatternProxyBlock;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.Direction;
@@ -67,19 +68,20 @@ public final class QuantumPatternProxyBE extends BlockEntity implements IMultibl
     }
 
     private MultiblockCasingStyle casingStyleFor(BlockPos controllerPos) {
-        return level != null && level.getBlockEntity(controllerPos) instanceof StellarNexusControllerBE
+        return level != null && LoadedBlockEntityLookup.get(level, controllerPos) instanceof StellarNexusControllerBE
                 ? MultiblockCasingStyle.ENTROPY
                 : MultiblockCasingStyle.QUANTUM;
     }
 
     private void updateCasingStyle(MultiblockCasingStyle style) {
-        if (level == null || level.isClientSide()
-                || !getBlockState().hasProperty(QuantumPatternProxyBlock.CASING_STYLE)
-                || getBlockState().getValue(QuantumPatternProxyBlock.CASING_STYLE) == style) {
+        if (level == null || level.isClientSide()) return;
+        BlockState state = LoadedBlockEntityLookup.getBlockState(level, worldPosition);
+        if (state == null || !state.hasProperty(QuantumPatternProxyBlock.CASING_STYLE)
+                || state.getValue(QuantumPatternProxyBlock.CASING_STYLE) == style) {
             return;
         }
         level.setBlock(worldPosition,
-                getBlockState().setValue(QuantumPatternProxyBlock.CASING_STYLE, style),
+                state.setValue(QuantumPatternProxyBlock.CASING_STYLE, style),
                 net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
     }
 
@@ -91,10 +93,10 @@ public final class QuantumPatternProxyBE extends BlockEntity implements IMultibl
 
     @Nullable
     public BlockEntity getControllerBlockEntity() {
-        if (level == null || controllerPos == null || !level.hasChunk(SectionPos.blockToSectionCoord(controllerPos.getX()), SectionPos.blockToSectionCoord(controllerPos.getZ()))) {
+        if (level == null || controllerPos == null) {
             return null;
         }
-        return level.getBlockEntity(controllerPos);
+        return LoadedBlockEntityLookup.get(level, controllerPos);
     }
 
     @Nullable
@@ -129,11 +131,10 @@ public final class QuantumPatternProxyBE extends BlockEntity implements IMultibl
     /** Returns a live, reciprocal Buffer link without loading either chunk. */
     @Nullable
     public QuantumPatternHatchBE getLinkedPatternBuffer() {
-        if (level == null || patternBufferPos == null || patternBufferIdentity == null
-                || !level.hasChunk(SectionPos.blockToSectionCoord(patternBufferPos.getX()), SectionPos.blockToSectionCoord(patternBufferPos.getZ()))) {
+        if (level == null || patternBufferPos == null || patternBufferIdentity == null) {
             return null;
         }
-        if (!(level.getBlockEntity(patternBufferPos) instanceof QuantumPatternHatchBE buffer)
+        if (!(LoadedBlockEntityLookup.get(level, patternBufferPos) instanceof QuantumPatternHatchBE buffer)
                 || !buffer.isPatternBuffer()
                 || !com.raishxn.ufo.wireless.QuantumWirelessLinks.matches(buffer, patternBufferIdentity)
                 || !buffer.wirelessLinks().enabled()) {

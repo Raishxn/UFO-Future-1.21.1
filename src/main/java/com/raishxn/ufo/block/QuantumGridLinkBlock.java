@@ -7,6 +7,7 @@ import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
 import com.raishxn.ufo.block.entity.QuantumGridLinkBE;
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
 import com.raishxn.ufo.init.ModBlockEntities;
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -81,7 +82,8 @@ public final class QuantumGridLinkBlock extends DirectionalBlock implements Enti
             // Recover while the original grid is still connected. Invalidating the
             // controller first can detach this node before it can return its results.
             link.unlinkForRemoval();
-            if (controllerPos != null && level.getBlockEntity(controllerPos) instanceof IMultiblockController controller) {
+            if (controllerPos != null
+                    && LoadedBlockEntityLookup.get(level, controllerPos) instanceof IMultiblockController controller) {
                 controller.removePart(pos);
                 markControllerDirty(level, controllerPos);
             }
@@ -100,7 +102,7 @@ public final class QuantumGridLinkBlock extends DirectionalBlock implements Enti
     }
 
     private static void markControllerDirty(Level level, BlockPos controllerPos) {
-        BlockEntity entity = level.getBlockEntity(controllerPos);
+        BlockEntity entity = LoadedBlockEntityLookup.get(level, controllerPos);
         if (entity instanceof AbstractSimpleMultiblockControllerBE controller) {
             controller.markStructureDirty();
         } else if (entity instanceof StellarNexusControllerBE controller) {

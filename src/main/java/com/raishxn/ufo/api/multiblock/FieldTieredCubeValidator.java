@@ -1,5 +1,7 @@
 package com.raishxn.ufo.api.multiblock;
 
+import com.raishxn.ufo.util.LoadedBlockEntityLookup;
+
 import com.raishxn.ufo.block.MultiblockBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -170,10 +172,10 @@ public final class FieldTieredCubeValidator {
     private static CubeProbe levelProbe(Level level, ShellPredicate shellPredicate) {
         return pos -> {
             BlockPos blockPos = pos.toBlockPos();
-            if (!level.isLoaded(blockPos)) {
+            BlockState state = LoadedBlockEntityLookup.getBlockState(level, blockPos);
+            if (state == null) {
                 return Cell.unloaded();
             }
-            BlockState state = level.getBlockState(blockPos);
             return new Cell(true, resolveFieldTier(state), shellPredicate.test(state, level, blockPos));
         };
     }

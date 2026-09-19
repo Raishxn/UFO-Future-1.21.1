@@ -133,7 +133,7 @@ public class StellarNexusControllerMenu extends AbstractContainerMenu {
         return switch (this.data.get(21)) {
             case 1 -> new FluidStack(ModFluids.SOURCE_GELID_CRYOTHEUM.get(), amount);
             case 2 -> new FluidStack(ModFluids.SOURCE_STABLE_COOLANT.get(), amount);
-            case 3 -> new FluidStack(ModFluids.SOURCE_TEMPORAL_FLUID.get(), amount);
+            case 3 -> new FluidStack(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), amount);
             default -> FluidStack.EMPTY;
         };
     }

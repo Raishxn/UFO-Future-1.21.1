@@ -24,7 +24,7 @@ public class ModCraftingStorageModelProvider extends AbstractCraftingUnitModelPr
     private static final List<Material> MATERIALS = new ArrayList<>();
     public static final ChunkRenderTypeSet CUTOUT = ChunkRenderTypeSet.of(RenderType.cutout());
 
-    // Carrega texturas diretamente de 'assets/ufo/textures/block/'
+    // Crafting-unit runtime materials have one canonical family directory.
     protected static final Material RING_CORNER = texture("ring_corner");
     protected static final Material RING_SIDE_HOR = texture("ring_side_hor");
     protected static final Material RING_SIDE_VER = texture("ring_side_ver");
@@ -70,8 +70,7 @@ public class ModCraftingStorageModelProvider extends AbstractCraftingUnitModelPr
     }
 
     private static Material texture(String name) {
-        // A LINHA CORRIGIDA FICA ASSIM:
-        var material = new Material(InventoryMenu.BLOCK_ATLAS, UfoMod.id("block/" + name));
+        var material = new Material(InventoryMenu.BLOCK_ATLAS, UfoMod.id("block/crafting/" + name));
         if (!MATERIALS.contains(material)) {
             MATERIALS.add(material);
         }

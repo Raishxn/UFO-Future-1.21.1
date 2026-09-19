@@ -4,6 +4,19 @@ The remaining human gates are **a real 2.x save upgrade** and **load profiling i
 the actual modpack with player activity**. The already approved Grid Link,
 energy-supply, viewer and idle-lifecycle checks remain closed.
 
+## Current beta.1 result — 2026-09-18
+
+- Unit/build/release-JAR verification: passed.
+- Full dependency GameTests: 34/34 passed.
+- Reduced dependency run without Mekanism: 34/34 passed.
+- Short idle soak: 2/2 passed; 3 machines for 200 measured ticks at 0.388 and
+  0.249 ms/tick average.
+- Short active-load smoke: 1/1 passed; 3 machines, 907 measured ticks at 0.646
+  wall ms/tick, exact stock/FE and zero scans outside power-change windows.
+- Every server run saved overworld, Nether, End and AE2 spatial storage and shut
+  down normally; the dedicated `Saving World` reproduction also passed.
+- Artifact: `ufo-3.0.0-beta.1.jar`; local backups and datagen caches absent.
+
 ## Automated gates
 
 Run sequentially: UFO's composite build writes to the same Core outputs.
