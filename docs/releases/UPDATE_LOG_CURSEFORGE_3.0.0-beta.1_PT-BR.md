@@ -29,7 +29,7 @@ os gates humanos finais.
 
 - Minecraft 1.21.1 e NeoForge 21.1.x.
 - Applied Energistics 2 19.2.17 ou compatível na linha 19.x.
-- RaishxCore na faixa declarada pelo arquivo `neoforge.mods.toml`.
+- RaishxCore 0.1.0-beta.1 ou mais recente na linha 0.1.x.
 - Mekanism continua opcional.
 
 Faça backup antes de migrar um mundo antigo e reporte bugs com `latest.log`,

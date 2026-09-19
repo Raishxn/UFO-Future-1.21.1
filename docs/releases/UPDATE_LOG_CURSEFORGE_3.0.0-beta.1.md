@@ -24,5 +24,12 @@ and release artifact cleanup. This is not yet a stable build: migration of a rea
 - Replaced the `star`/`space` models with original procedural geometry.
 - Local texture backups are excluded from published runtime and sources JARs.
 
+## Dependencies
+
+- Minecraft 1.21.1 and NeoForge 21.1.x.
+- Applied Energistics 2 19.2.17 or a compatible 19.x release.
+- RaishxCore 0.1.0-beta.1 or newer in the 0.1.x line.
+- Mekanism remains optional.
+
 Back up old worlds before migration and include `latest.log`, exact versions, and
 reproduction steps in bug reports.
