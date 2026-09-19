@@ -26,6 +26,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -33,11 +34,10 @@ import java.math.BigInteger;
 
 /** Compact AE-style status dashboard for the Quantum Computation Nexus. */
 public final class QuantumComputationNexusScreen extends AbstractContainerScreen<QuantumComputationNexusMenu> {
-    private static final int PANEL_WIDTH = 252;
-    private static final int PANEL_HEIGHT = 168;
-    private static final int BACKGROUND = 0xF20B1020;
-    private static final int PANEL = 0xFF151D32;
-    private static final int PANEL_ALT = 0xFF11182A;
+    private static final ResourceLocation TEXTURE =
+            ResourceLocation.fromNamespaceAndPath("ae2", "textures/guis/quantumcomputation.png");
+    private static final int PANEL_WIDTH = 176;
+    private static final int PANEL_HEIGHT = 127;
     private static final int CYAN = 0xFF58E6FF;
     private static final int PURPLE = 0xFFB268FF;
     private static final int TEXT = 0xFFE8F6FF;
@@ -49,7 +49,7 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
         super(menu, inventory, title);
         imageWidth = PANEL_WIDTH;
         imageHeight = PANEL_HEIGHT;
-        titleLabelY = 9;
+        titleLabelY = 10_000;
         inventoryLabelY = 10_000;
     }
 
@@ -87,7 +87,7 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
                 button -> PacketDistributor.sendToServer(SwitchGuisPacket.openSubMenu(PriorityMenu.TYPE)));
         priorityButton.setTooltip(Tooltip.create(priorityLabel));
         priorityButton.setSize(20, 20);
-        priorityButton.setPosition(leftPos + imageWidth - 24, topPos - 5);
+        priorityButton.setPosition(leftPos + imageWidth - 3, topPos + 5);
         addRenderableWidget(priorityButton);
 
         updateToolbarState();
@@ -110,24 +110,16 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        int x = leftPos;
-        int y = topPos;
-        graphics.fill(x, y, x + imageWidth, y + imageHeight, BACKGROUND);
-        outline(graphics, x, y, imageWidth, imageHeight, 0xFF314660);
-        graphics.fill(x + 1, y + 1, x + imageWidth - 1, y + 3, CYAN);
-        graphics.fill(x + imageWidth / 2, y + 1, x + imageWidth - 1, y + 3, PURPLE);
-
-        panel(graphics, x + 10, y + 27, 232, 29, PANEL_ALT);
-        panel(graphics, x + 10, y + 64, 111, 57, PANEL);
-        panel(graphics, x + 131, y + 64, 111, 57, PANEL);
-        panel(graphics, x + 10, y + 129, 232, 29, PANEL_ALT);
+        graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        leftToolbar.drawBackgroundLayer(graphics,
+                new Rect2i(leftPos, topPos, imageWidth, imageHeight), Point.ZERO);
     }
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawCenteredString(font,
+        drawCenteredFitted(graphics,
                 Component.translatable("gui.ufo.quantum_computation_nexus.title"),
-                imageWidth / 2, titleLabelY, TEXT);
+                14, 9, 160, 1.0F, TEXT);
 
         Component status;
         int statusColor;
@@ -147,30 +139,34 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
             status = Component.translatable("gui.ufo.quantum_computation_nexus.online");
             statusColor = 0xFF5DFFA2;
         }
-        graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.status"), 18, 34, MUTED, false);
-        graphics.drawString(font, status, 18, 45, statusColor, false);
-        String nodes = menu.getModuleCount() + "  •  " + menu.getStorageModuleCount() + " S  •  "
-                + menu.getCoProcessorModuleCount() + " C";
-        graphics.drawString(font, nodes, imageWidth - 18 - font.width(nodes), 39, TEXT, false);
+        drawCenteredFitted(graphics, Component.translatable("gui.ufo.quantum_computation_nexus.status"),
+                13, 34, 159, 0.75F, MUTED);
+        drawCenteredFitted(graphics, status, 13, 44, 159, 0.8F, statusColor);
 
-        graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.storage"), 18, 73, MUTED, false);
-        graphics.drawCenteredString(font, menu.isInfiniteMode() ? "∞" : formatBinary(menu.getStorageBytes()),
-                65, 91, CYAN);
-        graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.bytes"), 18, 108, MUTED, false);
+        drawCenteredFitted(graphics, Component.translatable("gui.ufo.quantum_computation_nexus.storage"),
+                13, 61, 78, 0.72F, MUTED);
+        drawCenteredFitted(graphics, Component.literal(menu.isInfiniteMode() ? "∞" : formatBinary(menu.getStorageBytes())),
+                13, 73, 78, 1.0F, CYAN);
+        drawCenteredFitted(graphics, Component.translatable("gui.ufo.quantum_computation_nexus.bytes"),
+                13, 85, 78, 0.75F, MUTED);
 
-        graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.parallelism"), 139, 73, MUTED, false);
-        graphics.drawCenteredString(font, menu.isInfiniteMode() ? "∞" : formatDecimal(menu.getParallelLanes()),
-                186, 91, PURPLE);
-        graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.lanes"), 139, 108, MUTED, false);
+        drawCenteredFitted(graphics, Component.translatable("gui.ufo.quantum_computation_nexus.parallelism"),
+                94, 61, 159, 0.72F, MUTED);
+        drawCenteredFitted(graphics, Component.literal(menu.isInfiniteMode() ? "∞" : formatDecimal(menu.getParallelLanes())),
+                94, 73, 159, 1.0F, PURPLE);
+        drawCenteredFitted(graphics, Component.translatable("gui.ufo.quantum_computation_nexus.lanes"),
+                94, 85, 159, 0.75F, MUTED);
 
-        graphics.drawString(font, Component.translatable("gui.ufo.quantum_computation_nexus.modules"), 18, 138, MUTED, false);
         Component breakdown = Component.translatable("gui.ufo.quantum_computation_nexus.module_breakdown",
                 menu.getStorageModuleCount(), menu.getCoProcessorModuleCount(), menu.getCpuPartitionCount());
-        graphics.drawString(font, breakdown, 18, 149, TEXT, false);
+        Component summary = Component.empty()
+                .append(Component.translatable("gui.ufo.quantum_computation_nexus.modules"))
+                .append("  •  ").append(breakdown);
+        drawCenteredFitted(graphics, summary, 13, 103, 159, 0.72F, TEXT);
     }
 
     private void renderMetricTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (inside(mouseX, mouseY, leftPos + 10, topPos + 64, 111, 57)) {
+        if (inside(mouseX, mouseY, leftPos + 13, topPos + 60, 66, 36)) {
             var tooltip = Component.literal(menu.getStorageBytes() + " ")
                     .append(Component.translatable("gui.ufo.quantum_computation_nexus.bytes"));
             if (menu.isInfiniteMode()) {
@@ -178,7 +174,7 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
                         .append(Component.translatable("gui.ufo.quantum_computation_nexus.infinite_active"));
             }
             graphics.renderTooltip(font, tooltip.withStyle(ChatFormatting.AQUA), mouseX, mouseY);
-        } else if (inside(mouseX, mouseY, leftPos + 131, topPos + 64, 111, 57)) {
+        } else if (inside(mouseX, mouseY, leftPos + 94, topPos + 60, 66, 36)) {
             var tooltip = Component.literal(menu.getParallelLanes() + " ")
                     .append(Component.translatable("gui.ufo.quantum_computation_nexus.lanes"));
             if (menu.isInfiniteMode()) {
@@ -234,16 +230,15 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
         return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
     }
 
-    private static void panel(GuiGraphics graphics, int x, int y, int width, int height, int color) {
-        graphics.fill(x, y, x + width, y + height, color);
-        outline(graphics, x, y, width, height, 0xFF263A54);
-    }
-
-    private static void outline(GuiGraphics graphics, int x, int y, int width, int height, int color) {
-        graphics.fill(x, y, x + width, y + 1, color);
-        graphics.fill(x, y + height - 1, x + width, y + height, color);
-        graphics.fill(x, y, x + 1, y + height, color);
-        graphics.fill(x + width - 1, y, x + width, y + height, color);
+    private void drawCenteredFitted(GuiGraphics graphics, Component text, int minX, int y, int maxX,
+                                    float maxScale, int color) {
+        int width = Math.max(1, font.width(text));
+        float scale = Math.min(maxScale, (maxX - minX + 1) / (float) width);
+        graphics.pose().pushPose();
+        graphics.pose().translate((minX + maxX + 1) / 2.0F, y, 0.0F);
+        graphics.pose().scale(scale, scale, 1.0F);
+        graphics.drawCenteredString(font, text, 0, 0, color);
+        graphics.pose().popPose();
     }
 
     private static String formatBinary(BigInteger amount) {

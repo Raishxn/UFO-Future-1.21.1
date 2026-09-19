@@ -20,6 +20,8 @@ os gates humanos finais.
 ## Assets e pacote
 
 - Novos overlays de máquinas e multiblocos integrados.
+- Novas UIs compactas do Nexus de Computação Quântica e da Matriz de Fabricação de
+  Padrões integradas, com indicadores dinâmicos de capacidade e módulos.
 - Auditoria de procedência zerada: nenhuma correspondência byte a byte antiga e
   nenhum asset all-rights-reserved no pacote.
 - Modelos `star`/`space` substituídos por geometria procedural original.

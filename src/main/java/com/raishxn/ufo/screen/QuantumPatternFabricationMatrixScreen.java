@@ -10,6 +10,7 @@ import appeng.items.tools.GuideItem;
 import appeng.menu.implementations.PriorityMenu;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
+import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.client.gui.widget.UfoQuickBuildButton;
 import com.raishxn.ufo.client.render.StructureHighlightRenderer;
 import com.raishxn.ufo.network.ModPackets;
@@ -26,18 +27,18 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 /** AE-style status dashboard for the Quantum Pattern Fabrication Matrix. */
 public final class QuantumPatternFabricationMatrixScreen
         extends AbstractContainerScreen<QuantumPatternFabricationMatrixMenu> {
-    private static final int PANEL_WIDTH = 252;
-    private static final int PANEL_HEIGHT = 180;
-    private static final int BACKGROUND = 0xF20B1020;
-    private static final int PANEL = 0xFF151D32;
-    private static final int PANEL_ALT = 0xFF11182A;
-    private static final int CYAN = 0xFF58E6FF;
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
+            "ae2", "textures/guis/quantumpatternfabricationmatrix.png");
+    private static final int PANEL_WIDTH = 176;
+    private static final int PANEL_HEIGHT = 127;
     private static final int PURPLE = 0xFFB268FF;
     private static final int TEXT = 0xFFE8F6FF;
     private static final int MUTED = 0xFF8DA4B8;
@@ -51,7 +52,7 @@ public final class QuantumPatternFabricationMatrixScreen
         super(menu, inventory, title);
         imageWidth = PANEL_WIDTH;
         imageHeight = PANEL_HEIGHT;
-        titleLabelY = 9;
+        titleLabelY = 10_000;
         inventoryLabelY = 10_000;
     }
 
@@ -84,7 +85,7 @@ public final class QuantumPatternFabricationMatrixScreen
                 button -> PacketDistributor.sendToServer(SwitchGuisPacket.openSubMenu(PriorityMenu.TYPE)));
         priorityButton.setTooltip(Tooltip.create(priorityLabel));
         priorityButton.setSize(20, 20);
-        priorityButton.setPosition(leftPos + imageWidth - 24, topPos - 5);
+        priorityButton.setPosition(leftPos + imageWidth - 3, topPos + 5);
         addRenderableWidget(priorityButton);
 
         Component patternsLabel = Component.translatable(
@@ -93,7 +94,7 @@ public final class QuantumPatternFabricationMatrixScreen
                 button -> menu.openPatternManagement());
         patternsButton.setTooltip(Tooltip.create(patternsLabel));
         patternsButton.setSize(20, 20);
-        patternsButton.setPosition(leftPos + imageWidth - 24, topPos + 17);
+        patternsButton.setPosition(leftPos + imageWidth - 3, topPos + 27);
         patternManagementButton = addRenderableWidget(patternsButton);
         updateToolbarState();
         leftToolbar.updateBeforeRender();
@@ -110,7 +111,7 @@ public final class QuantumPatternFabricationMatrixScreen
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
-        if (inside(mouseX, mouseY, leftPos + 10, topPos + 70, 232, 38)) {
+        if (inside(mouseX, mouseY, leftPos + 16, topPos + 47, 143, 15)) {
             graphics.renderTooltip(font,
                     Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.pattern_usage_detail",
                             menu.getStoredPatternCount(), menu.getPatternCapacity())
@@ -122,31 +123,25 @@ public final class QuantumPatternFabricationMatrixScreen
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
         int x = leftPos;
         int y = topPos;
-        graphics.fill(x, y, x + imageWidth, y + imageHeight, BACKGROUND);
-        outline(graphics, x, y, imageWidth, imageHeight, 0xFF314660);
-        graphics.fill(x + 1, y + 1, x + imageWidth - 1, y + 3, CYAN);
-        graphics.fill(x + imageWidth / 2, y + 1, x + imageWidth - 1, y + 3, PURPLE);
-
-        panel(graphics, x + 10, y + 27, 232, 33, PANEL_ALT);
-        panel(graphics, x + 10, y + 70, 232, 38, PANEL);
-        panel(graphics, x + 10, y + 118, 111, 51, PANEL);
-        panel(graphics, x + 131, y + 118, 111, 51, PANEL);
+        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
+        leftToolbar.drawBackgroundLayer(graphics,
+                new Rect2i(leftPos, topPos, imageWidth, imageHeight), Point.ZERO);
 
         int capacity = menu.getPatternCapacity();
         int used = menu.getStoredPatternCount();
-        int barWidth = capacity <= 0 ? 0 : Math.min(224, (int) ((long) used * 224L / capacity));
-        graphics.fill(x + 14, y + 94, x + 238, y + 101, 0xFF263249);
+        int barWidth = capacity <= 0 ? 0 : Math.min(141, (int) ((long) used * 141L / capacity));
+        graphics.fill(x + 17, y + 58, x + 158, y + 62, 0xFF202633);
         if (barWidth > 0) {
-            graphics.fill(x + 14, y + 94, x + 14 + barWidth, y + 101, CYAN);
+            float fullness = Math.min(1.0F, used / (float) capacity);
+            int red = Math.round(255.0F * fullness);
+            int green = Math.round(255.0F * (1.0F - fullness));
+            graphics.fill(x + 17, y + 58, x + 17 + barWidth, y + 62,
+                    0xFF000000 | red << 16 | green << 8);
         }
     }
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawCenteredString(font,
-                Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.title"),
-                imageWidth / 2, titleLabelY, TEXT);
-
         Component status;
         int statusColor;
         if (!menu.isFormed()) {
@@ -159,35 +154,35 @@ public final class QuantumPatternFabricationMatrixScreen
             status = Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.online");
             statusColor = 0xFF5DFFA2;
         }
-        graphics.drawString(font,
+        drawCenteredFitted(graphics,
                 Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.status"),
-                18, 34, MUTED, false);
-        graphics.drawString(font, status, 18, 46, statusColor, false);
-        String fields = Integer.toString(menu.getFieldCount());
-        graphics.drawString(font, fields, imageWidth - 18 - font.width(fields), 41, TEXT, false);
+                14, 14, 160, 0.75F, MUTED);
+        drawCenteredFitted(graphics, status, 14, 23, 160, 0.75F, statusColor);
 
-        graphics.drawString(font,
+        drawLeftFitted(graphics,
                 Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.pattern_library"),
-                18, 77, MUTED, false);
+                16, 47, 115, 0.72F, MUTED);
         String usage = menu.getStoredPatternCount() + " / " + menu.getPatternCapacity();
-        graphics.drawString(font, usage, imageWidth - 18 - font.width(usage), 77, TEXT, false);
+        drawRightFitted(graphics, Component.literal(usage), 116, 47, 158, 0.8F, TEXT);
 
-        graphics.drawString(font,
+        drawCenteredFitted(graphics,
                 Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.field_generators"),
-                18, 127, MUTED, false);
-        Component fieldBreakdown = Component.translatable(
-                "gui.ufo.quantum_pattern_fabrication_matrix.field_breakdown",
-                menu.getTier1Fields(), menu.getTier2Fields(), menu.getTier3Fields());
-        graphics.drawCenteredString(font, fieldBreakdown, 65, 146, CYAN);
+                17, 82, 80, 0.68F, MUTED);
+        renderField(graphics, MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().asItem().getDefaultInstance(),
+                menu.getTier1Fields(), 18, 94);
+        renderField(graphics, MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get().asItem().getDefaultInstance(),
+                menu.getTier2Fields(), 40, 94);
+        renderField(graphics, MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get().asItem().getDefaultInstance(),
+                menu.getTier3Fields(), 62, 94);
 
-        graphics.drawString(font,
+        drawCenteredFitted(graphics,
                 Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.auto_upload"),
-                139, 127, MUTED, false);
+                94, 82, 157, 0.72F, MUTED);
         Component upload = Component.translatable(
                 menu.isGridActive()
                         ? "gui.ufo.quantum_pattern_fabrication_matrix.auto_upload_ready"
                         : "gui.ufo.quantum_pattern_fabrication_matrix.auto_upload_offline");
-        graphics.drawCenteredString(font, upload, 186, 146, PURPLE);
+        drawCenteredFitted(graphics, upload, 94, 99, 157, 0.85F, PURPLE);
     }
 
     private void updateToolbarState() {
@@ -226,15 +221,36 @@ public final class QuantumPatternFabricationMatrixScreen
         return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
     }
 
-    private static void panel(GuiGraphics graphics, int x, int y, int width, int height, int color) {
-        graphics.fill(x, y, x + width, y + height, color);
-        outline(graphics, x, y, width, height, 0xFF263A54);
+    private void renderField(GuiGraphics graphics, ItemStack field, int count, int x, int y) {
+        graphics.renderItem(field, x, y);
+        graphics.renderItemDecorations(font, field, x, y, Integer.toString(count));
     }
 
-    private static void outline(GuiGraphics graphics, int x, int y, int width, int height, int color) {
-        graphics.fill(x, y, x + width, y + 1, color);
-        graphics.fill(x, y + height - 1, x + width, y + height, color);
-        graphics.fill(x, y, x + 1, y + height, color);
-        graphics.fill(x + width - 1, y, x + width, y + height, color);
+    private void drawCenteredFitted(GuiGraphics graphics, Component text, int minX, int y, int maxX,
+                                    float maxScale, int color) {
+        drawFitted(graphics, text, minX, y, maxX, maxScale, color, 0.5F);
+    }
+
+    private void drawLeftFitted(GuiGraphics graphics, Component text, int minX, int y, int maxX,
+                                float maxScale, int color) {
+        drawFitted(graphics, text, minX, y, maxX, maxScale, color, 0.0F);
+    }
+
+    private void drawRightFitted(GuiGraphics graphics, Component text, int minX, int y, int maxX,
+                                 float maxScale, int color) {
+        drawFitted(graphics, text, minX, y, maxX, maxScale, color, 1.0F);
+    }
+
+    private void drawFitted(GuiGraphics graphics, Component text, int minX, int y, int maxX,
+                            float maxScale, int color, float alignment) {
+        int width = Math.max(1, font.width(text));
+        float scale = Math.min(maxScale, (maxX - minX + 1) / (float) width);
+        float anchor = minX + (maxX - minX + 1) * alignment;
+        graphics.pose().pushPose();
+        graphics.pose().translate(anchor, y, 0.0F);
+        graphics.pose().scale(scale, scale, 1.0F);
+        int drawX = Math.round(-width * alignment);
+        graphics.drawString(font, text, drawX, 0, color, false);
+        graphics.pose().popPose();
     }
 }

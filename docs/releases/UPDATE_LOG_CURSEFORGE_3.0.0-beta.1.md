@@ -19,6 +19,8 @@ and release artifact cleanup. This is not yet a stable build: migration of a rea
 ## Assets and packaging
 
 - Integrated the new machine and multiblock overlays.
+- Integrated the new compact UI textures for the Quantum Computation Nexus and
+  Quantum Pattern Fabrication Matrix, including live capacity and module indicators.
 - Asset provenance audit is clean: no old byte-identical matches and no
   all-rights-reserved asset remains in the package.
 - Replaced the `star`/`space` models with original procedural geometry.
