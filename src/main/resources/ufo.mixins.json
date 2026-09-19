@@ -19,6 +19,7 @@
     "MixinPatternEncodingAutoUpload",
     "MixinTianshuPatternEncodingAutoUpload",
     "MixinKeyTypeSelection",
+    "MixinMmrAsyncShutdownGuard",
     "MixinNexusCraftingUnitOwnership",
     "MixinNexusVirtualCraftingCluster"
   ],
