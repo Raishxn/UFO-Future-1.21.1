@@ -299,10 +299,10 @@ the source of any external asset so the credits below stay accurate.
 ## 🙏 Credits
 
 Thank you to the **Applied Energistics 2**, **AE2 Lightning Tech**,
-**GregTech: New Horizons**, **GTO** and **AE2 Crystal Science** teams and
-contributors. Their code, structures, textures and tools helped make UFO Future
-possible. The specific contributions are credited below; original authors retain
-credit for their work.
+**GregTech: New Horizons** and **GregTech CEu Modern** teams and contributors.
+Their code, structures, textures and tools helped make UFO Future possible. The
+specific contributions are credited below; original authors retain credit for
+their work.
 
 If anything below is attributed incorrectly or is missing, please open an issue
 and it will be fixed.
@@ -338,19 +338,15 @@ and it will be fixed.
   and link visualization, and reuses eight mode/import/export/speed icons.
   See the [wireless attribution notice](src/main/resources/assets/ufo/AE2LT-WIRELESS-NOTICE.md)
   for source revisions, adapted components and asset licenses.
-- **[AE2 Crystal Science](https://github.com/Frostbite-time/AE2-Crystal-Science)** —
-  several UFO textures are based on or adapted from this project.
 - **[GregTech: New Horizons](https://github.com/GTNewHorizons/GT-New-Horizons-Modpack)** —
   the GTNH team and contributors are credited for the structure used as the
   basis for the **Stellar Nexus**, the textures used or adapted for the
   **Stellar Field Generators**, and texture references for the industrial
   material line.
-- **[GTO / GregTech Odyssey](https://github.com/GregTech-Odyssey)** — the GTO
-  team and contributors are credited for textures used or adapted in UFO
-  Future, including references for the compact connected-texture casing sheets
-  (`entropy_singularity_casing_ctm.png`, `quantum_hyper_mechanical_casing_ctm.png`).
-  The Stellar Nexus renderer is based on GTO Core's `EyeOfHarmonyRenderer`,
-  as credited in its source.
+- **[GregTech CEu Modern](https://github.com/GregTechCEu/GregTech-Modern)** —
+  the GTCEu team and contributors are credited for the overlay textures used by
+  the **Quantum Pattern Buffer**, **Quantum Pattern Proxy**, **ME Output Hatch**,
+  **ME Massive Fluid Hatch** and **ME Energy Hatch**.
 - **[Applied Energistics 2](https://github.com/AppliedEnergistics/Applied-Energistics-2)** —
   the multiblock supply panel reuses AE2's own
   `ae2:textures/guis/resourcesrequirementswidget.png` at its original size.
