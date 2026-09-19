@@ -68,7 +68,6 @@ These IDs appear registered but do not appear as outputs in the audited recipes:
 - `ufo:stellar_field_generator_t2`
 - `ufo:stellar_field_generator_t3`
 - `ufo:stellar_nexus_controller`
-- `ufo:quantum_entropy_casing`
 - `ufo:structure_scanner`
 - `ufo:ufo_sword`
 - `ufo:ufo_pickaxe`

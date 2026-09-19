@@ -1094,23 +1094,40 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         if (this.level == null) {
             return null;
         }
+        // The pattern endpoint is the sole AE route for a processing machine. In
+        // particular, the coolant hatch may itself be attached to another AE
+        // network through an export bus, but that connection is input-only and
+        // must never receive promised crafting outputs.
+        for (BlockPos partPos : this.parts) {
+            if (LoadedBlockEntityLookup.get(this.level, partPos) instanceof QuantumPatternHatchBE buffer) {
+                IGridNode node = buffer.getActionableNode();
+                return Ae2NodeAvailability.isUsable(
+                        node != null,
+                        node != null && node.getGrid() != null,
+                        node != null && node.isActive(),
+                        node != null && node.isPowered()) ? buffer : null;
+            }
+        }
         // A Proxy intentionally has no cable-facing AE node of its own. Its
-        // reciprocal Buffer link is the authoritative network for processing,
-        // energy reservation and returning promised crafting outputs.
+        // reciprocal Buffer link is the same authoritative route when the
+        // endpoint is remote.
         for (BlockPos partPos : this.parts) {
             if (LoadedBlockEntityLookup.get(this.level, partPos) instanceof QuantumPatternProxyBE proxy) {
                 QuantumPatternHatchBE buffer = proxy.getLinkedPatternBuffer();
                 IGridNode node = buffer != null ? buffer.getActionableNode() : null;
-                if (buffer != null && Ae2NodeAvailability.isUsable(
+                return buffer != null && Ae2NodeAvailability.isUsable(
                         node != null,
                         node != null && node.getGrid() != null,
                         node != null && node.isActive(),
-                        node != null && node.isPowered())) {
-                    return buffer;
-                }
+                        node != null && node.isPowered()) ? buffer : null;
             }
         }
+        // Defensive compatibility for an old/incomplete structure snapshot. A
+        // current valid structure always returned from one of the loops above.
         for (AENetworkedBlockEntity nodeBE : this.networkNodeCandidates) {
+            if (nodeBE instanceof MassiveOutputHatchBE hatch && hatch.supportsFluidInput()) {
+                continue;
+            }
             if (nodeBE.isRemoved()) {
                 continue;
             }

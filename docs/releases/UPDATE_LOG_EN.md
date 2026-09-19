@@ -29,7 +29,6 @@ Compared to `1.6.1`, the mod now includes a much larger block lineup, especially
 
 ### New Quantum and Endgame Structural Blocks
 
-- `Quantum Entropy Casing`
 - `Quantum Hyper Mechanical Casing`
 - `Entropy Assembler Core Casing`
 - `Entropy Singularity Casing`

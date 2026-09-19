@@ -78,10 +78,6 @@ public class ModMenus {
                                     appeng.helpers.patternprovider.PatternProviderLogicHost.class)
                             .build(ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "quantum_pattern_buffer_menu")));
 
-    public static final Supplier<MenuType<com.raishxn.ufo.screen.EntropicConvergenceEngineMenu>> ENTROPIC_CONVERGENCE_ENGINE_MENU =
-            MENUS.register("entropic_convergence_engine_menu",
-                    () -> IMenuTypeExtension.create(com.raishxn.ufo.screen.EntropicConvergenceEngineMenu::new));
-
     public static final Supplier<MenuType<com.raishxn.ufo.screen.UfoArmorConfigMenu>> UFO_ARMOR_CONFIG_MENU =
             MENUS.register("ufo_armor_config",
                     () -> new MenuType<>(com.raishxn.ufo.screen.UfoArmorConfigMenu::new, FeatureFlags.DEFAULT_FLAGS));

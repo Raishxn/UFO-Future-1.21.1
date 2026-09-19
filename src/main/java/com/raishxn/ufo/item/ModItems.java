@@ -235,23 +235,9 @@ public class ModItems {
              () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(), new Item.Properties(),
                      ChatFormatting.RED, ChatFormatting.DARK_RED, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.LIGHT_PURPLE));
 
-     public static final DeferredItem<Item> ENTROPIC_CONVERGENCE_ENGINE = ITEMS.register("entropic_convergence_engine",
-             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get(), new Item.Properties(),
-                     ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED));
-
-     public static final DeferredItem<Item> ENTROPIC_CONVERGENCE_CASING = ITEMS.register("entropic_convergence_casing",
-             () -> new AnimatedNameBlockItem(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get(), new Item.Properties(),
-                     ChatFormatting.AQUA, ChatFormatting.WHITE, ChatFormatting.LIGHT_PURPLE, ChatFormatting.RED));
-
-
-
      // ═══════════════════════════════════════════════════════════
      //  QUANTUM MATTER FABRICATOR — Block Items
      // ═══════════════════════════════════════════════════════════
-
-     public static final DeferredItem<Item> QUANTUM_ENTROPY_CASING = ITEMS.register("quantum_entropy_casing",
-             () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_ENTROPY_CASING.get(), new Item.Properties(),
-                     ChatFormatting.WHITE, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, ChatFormatting.BLUE, ChatFormatting.DARK_AQUA, ChatFormatting.AQUA));
 
      public static final DeferredItem<Item> QUANTUM_HYPER_MECHANICAL_CASING = ITEMS.register("quantum_hyper_mechanical_casing",
              () -> new AnimatedNameBlockItem(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get(), new Item.Properties(),

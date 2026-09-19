@@ -8,6 +8,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,11 +21,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.server.level.ServerPlayer;
 
 public class StructureScannerItem extends Item {
 
     public StructureScannerItem(Properties properties) {
         super(properties.stacksTo(1));
+    }
+
+    @Override
+    public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (level.isClientSide) ClientProxy.openSettings(hand, stack);
+        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
 
     @Override
@@ -48,6 +58,15 @@ public class StructureScannerItem extends Item {
         MultiblockControllerDefinition definition = definitionOpt.get();
         var state = level.getBlockState(pos);
         var facing = MultiblockControllerDefinitions.getPatternFacing(be, state);
+        StructureScannerSettings settings = StructureScannerSettings.read(context.getItemInHand());
+
+        if (player.isShiftKeyDown() && settings.mode() != StructureScannerSettings.Mode.SCAN) {
+            if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+                com.raishxn.ufo.api.multiblock.MultiblockAutoBuildService.start(
+                        serverPlayer, be, settings.mode(), settings.hatchMode());
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
 
         MultiblockPattern.MatchResult result = definition.pattern().match(level, pos, facing);
 
@@ -60,16 +79,6 @@ public class StructureScannerItem extends Item {
                     player.sendSystemMessage(definition.name().copy()
                             .append(Component.literal(": structure shape is valid, but extra controller validation failed.").withStyle(ChatFormatting.RED)));
                 }
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
-
-        if (player.isCreative() && player.isShiftKeyDown()) {
-            if (!level.isClientSide) {
-                definition.pattern().assembleAsCreative(level, pos, facing, definition.defaultCreativeStates());
-                controller.scanStructure(level);
-                player.displayClientMessage(definition.name().copy()
-                        .append(Component.literal(": instant auto-build completed.").withStyle(ChatFormatting.LIGHT_PURPLE)), true);
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
@@ -122,11 +131,21 @@ public class StructureScannerItem extends Item {
                                 @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.0").withStyle(ChatFormatting.GRAY));
         tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.1").withStyle(ChatFormatting.DARK_GRAY));
-        tooltipComponents.add(Component.literal("Sneak + Right Click in Creative to auto-build.").withStyle(ChatFormatting.YELLOW));
+        StructureScannerSettings settings = StructureScannerSettings.read(stack);
+        tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.configure").withStyle(ChatFormatting.AQUA));
+        tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.execute").withStyle(ChatFormatting.YELLOW));
+        tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.mode",
+                Component.translatable("gui.ufo.structure_scanner.mode."
+                        + settings.mode().name().toLowerCase(java.util.Locale.ROOT))).withStyle(ChatFormatting.LIGHT_PURPLE));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 
     private static final class ClientProxy {
+        private static void openSettings(InteractionHand hand, ItemStack stack) {
+            net.minecraft.client.Minecraft.getInstance().setScreen(
+                    new com.raishxn.ufo.screen.StructureScannerScreen(hand, stack));
+        }
+
         private static void highlight(BlockPos pos, long duration) {
             com.raishxn.ufo.client.render.StructureHighlightRenderer.highlight(pos, duration);
         }

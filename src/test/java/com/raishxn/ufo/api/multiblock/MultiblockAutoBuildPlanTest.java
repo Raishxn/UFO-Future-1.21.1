@@ -40,6 +40,19 @@ class MultiblockAutoBuildPlanTest {
     }
 
     @Test
+    void recordsExplicitReplacementWithoutTreatingItAsBlocked() {
+        var replacement = new MultiblockAutoBuildPlan.LocalPos(1, 0, 1);
+        var plan = MultiblockAutoBuildPlan.create(TEMPLATE, 'C', 1, 0, TARGETS, ignored -> true,
+                (pos, symbol, target) -> pos.equals(replacement)
+                        ? MultiblockAutoBuildPlan.SlotState.REPLACE
+                        : MultiblockAutoBuildPlan.SlotState.MATCHING);
+
+        assertTrue(plan.blocked().isEmpty());
+        assertEquals(1, plan.placements().size());
+        assertTrue(plan.placements().getFirst().replace());
+    }
+
+    @Test
     void sortsBottomUpThenOutwardFromController() {
         var states = new HashMap<MultiblockAutoBuildPlan.LocalPos, MultiblockAutoBuildPlan.SlotState>();
         states.put(new MultiblockAutoBuildPlan.LocalPos(0, 1, 0), MultiblockAutoBuildPlan.SlotState.EMPTY);

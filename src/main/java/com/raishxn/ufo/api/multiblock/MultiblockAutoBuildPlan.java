@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-/** Pure, immutable preflight plan. It never proposes replacing an occupied mismatching slot. */
+/** Pure, immutable preflight plan for missing and explicitly replaceable structure slots. */
 public record MultiblockAutoBuildPlan<T>(List<Placement<T>> placements, List<LocalPos> blocked) {
     public MultiblockAutoBuildPlan {
         placements = List.copyOf(placements);
@@ -39,7 +39,8 @@ public record MultiblockAutoBuildPlan<T>(List<Placement<T>> placements, List<Loc
                 LocalPos local = new LocalPos(x, y, z);
                 switch (resolver.resolve(local, symbol, target)) {
                     case MATCHING -> { }
-                    case EMPTY -> placements.add(new Placement<>(local, symbol, target));
+                    case EMPTY -> placements.add(new Placement<>(local, symbol, target, false));
+                    case REPLACE -> placements.add(new Placement<>(local, symbol, target, true));
                     case BLOCKED -> blocked.add(local);
                 }
             }
@@ -54,9 +55,9 @@ public record MultiblockAutoBuildPlan<T>(List<Placement<T>> placements, List<Loc
         return new MultiblockAutoBuildPlan<>(placements, blocked);
     }
 
-    public enum SlotState { MATCHING, EMPTY, BLOCKED }
+    public enum SlotState { MATCHING, EMPTY, REPLACE, BLOCKED }
     public record LocalPos(int x, int y, int z) { }
-    public record Placement<T>(LocalPos localPos, char symbol, T target) { }
+    public record Placement<T>(LocalPos localPos, char symbol, T target, boolean replace) { }
     @FunctionalInterface public interface SlotResolver<T> {
         SlotState resolve(LocalPos localPos, char symbol, T target);
     }

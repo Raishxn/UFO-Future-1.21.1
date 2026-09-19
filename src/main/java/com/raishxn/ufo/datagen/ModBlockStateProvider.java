@@ -38,10 +38,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         // Blocos que são um cubo simples
         multiblockCube(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING);
         connectedTextureCube(MultiblockBlocks.ENTROPY_SINGULARITY_CASING, "entropy_singularity_casing");
-        craftingLikeCube(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX, "entropy_computer_condensation_matrix");
-        craftingLikeCube(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE, "entropy_computer_condensation_matrix");
-        entropicMachineCube(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING, "entropic_convergence_casing");
-        multiblockCubeWithTexture(MultiblockBlocks.QUANTUM_ENTROPY_CASING, "quantum_hyper_mechanical_casing");
+        multiblockCubeWithTexture(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX,
+                "entropy_computer_condensation_matrix");
         connectedTextureCube(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING, "quantum_hyper_mechanical_casing");
         qmfControllerBlock(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER);
         controllerWithBase(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER, "quantum_hyper_mechanical_casing");

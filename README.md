@@ -211,7 +211,7 @@ UFO no longer requires GeckoLib; other mods in your pack may still require it.
                       │
 ┌─────────────────────▼───────────────────────────────────────────┐
 │                     ENDGAME                                      │
-│  Entropic Convergence Engine · Infinity Fabrication Singularity  │
+│  Infinity Fabrication Singularity · Quantum Computation Nexus    │
 │  UFO Armor · UFO Staff · Infinity Cells · Dimensional Catalyst   │
 └─────────────────────────────────────────────────────────────────┘
 ```

@@ -20,7 +20,6 @@ import com.raishxn.ufo.screen.QuantumPatternMatrixPatternScreen;
 import com.raishxn.ufo.screen.QuantumProcessorAssemblerControllerScreen;
 import com.raishxn.ufo.screen.QuantumSlicerControllerScreen;
 import com.raishxn.ufo.screen.StellarNexusControllerScreen;
-import com.raishxn.ufo.screen.EntropicConvergenceEngineScreen;
 import com.raishxn.ufo.menu.UFOMenus;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.init.ModMenus;
@@ -104,7 +103,6 @@ public class UfoModClient {
         InitScreens.register(event, ModMenus.QUANTUM_PATTERN_BUFFER_MENU.get(), QuantumPatternHatchScreen::new, "/screens/quantum_pattern_buffer.json");
         InitScreens.register(event, ModMenus.QUANTUM_INTERFACE_MENU.get(), com.raishxn.ufo.screen.QuantumInterfaceScreen::new, "/screens/ufo_quantum_interface.json");
         event.register(ModMenus.UFO_ARMOR_CONFIG_MENU.get(), com.raishxn.ufo.screen.UfoArmorConfigScreen::new);
-        InitScreens.register(event, ModMenus.ENTROPIC_CONVERGENCE_ENGINE_MENU.get(), EntropicConvergenceEngineScreen::new, "/screens/universal_multiblock_controller.json");
     }
 
     private void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {

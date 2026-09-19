@@ -62,9 +62,11 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
         float tick = blockEntity.getLevel().getGameTime() + partialTick;
 
         // Calculate center offset based on controller facing direction
-        // Assume controller is horizontally centered relative to the shape
+        // The controller sits on the bottom face of the 35x34x35 shell.
+        // Keep the scene at the actual vertical center instead of rendering it
+        // through the floor around the controller block.
         Direction facing = blockEntity.getBlockState().getValue(BlockStateProperties.FACING);
-        double x = 0.5, y = 0.5, z = 0.5; 
+        double x = 0.5, y = 17.0, z = 0.5;
         switch (facing) {
             case NORTH -> z += 16;
             case SOUTH -> z -= 16;
@@ -185,21 +187,6 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
 
         // Very slow rotation for ambient effect
         poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(0.0F, 1.0F, 0.0F, (tick * 0.05F) % 360.0F));
-
-        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
-                poseStack.last(),
-                buffer.getBuffer(RenderType.translucent()),
-                null,
-                model,
-                1.0F, 1.0F, 1.0F,
-                LightTexture.FULL_BRIGHT,
-                OverlayTexture.NO_OVERLAY,
-                ModelData.EMPTY,
-                RenderType.translucent()
-        );
-
-        // Render a second time rotated 180 degrees to cover the texture/mesh gap on the sphere
-        poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(0.0F, 1.0F, 0.0F, 180.0F));
 
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
                 poseStack.last(),

@@ -1394,39 +1394,6 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_entropy_core", has(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get()))
                 .save(c);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.QUANTUM_ENTROPY_CASING.get(), 2)
-                .pattern("ECN")
-                .pattern(" Q ")
-                .pattern("NCE")
-                .define('E', ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get())
-                .define('C', ModItems.COSMIC_STRING_COMPONENT_MATRIX.get())
-                .define('N', ModItems.NEUTRON_STAR_MATTER.get())
-                .define('Q', MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
-                .unlockedBy("has_condensation_matrix", has(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get()))
-                .save(c);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get())
-                .pattern("TET")
-                .pattern("CMC")
-                .pattern("TET")
-                .define('T', ModItems.TESSERACT_COMPONENT_MATRIX.get())
-                .define('E', ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get())
-                .define('C', MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
-                .define('M', ModBlocks.CO_PROCESSOR_BLOCKS.get(com.raishxn.ufo.core.MegaCoProcessorTier.COPROCESSOR_2B).get())
-                .unlockedBy("has_entropy_condensation_matrix", has(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get()))
-                .save(c);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get(), 4)
-                .pattern("TCT")
-                .pattern("CMC")
-                .pattern("TET")
-                .define('T', ModItems.TESSERACT_COMPONENT_MATRIX.get())
-                .define('E', ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get())
-                .define('C', MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
-                .define('M', ModBlocks.CO_PROCESSOR_BLOCKS.get(com.raishxn.ufo.core.MegaCoProcessorTier.COPROCESSOR_2B).get())
-                .unlockedBy("has_entropy_condensation_matrix", has(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get()))
-                .save(c);
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
                 .pattern("SES")
                 .pattern("LCL")

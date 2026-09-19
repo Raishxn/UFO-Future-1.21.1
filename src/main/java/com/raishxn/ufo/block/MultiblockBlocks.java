@@ -38,24 +38,12 @@ public class MultiblockBlocks {
     public static final DeferredBlock<EntropicMachineShellBlock> ENTROPY_SINGULARITY_CASING = BLOCKS.register("entropy_singularity_casing",
             () -> new EntropicMachineShellBlock(BlockBehaviour.Properties.of().strength(5.0f).requiresCorrectToolForDrops()));
 
-    public static final DeferredBlock<EntropicConvergenceEngineBlock> ENTROPY_COMPUTER_CONDENSATION_MATRIX = BLOCKS.register("entropy_computer_condensation_matrix",
-            EntropicConvergenceEngineBlock::new);
-
-    public static final DeferredBlock<EntropicConvergenceCasingBlock> ENTROPIC_CONVERGENCE_CASING = BLOCKS.register("entropic_convergence_casing",
-            EntropicConvergenceCasingBlock::new);
-
-    public static final DeferredBlock<EntropicConvergenceEngineBlock> ENTROPIC_CONVERGENCE_ENGINE = BLOCKS.register("entropic_convergence_engine",
-            EntropicConvergenceEngineBlock::new);
-
-
-
+    public static final DeferredBlock<Block> ENTROPY_COMPUTER_CONDENSATION_MATRIX = registerBlock("entropy_computer_condensation_matrix",
+            () -> new Block(BlockBehaviour.Properties.of().strength(10.0f).requiresCorrectToolForDrops()));
 
     // ═══════════════════════════════════════════════════════════
     //  QUANTUM MATTER FABRICATOR — Multiblock Components
     // ═══════════════════════════════════════════════════════════
-
-    public static final DeferredBlock<Block> QUANTUM_ENTROPY_CASING = registerBlock("quantum_entropy_casing",
-            () -> new Block(BlockBehaviour.Properties.of().strength(10.0f).requiresCorrectToolForDrops()));
 
     public static final DeferredBlock<Block> QUANTUM_HYPER_MECHANICAL_CASING = registerBlock("quantum_hyper_mechanical_casing",
             () -> new Block(BlockBehaviour.Properties.of().strength(12.0f, 1200.0f).requiresCorrectToolForDrops()));

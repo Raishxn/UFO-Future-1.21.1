@@ -17,11 +17,16 @@ public final class UfoMekanismStorageCompat {
 
     public static void initialize(IEventBus modEventBus) {
         if (!isLoaded()) return;
+        // Keep the legacy key type registered so worlds that once stored ufo:chemical keys can still
+        // decode them. The live capability/container adapters, however, must have exactly one owner.
+        // Applied Mekanistics already exposes Mekanism chemicals to AE2; registering our adapters too
+        // makes interfaces that enumerate AE key types expose the same tank as two different keys.
+        modEventBus.addListener(UfoMekanismStorageCompat::onRegisterEvent);
+        if (!shouldRegisterNativeAdapters(true, usesAppliedMekanistics())) return;
         StackWorldBehaviors.registerImportStrategy(Holder.KEY_TYPE, UfoMekanismStackImportStrategy::new);
         StackWorldBehaviors.registerExportStrategy(Holder.KEY_TYPE, UfoMekanismStackExportStrategy::new);
         StackWorldBehaviors.registerExternalStorageStrategy(Holder.KEY_TYPE, UfoMekanismExternalStorageStrategy::new);
         ContainerItemStrategy.register(Holder.KEY_TYPE, UfoMekanismKey.class, new ChemicalContainerItemStrategy());
-        modEventBus.addListener(UfoMekanismStorageCompat::onRegisterEvent);
     }
 
     public static void initializeClient(IEventBus modEventBus) {
@@ -33,11 +38,19 @@ public final class UfoMekanismStorageCompat {
         return ModList.get().isLoaded("mekanism");
     }
 
+    public static boolean usesAppliedMekanistics() {
+        return isLoaded() && ModList.get().isLoaded("appmek");
+    }
+
+    static boolean shouldRegisterNativeAdapters(boolean mekanismLoaded, boolean appmekLoaded) {
+        return mekanismLoaded && !appmekLoaded;
+    }
+
     public static AEKeyType getChemicalKeyType() {
         // Keep registered cell IDs loadable without the integration. All additions
         // are rejected by isChemicalBlacklisted while Mekanism is absent.
         if (!isLoaded()) return AEKeyType.fluids();
-        return ModList.get().isLoaded("appmek") ? AppliedMekanisticsCompat.keyType() : Holder.KEY_TYPE;
+        return usesAppliedMekanistics() ? AppliedMekanisticsCompat.keyType() : Holder.KEY_TYPE;
     }
 
     public static boolean isChemicalBlacklisted(ItemStack cellItem, AEKey requestedAddition) {

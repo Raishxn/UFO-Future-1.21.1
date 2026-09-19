@@ -1,5 +1,5 @@
-// 1.21.1	2026-09-11T12:52:17.239514011	Tags for minecraft:block mod id ufo
-53ae3dd54f069f17f3074bd4e3461372538aa720 data/minecraft/tags/block/mineable/pickaxe.json
-2d5d2c98cb8aeb0a728d5e0137dbca32e18efb18 data/minecraft/tags/block/needs_diamond_tool.json
+// 1.21.1	2026-09-19T03:57:29.395210591	Tags for minecraft:block mod id ufo
+53ed852104e7b979f5bd8931b197fce558107649 data/minecraft/tags/block/mineable/pickaxe.json
+f0de4853cb81cf76c2dd9b78965439183931f1e1 data/minecraft/tags/block/needs_diamond_tool.json
 bb611c6da5201b52042eb8938b9e647118260bb1 data/ufo/tags/block/incorrect_for_ufo_tool.json
 4ae316191760add992617741dc358f68d3378456 data/ufo/tags/block/needs_ufo_tool.json

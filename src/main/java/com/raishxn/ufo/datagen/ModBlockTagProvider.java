@@ -27,7 +27,6 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.QUANTUM_LATTICE_FRAME.get())         // <<-- ADICIONE .get() AQUI
                 .add(ModBlocks.GRAVITON_PLATED_CASING.get())       // <<-- E AQUI
                 .add(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get())  // <<-- E AQUI
-                .add(MultiblockBlocks.QUANTUM_ENTROPY_CASING.get())
                 .add(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
                 .add(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get())
                 .add(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get())
@@ -50,16 +49,13 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
                 .add(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
                 .add(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get())
-                .add(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
-                .add(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get())
-                .add(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get());
+                .add(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
 
 
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(ModBlocks.QUANTUM_LATTICE_FRAME.get())         // <<-- ADICIONE .get() AQUI
                 .add(ModBlocks.GRAVITON_PLATED_CASING.get())       // <<-- E AQUI
                 .add(ModBlocks.WHITE_DWARF_FRAGMENT_BLOCK.get())  // <<-- E AQUI
-                .add(MultiblockBlocks.QUANTUM_ENTROPY_CASING.get())
                 .add(MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get())
                 .add(MultiblockBlocks.QUANTUM_MATTER_FABRICATOR_CONTROLLER.get())
                 .add(MultiblockBlocks.QUANTUM_SLICER_CONTROLLER.get())
@@ -82,9 +78,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
                 .add(MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
                 .add(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get())
-                .add(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
-                .add(MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get())
-                .add(MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get());
+                .add(MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get());
         // --- FIM DA CORREÇÃO ---
 
 

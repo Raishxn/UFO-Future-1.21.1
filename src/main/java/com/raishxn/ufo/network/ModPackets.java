@@ -31,6 +31,9 @@ public class ModPackets {
                 OpenUfoArmorConfigPacket::handle);
         registrar.playToServer(SetUfoArmorModuleSettingPacket.TYPE, SetUfoArmorModuleSettingPacket.STREAM_CODEC,
                 SetUfoArmorModuleSettingPacket::handle);
+        registrar.playToServer(PacketSetStructureScannerSettings.TYPE,
+                PacketSetStructureScannerSettings.STREAM_CODEC,
+                PacketSetStructureScannerSettings::handle);
         registrar.playToServer(
                 PacketChangeStellarRecipe.TYPE,
                 PacketChangeStellarRecipe.STREAM_CODEC,

@@ -43,7 +43,8 @@ public final class MachinePacketGuard {
         CYCLE_MODE(2L),
         TOGGLE_AUTO_SMELT(2L),
         OPEN_ARMOR_CONFIG(10L),
-        SET_ARMOR_SETTING(1L);
+        SET_ARMOR_SETTING(1L),
+        CONFIGURE_SCANNER(1L);
 
         private final MachineAction coreAction;
 

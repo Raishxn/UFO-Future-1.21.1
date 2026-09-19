@@ -4,7 +4,6 @@
     "ufo:quantum_lattice_frame",
     "ufo:graviton_plated_casing",
     "ufo:white_dwarf_fragment_block",
-    "ufo:quantum_entropy_casing",
     "ufo:quantum_hyper_mechanical_casing",
     "ufo:quantum_matter_fabricator_controller",
     "ufo:quantum_slicer_controller",
@@ -27,8 +26,6 @@
     "ufo:ae_energy_input_hatch",
     "ufo:entropy_assembler_core_casing",
     "ufo:entropy_singularity_casing",
-    "ufo:entropy_computer_condensation_matrix",
-    "ufo:entropic_convergence_casing",
-    "ufo:entropic_convergence_engine"
+    "ufo:entropy_computer_condensation_matrix"
   ]
 }

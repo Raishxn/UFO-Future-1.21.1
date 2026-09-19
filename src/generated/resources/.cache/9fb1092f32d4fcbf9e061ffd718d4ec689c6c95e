@@ -1,4 +1,4 @@
-// 1.21.1	2026-09-18T12:58:57.216390273	Recipes
+// 1.21.1	2026-09-19T03:57:29.392340343	Recipes
 1d246551720da7a4278e01eabd033d544a6bdb32 data/ufo/advancement/recipes/combat/ufo_abyssal_sight_card.json
 273fbc64cfd42799ed2e94dcd62220d18b0be8db data/ufo/advancement/recipes/combat/ufo_adaptive_biosphere_card.json
 2ac858c09ad8edb63ed3f1aa10865d0083affd12 data/ufo/advancement/recipes/combat/ufo_aegis_singularity_card.json
@@ -23,8 +23,6 @@ eb7866de442289af9a906bdbf371421bb9e18e5a data/ufo/advancement/recipes/misc/copro
 c329c52c1cf665d32d0c4676c21a72563f6b324f data/ufo/advancement/recipes/misc/coprocessor_50m.json
 be3ad26fbd1e6a1fcf540a0efc63acf3c693e948 data/ufo/advancement/recipes/misc/coprocessor_750m.json
 ad8781cb7009056952f51b77421b471bdf8d2c1f data/ufo/advancement/recipes/misc/dimensional_matter_assembler.json
-a9bae6e8ddcdb6ee985e3dfe57763ec9fac4cea5 data/ufo/advancement/recipes/misc/entropic_convergence_casing.json
-c5adc1fceaff7d5e56a20a30c0da26a8a75dda5f data/ufo/advancement/recipes/misc/entropic_convergence_engine.json
 0d5f743983aff96a76c1ae614a923ec3ec990785 data/ufo/advancement/recipes/misc/entropy_assembler_core_casing.json
 c21fd064af707ccfdfe1e0536172550b1a27f558 data/ufo/advancement/recipes/misc/entropy_computer_condensation_matrix.json
 4efbf81ff94d9b30b6cf46ec2105ed5600a11dd6 data/ufo/advancement/recipes/misc/entropy_singularity_casing.json
@@ -57,7 +55,6 @@ a2e3f211998c3caf1b304987f920320e1cd320e7 data/ufo/advancement/recipes/misc/pulsa
 1a456896600879df2122694278854c9ed87c5ba0 data/ufo/advancement/recipes/misc/quantum_computation_nexus_controller.json
 ca25101ccdb64a2ada54a572667f2e0c3d372fb9 data/ufo/advancement/recipes/misc/quantum_cryoforge_controller.json
 92b2a98ed2f5f63c460bcbd161a6559d0d6fedf5 data/ufo/advancement/recipes/misc/quantum_energy_cell.json
-1fc2b5e9105e86bebb88fde3d3a8c127c7f4830a data/ufo/advancement/recipes/misc/quantum_entropy_casing.json
 3a9e122840eeac27abae55ea547c7caf2c3f74ba data/ufo/advancement/recipes/misc/quantum_grid_link.json
 0dfff1cce5880968d4f5b5246670a739d36ecdc3 data/ufo/advancement/recipes/misc/quantum_hyper_mechanical_casing.json
 397686d5fa3a5912e1a0ac6b0e3ae9d778836a19 data/ufo/advancement/recipes/misc/quantum_interface.json
@@ -170,8 +167,6 @@ f3a29ec91ca9a335a36bab0efd76b5199742752d data/ufo/recipe/dma/ufo_energy_cell.jso
 34b1f6dfbbfe010a23036b8b3ddc5763b7da7a66 data/ufo/recipe/dma/white_dwarf_fluid.json
 cf4b81ce61d0f396eb8a9609ec8e419089a8d44a data/ufo/recipe/dma/white_dwarf_fragment_rod.json
 0550e939ca1f756eee5584eaacaebb90e6986d27 data/ufo/recipe/dma/white_dwarf_matter.json
-d0ee8de5cf5809cae03e3e44513a9b846a24c4d4 data/ufo/recipe/entropic_convergence_casing.json
-582495991131baa82c3fa124dcc21b4ac35c9882 data/ufo/recipe/entropic_convergence_engine.json
 739e234a080d382a317713f40819107115b3eadf data/ufo/recipe/entropy_assembler_core_casing.json
 d0518a9ce7190113425dae077dae4d00aed9b181 data/ufo/recipe/entropy_computer_condensation_matrix.json
 af792a576062f9741d290020ea205b7f99f7adfd data/ufo/recipe/entropy_singularity_casing.json
@@ -204,7 +199,6 @@ d75c15674fcca4dd88e4cf83891764db5c60c8e7 data/ufo/recipe/pulsar_fragment_nugget.
 019b394f473dd013c51e1e63bbc4a0977a97db20 data/ufo/recipe/quantum_computation_nexus_controller.json
 48b4e93930ebacb57a2fd8b4535b8e6afea0ef7d data/ufo/recipe/quantum_cryoforge_controller.json
 9a177f4ec2897ca955d138f75bd02e899c4487d4 data/ufo/recipe/quantum_energy_cell.json
-52c55d11d5a10bc315040c311c0396c8947e5846 data/ufo/recipe/quantum_entropy_casing.json
 5f0d09212f02913685b2d4b09608b00c31b339e3 data/ufo/recipe/quantum_grid_link.json
 89d08402c995c7017ffd8b71add16ddfe90e6dc4 data/ufo/recipe/quantum_hyper_mechanical_casing.json
 a8524420528c6b6a9a956ddb7d05e101d637d851 data/ufo/recipe/quantum_interface.json

@@ -271,51 +271,6 @@ public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raish
                 return type;
             });
 
-    @SuppressWarnings("unchecked")
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE>> ENTROPIC_CONVERGENCE_CASING_BE =
-            BLOCK_ENTITIES.register("entropic_convergence_casing", () -> {
-                final java.util.concurrent.atomic.AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE>> typeHolder = new java.util.concurrent.atomic.AtomicReference<>();
-                var type = BlockEntityType.Builder.of(
-                        (pos, state) -> new com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE(typeHolder.get(), pos, state),
-                        com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get()
-                ).build(null);
-                typeHolder.set(type);
-                AEBaseBlockEntity.registerBlockEntityItem(type,
-                        com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get().asItem());
-                ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_CONVERGENCE_CASING.get()).setBlockEntity(
-                        (Class) com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE.class,
-                        (BlockEntityType) type,
-                        null,
-                        null
-                );
-                return type;
-            });
-
-    @SuppressWarnings("unchecked")
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE>> ENTROPIC_CONVERGENCE_ENGINE_BE =
-            BLOCK_ENTITIES.register("entropic_convergence_engine", () -> {
-                final java.util.concurrent.atomic.AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE>> typeHolder = new java.util.concurrent.atomic.AtomicReference<>();
-                var type = BlockEntityType.Builder.of(
-                        (pos, state) -> new com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE(typeHolder.get(), pos, state),
-                        com.raishxn.ufo.block.MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get(),
-                        com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get()
-                ).build(null);
-                typeHolder.set(type);
-                ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get()).setBlockEntity(
-                        (Class) com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE.class,
-                        (BlockEntityType) type,
-                        null,
-                        null
-                );
-                ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.ENTROPIC_CONVERGENCE_ENGINE.get()).setBlockEntity(
-                        (Class) com.raishxn.ufo.block.entity.EntropicConvergenceEngineBE.class,
-                        (BlockEntityType) type,
-                        null,
-                        null
-                );
-                return type;
-            });
-
     // ═══════════════════════════════════════════════════════════
     //  STELLAR NEXUS — Block Entities
     // ═══════════════════════════════════════════════════════════
