@@ -10,8 +10,6 @@
   <img src="https://img.shields.io/badge/License-LGPLv3%20%2F%20CC%20BY--NC--SA%203.0-blue?style=for-the-badge" alt="License"/>
 </p>
 
-<h1 align="center">🛸 UFO Future</h1>
-
 <p align="center">
   <strong>An endgame Applied Energistics 2 addon for Minecraft 1.21.1 (NeoForge)</strong><br/>
   Eight multiblocks · ME-native hatches · Aggregate billion-scale crafting · Stellar materials · Transformable energy tools · BigInteger storage
