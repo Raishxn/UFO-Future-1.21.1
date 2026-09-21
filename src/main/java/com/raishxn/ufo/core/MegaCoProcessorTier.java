@@ -1,17 +1,17 @@
 package com.raishxn.ufo.core;
 
-import appeng.block.crafting.ICraftingUnitType; // <<-- 1. IMPORT CORRETO
+import appeng.block.crafting.ICraftingUnitType;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufocore.api.crafting.CraftingComputeCapacity;
 import net.minecraft.world.item.Item;
 
-// 2. FAÇA O ENUM IMPLEMENTAR A INTERFACE
+/** Defines the endgame parallel-processing tiers while preserving their legacy registry IDs. */
 public enum MegaCoProcessorTier implements ICraftingUnitType {
-    COPROCESSOR_50M("50m", "50M", 50_000_000),
-    COPROCESSOR_150M("150m", "150M", 150_000_000),
-    COPROCESSOR_300M("300m", "300M", 300_000_000),
-    COPROCESSOR_750M("750m", "750M", 750_000_000),
-    COPROCESSOR_2B("2b", "2B", 2_000_000_000);
+    COPROCESSOR_50M("50m", "4K", 4_096),
+    COPROCESSOR_150M("150m", "8K", 8_192),
+    COPROCESSOR_300M("300m", "16K", 16_384),
+    COPROCESSOR_750M("750m", "32K", 32_768),
+    COPROCESSOR_2B("2b", "64K", 65_536);
 
     private final String registryId;
     private final String displayName;
@@ -36,8 +36,6 @@ public enum MegaCoProcessorTier implements ICraftingUnitType {
         return CraftingComputeCapacity.lanes(acceleratorThreads);
     }
 
-    // --- MÉTODOS DA INTERFACE ICraftingUnitType ---
-
     @Override
     public int getAcceleratorThreads() {
         return this.acceleratorThreads;
@@ -45,13 +43,11 @@ public enum MegaCoProcessorTier implements ICraftingUnitType {
 
     @Override
     public long getStorageBytes() {
-        // 4. Como é um co-processador, ele não tem armazenamento. Retornamos 0.
         return 0;
     }
 
     @Override
     public Item getItemFromType() {
-        // 5. Este método ajuda o AE2 a saber qual item corresponde a este tier.
         return ModBlocks.CO_PROCESSOR_BLOCKS.get(this).get().asItem();
     }
 }

@@ -65,6 +65,6 @@ public class InfinityCell extends AEBaseItem {
 
     public static long getAsIntMax(AEKey key) {
         if (key == null) return 0;
-        return (long) Integer.MAX_VALUE * key.getAmountPerUnit();
+        return com.raishxn.ufo.item.custom.cell.InfiniteSourceCapacity.advertisedAmount();
     }
 }

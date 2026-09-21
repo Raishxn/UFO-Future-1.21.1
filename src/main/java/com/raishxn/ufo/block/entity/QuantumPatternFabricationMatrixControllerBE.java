@@ -61,6 +61,7 @@ import java.util.Set;
 public final class QuantumPatternFabricationMatrixControllerBE extends AENetworkedBlockEntity
         implements StructureInvalidationTarget, MenuProvider, IMultiblockController,
         QuantumGridLinkHost, QuantumPatternMatrixHost, IPriorityHost, InternalInventoryHost {
+    private final com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter tickAccelerationLimiter = new com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter();
     public static final int SLOTS_PER_MK1_FIELD = 256;
     public static final int SLOTS_PER_MK2_FIELD = 512;
     public static final int SLOTS_PER_MK3_FIELD = 1024;
@@ -131,6 +132,7 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
 
     public void serverTick() {
         if (!(level instanceof ServerLevel serverLevel)) return;
+        if (!tickAccelerationLimiter.tryAcquire(serverLevel.getGameTime(), com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks())) return;
         long startedAt = System.nanoTime();
         try {
             if (structureDirty) {

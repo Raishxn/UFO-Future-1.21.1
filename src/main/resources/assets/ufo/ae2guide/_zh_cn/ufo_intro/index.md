@@ -33,7 +33,7 @@ categories:
 3. 建造通用多方块生产线，并连接 <ItemLink id="ufo:quantum_pattern_hatch" /> 以使用 AE2 处理样板。
 4. 将恒星场生成器从 MK1 升级至 MK3，以解锁配方并加速低等级生产。
 5. 扩建合成 CPU 与存储系统，以承载超大规模请求。
-6. 建造 <ItemLink id="ufo:stellar_nexus_controller" />，进行终局恒星模拟和长周期生产。
+6. 建造 <ItemLink id="ufo:stellar_nexus_controller" />，进行终局恒星模拟和高吞吐短周期生产。
 
 > 已停用的熵装配矩阵现由量子计算枢纽、量子样板制造矩阵与无限制造奇点组成的自动合成生产线取代。
 

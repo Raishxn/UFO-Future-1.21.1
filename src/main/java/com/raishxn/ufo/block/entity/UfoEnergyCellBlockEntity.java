@@ -6,12 +6,14 @@ import appeng.api.config.PowerUnit;
 import appeng.block.networking.EnergyCellBlock;
 import appeng.blockentity.networking.EnergyCellBlockEntity;
 import com.raishxn.ufo.util.AdjacentEnergyExporter;
+import com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class UfoEnergyCellBlockEntity extends EnergyCellBlockEntity {
+    private final TickAccelerationLimiter tickAccelerationLimiter = new TickAccelerationLimiter();
     private final IEnergyStorage exposedEnergy = new IEnergyStorage() {
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
@@ -70,7 +72,10 @@ public class UfoEnergyCellBlockEntity extends EnergyCellBlockEntity {
         if (this.level == null || this.level.isClientSide()) {
             return;
         }
-
+        if (!this.tickAccelerationLimiter.tryAcquire(this.level.getGameTime(),
+                com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks())) {
+            return;
+        }
         int totalBudget = getForgeExportRate();
         AdjacentEnergyExporter.pushEnergy(this.level, this.worldPosition, this.exposedEnergy, totalBudget, totalBudget);
     }

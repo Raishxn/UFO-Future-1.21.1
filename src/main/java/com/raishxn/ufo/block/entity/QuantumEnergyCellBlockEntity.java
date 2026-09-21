@@ -4,6 +4,7 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.blockentity.networking.CreativeEnergyCellBlockEntity;
 import com.raishxn.ufo.util.AdjacentEnergyExporter;
+import com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,6 +12,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class QuantumEnergyCellBlockEntity extends CreativeEnergyCellBlockEntity {
     private static final int CREATIVE_EXPORT_RATE = Integer.MAX_VALUE;
+    private final TickAccelerationLimiter tickAccelerationLimiter = new TickAccelerationLimiter();
 
     private final IEnergyStorage exposedEnergy = new IEnergyStorage() {
         @Override
@@ -59,7 +61,10 @@ public class QuantumEnergyCellBlockEntity extends CreativeEnergyCellBlockEntity 
         if (this.level == null || this.level.isClientSide()) {
             return;
         }
-
+        if (!this.tickAccelerationLimiter.tryAcquire(this.level.getGameTime(),
+                com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks())) {
+            return;
+        }
         AdjacentEnergyExporter.pushEnergy(this.level, this.worldPosition, this.exposedEnergy, CREATIVE_EXPORT_RATE, CREATIVE_EXPORT_RATE);
     }
 

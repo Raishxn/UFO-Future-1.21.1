@@ -56,6 +56,8 @@ public class AppliedFluxPlugin {
                     "group.pattern_provider.name");
             Upgrades.add(AFSingletons.INDUCTION_CARD, ModItems.QUANTUM_PATTERN_PROVIDER_PART.get(), 1,
                     "group.pattern_provider.name");
+            Upgrades.add(AFSingletons.INDUCTION_CARD, ModItems.QUANTUM_INTERFACE.get(), 1,
+                    "group.interface.name");
         } catch (Throwable failure) {
             disableAfterFailure("registerInductionCardUpgrades", failure);
         }

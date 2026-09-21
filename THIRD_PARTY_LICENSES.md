@@ -23,11 +23,13 @@ tools/check-texture-provenance.py.
 
 ## AE2 Lightning Tech
 
-- Code: LGPL-3.0. Textures and assets: CC BY-NC-SA 3.0.
-- Usage: the interactive multiblock preview, the auto-build architecture and the
-  compact connected-texture geometry were ported and adapted; eight
-  wireless/import/export icons and quick_build.png are redistributed unchanged.
-- See CREDITS.md and docs/credits/ae2-lightning-wireless.md.
+- Code: LGPL-3.0.
+- Usage: the interactive multiblock preview, the auto-build architecture, the
+  two-state toggle button logic and compact connected-texture geometry were ported
+  and adapted under LGPL-3.0. All toolbar icons (quick_build and the 8 wireless/import/export
+  buttons) and GUI backgrounds were remade as original UFO Future artwork (no AE2LT
+  images are redistributed).
+- See CREDITS.md, docs/credits/ae2-lightning-wireless.md, and assets/ufo/AE2LT-WIRELESS-NOTICE.md.
 
 ## GTOCore / GTO Project (GregTech-Odyssey)
 

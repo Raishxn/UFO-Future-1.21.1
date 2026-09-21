@@ -94,6 +94,7 @@ import com.raishxn.ufo.screen.StellarNexusControllerMenu;
 import com.raishxn.ufo.block.MultiblockBlocks;
 
 public class StellarNexusControllerBE extends BlockEntity implements IMultiblockController, MenuProvider {
+    private final com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter tickAccelerationLimiter = new com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter();
 
     private boolean assembled = false;
     private boolean structureDirty = true;
@@ -528,6 +529,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
 
     public void serverTick() {
         if (this.level == null || this.level.isClientSide())
+            return;
+        if (!this.tickAccelerationLimiter.tryAcquire(this.level.getGameTime(), com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks()))
             return;
 
         long startedAt = System.nanoTime();

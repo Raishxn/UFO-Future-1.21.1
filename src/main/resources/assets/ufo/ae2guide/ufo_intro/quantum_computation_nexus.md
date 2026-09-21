@@ -58,8 +58,9 @@ fairly between active jobs rather than duplicated for every job.
 
 ### Infinite computation mode
 
-Installing at least **25 Cosmic String Crafting Storages** (the 1 PiB tier) and
-**25 2B Co-Processors** activates the Nexus' infinite computation mode. Both
+Installing at least **25 Cosmic String Crafting Storages** (the 1 TiB tier) and
+**25 Cosmic String Co-Processors** (65,536 lanes each) activates the Nexus'
+infinite computation mode. Both
 Crafting Storage and Co-Processors are then advertised as **infinite** to AE2.
 The controller displays `∞`, while its tooltips continue to report the physical
 capacity installed in the cavity.

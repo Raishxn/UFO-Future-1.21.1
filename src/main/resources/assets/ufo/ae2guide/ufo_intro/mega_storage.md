@@ -24,16 +24,20 @@ UFO Future extends AE2 crafting infrastructure with very large crafting storages
 
 ## Mega Crafting Storages
 
-- Phase-Shift Crafting Storage
-- Hyper-Dense Crafting Storage
-- Tesseract Crafting Storage
-- Event Horizon Crafting Storage
-- Cosmic String Crafting Storage
+- Phase-Shift Crafting Storage — **4 GiB**
+- Hyper-Dense Crafting Storage — **16 GiB**
+- Tesseract Crafting Storage — **64 GiB**
+- Event Horizon Crafting Storage — **256 GiB**
+- Cosmic String Crafting Storage — **1 TiB**
 
 ## Mega Co-Processors
 
-- Phase-Shift Co-Processor
-- Hyper-Dense Co-Processor
-- Tesseract Co-Processor
-- Event Horizon Co-Processor
-- Cosmic String Co-Processor
+- Phase-Shift Co-Processor — **4,096 lanes**
+- Hyper-Dense Co-Processor — **8,192 lanes**
+- Tesseract Co-Processor — **16,384 lanes**
+- Event Horizon Co-Processor — **32,768 lanes**
+- Cosmic String Co-Processor — **65,536 lanes**
+
+Even the first UFO tier exceeds the strongest conventional addon modules used by
+the supported modpack. The bounded values keep normal crafting CPUs useful while
+the Quantum Computation Nexus remains the path to a shared, infinite pool.

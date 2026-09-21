@@ -298,7 +298,8 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         this.lockButton.setAe2Icon(locked ? Icon.LOCKED : Icon.UNLOCKED);
         this.lockButton.setTooltip(Tooltip.create(Component.literal(locked ? "§aSimulation locked" : "§cSimulation unlocked")));
         boolean overclocked = this.menu.isOverclocked();
-        this.overclockButton.setAtlasSprite(UNIVERSAL_WIDGETS, 256, 256, 0, 33, 14, 14);
+        int overclockU = overclocked ? 0 : 16;
+        this.overclockButton.setAtlasSprite(UNIVERSAL_WIDGETS, 256, 256, overclockU, 33, 14, 14);
         this.overclockButton.setTooltip(Tooltip.create(Component.literal(overclocked
                 ? "§aOverclock: ON\n§78x energy, 5x heat/fuel/speed" : "§cOverclock: OFF")));
     }

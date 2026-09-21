@@ -42,6 +42,7 @@ public final class QuantumPatternFabricationMatrixScreen
     private static final int PURPLE = 0xFFB268FF;
     private static final int TEXT = 0xFFE8F6FF;
     private static final int MUTED = 0xFF8DA4B8;
+    private static final int BLACK = 0xFF000000;
 
     private VerticalButtonBar leftToolbar;
     private Button autoBuildButton;
@@ -156,28 +157,23 @@ public final class QuantumPatternFabricationMatrixScreen
         }
         drawCenteredFitted(graphics,
                 Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.status"),
-                14, 14, 160, 0.75F, MUTED);
-        drawCenteredFitted(graphics, status, 14, 23, 160, 0.75F, statusColor);
+                14, 17, 160, 0.75F, MUTED);
+        drawCenteredFitted(graphics, status, 14, 26, 160, 0.75F, statusColor);
 
         drawLeftFitted(graphics,
                 Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.pattern_library"),
-                16, 47, 115, 0.72F, MUTED);
+                16, 47, 115, 0.72F, BLACK);
         String usage = menu.getStoredPatternCount() + " / " + menu.getPatternCapacity();
         drawRightFitted(graphics, Component.literal(usage), 116, 47, 158, 0.8F, TEXT);
 
         drawCenteredFitted(graphics,
                 Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.field_generators"),
-                17, 82, 80, 0.68F, MUTED);
-        renderField(graphics, MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().asItem().getDefaultInstance(),
-                menu.getTier1Fields(), 18, 94);
-        renderField(graphics, MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get().asItem().getDefaultInstance(),
-                menu.getTier2Fields(), 40, 94);
-        renderField(graphics, MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get().asItem().getDefaultInstance(),
-                menu.getTier3Fields(), 62, 94);
+                17, 85, 80, 0.68F, MUTED);
+        renderInstalledFields(graphics);
 
         drawCenteredFitted(graphics,
                 Component.translatable("gui.ufo.quantum_pattern_fabrication_matrix.auto_upload"),
-                94, 82, 157, 0.72F, MUTED);
+                94, 85, 157, 0.72F, MUTED);
         Component upload = Component.translatable(
                 menu.isGridActive()
                         ? "gui.ufo.quantum_pattern_fabrication_matrix.auto_upload_ready"
@@ -224,6 +220,27 @@ public final class QuantumPatternFabricationMatrixScreen
     private void renderField(GuiGraphics graphics, ItemStack field, int count, int x, int y) {
         graphics.renderItem(field, x, y);
         graphics.renderItemDecorations(font, field, x, y, Integer.toString(count));
+    }
+
+    private void renderInstalledFields(GuiGraphics graphics) {
+        ItemStack[] fields = {
+                MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().asItem().getDefaultInstance(),
+                MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get().asItem().getDefaultInstance(),
+                MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get().asItem().getDefaultInstance()
+        };
+        int[] counts = {menu.getTier1Fields(), menu.getTier2Fields(), menu.getTier3Fields()};
+        int installedTiers = 0;
+        for (int count : counts) {
+            if (count > 0) installedTiers++;
+        }
+
+        int totalWidth = installedTiers == 0 ? 0 : installedTiers * 16 + (installedTiers - 1) * 6;
+        int x = 17 + (64 - totalWidth) / 2;
+        for (int tier = 0; tier < counts.length; tier++) {
+            if (counts[tier] <= 0) continue;
+            renderField(graphics, fields[tier], counts[tier], x, 94);
+            x += 22;
+        }
     }
 
     private void drawCenteredFitted(GuiGraphics graphics, Component text, int minX, int y, int maxX,

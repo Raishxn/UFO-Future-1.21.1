@@ -14,6 +14,7 @@ import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
 import appeng.parts.automation.StackWorldBehaviors;
 import com.raishxn.ufo.init.ModMenus;
+import com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter;
 import com.raishxn.ufo.wireless.QuantumWirelessHost;
 import com.raishxn.ufo.wireless.QuantumWirelessLinks;
 import net.minecraft.core.BlockPos;
@@ -37,6 +38,7 @@ public class QuantumInterfaceBlockEntity extends InterfaceBlockEntity implements
     private int localSide;
     private int stockCursor;
     private long unlimitedSlots;
+    private final TickAccelerationLimiter tickAccelerationLimiter = new TickAccelerationLimiter();
 
     public long unlimitedSlots() { return unlimitedSlots; }
     public void toggleUnlimited(int slot) {
@@ -69,7 +71,10 @@ public class QuantumInterfaceBlockEntity extends InterfaceBlockEntity implements
     public void toggleFast() { fast = !fast; setChanged(); }
 
     public void serverTick() {
-        if (level == null || level.isClientSide() || !getMainNode().isActive()) return;
+        if (level == null || level.isClientSide()) return;
+        if (!tickAccelerationLimiter.tryAcquire(level.getGameTime(),
+                com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks())) return;
+        if (!getMainNode().isActive()) return;
         if (level.getGameTime() % (fast ? 1 : 5) != 0) return;
         var node = getMainNode().getNode();
         if (node == null) return;

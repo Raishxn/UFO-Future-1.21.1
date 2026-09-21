@@ -61,6 +61,9 @@ public class UFOConfig {
     public static final ModConfigSpec.IntValue STELLAR_IDLE_COOLANT_INTERVAL_TICKS = SERVER_BUILDER
             .comment("Ticks between coolant attempts while the Stellar Nexus is idle. Zero disables idle coolant use.")
             .defineInRange("stellar.thermal.idleCoolantIntervalTicks", 20, 0, 1_200);
+    public static final ModConfigSpec.IntValue MAX_EXTERNAL_ACCELERATION_TICKS = SERVER_BUILDER
+            .comment("Maximum updates a UFO ticked block entity may run in one real game tick when an external mod accelerates it. Limits TPS cost while preserving up to this much acceleration.")
+            .defineInRange("performance.maxExternalAccelerationTicksPerGameTick", 64, 1, 256);
 
     /**
      * Operator caps for the armor module settings. The enum maximum stays the design limit the
@@ -123,6 +126,11 @@ public class UFOConfig {
         // Reading a spec value before its config is loaded throws; fall back to the design maximum.
         if (cap == null || !SERVER_SPEC.isLoaded()) return setting.max();
         return cap.get();
+    }
+
+    /** Safe before server config loading, which is relevant during early block-entity ticks. */
+    public static int maxExternalAccelerationTicks() {
+        return SERVER_SPEC.isLoaded() ? MAX_EXTERNAL_ACCELERATION_TICKS.get() : 64;
     }
 
     private static boolean isResourceLocation(Object value) {

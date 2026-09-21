@@ -94,6 +94,11 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> DMA_ALLOWED_OUTPUTS =
             register("dma_allowed_outputs", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    /** Bit 0 = safe mode, bit 1 = overclock. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> UNIVERSAL_CONTROLLER_SETTINGS =
+            register("universal_controller_settings", builder -> builder.persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT));
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>> FLUID_CONTENT = register("fluid_content",
             builder -> builder.persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC));
 

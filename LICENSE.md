@@ -31,7 +31,7 @@ Some UFO Future textures are based on, adapted from, or inspired by work from th
   current status and the required action for every matched file are tracked in
   [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) and
   [docs/credits/texture-provenance.md](docs/credits/texture-provenance.md).
-- AE2 Lightning Tech: its interactive multiblock preview, auto-build architecture, and compact connected-texture geometry were ported and adapted for UFO Future under LGPL-3.0. The `quick_build.png` toolbar icon is redistributed under CC BY-NC-SA 3.0 with attribution to the AE2 Lightning Tech contributors: https://github.com/ae2lt/AE2-Lightning-Tech
+- AE2 Lightning Tech: its interactive multiblock preview, auto-build architecture, and compact connected-texture geometry were ported and adapted for UFO Future under LGPL-3.0 (https://github.com/ae2lt/AE2-Lightning-Tech). All toolbar icons (including `quick_build.png`) and GUI backgrounds are original UFO Future creative assets.
 
 Assets that the provenance audit traced to all-rights-reserved projects — Thermal
 Foundation's former cryotheum sprites and Astral Sorcery's former liquid-starlight
@@ -40,7 +40,7 @@ third-party texture without a license that permits redistribution;
 [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) is the authoritative list and
 `tools/check-texture-provenance.py` checks it.
 
-The Quantum Wireless two-state toolbar widget adapts AE2 Lightning Tech's TextureToggleButton. Eight associated mode/import/export/speed icons are redistributed unchanged under CC BY-NC-SA 3.0. See [the provenance inventory](docs/credits/ae2-lightning-wireless.md) and the bundled `assets/ufo/AE2LT-WIRELESS-NOTICE.md` for the source revision, file list and licenses. Quantum Interface functional parity is still in progress.
+The Quantum Wireless two-state toolbar widget adapts AE2 Lightning Tech's TextureToggleButton logic under LGPL-3.0. All associated mode/import/export/speed button textures and the Quantum Interface screen background were recreated from scratch as original UFO Future artwork; no image assets from AE2LT are redistributed. See [the provenance inventory](docs/credits/ae2-lightning-wireless.md) and the bundled `assets/ufo/AE2LT-WIRELESS-NOTICE.md`. Quantum Interface functional parity is still in progress.
 
 The UFO Armor configuration uses AE2's standard checkbox, cog, back and slider visuals and redistributes AdvancedAE's `states.png` for its clear/uninstall icon. See `assets/ufo/ADVANCEDAE-UI-NOTICE.md` in the packaged resources.
 

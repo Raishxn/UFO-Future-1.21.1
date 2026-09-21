@@ -3,7 +3,7 @@ package com.raishxn.ufo.client.gui.widget;
 /*
  * Adapted from AE2 Lightning Tech TextureToggleButton, revision 7e2e2726401e4ff4720e5f7efa9f4c0031b57c22.
  * Copyright AE2 Lightning Tech contributors. Source licensed under LGPL-3.0.
- * Associated AE2LT icons are CC BY-NC-SA 3.0; see assets/ufo/AE2LT-WIRELESS-NOTICE.md.
+ * Associated button textures are original UFO Future assets; see assets/ufo/AE2LT-WIRELESS-NOTICE.md.
  * UFO adaptation: two-state controls, translated tooltips and UFO resource namespace.
  */
 

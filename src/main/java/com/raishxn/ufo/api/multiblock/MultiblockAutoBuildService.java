@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import com.raishxn.ufo.item.StructureScannerSettings;
+import com.raishxn.ufo.item.StructureScannerAe2Link;
+import com.raishxn.ufo.block.MultiblockBlocks;
 
 /** Server-owned gradual auto-build sessions. Wrong occupied blocks are never replaced. */
 @EventBusSubscriber(modid = "ufo")
@@ -44,11 +46,15 @@ public final class MultiblockAutoBuildService {
     private MultiblockAutoBuildService() { }
 
     public static void start(ServerPlayer player, BlockEntity controllerBlockEntity) {
-        start(player, controllerBlockEntity, StructureScannerSettings.Mode.BUILD, true);
+        start(player, controllerBlockEntity,
+                new StructureScannerSettings(StructureScannerSettings.Mode.BUILD, true, 1, false),
+                ItemStack.EMPTY);
     }
 
     public static void start(ServerPlayer player, BlockEntity controllerBlockEntity,
-                             StructureScannerSettings.Mode mode, boolean hatchMode) {
+                             StructureScannerSettings settings, ItemStack scanner) {
+        StructureScannerSettings.Mode mode = settings.mode();
+        boolean hatchMode = settings.hatchMode();
         if (!(player.level() instanceof ServerLevel level)
                 || !(controllerBlockEntity instanceof IMultiblockController controller)) return;
         var definitionOptional = MultiblockControllerDefinitions.getDefinition(controllerBlockEntity);
@@ -59,7 +65,7 @@ public final class MultiblockAutoBuildService {
             return;
         }
         if (controller.isAssembled() && mode != StructureScannerSettings.Mode.DEMOLISH
-                && !(mode == StructureScannerSettings.Mode.REPLACE && !hatchMode)) {
+                && mode != StructureScannerSettings.Mode.REPLACE) {
             message(player, "The structure is already complete.", ChatFormatting.GREEN);
             return;
         }
@@ -74,17 +80,21 @@ public final class MultiblockAutoBuildService {
             return;
         }
         boolean replace = mode == StructureScannerSettings.Mode.REPLACE;
+        Map<Character, BlockState> selectedStates = selectFieldTier(
+                definition.defaultCreativeStates(), settings.fieldTier());
         var plan = MultiblockAutoBuildPlan.create(
                 pattern.getPattern(), pattern.getControllerChar(), pattern.getControllerCol(), pattern.getControllerRow(),
-                definition.defaultCreativeStates(), target -> !target.isAir(), (local, symbol, target) -> {
+                selectedStates, target -> !target.isAir(), (local, symbol, target) -> {
                     BlockPos world = worldPos(pattern, controllerBlockEntity.getBlockPos(), local, facing);
                     if (!level.isInWorldBounds(world) || !level.hasChunk(SectionPos.blockToSectionCoord(world.getX()), SectionPos.blockToSectionCoord(world.getZ()))) {
                         unavailable.add(world);
                         return MultiblockAutoBuildPlan.SlotState.BLOCKED;
                     }
                     BlockState current = level.getBlockState(world);
+                    boolean exactTarget = current.getBlock() == target.getBlock();
+                    boolean preservedHatch = hatchMode && isInstalledHatch(current);
                     if (pattern.matchesSlot(symbol, current, level, world)
-                            && (hatchMode || current.getBlock() == target.getBlock())) {
+                            && (exactTarget || preservedHatch)) {
                         return MultiblockAutoBuildPlan.SlotState.MATCHING;
                     }
                     if (current.isAir()) return MultiblockAutoBuildPlan.SlotState.EMPTY;
@@ -113,7 +123,7 @@ public final class MultiblockAutoBuildService {
             return;
         }
         if (!player.getAbilities().instabuild) {
-            List<String> missing = missingRequirements(player, requirements);
+            List<String> missing = missingRequirements(player, requirements, settings, scanner);
             if (!missing.isEmpty()) {
                 message(player, "Missing materials: " + String.join(", ", missing) + ".", ChatFormatting.RED);
                 return;
@@ -124,7 +134,8 @@ public final class MultiblockAutoBuildService {
             message(player, "No structural blocks need to be placed.", ChatFormatting.GREEN);
             return;
         }
-        SESSIONS.put(key, new Session(player.getUUID(), mode, List.copyOf(work), 0, 0));
+        SESSIONS.put(key, new Session(player.getUUID(), mode, List.copyOf(work), 0, 0,
+                settings, scanner.copy()));
         message(player, "Auto-build started: " + plan.placements().size() + " block(s).", ChatFormatting.GREEN);
     }
 
@@ -143,7 +154,8 @@ public final class MultiblockAutoBuildService {
             message(player, "Demolition found no invalid occupied structure slots.", ChatFormatting.GREEN);
             return;
         }
-        SESSIONS.put(key, new Session(player.getUUID(), StructureScannerSettings.Mode.DEMOLISH, work, 0, 0));
+        SESSIONS.put(key, new Session(player.getUUID(), StructureScannerSettings.Mode.DEMOLISH, work, 0, 0,
+                StructureScannerSettings.DEFAULT, ItemStack.EMPTY));
         message(player, "Demolition started: " + work.size() + " invalid block(s).", ChatFormatting.YELLOW);
     }
 
@@ -186,19 +198,37 @@ public final class MultiblockAutoBuildService {
                 continue;
             }
             Item item = work.target().getBlock().asItem();
+            boolean consumedFromAe = false;
             if (!player.getAbilities().instabuild && !consume(player, item)) {
-                iterator.remove();
-                message(player, "Auto-build interrupted: missing " + item.getDescription().getString() + ".", ChatFormatting.RED);
-                refresh(level, key.controllerPos());
-                continue;
+                consumedFromAe = session.settings().useAeNetwork()
+                        && StructureScannerAe2Link.extractOne(session.scanner(), player, item);
+                if (!consumedFromAe) {
+                    iterator.remove();
+                    message(player, "Auto-build interrupted: missing " + item.getDescription().getString() + ".", ChatFormatting.RED);
+                    refresh(level, key.controllerPos());
+                    continue;
+                }
             }
-            if (!current.isAir()) level.destroyBlock(world, true, player);
+            // Do not use destroyBlock(..., true) for replacement. Besides spawning loose
+            // entities between two steps of the operation, that made the old field generator
+            // easy to lose to magnets, void pickup rules or a full inventory. Capture its
+            // exact loot first and only hand it back after the new block was placed.
+            List<ItemStack> replacedDrops = current.isAir()
+                    ? List.of()
+                    : Block.getDrops(current, level, world, level.getBlockEntity(world), player, ItemStack.EMPTY);
             if (!level.setBlock(world, work.target(), Block.UPDATE_ALL)) {
-                if (!player.getAbilities().instabuild) giveBack(player, item);
+                if (!player.getAbilities().instabuild) {
+                    if (!consumedFromAe || !StructureScannerAe2Link.insertOne(session.scanner(), player, item)) {
+                        giveBack(player, item);
+                    }
+                }
                 iterator.remove();
                 message(player, "Auto-build could not place a block at " + position(world) + ".", ChatFormatting.RED);
                 refresh(level, key.controllerPos());
                 continue;
+            }
+            for (ItemStack replacedDrop : replacedDrops) {
+                giveBack(player, replacedDrop);
             }
             var sound = work.target().getSoundType(level, world, player);
             level.playSound(null, world, sound.getPlaceSound(), SoundSource.BLOCKS,
@@ -211,7 +241,8 @@ public final class MultiblockAutoBuildService {
             ServerPlayer player, ServerLevel level, SessionKey key,
             Iterator<Map.Entry<SessionKey, Session>> iterator) {
         Session next = new Session(session.playerId(), session.mode(), session.work(),
-                session.index() + 1, session.placed() + (placed ? 1 : 0));
+                session.index() + 1, session.placed() + (placed ? 1 : 0),
+                session.settings(), session.scanner());
         if (next.index() < next.work().size()) {
             entry.setValue(next);
             return;
@@ -243,10 +274,15 @@ public final class MultiblockAutoBuildService {
         return result;
     }
 
-    private static List<String> missingRequirements(ServerPlayer player, Map<Item, Integer> requirements) {
+    private static List<String> missingRequirements(ServerPlayer player, Map<Item, Integer> requirements,
+                                                    StructureScannerSettings settings, ItemStack scanner) {
         List<String> missing = new ArrayList<>();
         for (var entry : requirements.entrySet()) {
-            int available = player.getInventory().countItem(entry.getKey());
+            long available = player.getInventory().countItem(entry.getKey());
+            if (settings.useAeNetwork()) {
+                available = Math.min(Integer.MAX_VALUE,
+                        available + StructureScannerAe2Link.available(scanner, player, entry.getKey()));
+            }
             if (available < entry.getValue()) {
                 missing.add(entry.getKey().getDescription().getString() + " x" + (entry.getValue() - available));
             }
@@ -263,7 +299,48 @@ public final class MultiblockAutoBuildService {
     }
 
     private static void giveBack(ServerPlayer player, Item item) {
-        if (!player.getInventory().add(new ItemStack(item))) player.drop(new ItemStack(item), false);
+        giveBack(player, new ItemStack(item));
+    }
+
+    private static void giveBack(ServerPlayer player, ItemStack stack) {
+        ItemStack returned = stack.copy();
+        if (!player.getInventory().add(returned) && !returned.isEmpty()) {
+            player.drop(returned, false);
+        }
+    }
+
+    private static Map<Character, BlockState> selectFieldTier(Map<Character, BlockState> defaults, int tier) {
+        BlockState selected = switch (Math.clamp(tier, 1, 3)) {
+            case 2 -> MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get().defaultBlockState();
+            case 3 -> MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get().defaultBlockState();
+            default -> MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().defaultBlockState();
+        };
+        Map<Character, BlockState> result = new HashMap<>(defaults);
+        result.replaceAll((symbol, state) -> isFieldGenerator(state) ? selected : state);
+        return result;
+    }
+
+    private static boolean isFieldGenerator(BlockState state) {
+        return state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())
+                || state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())
+                || state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get());
+    }
+
+    /**
+     * Preserve only actual service hatches. Structural parts such as Stellar Field Generators also
+     * implement IMultiblockPart, so using that interface here makes Replace silently skip every field.
+     * This mirrors the GTCEu terminal behavior, which distinguishes hatches from ordinary pattern blocks.
+     */
+    private static boolean isInstalledHatch(BlockState state) {
+        return state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
+                || state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())
+                || state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
+                || state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
+                || state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())
+                || state.is(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get())
+                || state.is(MultiblockBlocks.QUANTUM_PATTERN_PROXY.get())
+                || state.is(MultiblockBlocks.QUANTUM_INTERFACE.get())
+                || state.is(MultiblockBlocks.QUANTUM_GRID_LINK.get());
     }
 
     private static String position(BlockPos pos) { return pos.getX() + ", " + pos.getY() + ", " + pos.getZ(); }
@@ -276,5 +353,6 @@ public final class MultiblockAutoBuildService {
     private record SessionKey(ResourceKey<Level> dimension, BlockPos controllerPos) { }
     private record Work(BlockPos position, BlockState target, boolean replace, boolean removeOnly) { }
     private record Session(UUID playerId, StructureScannerSettings.Mode mode,
-                           List<Work> work, int index, int placed) { }
+                           List<Work> work, int index, int placed,
+                           StructureScannerSettings settings, ItemStack scanner) { }
 }

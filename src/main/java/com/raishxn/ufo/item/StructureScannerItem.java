@@ -46,6 +46,15 @@ public class StructureScannerItem extends Item {
         }
 
         BlockEntity be = level.getBlockEntity(pos);
+        if (StructureScannerAe2Link.isAccessPoint(be)) {
+            if (!level.isClientSide) {
+                StructureScannerAe2Link.link(context.getItemInHand(), level, pos);
+                player.displayClientMessage(Component.translatable(
+                        "message.ufo.structure_scanner.ae_linked", pos.getX(), pos.getY(), pos.getZ())
+                        .withStyle(ChatFormatting.GREEN), true);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
         if (!(be instanceof IMultiblockController controller)) {
             return InteractionResult.PASS;
         }
@@ -63,7 +72,7 @@ public class StructureScannerItem extends Item {
         if (player.isShiftKeyDown() && settings.mode() != StructureScannerSettings.Mode.SCAN) {
             if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
                 com.raishxn.ufo.api.multiblock.MultiblockAutoBuildService.start(
-                        serverPlayer, be, settings.mode(), settings.hatchMode());
+                        serverPlayer, be, settings, context.getItemInHand());
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
@@ -137,6 +146,16 @@ public class StructureScannerItem extends Item {
         tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.mode",
                 Component.translatable("gui.ufo.structure_scanner.mode."
                         + settings.mode().name().toLowerCase(java.util.Locale.ROOT))).withStyle(ChatFormatting.LIGHT_PURPLE));
+        tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.field", settings.fieldTier())
+                .withStyle(ChatFormatting.AQUA));
+        var linked = StructureScannerAe2Link.linkedPosition(stack);
+        tooltipComponents.add(Component.translatable(linked == null
+                        ? "item.ufo.structure_scanner.tooltip.ae_unlinked"
+                        : "item.ufo.structure_scanner.tooltip.ae_linked",
+                linked == null ? "" : linked.pos().getX(),
+                linked == null ? "" : linked.pos().getY(),
+                linked == null ? "" : linked.pos().getZ()).withStyle(
+                linked == null ? ChatFormatting.RED : ChatFormatting.GREEN));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 

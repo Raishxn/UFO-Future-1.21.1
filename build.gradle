@@ -166,6 +166,7 @@ dependencies {
     compileOnly "curse.maven:kubejs-238086:${kubejs_file_id}"
     compileOnly "curse.maven:rhino-416294:${rhino_file_id}"
     compileOnly "curse.maven:applied-flux-965012:${applied_flux_file_id}"
+    compileOnly "curse.maven:jade-324717:8591319"
 
     // ===========================================
     // Local Runtime - Dev test mods

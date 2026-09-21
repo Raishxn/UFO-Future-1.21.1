@@ -27,6 +27,8 @@ import java.util.List;
  */
 public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusControllerBE> {
 
+    private static final double[] ORBIT_RADII = {300.0D, 320.0D, 440.0D};
+
     private static final List<ResourceLocation> ORBIT_OBJECTS = List.of(
             StellarModelRegistry.THE_NETHER,
             StellarModelRegistry.OVERWORLD,
@@ -39,10 +41,10 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
     @Override
     public void render(StellarNexusControllerBE blockEntity, float partialTick, PoseStack poseStack,
                        MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        if (!blockEntity.isAssembled()) return;
+        if (!blockEntity.isAssembled() || !blockEntity.isActive()) return;
         if (blockEntity.getLevel() == null) return;
 
-        boolean isActive = blockEntity.isActive();
+        boolean isActive = true;
 
         // Determine which star model to use based on active recipe
         ResourceLocation starModelLoc = StellarModelRegistry.STAR;
@@ -61,32 +63,29 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
         // Calculate animation tick
         float tick = blockEntity.getLevel().getGameTime() + partialTick;
 
-        // Calculate center offset based on controller facing direction
-        // The controller sits on the bottom face of the 35x34x35 shell.
-        // Keep the scene at the actual vertical center instead of rendering it
-        // through the floor around the controller block.
+        // The 35x34x35 template puts the controller at [18,17,1] and the
+        // geometric center at [17,16.5,17]. Convert that continuous local
+        // offset through the same horizontal rotations as MultiblockPattern.
         Direction facing = blockEntity.getBlockState().getValue(BlockStateProperties.FACING);
-        double x = 0.5, y = 17.0, z = 0.5;
+        double x;
+        double y = 0.0;
+        double z;
         switch (facing) {
-            case NORTH -> z += 16;
-            case SOUTH -> z -= 16;
-            case WEST  -> x += 16;
-            case EAST  -> x -= 16;
+            case SOUTH -> { x = 1.5; z = -15.5; }
+            case WEST  -> { x = 16.5; z = 1.5; }
+            case EAST  -> { x = -15.5; z = -0.5; }
+            default -> { x = -0.5; z = 16.5; }
         }
 
         poseStack.pushPose();
         poseStack.translate(x, y, z);
 
-        // 1. Render outer space shell (largest layer)
+        // Restore the proven 2.1-fix7 composition. The procedural replacement meshes need an
+        // opaque star pass (to avoid translucent self-sorting seams), while the enclosing shell
+        // must remain translucent so its inside never becomes a solid black sphere.
         renderOuterSpaceShell(tick, poseStack, bufferSource);
-
-        // 2. Render the central star (SUN — large and dominant)
         renderStar(tick, starModelLoc, poseStack, bufferSource, isActive);
-
-        // 3. Render orbiting dimension objects (smaller, orbiting)
-        if (isActive) {
-            renderOrbitObjects(tick, poseStack, bufferSource);
-        }
+        renderOrbitObjects(tick, poseStack, bufferSource);
 
         poseStack.popPose();
     }
@@ -116,14 +115,14 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
 
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
                 poseStack.last(),
-                buffer.getBuffer(RenderType.translucent()),
+                buffer.getBuffer(RenderType.solid()),
                 null,
                 model,
                 1.0F, 1.0F, 1.0F,
                 LightTexture.FULL_BRIGHT,
                 OverlayTexture.NO_OVERLAY,
                 ModelData.EMPTY,
-                RenderType.translucent()
+                RenderType.solid()
         );
 
         poseStack.popPose();
@@ -147,8 +146,10 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
             // Tilt + rotate
             poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(1.0F, 0.0F, 1.0F, (tick * 1.5F / a) % 360.0F));
 
-            // Orbital translation — distance proportional to orbit index
-            double orbitRadius = (a * 120 + 80);
+            // The Nether mesh is wider than its nominal scale suggested and could intersect
+            // the pulsing star. Keep it clearly outside the star, but still inside the second
+            // orbit and comfortably within the 17-block space shell.
+            double orbitRadius = ORBIT_RADII[a - 1];
             double orbitSpeed = tick * 0.02 / a; // Much slower orbit
             poseStack.translate(
                     orbitRadius * Math.sin(orbitSpeed + a * 2.094), // 120° apart
@@ -183,11 +184,28 @@ public class StellarNexusRenderer implements BlockEntityRenderer<StellarNexusCon
         float scale = 0.01F * 17.0F;
 
         poseStack.pushPose();
-        poseStack.scale(scale, scale, scale);
+        // The replacement procedural OBJ is outward-facing, unlike the old Eye-of-Harmony shell.
+        // Mirror one axis to reverse its winding: visible as a backdrop from inside the Nexus,
+        // culled from outside instead of presenting an opaque-looking black globe.
+        poseStack.scale(-scale, scale, scale);
+        poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(
+                0.0F, 1.0F, 0.0F, (tick * 0.05F) % 360.0F));
 
-        // Very slow rotation for ambient effect
-        poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(0.0F, 1.0F, 0.0F, (tick * 0.05F) % 360.0F));
+        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
+                poseStack.last(),
+                buffer.getBuffer(RenderType.translucent()),
+                null,
+                model,
+                1.0F, 1.0F, 1.0F,
+                LightTexture.FULL_BRIGHT,
+                OverlayTexture.NO_OVERLAY,
+                ModelData.EMPTY,
+                RenderType.translucent()
+        );
 
+        // The original working renderer drew the inside-facing shell twice, 180 degrees apart,
+        // to conceal the OBJ longitude seam while retaining the transparent space texture.
+        poseStack.mulPose(new Quaternionf().fromAxisAngleDeg(0.0F, 1.0F, 0.0F, 180.0F));
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
                 poseStack.last(),
                 buffer.getBuffer(RenderType.translucent()),

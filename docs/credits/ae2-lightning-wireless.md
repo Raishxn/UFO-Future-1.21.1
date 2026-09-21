@@ -10,16 +10,16 @@ O desenho do Quantum Wireless e a paridade pretendida da Quantum Interface usam 
 
 ## Inventário de referências planejadas
 
-Atualização da primeira implementação: `QuantumWirelessToggleButton.java` já adapta a renderização/estados do widget da referência. Oito ícones (wired_mode, wireless_mode, auto_export_off/on, auto_input_off/on, speed_normal/fast) foram copiados sem alteração. O inventário efetivo e as licenças são distribuídos em `src/main/resources/assets/ufo/AE2LT-WIRELESS-NOTICE.md` e `META-INF/licenses/`. As demais classes listadas abaixo continuam sendo referências; não houve cópia integral da lógica de interface AE2LT.
+Atualização da implementação: `QuantumWirelessToggleButton.java` adapta a lógica de estados do widget da referência sob LGPL-3.0. Todos os ícones (wired_mode, wireless_mode, auto_export_off/on, auto_input_off/on, speed_normal/fast) e a textura de fundo da GUI (`quantum_interface.png`) foram recriados como artes 100% autorais do UFO Future, eliminando qualquer redistribuição de imagens do AE2LT. O inventário efetivo e as licenças são distribuídos em `src/main/resources/assets/ufo/AE2LT-WIRELESS-NOTICE.md`.
 
 | Origem no AE2LT | Uso pretendido | Estado |
 | --- | --- | --- |
-| `client/TextureToggleButton.java` | Widgets de estados | Adaptado em QuantumWirelessToggleButton.java; dois estados, namespace UFO e tooltips traduzidos |
+| `client/TextureToggleButton.java` | Widgets de estados | Adaptado em QuantumWirelessToggleButton.java sob LGPL-3.0; dois estados, namespace UFO e tooltips traduzidos |
 | `client/OverloadedInterfaceScreen.java` | Controles de modo, importação, exportação e I/O | Examinado; ainda não adaptado |
 | `menu/OverloadedInterfaceMenu.java` | Contrato da tela e ações | Identificado; paridade ainda não implementada |
 | `blockentity/OverloadedInterfaceBlockEntity.java` | Vínculos por face e transferência | Trechos examinados; ainda não adaptado |
 | `logic/OverloadedInterfaceLogic.java` | Configuração e armazenamento | Trechos examinados; ainda não adaptado |
-| `textures/gui/buttons/` | Ícones correspondentes aos widgets | Oito ícones copiados; lista exata no aviso distribuído |
+| `textures/gui/buttons/` | Ícones correspondentes aos widgets | Substituídos por pixel art original do UFO Future (nenhum asset redistribuído) |
 
 Na implementação, completar a lista com os caminhos individuais efetivamente copiados/adaptados, destino no UFO, licença, autoria indicada na origem e alterações feitas. Preservar avisos nos arquivos derivados e disponibilizar os textos de licença e avisos com a distribuição correspondente.
 

@@ -62,6 +62,7 @@ public class ModBlockEntities {
         }
     }
 
+
         // Unchecked by contract: AE2's AEBaseEntityBlock#setBlockEntity and the raw DeferredBlock
     // casts inside these registrations are erased at this API boundary.
     @SuppressWarnings("unchecked")

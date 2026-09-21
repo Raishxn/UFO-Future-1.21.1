@@ -12,7 +12,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record PacketSetStructureScannerSettings(int handOrdinal, int modeOrdinal, boolean hatchMode)
+public record PacketSetStructureScannerSettings(int handOrdinal, int modeOrdinal, boolean hatchMode,
+                                                int fieldTier, boolean useAeNetwork)
         implements CustomPacketPayload {
     public static final Type<PacketSetStructureScannerSettings> TYPE =
             new Type<>(UfoMod.id("set_structure_scanner_settings"));
@@ -21,6 +22,8 @@ public record PacketSetStructureScannerSettings(int handOrdinal, int modeOrdinal
                     ByteBufCodecs.VAR_INT, PacketSetStructureScannerSettings::handOrdinal,
                     ByteBufCodecs.VAR_INT, PacketSetStructureScannerSettings::modeOrdinal,
                     ByteBufCodecs.BOOL, PacketSetStructureScannerSettings::hatchMode,
+                    ByteBufCodecs.VAR_INT, PacketSetStructureScannerSettings::fieldTier,
+                    ByteBufCodecs.BOOL, PacketSetStructureScannerSettings::useAeNetwork,
                     PacketSetStructureScannerSettings::new);
 
     @Override
@@ -35,7 +38,8 @@ public record PacketSetStructureScannerSettings(int handOrdinal, int modeOrdinal
             ItemStack stack = context.player().getItemInHand(InteractionHand.values()[packet.handOrdinal]);
             if (!(stack.getItem() instanceof StructureScannerItem)) return;
             new StructureScannerSettings(
-                    StructureScannerSettings.Mode.byOrdinal(packet.modeOrdinal), packet.hatchMode).write(stack);
+                    StructureScannerSettings.Mode.byOrdinal(packet.modeOrdinal), packet.hatchMode,
+                    Math.clamp(packet.fieldTier, 1, 3), packet.useAeNetwork).write(stack);
         });
     }
 }

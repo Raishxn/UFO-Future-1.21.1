@@ -18,6 +18,35 @@ projeto. IDs, saves, receitas e progressao existentes foram preservados.
 
 ### Bug Fixes
 
+- Aceleradores de tempo externos agora avançam o DMA e os demais controladores UFO até o limite
+  seguro configurável por tick (64x por padrão, configurável de 1x a 256x), em vez de serem
+  descartados pela deduplicação de `gameTime`.
+- O renderer do Stellar Nexus restaura a composição visual estável da 2.1-fix7: shell translúcido
+  interno em duas passagens para esconder a emenda e estrela opaca para impedir artefatos de ordenação.
+- Replace do Structure Scanner agora troca variantes de Field Generator mesmo em estruturas já
+  formadas; “Preservar hatches” reconhece somente portas de serviço reais, não todo IMultiblockPart.
+- Replace agora devolve diretamente ao jogador cada bloco substituído, sem criar um drop solto
+  intermediário que podia ser perdido durante a troca de Field Generators.
+- A órbita do Nether no Stellar Nexus foi afastada da estrela pulsante, permanecendo antes da
+  órbita do Overworld e dentro da redoma espacial.
+- Pacotes compactos criados ao quebrar um controller com buffers grandes agora podem ser
+  reinseridos com botão direito em qualquer bloco de uma rede ME ativa; quantidades que não
+  couberem permanecem no mesmo pacote, evitando milhares de entidades e perda de recursos.
+- Infinity Genesis Cell agora anuncia `Long.MAX_VALUE` por recurso aprendido, removendo o teto de
+  2,1 bilhões que impedia planos de crafting grandes.
+- Memory Card agora também restaura os cartões de upgrade usando as regras nativas do AE2.
+- Jade agora recebe do servidor o fluido real armazenado no ME Massive Fluid Hatch e substitui a
+  linha universal desatualizada que exibia `Empty`.
+- Corrigida a origem do render central do Stellar Nexus nas quatro orientações e no eixo vertical.
+- Quantum Interface agora anuncia suporte aos cartões Crafting, Fuzzy e Induction nos respectivos
+  registros de upgrades do AE2/Applied Flux.
+- Memory Card do AE2 copia Safe Mode, Overclock e upgrades entre controladores UFO ociosos sem
+  copiar estado de processo, inventários, temperatura ou progresso.
+- Tickable UFO block entities now bound repeated external ticker calls to the configurable
+  `performance.maxExternalAccelerationTicksPerGameTick` budget (default 64, maximum 256),
+  preventing a time accelerator from turning one controller into an unbounded
+  amount of work in a single Minecraft tick. Unit and GameTests reproduce
+  repeated calls with unchanged `gameTime`.
 - Cabos AE2 agora conectam em todas as faces do Quantum Pattern Buffer e do ME Massive Fluid Hatch, inclusive na face frontal visível.
 - Pacotes de recuperação de recursos agora mostram o recurso e a quantidade, em vez do nome interno `Wrapped Generic Stack`.
 - Corrigida a codificação UTF-8 de nomes e tooltips em português brasileiro.
@@ -43,6 +72,14 @@ projeto. IDs, saves, receitas e progressao existentes foram preservados.
 
 ### Implementations
 
+- Structure Scanner agora pode ser vinculado a um Wireless Access Point do AE2, consumir materiais
+  da rede durante a construção e selecionar Field Generator MK1, MK2 ou MK3.
+- Mega Crafting Storages foram rebalanceados para 4 GiB, 16 GiB, 64 GiB,
+  256 GiB e 1 TiB; Mega Co-Processors agora fornecem 4.096, 8.192, 16.384,
+  32.768 e 65.536 lanes. Os registry IDs foram preservados para compatibilidade
+  de mundos, todos os tiers UFO permanecem acima dos addons suportados e o
+  Quantum Computation Nexus continua sendo o caminho para computacao infinita.
+- Stellar Nexus simulations now complete in at most four minutes at normal speed (three minutes for Mk2 programs), so an endgame factory delivers its payoff in active play instead of hour-long waits.
 - Atualizados os overlays de `general1`, Infinity Fabrication Singularity, multiblocos, QMF e Quantum Computation Nexus com o novo pacote visual e suas animacoes.
 - Atualizadas as texturas de `scrap`, `scrap_box`, `quantum_wireless_tool` e das 17 cartas de upgrade UFO; as cartas agora usam tiras animadas autorais de 11 frames.
 - Substituidas 26 texturas ativas por arte autoral nova; `dust_blizz` e `dust_cryotheum` agora são tiras animadas autorais de 16x176. Os quatro overlays antigos de nêutrons foram removidos e os sprites-base autorais passaram a ser usados diretamente.

@@ -20,6 +20,7 @@ import appeng.api.upgrades.UpgradeInventories;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity implements IMultiblockController, MenuProvider, IUniversalMultiblockController, IUpgradeableObject, StructureInvalidationTarget {
+    private final com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter tickAccelerationLimiter = new com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter();
     protected boolean assembled = false;
     protected boolean structureDirty = true;
     protected final List<BlockPos> parts = new ArrayList<>();
@@ -139,6 +141,9 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
 
     public void serverTick() {
         if (this.level == null || this.level.isClientSide()) {
+            return;
+        }
+        if (!this.tickAccelerationLimiter.tryAcquire(this.level.getGameTime(), com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks())) {
             return;
         }
 
@@ -548,6 +553,24 @@ public abstract class AbstractSimpleMultiblockControllerBE extends BlockEntity i
         if (this.level != null) {
             this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
         }
+    }
+
+    public void exportMemoryCardSettings(DataComponentMap.Builder builder) {
+        int settings = (this.safeMode ? 1 : 0) | (this.overclocked ? 2 : 0);
+        builder.set(com.raishxn.ufo.datagen.ModDataComponents.UNIVERSAL_CONTROLLER_SETTINGS.get(), settings);
+        appeng.items.tools.MemoryCardItem.exportGenericSettings(this, builder);
+    }
+
+    /** Applies operating switches and upgrades; jobs, inventories, heat and progress are never copied. */
+    public boolean importMemoryCardSettings(DataComponentMap components, net.minecraft.world.entity.player.Player player) {
+        Integer settings = components.get(
+                com.raishxn.ufo.datagen.ModDataComponents.UNIVERSAL_CONTROLLER_SETTINGS.get());
+        if (settings == null || hasOngoingWork()) return false;
+        this.safeMode = (settings & 1) != 0;
+        this.overclocked = (settings & 2) != 0;
+        appeng.items.tools.MemoryCardItem.importGenericSettings(this, components, player);
+        saveChanges();
+        return true;
     }
 
     @Override

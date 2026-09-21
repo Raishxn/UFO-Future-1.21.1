@@ -332,12 +332,11 @@ and it will be fixed.
 - **[AE2 Lightning Tech](https://github.com/ae2lt/AE2-Lightning-Tech)** — its
   interactive multiblock preview, auto-build architecture and compact
   connected-texture geometry were ported and adapted for UFO Future under
-  **LGPL-3.0**. The `quick_build.png` toolbar icon is redistributed under
-  **CC BY-NC-SA 3.0** with attribution to the AE2 Lightning Tech contributors.
-  Quantum Wireless also adapts its two-state toolbar widget, interface layout
-  and link visualization, and reuses eight mode/import/export/speed icons.
-  See the [wireless attribution notice](src/main/resources/assets/ufo/AE2LT-WIRELESS-NOTICE.md)
-  for source revisions, adapted components and asset licenses.
+  **LGPL-3.0**. Quantum Wireless also adapts its two-state toolbar widget logic
+  and link visualization under LGPL-3.0. All toolbar icons (including `quick_build.png`
+  and the 8 wireless/import/export buttons) and the Quantum Interface screen
+  background were remade as original UFO Future artwork. See the
+  [wireless attribution notice](src/main/resources/assets/ufo/AE2LT-WIRELESS-NOTICE.md).
 - **[GregTech: New Horizons](https://github.com/GTNewHorizons/GT-New-Horizons-Modpack)** —
   the GTNH team and contributors are credited for the structure used as the
   basis for the **Stellar Nexus**, the textures used or adapted for the

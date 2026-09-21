@@ -1556,7 +1556,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolant(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), 100000)
                 .fieldLevel(3)
                 .energy(3000000000L)
-                .time(72000)
+                .time(4800)
                 .save(c);
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/massive_copper_synthesis")
@@ -1579,7 +1579,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolant(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), 100000)
                 .fieldLevel(3)
                 .energy(3200000000L)
-                .time(70000)
+                .time(4800)
                 .save(c);
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/massive_gold_synthesis")
@@ -1602,7 +1602,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolant(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), 150000)
                 .fieldLevel(3)
                 .energy(4200000000L)
-                .time(84000)
+                .time(4800)
                 .save(c);
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/massive_netherite_synthesis")
@@ -1626,7 +1626,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolant(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), 250000)
                 .fieldLevel(3)
                 .energy(6500000000L)
-                .time(120000)
+                .time(4800)
                 .save(c);
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/stellar_synthesis")
@@ -1651,7 +1651,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolant(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), 220000)
                 .fieldLevel(3)
                 .energy(2500000000L)
-                .time(72000)
+                .time(4800)
                 .save(c);
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/advancedae_quantum")
@@ -1674,7 +1674,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolant(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), 600000)
                 .fieldLevel(3)
                 .energy(2400000000L)
-                .time(96000)
+                .time(4800)
                 .save(c.withConditions(new ModLoadedCondition("advanced_ae")));
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/ae2_singularity")
@@ -1697,7 +1697,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolingLevel(2)
                 .fieldLevel(3)
                 .energy(2100000000L)
-                .time(84000)
+                .time(4800)
                 .save(c.withConditions(new ModLoadedCondition("ae2")));
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/extendedae_entro")
@@ -1720,7 +1720,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolant(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), 850000)
                 .fieldLevel(3)
                 .energy(3200000000L)
-                .time(108000)
+                .time(4800)
                 .save(c.withConditions(new ModLoadedCondition("extendedae")));
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/megacells_skysteel")
@@ -1743,7 +1743,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolingLevel(2)
                 .fieldLevel(2)
                 .energy(1200000000L)
-                .time(72000)
+                .time(3600)
                 .save(c.withConditions(new ModLoadedCondition("megacells")));
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/mekanism_ethylene")
@@ -1765,7 +1765,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolingLevel(2)
                 .fieldLevel(2)
                 .energy(900000000L)
-                .time(72000)
+                .time(3600)
                 .save(c.withConditions(new ModLoadedCondition("mekanism")));
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/mekanism_fission")
@@ -1786,7 +1786,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolant(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), 3000000)
                 .fieldLevel(3)
                 .energy(3400000000L)
-                .time(120000)
+                .time(4800)
                 .save(c.withConditions(new ModLoadedCondition("mekanism")));
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/mekanism_metallurgic_surge")
@@ -1814,7 +1814,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolant(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), 350000)
                 .fieldLevel(3)
                 .energy(3800000000L)
-                .time(96000)
+                .time(4800)
                 .save(c.withConditions(new ModLoadedCondition("mekanism")));
 
         StellarSimulationRecipeBuilder.create("stellar_simulation/vanilla_reagent_fabrication")
@@ -1842,7 +1842,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .coolant(ModFluids.SOURCE_BOSE_EINSTEIN_CONDENSATE.get(), 300000)
                 .fieldLevel(3)
                 .energy(3000000000L)
-                .time(90000)
+                .time(4800)
                 .save(c);
 
     }

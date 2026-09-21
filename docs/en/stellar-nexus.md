@@ -1,6 +1,6 @@
 # Stellar Nexus
 
-The **Stellar Nexus** is the final simulation multiblock in UFO Future. It consumes immense AE power, rare fluids and high-tier materials to produce extreme-scale outputs over long cycle times.
+The **Stellar Nexus** is the final simulation multiblock in UFO Future. It consumes immense AE power, rare fluids and high-tier materials to produce extreme-scale outputs in short, high-throughput cycles: up to three minutes for Mk2 programs and four minutes for Mk3 programs.
 
 ## Machine Identity
 

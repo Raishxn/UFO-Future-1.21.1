@@ -56,8 +56,9 @@ compartilhada, repartida de forma justa entre os jobs ativos.
 
 ### Modo de computacao infinita
 
-Instalar pelo menos **25 Armazenamentos de Crafting Cosmic String** (tier de 1 PiB)
-e **25 Co-Processadores 2B** ativa o modo de computacao infinita do Nexus. O
+Instalar pelo menos **25 Armazenamentos de Crafting Cosmic String** (tier de 1 TiB)
+e **25 Co-Processadores Cosmic String** (65.536 linhas cada) ativa o modo de
+computacao infinita do Nexus. O
 Armazenamento de Crafting e os Co-Processadores passam a ser publicados como
 **infinitos** para o AE2. O controller mostra `∞`, mas os tooltips continuam
 informando a capacidade fisica instalada na cavidade.

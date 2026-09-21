@@ -63,6 +63,7 @@ import java.util.Set;
 public final class InfinityFabricationSingularityControllerBE extends AENetworkedBlockEntity
         implements StructureInvalidationTarget, MenuProvider, IMultiblockController, QuantumGridLinkHost,
         InternalInventoryHost {
+    private final com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter tickAccelerationLimiter = new com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter();
     public static final int PATTERNS_PER_PAGE = SingularityPatternCapacity.PATTERNS_PER_PAGE;
     public static final int MAX_PATTERN_SLOTS = SingularityPatternCapacity.MAX_PATTERN_SLOTS;
 
@@ -144,6 +145,7 @@ public final class InfinityFabricationSingularityControllerBE extends AENetworke
 
     public void serverTick() {
         if (!(level instanceof ServerLevel serverLevel)) return;
+        if (!tickAccelerationLimiter.tryAcquire(serverLevel.getGameTime(), com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks())) return;
         long startedAt = System.nanoTime();
         try {
             long gameTime = level.getGameTime();

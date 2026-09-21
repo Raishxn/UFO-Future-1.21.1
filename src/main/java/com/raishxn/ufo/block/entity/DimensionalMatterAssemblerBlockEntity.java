@@ -32,6 +32,7 @@ import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.block.entity.processing.SingleTankFluidReservation;
 import com.raishxn.ufo.block.entity.processing.DmaHazardCadence;
 import com.raishxn.ufo.block.entity.processing.DmaTickWakePolicy;
+import com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter;
 import com.raishxn.ufo.block.entity.processing.GridPoweredEnergySource;
 import com.raishxn.ufo.block.entity.processing.CoolantRegistry;
 import com.raishxn.ufo.block.entity.processing.CoolantTuning;
@@ -116,6 +117,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     private long lastGridServiceTick = Long.MIN_VALUE;
     private long blockFallbackProcessedAt = Long.MIN_VALUE;
     private boolean runningBlockTickerFallback;
+    private final TickAccelerationLimiter tickAccelerationLimiter = new TickAccelerationLimiter();
     public boolean isWirelessCreative() { return hasCreativeCatalyst; }
     /** Reserve the whole dispatch on detached inventories, including shared slot capacity. */
     public boolean canAcceptWirelessInputs(appeng.api.stacks.KeyCounter[] inputs) {
@@ -224,7 +226,10 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
     public void serverTick() {
         if (this.level == null || this.level.isClientSide())
             return;
-
+        if (!this.tickAccelerationLimiter.tryAcquire(this.level.getGameTime(),
+                com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks())) {
+            return;
+        }
         boolean restoredWork = DmaTickWakePolicy.hasRestoredWork(
                 this.wirelessJobStarted, this.processingTime, this.wirelessResumeRecipe != null);
 
@@ -235,11 +240,15 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
         }
 
         long gameTime = this.level.getGameTime();
-        if (DmaTickWakePolicy.shouldUseBlockTickerFallback(restoredWork, gameTime, lastGridServiceTick)) {
+        boolean externallyAccelerated = this.tickAccelerationLimiter.acceptedUpdates() > 1;
+        if (externallyAccelerated
+                || DmaTickWakePolicy.shouldUseBlockTickerFallback(restoredWork, gameTime, lastGridServiceTick)) {
             var node = getMainNode().getNode();
             if (node != null) {
                 runningBlockTickerFallback = true;
-                blockFallbackProcessedAt = gameTime;
+                // External invocations are intentional extra work and must not poison AE2's
+                // same-tick recovery guard used by the ordinary level ticker.
+                if (!externallyAccelerated) blockFallbackProcessedAt = gameTime;
                 try {
                     tickingRequest(node, 1);
                 } finally {

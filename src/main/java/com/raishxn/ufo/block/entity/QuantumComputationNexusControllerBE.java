@@ -63,6 +63,7 @@ import org.jetbrains.annotations.Nullable;
 public final class QuantumComputationNexusControllerBE extends AENetworkedBlockEntity
         implements StructureInvalidationTarget, MenuProvider, IMultiblockController,
         QuantumGridLinkHost, NexusVirtualCpuHost, IPriorityHost {
+    private final com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter tickAccelerationLimiter = new com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter();
     public static final int INFINITE_MODE_MODULE_THRESHOLD = 25;
     private static final String TAG_CPU_POOL = "NexusCpuPool";
     private static final String TAG_CPU_PRIORITY = "CpuPriority";
@@ -110,6 +111,7 @@ public final class QuantumComputationNexusControllerBE extends AENetworkedBlockE
 
     public void serverTick() {
         if (!(level instanceof ServerLevel serverLevel)) return;
+        if (!tickAccelerationLimiter.tryAcquire(serverLevel.getGameTime(), com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks())) return;
         long startedAt = System.nanoTime();
         try {
             if (structureDirty) {

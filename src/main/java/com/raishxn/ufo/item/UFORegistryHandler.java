@@ -76,6 +76,12 @@ public class UFORegistryHandler {
         Upgrades.add(AEItems.INVERTER_CARD, infinityGenesisCell, 1);
         Upgrades.add(AEItems.FUZZY_CARD, infinityGenesisCell, 1);
 
+        // Quantum Interface uses AE2's InterfaceLogic; register the same functional
+        // cards against its own host item instead of AE2's native interface item.
+        Item quantumInterface = ModItems.QUANTUM_INTERFACE.get();
+        Upgrades.add(AEItems.CRAFTING_CARD, quantumInterface, 1, "group.interface.name");
+        Upgrades.add(AEItems.FUZZY_CARD, quantumInterface, 1, "group.interface.name");
+
         // AppFlux's induction card needs an explicit (card, machine) association for the
         // Quantum Pattern Hatch block and part; its mixin already provides the inventory.
         com.raishxn.ufo.compat.appflux.AppliedFluxPlugin.registerInductionCardUpgrades();

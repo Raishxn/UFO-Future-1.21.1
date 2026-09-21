@@ -42,6 +42,7 @@ import java.util.Set;
 
 public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
         implements IEntropicMachineController, IUniversalMultiblockController, IUpgradeableObject, MenuProvider {
+    private final com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter tickAccelerationLimiter = new com.raishxn.ufo.block.entity.processing.TickAccelerationLimiter();
     protected boolean assembled;
     protected final List<BlockPos> parts = new ArrayList<>();
     protected final Set<BlockPos> partSet = new HashSet<>();
@@ -73,6 +74,9 @@ public abstract class AbstractEntropicMachineBE extends AENetworkedBlockEntity
 
     public void serverTick() {
         if (this.level == null || this.level.isClientSide()) {
+            return;
+        }
+        if (!this.tickAccelerationLimiter.tryAcquire(this.level.getGameTime(), com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks())) {
             return;
         }
 

@@ -31,6 +31,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.math.BigInteger;
+import java.util.List;
 
 /** Compact AE-style status dashboard for the Quantum Computation Nexus. */
 public final class QuantumComputationNexusScreen extends AbstractContainerScreen<QuantumComputationNexusMenu> {
@@ -119,7 +120,7 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         drawCenteredFitted(graphics,
                 Component.translatable("gui.ufo.quantum_computation_nexus.title"),
-                14, 9, 160, 1.0F, TEXT);
+                14, 12, 160, 1.0F, TEXT);
 
         Component status;
         int statusColor;
@@ -157,12 +158,9 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
         drawCenteredFitted(graphics, Component.translatable("gui.ufo.quantum_computation_nexus.lanes"),
                 94, 85, 159, 0.75F, MUTED);
 
-        Component breakdown = Component.translatable("gui.ufo.quantum_computation_nexus.module_breakdown",
-                menu.getStorageModuleCount(), menu.getCoProcessorModuleCount(), menu.getCpuPartitionCount());
-        Component summary = Component.empty()
-                .append(Component.translatable("gui.ufo.quantum_computation_nexus.modules"))
-                .append("  •  ").append(breakdown);
-        drawCenteredFitted(graphics, summary, 13, 103, 159, 0.72F, TEXT);
+        drawCenteredFitted(graphics,
+                Component.translatable("gui.ufo.quantum_computation_nexus.modules"),
+                13, 103, 159, 0.8F, TEXT);
     }
 
     private void renderMetricTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -182,6 +180,14 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
                         .append(Component.translatable("gui.ufo.quantum_computation_nexus.infinite_active"));
             }
             graphics.renderTooltip(font, tooltip.withStyle(ChatFormatting.LIGHT_PURPLE), mouseX, mouseY);
+        } else if (inside(mouseX, mouseY, leftPos + 13, topPos + 101, 147, 14)) {
+            Component breakdown = Component.translatable("gui.ufo.quantum_computation_nexus.module_breakdown",
+                    menu.getStorageModuleCount(), menu.getCoProcessorModuleCount(), menu.getCpuPartitionCount())
+                    .withStyle(ChatFormatting.AQUA);
+            graphics.renderComponentTooltip(font, List.of(
+                    Component.translatable("gui.ufo.quantum_computation_nexus.modules")
+                            .withStyle(ChatFormatting.GRAY),
+                    breakdown), mouseX, mouseY);
         }
     }
 

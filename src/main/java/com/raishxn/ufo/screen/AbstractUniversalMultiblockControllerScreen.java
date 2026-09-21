@@ -265,7 +265,8 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
             boolean overclocked = this.menu.isOverclocked();
             Component tooltip = Component.literal(overclocked ? "Overclock enabled" : "Overclock disabled");
             this.overclockButton.setMessage(tooltip);
-            this.overclockButton.setAtlasSprite(MAIN_TEXTURE, 256, 256, 0, 33, 14, 14);
+            int overclockU = overclocked ? 0 : 16;
+            this.overclockButton.setAtlasSprite(MAIN_TEXTURE, 256, 256, overclockU, 33, 14, 14);
             this.overclockButton.active = controlsAvailable;
         }
     }

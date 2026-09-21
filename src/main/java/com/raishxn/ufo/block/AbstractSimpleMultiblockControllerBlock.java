@@ -3,9 +3,15 @@ package com.raishxn.ufo.block;
 import appeng.api.orientation.IOrientableBlock;
 import appeng.api.orientation.IOrientationStrategy;
 import appeng.api.orientation.OrientationStrategies;
+import appeng.api.implementations.items.IMemoryCard;
+import appeng.api.implementations.items.MemoryCardMessages;
+import appeng.api.ids.AEComponents;
+import appeng.items.tools.MemoryCardItem;
+import appeng.util.InteractionUtil;
 import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.InteractionHand;
@@ -52,6 +58,24 @@ public abstract class AbstractSimpleMultiblockControllerBlock<T extends Abstract
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (stack.getItem() instanceof IMemoryCard memoryCard
+                && level.getBlockEntity(pos) instanceof AbstractSimpleMultiblockControllerBE controller) {
+            if (!level.isClientSide()) {
+                if (InteractionUtil.isInAlternateUseMode(player)) {
+                    DataComponentMap.Builder builder = DataComponentMap.builder();
+                    controller.exportMemoryCardSettings(builder);
+                    builder.set(AEComponents.EXPORTED_SETTINGS_SOURCE, state.getBlock().getName());
+                    MemoryCardItem.clearCard(stack);
+                    stack.applyComponents(builder.build());
+                    memoryCard.notifyUser(player, MemoryCardMessages.SETTINGS_SAVED);
+                } else if (controller.importMemoryCardSettings(stack.getComponents(), player)) {
+                    memoryCard.notifyUser(player, MemoryCardMessages.SETTINGS_LOADED);
+                } else {
+                    memoryCard.notifyUser(player, MemoryCardMessages.INVALID_MACHINE);
+                }
+            }
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        }
         if (stack.is(Tags.Items.TOOLS_WRENCH) && player.isShiftKeyDown()) {
             if (!level.isClientSide()) {
                 level.destroyBlock(pos, true, player);
