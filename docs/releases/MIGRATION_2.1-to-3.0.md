@@ -11,7 +11,7 @@ Normal Minecraft saves rewrite loaded data; this is not a zero-rewrite migration
 3.0 declares hard dependencies in `neoforge.mods.toml` and refuses to load without:
 
 - **Applied Energistics 2** 19.2.17+ (as before).
-- **RaishxCore** (`raishxcore-0.1.0-alpha.2.jar` or compatible) — new shared core mod.
+- **RaishxCore** (`raishxcore-0.1.0-beta.2.jar` or compatible) — new shared core mod.
   If you previously ran the 3.0 alphas with the old `ufocore` jar, replace it: the
   core mod id changed from `ufocore` to `raishxcore` and the old jar no longer
   satisfies the dependency. The core registers no content, so there is nothing to

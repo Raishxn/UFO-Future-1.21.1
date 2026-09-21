@@ -42,7 +42,7 @@ RaishxCore
 UFO-Future-1.21.1  máquinas, recipes, progressão e assets do addon atual
 ```
 
-O Core produz `raishxcore-0.1.0-alpha.2.jar`; o addon produz seu artefato separado.
+O Core produz `raishxcore-0.1.0-beta.2.jar`; o addon produz seu artefato separado.
 No desenvolvimento, um composite build substitui a coordenada Maven do Core
 pelo projeto irmão automaticamente.
 

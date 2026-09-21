@@ -12,6 +12,10 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+## [3.0.0-beta.2] - 2026-09-21
+
+Segundo beta público da linha 3.0, reunindo o polimento e as correções abaixo.
+
 Resumo do ciclo 3.0 (marcos L-0001 a L-0066). O detalhe tecnico por marco esta
 em [CHANGELOG_L0001_L0037.md](CHANGELOG_L0001_L0037.md) e no ledger interno do
 projeto. IDs, saves, receitas e progressao existentes foram preservados.
