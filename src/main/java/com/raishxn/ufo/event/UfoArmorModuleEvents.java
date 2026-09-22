@@ -20,6 +20,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -164,6 +165,15 @@ public final class UfoArmorModuleEvents {
         if (player.level().isClientSide()) return;
         syncModuleAttributes(player);
         if (!UfoArmorItem.hasFullUfoSet(player)) return;
+        // Rescue before vanilla starts dealing void damage. Once the player is below the world,
+        // canceling that damage alone can leave them trapped at the same height.
+        if (player instanceof ServerPlayer serverPlayer
+                && player.getY() < player.level().getMinBuildHeight() - 2
+                && UfoArmorModules.active(player, UfoArmorModule.REALITY_ANCHOR)
+                && UfoArmorModules.consume(player, UfoArmorModule.REALITY_ANCHOR)) {
+            teleportToSafety(serverPlayer);
+            return;
+        }
         // A single dimension's game time is not a global clock: a player who changes dimension
         // would see cadences and cooldowns jump. The overworld clock is the shared, persisted one.
         var server = player.getServer();
@@ -339,9 +349,11 @@ public final class UfoArmorModuleEvents {
         if (pos != null && level != null) {
             player.teleportTo(level, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, player.getYRot(), player.getXRot());
         } else {
-            ServerLevel current = player.serverLevel();
-            BlockPos spawn = current.getSharedSpawnPos();
-            player.teleportTo(current, spawn.getX() + 0.5, spawn.getY() + 1.0, spawn.getZ() + 0.5, player.getYRot(), player.getXRot());
+            ServerLevel overworld = player.server.overworld();
+            BlockPos spawn = overworld.getSharedSpawnPos();
+            player.teleportTo(overworld, spawn.getX() + 0.5, spawn.getY() + 1.0, spawn.getZ() + 0.5, player.getYRot(), player.getXRot());
         }
+        player.setDeltaMovement(Vec3.ZERO);
+        player.fallDistance = 0;
     }
 }
