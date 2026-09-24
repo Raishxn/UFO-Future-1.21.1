@@ -1,19 +1,19 @@
-# Containment
+# 收容系统
 
-UFO Future uses two containment items for unstable late-game matter handling.
+UFO Future 使用两种收容物品处理不稳定的终局物质。
 
-## Safe Containment Matter
+## 安全收容物质
 
-**Safe Containment Matter (SCM)** is the stable base material for dangerous matter workflows.
+**安全收容物质（SCM）** 是危险物质加工流程中的稳定基础材料。
 
-- Used as the safe structural component for risky crafting
-- Built before the capsule tier
-- Appears in recipes that stabilize volatile matter
+- 为高风险合成提供安全的结构组件
+- 在胶囊等级之前制作
+- 用于稳定易变物质的配方
 
-## Aether Containment Capsule
+## 以太收容胶囊
 
-The **Aether Containment Capsule (ACC)** upgrades SCM into a portable containment shell.
+**以太收容胶囊（ACC）** 将 SCM 升级为可携带的收容外壳。
 
-- Used to move or craft hazardous late-game materials
-- Prevents fragile progression items from being treated like ordinary components
-- Acts as the higher-tier containment step in the matter pipeline
+- 用于转移或合成危险的终局材料
+- 为脆弱的进阶物品提供专门的处理步骤
+- 是物质加工链中更高级的收容阶段

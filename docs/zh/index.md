@@ -1,25 +1,25 @@
-# UFO Future Wiki
+# UFO Future 中文 Wiki
 
-This wiki tracks the current 1.21.1 repository state of **UFO Future** in Chinese.
+本 Wiki 介绍 **UFO Future** 1.21.1 版本仓库中的当前内容。
 
-## Main Progression
+## 主要进阶路线
 
-- [Dimensional Matter Assembler](dma.md): first advanced machine with heat, coolant and catalyst control.
-- [Quantum Matter Fabricator](quantum-matter-fabricator.md): AE2-native multiblock successor to the DMA.
-- [Quantum Slicer](quantum-slicer.md): bulk printed-part preparation.
-- [Quantum Processor Assembler](quantum-processor-assembler.md): factory-scale final processor assembly.
-- [Stellar Nexus](stellar-nexus.md): final stellar simulation platform.
-- [Multiblock Tiers](multiblock-tiers.md): MK1, MK2 and MK3 gating with tier bonuses.
+- [维度物质装配器](dma.md)：首台高级机器，可控制热量、冷却液和催化剂。
+- [量子物质制造机](quantum-matter-fabricator.md)：DMA 的多方块升级版，直接连接 AE2 网络。
+- [量子切片机](quantum-slicer.md)：批量制备印刷部件。
+- [量子处理器装配机](quantum-processor-assembler.md)：大规模组装最终处理器。
+- [恒星枢纽](stellar-nexus.md)：终局恒星模拟平台。
+- [多方块等级](multiblock-tiers.md)：MK1、MK2、MK3 的配方限制与等级加成。
 
-## Support Systems
+## 辅助系统
 
-- [Mega Storage](mega-storage.md): mega crafting storages and mega co-processors.
-- [Containment](containment.md): SCM and ACC for volatile matter.
-- [Storage Cells](storage-cells.md): White Dwarf, Neutron Star and Infinity cells.
-- [Materials & Fluids](materials.md): star matter, coolants and progression materials.
-- [Catalysts](catalysts.md): DMA catalyst families and roles.
-- [Tools & Weapons](tools.md): transformable tools plus the Structure Scanner.
-- [Armor Sets](armor.md): Thermal Resistor gear and UFO armor.
-- [Crafting Progression](progression.md): recommended progression order.
-- [KubeJS Recipes](kubejs-recipes.md): custom recipe support.
-- [Recipe Balance Audit](recipe-balance-audit.md): balance notes for the current recipe set.
+- [巨型存储](mega-storage.md)：巨型合成存储器和巨型协处理器。
+- [收容系统](containment.md)：处理不稳定物质的 SCM 和 ACC。
+- [存储单元](storage-cells.md)：白矮星、中子星和无限存储单元。
+- [材料与流体](materials.md)：恒星物质、冷却液及进阶材料。
+- [催化剂](catalysts.md)：DMA 催化剂的类型和用途。
+- [工具与武器](tools.md)：可变形工具与结构扫描仪。
+- [护甲套装](armor.md)：热阻装备与 UFO 护甲。
+- [合成进阶](progression.md)：推荐的进阶顺序。
+- [KubeJS 配方](kubejs-recipes.md)：自定义配方支持。
+- [配方平衡审查](recipe-balance-audit.md)：当前配方体系的平衡说明。

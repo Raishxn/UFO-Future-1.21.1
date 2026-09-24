@@ -1,28 +1,28 @@
-# Tools & Weapons
+# 工具与武器
 
-UFO Future includes transformable energy tools and utility items for multiblock debugging.
+UFO Future 提供可变形的能量工具，以及调试多方块结构的实用物品。
 
-## Tool Line
+## 工具系列
 
-The main tools share these properties:
+主要工具具有以下共同特点：
 
-- Energy powered instead of durability based
-- Can switch between several forms
-- Keep stored energy during transformation
-- Gain perks such as area mining, auto-smelt or combat scaling
+- 消耗能量，而非耐久度
+- 可在多种形态之间切换
+- 变形时保留已存储的能量
+- 可获得范围挖掘、自动熔炼或战斗强化等能力
 
-## Main Forms
+## 主要形态
 
-- **Pickaxe**: mining and ore utility
-- **Hammer**: area mining
-- **Sword / Greatsword**: combat
-- **Axe, Shovel, Hoe, Fishing Rod, Bow, Staff**: specialized utility
+- **镐**：挖掘与矿石采集
+- **锤**：范围挖掘
+- **剑 / 巨剑**：战斗
+- **斧、锹、锄、钓竿、弓、法杖**：各有专门用途
 
-## Structure Scanner
+## 结构扫描仪
 
-The **Structure Scanner** is the main utility tool for the multiblock line.
+**结构扫描仪**是多方块机器系列的主要辅助工具。
 
-- Right-click a supported controller to validate the structure
-- Highlights missing or invalid blocks on the client
-- Prints exact positions and expected parts in chat
-- In Creative, **Shift + Right Click** auto-builds the shell from default preview states
+- 右键点击受支持的控制器，验证结构。
+- 在客户端高亮显示缺失或错误的方块。
+- 在聊天栏显示准确位置和应放置的部件。
+- 在创造模式下按住 **Shift 并右键点击**，可按默认预览方块状态自动搭建外壳。

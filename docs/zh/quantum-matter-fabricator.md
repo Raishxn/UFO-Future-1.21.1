@@ -1,27 +1,27 @@
-# Quantum Matter Fabricator
+# 量子物质制造机
 
-The **Quantum Matter Fabricator (QMF)** is the multiblock evolution of the DMA for bulk processing, parallel jobs and AE2 autocrafting.
+**量子物质制造机（QMF）** 是 DMA 的多方块升级版，支持批量加工、并行任务和 AE2 自动合成。
 
-## Core Behavior
+## 核心功能
 
-- Up to **27 parallel threads** in standard mode
-- **9 parallel threads** in Safe Mode
-- Accepts both **QMF** recipes and **DMA** recipes
-- Pulls ingredients directly from the ME network
-- Pushes outputs back into ME storage
-- Uses the **Quantum Pattern Hatch** for automation
+- 标准模式最多运行 **27 个并行任务**
+- 安全模式运行 **9 个并行任务**
+- 同时接受 **QMF** 和 **DMA** 配方
+- 直接从 ME 网络提取原料，并将产物送回 ME 存储
+- 通过**量子样板仓**接入自动合成
 
-## Quantum Pattern Hatch
+## 量子样板仓
 
-- Stores up to **72 encoded patterns**
-- Links to the controller when the structure assembles
-- Exposes the multiblock to AE2 as a crafting machine
-- Lets AE2 dispatch work to free threads
+- 最多存储 **72 个编码样板**
+- 结构组装完成后连接控制器
+- 将多方块机器作为合成设备提供给 AE2
+- 允许 AE2 将任务分配给空闲线程
 
-## Parallel Model
+## 并行机制
 
-Each free thread can run one recipe copy.
+每个空闲线程可执行一份配方。
 
-- One AE2 pattern reserves one free thread
-- Idle threads can still auto-start valid work
-- Items, fluids and AE all come from the ME network
+- 一个 AE2 样板任务占用一个空闲线程
+- 其他空闲线程仍可自动启动有效任务
+- 物品、流体和 AE 能量均来自 ME 网络
+- 配方可以要求 **MK1**、**MK2** 或 **MK3** 等级

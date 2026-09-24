@@ -1,38 +1,38 @@
-# KubeJS Pei Fang
+# KubeJS 配方
 
-Ben ye shuo ming ru he tong guo [KubeJS](https://kubejs.com/) wei UFO Future zai Minecraft 1.21.1 (NeoForge) zhong de zhu yao duo fang kuai ji qi chuang jian, xiu gai he shan chu zi ding yi pei fang.
+本页介绍如何通过 [KubeJS](https://kubejs.com/) 在 Minecraft 1.21.1（NeoForge）中为 UFO Future 的主要多方块机器创建、修改和移除自定义配方。
 
-## Yi Zhi Chi De Pei Fang Lei Xing
+## 支持的配方类型
 
 - `ufo:dimensional_assembly`
 - `ufo:stellar_simulation`
 - `ufo:universal_multiblock`
-- `ufo:qmf_recipe` (lao ge shi, QMF reng ran zhi chi)
+- `ufo:qmf_recipe` （旧格式，QMF 仍然支持）
 
 ---
 
 ## DMA
 
-### Lei Xing
+### 类型
 
 ```txt
 ufo:dimensional_assembly
 ```
 
-### Ji Ben Jie Gou
+### 基本结构
 
-| Zi Duan | Lei Xing | Bi Xu | Shuo Ming |
+| 字段 | 类型 | 必填 | 说明 |
 |--------|----------|-------|----------|
-| `item_inputs` | Array | Shi | Wu pin shu ru ji shu liang |
-| `fluid_inputs` | Array | Fou | Liu ti shu ru ji shu liang, dan wei mB |
-| `item_outputs` | Array | Fou | Wu pin shu chu |
-| `fluid_outputs` | Array | Fou | Liu ti shu chu |
-| `energy` | Integer | Shi | Zong AE neng liang xiao hao |
-| `time` | Integer | Shi | Chu li shi jian, dan wei tick |
+| `item_inputs` | Array | 是 | 物品输入及数量 |
+| `fluid_inputs` | Array | 否 | 流体输入及数量，单位为 mB |
+| `item_outputs` | Array | 否 | 物品输出 |
+| `fluid_outputs` | Array | 否 | 流体输出 |
+| `energy` | Integer | 是 | 总 AE 能耗 |
+| `time` | Integer | 是 | 处理时间，单位为 tick |
 
-> Zhi shao yao you yi ge shu chu: `item_outputs` huo `fluid_outputs`.
+> 至少需要一种输出：`item_outputs` 或 `fluid_outputs`。
 
-### Shi Li
+### 示例
 
 ```js
 ServerEvents.recipes(event => {
@@ -67,7 +67,7 @@ ServerEvents.recipes(event => {
 })
 ```
 
-### Shi Yong Tag Zuo Wei Shu Ru
+### 使用标签作为输入
 
 ```js
 ServerEvents.recipes(event => {
@@ -93,7 +93,7 @@ ServerEvents.recipes(event => {
 })
 ```
 
-### Shan Chu
+### 移除配方
 
 ```js
 ServerEvents.recipes(event => {
@@ -102,39 +102,39 @@ ServerEvents.recipes(event => {
 })
 ```
 
-### Bei Zhu
+### 备注
 
-- DMA pei fang shi wu xu xing zhuang de.
-- DMA zui duo zhi chi 9 zhong wu pin shu ru.
-- Coolant bu shu yu pei fang ding yi de yi bu fen.
+- DMA 配方中的物品输入不区分排列顺序。
+- DMA 最多支持 9 种物品输入。
+- 冷却液不属于配方定义的一部分。
 
 ---
 
-## Stellar Nexus
+## 恒星枢纽
 
-### Lei Xing
+### 类型
 
 ```txt
 ufo:stellar_simulation
 ```
 
-### Ji Ben Jie Gou
+### 基本结构
 
-| Zi Duan | Lei Xing | Bi Xu | Shuo Ming |
+| 字段 | 类型 | 必填 | 说明 |
 |--------|----------|-------|----------|
-| `simulation_name` | String | Shi | Controller zhong xian shi de ming cheng |
-| `item_inputs` | Array | Shi | Cong ME wang luo xiao hao de wu pin |
-| `fluid_inputs` | Array | Fou | Cong ME wang luo xiao hao de liu ti |
-| `item_outputs` | Array | Fou | AE2 GenericStack ge shi de wu pin shu chu |
-| `fluid_outputs` | Array | Fou | AE2 GenericStack ge shi de liu ti shu chu |
-| `energy` | Integer | Shi | Zong AE neng liang |
-| `time` | Integer | Shi | Chi xu shi jian, dan wei tick |
-| `cooling_level` | Integer | Shi | Re fu he deng ji, 0 dao 3 |
-| `field_tier` | Integer | Shi | Zui di field generator deng ji |
-| `fuel_fluid` | String | Fou | Ran liao liu ti id |
-| `fuel_amount` | Integer | Fou | Ran liao shu liang, mB |
-| `coolant_fluid` | String | Fou | Leng que ye liu ti id |
-| `coolant_amount` | Integer | Fou | Leng que ye shu liang, mB |
+| `simulation_name` | String | 是 | 控制器中显示的名称 |
+| `item_inputs` | Array | 是 | 从 ME 网络消耗的物品 |
+| `fluid_inputs` | Array | 否 | 从 ME 网络消耗的流体 |
+| `item_outputs` | Array | 否 | AE2 GenericStack 格式的物品输出 |
+| `fluid_outputs` | Array | 否 | AE2 GenericStack 格式的流体输出 |
+| `energy` | Integer | 是 | 总 AE 能量 |
+| `time` | Integer | 是 | 持续时间，单位为 tick |
+| `cooling_level` | Integer | 是 | 热负荷等级，0 至 3 |
+| `field_tier` | Integer | 是 | 所需的最低力场发生器等级 |
+| `fuel_fluid` | String | 否 | 燃料流体 ID |
+| `fuel_amount` | Integer | 否 | 燃料用量，mB |
+| `coolant_fluid` | String | 否 | 冷却液流体 ID |
+| `coolant_amount` | Integer | 否 | 冷却液用量，mB |
 
 ### AE2 GenericStack
 
@@ -142,11 +142,11 @@ ufo:stellar_simulation
 { "#": 15000000, "#t": "ae2:i", "id": "minecraft:iron_ingot" }
 ```
 
-- `#` = shu liang
-- `#t` = lei xing: `ae2:i` biao shi wu pin, `ae2:f` biao shi liu ti
-- `id` = wan zheng registry id
+- `#` = 数量
+- `#t` = 类型：`ae2:i` 表示物品，`ae2:f` 表示流体
+- `id` = 完整的注册 ID
 
-### Shi Li
+### 示例
 
 ```js
 ServerEvents.recipes(event => {
@@ -188,7 +188,7 @@ ServerEvents.recipes(event => {
 })
 ```
 
-### Shan Chu
+### 移除配方
 
 ```js
 ServerEvents.recipes(event => {
@@ -199,43 +199,43 @@ ServerEvents.recipes(event => {
 
 ---
 
-## Universal Multiblock
+## 通用多方块配方
 
-Zhe shi qi ta da gui mo zi dong hua duo fang kuai ji qi tui jian shi yong de ge shi.
+这是其他大型自动化多方块机器推荐使用的配方格式。
 
-### Lei Xing
+### 类型
 
 ```txt
 ufo:universal_multiblock
 ```
 
-### Zhi Chi De Ji Qi
+### 支持的机器
 
 - `machine: 'qmf'`
 - `machine: 'quantum_slicer'`
 - `machine: 'quantum_processor_assembler'`
 - `machine: 'quantum_cryoforge'`
 
-### Ji Ben Jie Gou
+### 基本结构
 
-| Zi Duan | Lei Xing | Bi Xu | Shuo Ming |
+| 字段 | 类型 | 必填 | 说明 |
 |--------|----------|-------|----------|
-| `machine` | String | Shi | Mu biao duo fang kuai ji qi |
-| `recipe_name` | String | Fou | Nei bu huo xian shi ming cheng |
-| `item_inputs` | Array | Shi | Wu pin shu ru ji shu liang |
-| `fluid_inputs` | Array | Fou | Liu ti shu ru ji shu liang, mB |
-| `item_output` | Object | Fou | Dan ge wu pin shu chu |
-| `fluid_output` | Object | Fou | Dan ge liu ti shu chu |
-| `fluid_output_amount` | Integer | Fou | Liu ti shu chu zong liang, mB |
-| `energy` | Integer/Long | Shi | Zong AE neng liang |
-| `time` | Integer | Shi | Shi jian, dan wei tick |
-| `required_tier` | Integer | Fou | Ji qi zui di deng ji |
+| `machine` | String | 是 | 目标多方块机器 |
+| `recipe_name` | String | 否 | 内部名称或显示名称 |
+| `item_inputs` | Array | 是 | 物品输入及数量 |
+| `fluid_inputs` | Array | 否 | 流体输入及数量，mB |
+| `item_output` | Object | 否 | 单项物品输出 |
+| `fluid_output` | Object | 否 | 单项流体输出 |
+| `fluid_output_amount` | Integer | 否 | 流体输出总量，mB |
+| `energy` | Integer/Long | 是 | 总 AE 能量 |
+| `time` | Integer | 是 | 时间，单位为 tick |
+| `required_tier` | Integer | 否 | 机器的最低等级 |
 
-> Zhi shao yao you yi ge shu chu: `item_output` huo `fluid_output`.
+> 至少需要一种输出：`item_output` 或 `fluid_output`。
 
-### Ge Shi
+### 数据格式
 
-Wu pin shu ru:
+物品输入：
 
 ```json
 {
@@ -244,7 +244,7 @@ Wu pin shu ru:
 }
 ```
 
-Tag shu ru:
+标签输入：
 
 ```json
 {
@@ -253,7 +253,7 @@ Tag shu ru:
 }
 ```
 
-Liu ti shu ru:
+流体输入：
 
 ```json
 {
@@ -265,7 +265,7 @@ Liu ti shu ru:
 }
 ```
 
-Wu pin shu chu:
+物品输出：
 
 ```json
 {
@@ -274,7 +274,7 @@ Wu pin shu chu:
 }
 ```
 
-Liu ti shu chu:
+流体输出：
 
 ```json
 {
@@ -283,13 +283,13 @@ Liu ti shu chu:
 }
 ```
 
-Xu yao da pei:
+还需要配合设置：
 
 ```json
 "fluid_output_amount": 128000
 ```
 
-### Shi Li - QMF
+### 示例 - QMF
 
 ```js
 ServerEvents.recipes(event => {
@@ -331,7 +331,7 @@ ServerEvents.recipes(event => {
 })
 ```
 
-### Shi Li - Quantum Processor Assembler
+### 示例 - 量子处理器装配机
 
 ```js
 ServerEvents.recipes(event => {
@@ -363,7 +363,7 @@ ServerEvents.recipes(event => {
 })
 ```
 
-### Shi Li - Quantum Cryoforge
+### 示例 - 量子冷锻炉
 
 ```js
 ServerEvents.recipes(event => {
@@ -406,9 +406,9 @@ ServerEvents.recipes(event => {
 })
 ```
 
-### Shi Li - Quantum Slicer
+### 示例 - 量子切片机
 
-Mu qian Quantum Slicer hai mei you sheng cheng hao de datapack shi li, dan serializer yi jing ke yi yong tong yang de ge shi jie shou zi ding yi pei fang:
+目前量子切片机没有现成的 datapack 示例，但其序列化器已支持使用相同格式接收自定义配方：
 
 ```js
 ServerEvents.recipes(event => {
@@ -450,7 +450,7 @@ ServerEvents.recipes(event => {
 })
 ```
 
-### Shan Chu
+### 移除配方
 
 ```js
 ServerEvents.recipes(event => {
@@ -461,17 +461,17 @@ ServerEvents.recipes(event => {
 
 ---
 
-## QMF Lao Ge Shi Jian Rong
+## QMF 旧格式兼容性
 
-QMF reng ran zhi chi:
+QMF 仍然支持：
 
 ```txt
 ufo:qmf_recipe
 ```
 
-Zhe ge ge shi reng ran ke yong yu xiang rong lao nei rong, dan xin pei fang geng tui jian shi yong `ufo:universal_multiblock` bing pei he `machine: 'qmf'`.
+该格式可用于兼容旧内容。新配方建议使用 `ufo:universal_multiblock`，并设置 `machine: 'qmf'`。
 
-### Shi Li
+### 示例
 
 ```js
 ServerEvents.recipes(event => {
@@ -506,16 +506,16 @@ ServerEvents.recipes(event => {
 
 ---
 
-## Datapack
+## 数据包
 
-Ru guo ni xi huan yong datapack er bu shi KubeJS, qing ba JSON fang zai:
+如果选择使用 datapack 而非 KubeJS，请将 JSON 放在：
 
 ```txt
 data/<your_namespace>/recipe/<recipe_name>.json
 ```
 
-Shi yong yu shang mian shi li wan quan xiang tong de jie gou ji ke.
+使用与上述示例相同的结构即可。
 
 ---
 
-*Can kao: [DMA](dma.md) · [Quantum Matter Fabricator](quantum-matter-fabricator.md) · [Quantum Processor Assembler](quantum-processor-assembler.md) · [Stellar Nexus](stellar-nexus.md) · [Catalysts](catalysts.md) · [Materials](materials.md)*
+*另见： [DMA](dma.md) · [量子物质制造机](quantum-matter-fabricator.md) · [量子处理器装配机](quantum-processor-assembler.md) · [恒星枢纽](stellar-nexus.md) · [催化剂](catalysts.md) · [材料与流体](materials.md)*

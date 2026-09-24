@@ -1,23 +1,23 @@
-# Quantum Processor Assembler
+# 量子处理器装配机
 
-The **Quantum Processor Assembler** is the finishing multiblock for processor production. It takes printed circuits and support materials, then assembles final processors at endgame scale.
+**量子处理器装配机**是处理器生产线的最终多方块机器。它使用印刷电路及辅助材料，大规模组装终局处理器。
 
-## Main Features
+## 主要功能
 
-- Up to **27 parallel jobs** in standard mode
-- **9 parallel jobs** in Safe Mode
-- Universal multiblock recipe support
-- AE2 autocrafting through the **Quantum Pattern Hatch**
-- Direct network pull for ingredients and direct push for outputs
+- 标准模式最多运行 **27 个并行任务**
+- 安全模式运行 **9 个并行任务**
+- 支持通用多方块配方
+- 通过**量子样板仓**接入 AE2 自动合成
+- 直接从网络提取原料，并将产物送回网络
 
-## Pattern Hatch
+## 量子样板仓
 
-- The **Quantum Pattern Hatch** stores **72 encoded patterns**
-- It exposes the controller to AE2 as a crafting machine
-- Each pattern uses one free thread instead of blocking the whole machine
+- 最多存储 **72 个编码样板**
+- 将控制器作为合成设备提供给 AE2
+- 每个样板任务只占用一个空闲线程，不会阻塞整台机器
 
-## Factory Chain
+## 工厂生产链
 
-- **Quantum Slicer** makes printed parts
-- **Quantum Processor Assembler** finishes processors
-- **QMF** handles heavy DMA-style conversions
+- **量子切片机**制作印刷部件
+- **量子处理器装配机**完成处理器组装
+- **QMF**负责高负载的 DMA 类物质加工

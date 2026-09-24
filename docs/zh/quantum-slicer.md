@@ -1,24 +1,24 @@
-# Quantum Slicer
+# 量子切片机
 
-The **Quantum Slicer** prepares printed components in large volume for processor and circuit lines.
+**量子切片机**批量制备处理器和电路生产线所需的印刷部件。
 
-## Core Behavior
+## 核心功能
 
-- Converts source materials into printed parts
-- Uses the universal multiblock recipe system
-- Supports up to **27 parallel jobs** in standard mode
-- Drops to **9 parallel jobs** in Safe Mode
-- Integrates with AE2 through the **Quantum Pattern Hatch**
-- Pulls and returns ingredients directly through the ME network
+- 将原材料加工为印刷部件
+- 使用通用多方块配方系统
+- 标准模式最多运行 **27 个并行任务**
+- 安全模式运行 **9 个并行任务**
+- 通过**量子样板仓**接入 AE2
+- 直接从 ME 网络提取原料，并将产物送回网络
 
-## Pattern Hatch
+## 量子样板仓
 
-- The **Quantum Pattern Hatch** stores **72 encoded patterns**
-- It links to the controller after assembly
-- AE2 can push jobs without manual inventory handling
+- 最多存储 **72 个编码样板**
+- 结构组装完成后连接控制器
+- AE2 可直接派发任务，无需手动管理物品栏
 
-## Factory Position
+## 生产链中的位置
 
-1. Materials enter the **Quantum Slicer**
-2. Printed parts return to the ME
-3. AE2 requests final processors from the **Quantum Processor Assembler**
+1. 原材料进入**量子切片机**。
+2. 印刷部件返回 ME 网络。
+3. AE2 向**量子处理器装配机**请求最终处理器。

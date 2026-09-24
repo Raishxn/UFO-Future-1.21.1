@@ -1,45 +1,45 @@
-# Stellar Nexus
+# 恒星枢纽
 
-The **Stellar Nexus** is the final simulation multiblock in UFO Future. It consumes AE, rare fluids and high-tier materials for extreme-scale outputs.
+**恒星枢纽**是 UFO Future 的终局模拟多方块机器。它消耗 AE 能量、稀有流体和高级材料，产生大规模产物。
 
-## Machine Identity
+## 机器特性
 
-- Massive multiblock structure
-- Reads items and fluids directly from the ME network
-- Charges a **200B AE** internal buffer
-- Consumes fuel on start and coolant during operation
-- Uses heat, safe mode and overclock as the main risk systems
-- Requires one item input hatch, one item output hatch, one fluid output hatch and one AE energy input hatch
+- 体积庞大的多方块结构
+- 直接从 ME 网络读取物品与流体
+- 可充入 **2000 亿 AE** 的内部缓存
+- 启动时消耗燃料，运行时消耗冷却液
+- 以热量、安全模式和超频构成主要风险机制
+- 需要一个物品输入仓、一个物品输出仓、一个流体输出仓和一个 AE 能量输入仓
 
-## Field Generator Tiers
+## 力场发生器等级
 
-All four field positions must use the same tier:
+四个力场位置必须使用相同等级：
 
 - **MK1**
 - **MK2**
 - **MK3**
 
-Mixed tiers invalidate the structure.
+混用等级会使结构无效。
 
-## Coolant Ladder
+## 冷却液等级
 
-- **Gelid Cryotheum** = low efficiency
-- **Stable Coolant** = medium efficiency
-- **Temporal Fluid** = extreme efficiency
+- **极寒冰晶**：低效率
+- **稳定冷却液**：中等效率
+- **时间流体**：极高效率
 
-## Safe Mode
+## 安全模式
 
-- **2x** AE cost
-- **2x** fuel use
-- **2.5x** coolant use
-- Automatic shutdown instead of explosion
+- AE 消耗为 **2 倍**
+- 燃料消耗为 **2 倍**
+- 冷却液消耗为 **2.5 倍**
+- 发生故障时自动停机，而非爆炸
 
-## Overclock
+## 超频
 
-- **5x** speed
-- **8x** AE cost
-- **5x** fuel
-- **5x** heat
-- **5x** coolant
+- 处理速度为 **5 倍**
+- AE 消耗为 **8 倍**
+- 燃料消耗为 **5 倍**
+- 热量产生为 **5 倍**
+- 冷却液消耗为 **5 倍**
 
-This also affects custom recipes.
+这些倍率同样适用于自定义配方。

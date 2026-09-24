@@ -1,18 +1,18 @@
-# Recipe Balance Audit
+# 配方平衡审查
 
-This page summarizes the balance audit for the current UFO Future recipe set.
+本页概述当前 UFO Future 配方体系的平衡审查。
 
-## Coverage
+## 审查范围
 
-- Generated normal recipes
-- DMA recipes
-- Stellar Nexus simulations
-- Universal multiblock recipes
-- Disassembly recipes
+- 自动生成的普通配方
+- DMA 配方
+- 恒星枢纽模拟配方
+- 通用多方块配方
+- 拆解配方
 
-## Main Findings
+## 主要结论
 
-- The DMA should no longer carry the entire progression alone
-- Quantum multiblocks are the correct layer for throughput and autocrafting
-- The Stellar Nexus must remain the most expensive and most extreme production layer
-- MK tiers should accelerate old recipes without removing progression cost
+- DMA 不应独自承担整个进阶流程。
+- 量子多方块机器负责提升吞吐量并支持自动合成。
+- 恒星枢纽仍应是成本最高、产出规模最大的生产阶段。
+- MK 等级应加速旧配方，同时保留进阶成本。

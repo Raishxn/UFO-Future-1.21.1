@@ -64,27 +64,27 @@ plugins:
             Crafting Progression: Progresion
             Recipe Balance Audit: Auditoria de Balance
         - locale: zh
-          name: Zhongwen
+          name: 简体中文
           build: true
           nav_translations:
-            Home: Shouye
+            Home: 首页
             Wiki: Wiki
-            Mega Storage: Juxing Cunchu
-            Containment: Kongzhi
-            Stellar Nexus: Stellar Nexus
-            Dimensional Matter Assembler: Weidu Wuzhi Zupeiqi
-            Quantum Matter Fabricator: Quantum Matter Fabricator
-            Quantum Slicer: Quantum Slicer
-            Quantum Processor Assembler: Quantum Processor Assembler
-            Multiblock Tiers: Multiblock Tiers
-            Catalysts: Cuihuaji
-            KubeJS Recipes: KubeJS Peifang
-            Tools & Weapons: Gongju Yu Wuqi
-            Armor Sets: Hujia Taozhuang
-            Storage Cells: Cunchu Danyuan
-            Materials & Fluids: Cailiao Yu Yeti
-            Crafting Progression: Hecheng Jinjie
-            Recipe Balance Audit: Peifang Pingheng Shenji
+            Mega Storage: 巨型存储
+            Containment: 收容系统
+            Stellar Nexus: 恒星枢纽
+            Dimensional Matter Assembler: 维度物质装配器
+            Quantum Matter Fabricator: 量子物质制造机
+            Quantum Slicer: 量子切片机
+            Quantum Processor Assembler: 量子处理器装配机
+            Multiblock Tiers: 多方块等级
+            Catalysts: 催化剂
+            KubeJS Recipes: KubeJS 配方
+            Tools & Weapons: 工具与武器
+            Armor Sets: 护甲套装
+            Storage Cells: 存储单元
+            Materials & Fluids: 材料与流体
+            Crafting Progression: 合成进阶
+            Recipe Balance Audit: 配方平衡审查
 
 nav:
   - Home: index.md
