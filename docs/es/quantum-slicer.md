@@ -8,14 +8,14 @@ El **Quantum Slicer** prepara componentes impresos en gran volumen para lineas d
 - Usa el sistema universal de recetas de multibloque
 - Soporta hasta **27 trabajos paralelos** en modo normal
 - Baja a **9 trabajos paralelos** con Safe Mode
-- Se integra con AE2 por medio del **Quantum Pattern Hatch**
+- Se integra con AE2 mediante un **Quantum Pattern Buffer** o **Quantum Pattern Proxy** vinculado
 - Extrae y devuelve ingredientes y outputs directamente por la ME
 
-## Pattern Hatch
+## Pattern Buffer y Proxy
 
-- El **Quantum Pattern Hatch** guarda **72 encoded patterns**
-- Se vincula al controller despues del ensamblado
-- AE2 puede empujar trabajos sin inventario manual
+- La estructura requiere exactamente un Buffer o Proxy.
+- El Buffer almacena **72 patrones codificados**; un Proxy vinculado comparte otro Buffer.
+- AE2 puede enviar trabajos sin inventario manual.
 
 ## Posicion En La Fabrica
 

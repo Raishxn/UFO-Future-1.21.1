@@ -4,11 +4,17 @@ This wiki tracks the current 1.21.1 repository state of **UFO Future**.
 
 ## Main Progression
 
+- [Current Multiblock Line](multiblock-line.md): overview of all eight machines and current pattern infrastructure.
+
 - [Dimensional Matter Assembler](dma.md): the first advanced machine, with heat, coolant and catalyst management.
 - [Quantum Matter Fabricator](quantum-matter-fabricator.md): the DMA's AE2-native multiblock successor.
 - [Quantum Slicer](quantum-slicer.md): bulk printed-part preparation.
 - [Quantum Processor Assembler](quantum-processor-assembler.md): final processor assembly at factory scale.
+- [Quantum Cryoforge](quantum-cryoforge.md): cryogenic processing and Stable Coolant production.
 - [Stellar Nexus](stellar-nexus.md): the endgame stellar simulation platform.
+- [Quantum Computation Nexus](quantum-computation-nexus.md): shared AE2 crafting CPUs from UFO modules.
+- [Quantum Pattern Fabrication Matrix](quantum-pattern-fabrication-matrix.md): searchable pattern library and virtual assembler.
+- [Infinity Fabrication Singularity](infinity-fabrication-singularity.md): persistent aggregate crafting routes.
 - [Multiblock Tiers](multiblock-tiers.md): MK1, MK2 and MK3 gating plus cross-tier bonuses.
 
 ## Support Systems

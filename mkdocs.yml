@@ -25,6 +25,11 @@ plugins:
           nav_translations:
             Home: Inicio
             Wiki: Wiki
+            Multiblock Line: Linha atual de multiblocos
+            Quantum Cryoforge: Quantum Cryoforge
+            Quantum Computation Nexus: Quantum Computation Nexus
+            Quantum Pattern Fabrication Matrix: Quantum Pattern Fabrication Matrix
+            Infinity Fabrication Singularity: Infinity Fabrication Singularity
             Mega Storage: Mega Storage
             Containment: Contencao
             Stellar Nexus: Stellar Nexus
@@ -47,6 +52,11 @@ plugins:
           nav_translations:
             Home: Inicio
             Wiki: Wiki
+            Multiblock Line: Linea actual de multibloques
+            Quantum Cryoforge: Quantum Cryoforge
+            Quantum Computation Nexus: Quantum Computation Nexus
+            Quantum Pattern Fabrication Matrix: Quantum Pattern Fabrication Matrix
+            Infinity Fabrication Singularity: Infinity Fabrication Singularity
             Mega Storage: Mega Storage
             Containment: Contencion
             Stellar Nexus: Stellar Nexus
@@ -69,6 +79,11 @@ plugins:
           nav_translations:
             Home: 首页
             Wiki: Wiki
+            Multiblock Line: 当前多方块机器系列
+            Quantum Cryoforge: 量子冷锻炉
+            Quantum Computation Nexus: 量子计算枢纽
+            Quantum Pattern Fabrication Matrix: 量子样板制造矩阵
+            Infinity Fabrication Singularity: 无限制造奇点
             Mega Storage: 巨型存储
             Containment: 收容系统
             Stellar Nexus: 恒星枢纽
@@ -89,13 +104,18 @@ plugins:
 nav:
   - Home: index.md
   - Wiki:
+    - Multiblock Line: multiblock-line.md
     - Mega Storage: mega-storage.md
     - Containment: containment.md
-    - Stellar Nexus: stellar-nexus.md
     - Dimensional Matter Assembler: dma.md
     - Quantum Matter Fabricator: quantum-matter-fabricator.md
     - Quantum Slicer: quantum-slicer.md
     - Quantum Processor Assembler: quantum-processor-assembler.md
+    - Quantum Cryoforge: quantum-cryoforge.md
+    - Stellar Nexus: stellar-nexus.md
+    - Quantum Computation Nexus: quantum-computation-nexus.md
+    - Quantum Pattern Fabrication Matrix: quantum-pattern-fabrication-matrix.md
+    - Infinity Fabrication Singularity: infinity-fabrication-singularity.md
     - Multiblock Tiers: multiblock-tiers.md
     - Catalysts: catalysts.md
     - KubeJS Recipes: kubejs-recipes.md

@@ -7,14 +7,14 @@ O **Quantum Processor Assembler** e o multibloco de acabamento da linha de proce
 - Ate **27 jobs paralelos** no modo padrao
 - **9 jobs paralelos** em Safe Mode
 - Suporte a receitas universais de multibloco
-- Integracao de autocrafting AE2 pelo **Quantum Pattern Hatch**
+- Integracao de autocrafting AE2 pelo **Quantum Pattern Buffer** ou **Quantum Pattern Proxy** vinculado
 - Pull de ingredientes e push de outputs direto pela rede
 
-## Pattern Hatch
+## Pattern Buffer e Proxy
 
-- O **Quantum Pattern Hatch** armazena **72 encoded patterns**
-- Expoe o controller para a AE2 como maquina de crafting
-- Cada pattern usa uma thread livre em vez de travar a maquina inteira
+- A estrutura exige exatamente um Buffer ou Proxy.
+- O Buffer armazena **72 patterns codificados**; um Proxy vinculado compartilha outro Buffer.
+- Cada pattern usa uma thread livre em vez de travar a maquina inteira.
 
 ## Cadeia Da Fabrica
 

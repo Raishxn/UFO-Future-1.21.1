@@ -9,14 +9,15 @@ El **Quantum Matter Fabricator (QMF)** es la evolucion multibloque del DMA. Exis
 - Acepta recetas nativas de **QMF** y recetas de **DMA**
 - Extrae ingredientes directamente de la ME
 - Devuelve los outputs al almacenamiento ME
-- Usa el **Quantum Pattern Hatch** para automatizacion
+- Usa el **Quantum Pattern Buffer** o un **Quantum Pattern Proxy** vinculado para automatizacion
 
-## Quantum Pattern Hatch
+## Pattern Buffer y Proxy
 
-- Guarda hasta **72 encoded patterns**
-- Se vincula al controller cuando la estructura se ensambla
-- Expone el multibloque a AE2 como maquina de crafting
-- Permite que AE2 despache trabajos directo a los hilos libres
+- La estructura requiere exactamente un Buffer o Proxy.
+- El Buffer almacena hasta **72 patrones codificados** y sirve a su propio controlador.
+- Un Proxy vinculado comparte otro Buffer con este controlador.
+- AE2 puede enviar trabajos a los hilos libres.
+- El antiguo **Quantum Pattern Hatch** corresponde al DMA de un solo bloque.
 
 ## Modelo Paralelo
 
@@ -24,4 +25,4 @@ Cada hilo libre puede ejecutar una copia de receta.
 
 - Un pattern enviado por AE2 reserva un hilo
 - Los hilos ociosos aun pueden iniciar trabajos validos desde la red
-- Items, fluidos y AE llegan directo desde la ME
+- Los items y fluidos de la receta llegan desde ME. Suministra coolant externo al ME Massive Fluid Hatch y FE al FE Energy Input Hatch.

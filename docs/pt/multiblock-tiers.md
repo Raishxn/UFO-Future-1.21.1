@@ -1,27 +1,27 @@
-# Tiers de Multibloco
+# Tiers de multibloco
 
-A linha de multiblocos universais usa um sistema compartilhado de **MK1 / MK2 / MK3** para gate e escalonamento.
+Os multiblocos universais compartilham os tiers **MK1 / MK2 / MK3**, que controlam o acesso as receitas e os bonus de eficiencia.
 
-## Acesso a Recipes
+## Acesso as receitas
 
-- maquina **MK1**: recipes MK1
-- maquina **MK2**: recipes MK1 e MK2
-- maquina **MK3**: recipes MK1, MK2 e MK3
+- Maquina **MK1**: executa apenas receitas MK1.
+- Maquina **MK2**: executa receitas MK1 e MK2.
+- Maquina **MK3**: executa receitas MK1, MK2 e MK3.
 
-Se o tier da maquina for menor que o tier da recipe, o controller nao inicia.
+O controller nao inicia uma receita que exige um tier maior que o da maquina.
 
-## Bonus de Tier
+## Bonus de tier
 
-Rodar uma recipe antiga em uma maquina melhor da bonus automatico:
+Ao executar uma receita antiga numa maquina de tier superior, para cada tier de diferenca:
 
-- **tempo** cai pela metade a cada tier acima da recipe
-- **energia** cai para **75%** a cada tier acima da recipe
+- O **tempo** cai pela metade.
+- O **custo de AE** cai para **75%** do valor anterior.
 
 Exemplos:
 
-- MK2 rodando recipe MK1 = **2x mais rapido** e **25% menos AE**
-- MK3 rodando recipe MK1 = **4x mais rapido** e **43,75% menos AE**
+- MK2 executando receita MK1: **2x mais rapido** e **25% menos AE**.
+- MK3 executando receita MK1: **4x mais rapido** e **43,75% menos AE**.
 
-## Por Que Isso Importa
+## Por que atualizar a maquina?
 
-Melhorar o tier nao serve apenas para liberar recipes novas. Tambem comprime linhas antigas em throughput de fundo, o que fica ainda mais importante quando o AE2 comeca a jogar muitos jobs no mesmo controller pelo Quantum Pattern Hatch.
+O upgrade acelera receitas existentes mesmo antes de liberar receitas novas. Isso ajuda quando a AE2 distribui muitos jobs ao mesmo controller por meio de um Quantum Pattern Buffer ou Proxy vinculado.

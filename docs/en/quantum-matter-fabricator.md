@@ -9,16 +9,16 @@ The **Quantum Matter Fabricator (QMF)** is the multiblock evolution of the DMA. 
 - Accepts both **QMF-native** recipes and **DMA** recipes
 - Pulls ingredients from the ME network automatically
 - Pushes outputs back into ME storage automatically
-- Supports AE2 automation through the **Quantum Pattern Hatch**
+- Supports AE2 automation through a **Quantum Pattern Buffer** or linked **Quantum Pattern Proxy**
 
-## Quantum Pattern Hatch
+## Pattern Buffer and Proxy
 
-The **Quantum Pattern Hatch** is the multiblock-facing pattern provider for this machine family.
+The controller requires exactly one **Quantum Pattern Buffer** or **Quantum Pattern Proxy**.
 
-- Stores up to **72 encoded patterns**
-- Links itself to the controller when the structure assembles
-- Exposes the controller to AE2 as a crafting machine
-- Lets AE2 dispatch work directly into the multiblock threads
+- The Buffer stores up to **72 encoded patterns** and serves its own controller.
+- A linked Proxy lets this controller share another Buffer.
+- AE2 can dispatch work directly into free multiblock threads.
+- The older **Quantum Pattern Hatch** is for the single-block DMA workflow.
 
 ## Parallel Model
 
@@ -26,7 +26,7 @@ Each free thread can run one recipe copy.
 
 - A pushed AE2 pattern reserves one free thread
 - Idle threads can still auto-start valid work from the ME network
-- Items, fluids and AE are all pulled directly from the network
+- Recipe items and fluids come from ME. Supply coolant externally through the ME Massive Fluid Hatch and FE through the FE Energy Input Hatch.
 
 ## Tier Rules
 

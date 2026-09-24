@@ -4,11 +4,17 @@
 
 ## 主要进阶路线
 
+- [当前多方块机器系列](multiblock-line.md): 八台机器及当前样板系统的概览。
+
 - [维度物质装配器](dma.md)：首台高级机器，可控制热量、冷却液和催化剂。
 - [量子物质制造机](quantum-matter-fabricator.md)：DMA 的多方块升级版，直接连接 AE2 网络。
 - [量子切片机](quantum-slicer.md)：批量制备印刷部件。
 - [量子处理器装配机](quantum-processor-assembler.md)：大规模组装最终处理器。
+- [量子冷锻炉](quantum-cryoforge.md): 低温加工与稳定冷却液生产。
 - [恒星枢纽](stellar-nexus.md)：终局恒星模拟平台。
+- [量子计算枢纽](quantum-computation-nexus.md): 由 UFO 模块组成的共享 AE2 合成 CPU。
+- [量子样板制造矩阵](quantum-pattern-fabrication-matrix.md): 可搜索的样板库和虚拟装配器。
+- [无限制造奇点](infinity-fabrication-singularity.md): 持久化聚合合成路线。
 - [多方块等级](multiblock-tiers.md)：MK1、MK2、MK3 的配方限制与等级加成。
 
 ## 辅助系统

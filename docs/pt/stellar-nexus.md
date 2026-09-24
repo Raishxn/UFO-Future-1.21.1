@@ -9,7 +9,7 @@ O **Stellar Nexus** e o multibloco final de simulacao do UFO Future. Ele consome
 - Carrega um buffer interno de **200B AE**
 - Consome combustivel ao iniciar e coolant durante a operacao
 - Usa calor, safe mode e overclock como eixos principais
-- Exige exatamente um hatch de item input, um de item output, um de fluid output e um de AE energy input
+- Exige os hatches de entrada e saida de itens, um ME Massive Fluid Hatch para coolant externo e um FE Energy Input Hatch para energia externa
 
 ## Tiers Dos Field Generators
 

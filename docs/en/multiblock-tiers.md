@@ -26,4 +26,4 @@ Examples:
 
 This makes upgrades valuable even before you touch brand-new recipes. A stronger tier does not only unlock content; it also compresses your old production chains into background throughput.
 
-That is especially important once AE2 begins dispatching many jobs into the same controller through the Quantum Pattern Hatch.
+That is especially important once AE2 begins dispatching many jobs into the same controller through a Quantum Pattern Buffer or linked Proxy.

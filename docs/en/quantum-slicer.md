@@ -8,14 +8,14 @@ The **Quantum Slicer** is the printed-component preparation multiblock. It handl
 - Uses the universal multiblock recipe system
 - Supports up to **27 parallel jobs** in standard mode
 - Drops to **9 parallel jobs** in Safe Mode
-- Integrates with AE2 through the **Quantum Pattern Hatch**
+- Integrates with AE2 through a **Quantum Pattern Buffer** or linked **Quantum Pattern Proxy**
 - Uses direct ME network pull and push for ingredients and outputs
 
-## Pattern Hatch
+## Pattern Buffer and Proxy
 
-- The **Quantum Pattern Hatch** stores **72 encoded patterns**
-- It links itself to the controller after the structure assembles
-- AE2 can push jobs directly into the slicer without manual inventory handling
+- Exactly one Buffer or Proxy is required in the structure.
+- A Buffer stores **72 encoded patterns**; a linked Proxy shares another Buffer.
+- AE2 can dispatch jobs without manual inventory handling.
 
 ## Typical Factory Position
 
