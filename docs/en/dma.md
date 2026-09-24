@@ -7,7 +7,7 @@ The **Dimensional Matter Assembler (DMA)** is the first advanced machine in UFO 
 - Shapeless 9-slot item crafting
 - Optional recipe fluid input
 - Dedicated coolant tank for heat management
-- Catalyst upgrades for speed, efficiency, stability and advanced output behavior
+- Catalyst upgrades for speed, energy, heat and extra output behavior
 - AE2-powered operation
 
 The DMA is best seen as the flexible single-block machine for early and mid progression, recipe prototyping and lower-scale automation.
@@ -48,6 +48,7 @@ Very large endgame jobs are no longer meant to be solved by inflating the DMA in
 - [Quantum Matter Fabricator](quantum-matter-fabricator.md)
 - [Quantum Slicer](quantum-slicer.md)
 - [Quantum Processor Assembler](quantum-processor-assembler.md)
+- [Quantum Cryoforge](quantum-cryoforge.md)
 
 This keeps the DMA useful without forcing it to become the answer to every industrial-scale problem.
 

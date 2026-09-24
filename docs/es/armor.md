@@ -1,73 +1,32 @@
-# Conjuntos de Armadura
+# Conjuntos de armadura
 
-UFO Future añade dos conjuntos de armadura con mecánicas únicas: el **Exotraje Resistor Térmico** (mid-game, protección térmica) y la **Armadura UFO** (endgame, modo dios con vuelo).
+UFO Future tiene dos etapas de armadura: el **Exotraje Resistor Termico** y la **Armadura UFO modular**.
 
----
+## Exotraje Resistor Termico
 
-## Exotraje Resistor Térmico
+Mascara, pechera, pantalones y botas se fabrican con recetas del DMA. El conjunto completo protege contra el calor de la zona de peligro del DMA y contra los efectos de materiales peligrosos en el inventario. Un conjunto completo de Armadura UFO tambien ofrece esta proteccion; las piezas sueltas no bastan.
 
-Armadura especializada para proteger contra el daño térmico del DMA.
+Empieza con el Blindaje Resistor Termico y consulta las recetas actuales de las piezas en JEI/EMI. El blindaje usa Netherite, Matriz de Obsidiana, Hielo Azul y agua. La antigua indicacion de Criotheum para esta receta era incorrecta.
 
-### Stats y Habilidades (por pieza)
+## Armadura UFO modular
 
-| Característica | Valor |
-|---------------|-------|
-| Armadura Base | Nivel estándar UFO |
-| Inmunidad al Fuego | ✅ Extingue fuego instantáneamente |
-| +15% Eficiencia de Minería | Por pieza (modificador de atributo) |
-| Ítem Resistente al Fuego | No se destruye por fuego/lava |
+Las cuatro piezas de Armadura UFO son **recetas del QMF**. Sus habilidades dependen de cartas instaladas: un conjunto sin modulos no concede automaticamente vuelo, vision nocturna ni invulnerabilidad. Los efectos requieren el conjunto completo, el modulo activado en la pieza correcta y suficiente RF.
 
-### Bonus de Conjunto Completo (4 piezas)
+| Pieza | Espacios de modulo | Ejemplos |
+|---|---:|---|
+| Casco | 5 | Abyssal Sight, Adaptive Biosphere, Quantum Relay |
+| Pechera | 8 | Aegis Singularity, Reality Anchor, Void Flight, Chrono Regenerator |
+| Pantalones | 5 | Entropy Magnet, Matter Translocator, Singularity Strike |
+| Botas | 4 | Phase Step, Kinetic Overdrive |
 
-| Bonus | Descripción |
-|-------|-------------|
-| Resistencia II | Reducción de daño permanente |
-| Inmunidad a Fuego/Lava | Inmunidad completa |
-| Inmunidad al Calor del DMA | Protección contra zona de peligro |
-| Estabilidad Térmica | Protección total de todas las fuentes |
+Hay **16 tipos de modulo**. Abre la interfaz de configuracion de armadura para instalar, activar y ajustar las cartas; el servidor puede limitar los valores configurables. Ejemplos:
 
-> El Exotraje es la **única** armadura que protege del daño térmico del DMA (≥50% calor).
+- **Void Flight** permite volar con el conjunto completo y energia en la pechera.
+- **Abyssal Sight** ofrece vision nocturna y contrarresta la oscuridad.
+- **Aegis Singularity** puede cancelar el dano recibido gastando energia.
+- **Reality Anchor** puede rescatar al jugador del vacio o de un evento mortal gastando energia.
+- **Adaptive Biosphere** ofrece resistencia al fuego y respiracion acuatica.
 
-### Fabricación
+Usa JEI/EMI para las recetas actuales de armadura y cartas. La antigua receta fija del DMA y el consumo fijo de 400 RF/s describian otro diseno.
 
-#### Blindaje Resistor Térmico
-**DMA**: Netherite ×1 + Matriz Obsidiana ×1 + 500 mB Criotheum · 50,000 AE, 100 ticks
-
-#### Piezas de Armadura (DMA)
-
-| Pieza | Blindaje | Energía | Tiempo |
-|-------|---------|---------|--------|
-| Máscara (Casco) | 5 | 1,000,000 AE | 500 ticks |
-| Pechera | 8 | 1,500,000 AE | 500 ticks |
-| Pantalones | 7 | 1,200,000 AE | 500 ticks |
-| Botas | 4 | 800,000 AE | 500 ticks |
-
-Todas requieren 1,000 mB de Criotheum Gélido.
-
----
-
-## Armadura UFO (Endgame)
-
-La armadura definitiva. Requiere el Exotraje como base y otorga poderes divinos.
-
-### Bonus de Conjunto (Con RF)
-
-| Bonus | Descripción |
-|-------|-------------|
-| **Resistencia X** | Casi-invulnerabilidad (amplificador 9) |
-| **Visión Nocturna** | Permanente |
-| **Vuelo Creativo** | Vuelo completo modo creativo |
-| **+40 Vida Máxima** | 20 corazones extra |
-
-### Consumo de Energía
-- **400 RF/s** (20 RF/tick) por pieza
-- Todos los efectos se eliminan si alguna pieza se queda sin energía
-
-### Fabricación (DMA)
-
-Cada pieza: Pieza Resistor Térmico + 2× Esfera Neutronio Enriquecida + Anomalía Cuántica
-+ 2,000 mB Materia Trascendente · **50,000,000 AE** · 2,000 ticks
-
----
-
-*Ver también: [Herramientas](tools.md) · [Progresión](progression.md)*
+*Ver tambien: [QMF](quantum-matter-fabricator.md) · [Progresion](progression.md)*

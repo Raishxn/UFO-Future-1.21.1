@@ -1,118 +1,32 @@
-# Conjuntos de Armadura
+# Conjuntos de armadura
 
-UFO Future adiciona dois conjuntos de armadura com mecânicas únicas: o **Exotraje Resistor Térmico** (mid-game, proteção térmica) e a **Armadura UFO** (endgame, modo deus completo com voo).
+UFO Future tem duas etapas de armadura: o **Exotraje Resistor Termico** e a **Armadura UFO modular**.
 
----
+## Exotraje Resistor Termico
 
-## Exotraje Resistor Térmico
+Mascara, peitoral, calcas e botas sao feitos em receitas do DMA. O conjunto completo protege contra o calor da zona de perigo do DMA e contra os efeitos de materiais perigosos no inventario. Um conjunto completo de Armadura UFO tambem oferece essa protecao; pecas isoladas nao bastam.
 
-Um conjunto de armadura especializado projetado para proteger contra o dano térmico da zona de perigo do DMA. Este é um pré-requisito para operar configurações de DMA de alta temperatura com segurança.
+Comece pela Blindagem Resistor Termico e confira as receitas atuais das pecas no JEI/EMI. A receita da blindagem usa Netherite, Matriz de Obsidiana, Gelo Azul e agua. A antiga indicacao de Criotheum como entrada dessa receita estava incorreta.
 
-### Estatísticas & Habilidades (por peça)
+## Armadura UFO modular
 
-| Recurso | Valor |
-|---------|-------|
-| Armadura Base | Tier padrão de Armadura UFO |
-| Imunidade ao Fogo | ✅ Extingue fogo instantaneamente |
-| +15% Eficiência de Mineração | Por peça (modificador de atributo) |
-| Item Resistente ao Fogo | Não pode ser destruído por fogo/lava |
+As quatro pecas da Armadura UFO sao **receitas do QMF**. As habilidades dependem de cartas instaladas: vestir um conjunto sem modulos nao concede automaticamente voo, visao noturna ou invulnerabilidade. Os efeitos exigem o conjunto completo, o modulo ativado na peca correta e RF suficiente.
 
-### Bônus de Conjunto Completo
+| Peca | Slots de modulo | Exemplos |
+|---|---:|---|
+| Capacete | 5 | Abyssal Sight, Adaptive Biosphere, Quantum Relay |
+| Peitoral | 8 | Aegis Singularity, Reality Anchor, Void Flight, Chrono Regenerator |
+| Calcas | 5 | Entropy Magnet, Matter Translocator, Singularity Strike |
+| Botas | 4 | Phase Step, Kinetic Overdrive |
 
-Quando **todas as 4 peças** (Capacete, Peitoral, Calças, Botas) estão equipadas:
+Existem **16 tipos de modulo**. Abra a interface de configuracao da armadura para instalar, ativar e ajustar as cartas; o servidor pode limitar os valores configuraveis. Exemplos:
 
-| Bônus | Descrição |
-|-------|-----------|
-| Resistência II | Redução de dano permanente (amplificador 1) |
-| Imunidade a Fogo/Lava | Imunidade completa a dano de fogo e lava |
-| Imunidade ao Calor do DMA | Seguro contra dano de queimadura da zona de perigo do DMA |
-| Estabilidade Térmica | Proteção térmica total de todas as fontes |
+- **Void Flight** permite voar com o conjunto completo e energia no peitoral.
+- **Abyssal Sight** oferece visao noturna e impede escuridao.
+- **Aegis Singularity** pode cancelar dano recebido consumindo energia.
+- **Reality Anchor** pode salvar o jogador do vazio ou de um evento fatal consumindo energia.
+- **Adaptive Biosphere** oferece resistencia ao fogo e respiracao aquatica.
 
-> O Exotraje Resistor Térmico é a **única** armadura que protege do dano térmico do DMA na zona de perigo (≥50% calor).
+Use JEI/EMI para as receitas atuais da armadura e das cartas. A antiga receita fixa no DMA e o consumo fixo de 400 RF/s descreviam outra versao.
 
-### Fabricação
-
-#### Blindagem de Resistor Térmico (Material)
-**Receita DMA**:
-- Lingote de Netherite ×1 + Matriz de Obsidiana ×1
-- 500 mB Criotheum Gélido
-- 50.000 AE, 100 ticks
-
-#### Peças de Armadura (Receitas DMA)
-
-| Peça | Qtd. Blindagem | Energia | Tempo |
-|------|---------------|---------|-------|
-| Máscara (Capacete) | 5 | 1.000.000 AE | 500 ticks |
-| Peitoral | 8 | 1.500.000 AE | 500 ticks |
-| Calças | 7 | 1.200.000 AE | 500 ticks |
-| Botas | 4 | 800.000 AE | 500 ticks |
-
-Todas as peças requerem 1.000 mB de Criotheum Gélido como entrada de fluido.
-
-### IDs dos Itens
-
-| Peça | ID de Registro |
-|------|---------------|
-| Blindagem de Resistor Térmico | `ufo:thermal_resistor_plating` |
-| Máscara | `ufo:thermal_resistor_mask` |
-| Peitoral | `ufo:thermal_resistor_chest` |
-| Calças | `ufo:thermal_resistor_pants` |
-| Botas | `ufo:thermal_resistor_boots` |
-
----
-
-## Armadura UFO (Endgame)
-
-O conjunto de armadura definitivo do UFO Future. Requer o Exotraje Resistor Térmico como base e concede poderes divinos quando vestido como conjunto completo.
-
-### Estatísticas & Habilidades
-
-| Recurso | Valor |
-|---------|-------|
-| Armadura Base | Tier mais alto do mod |
-| **Alimentada por RF** | Cada peça armazena e consome energia RF |
-| Barra de Energia | HUD de energia dinâmica em cada peça |
-| Nome Arco-Íris | Efeito animado de nome arco-íris |
-
-### Bônus de Conjunto Completo (Com RF Disponível)
-
-Quando **todas as 4 peças** estão equipadas e têm energia RF suficiente:
-
-| Bônus | Descrição |
-|-------|-----------|
-| **Resistência X** | Quase-invulnerabilidade (amplificador 9) |
-| **Visão Noturna** | Visão noturna permanente |
-| **Voo Criativo** | Habilidade de voo completo do modo criativo |
-| **+40 Vida Máxima** | Adiciona 20 corações extras (+40 HP) |
-
-### Consumo de Energia
-- **400 RF por segundo** (20 RF/tick) por peça
-- Drenado a cada 20 ticks para evitar spam de som de equipar
-- Todos os efeitos são removidos imediatamente quando qualquer peça fica sem energia
-- Voo é desabilitado (cai ao chão) quando a energia acaba
-
-### Fabricação (Receitas DMA)
-
-Cada peça requer a peça correspondente do Resistor Térmico como entrada:
-
-| Peça | Entradas | Energia | Tempo |
-|------|---------|---------|-------|
-| Capacete | Máscara do Resistor Térmico + 2× Esfera de Neutrônio Enriquecida + Anomalia Quântica | 50.000.000 AE | 2.000 ticks |
-| Peitoral | Peitoral do Resistor Térmico + 2× Esfera de Neutrônio Enriquecida + Anomalia Quântica | 50.000.000 AE | 2.000 ticks |
-| Calças | Calças do Resistor Térmico + 2× Esfera de Neutrônio Enriquecida + Anomalia Quântica | 50.000.000 AE | 2.000 ticks |
-| Botas | Botas do Resistor Térmico + 2× Esfera de Neutrônio Enriquecida + Anomalia Quântica | 50.000.000 AE | 2.000 ticks |
-
-Todas as peças requerem 2.000 mB de Matéria Transcendente como entrada de fluido.
-
-### IDs dos Itens
-
-| Peça | ID de Registro |
-|------|---------------|
-| Capacete | `ufo:ufo_helmet` |
-| Peitoral | `ufo:ufo_chestplate` |
-| Calças | `ufo:ufo_leggings` |
-| Botas | `ufo:ufo_boots` |
-
----
-
-*Veja também: [Ferramentas](tools.md) · [Progressão](progression.md)*
+*Veja tambem: [QMF](quantum-matter-fabricator.md) · [Progressao](progression.md)*

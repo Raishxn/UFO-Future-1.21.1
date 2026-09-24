@@ -7,7 +7,7 @@ O **Montador de Materia Dimensional (DMA)** continua sendo a primeira maquina av
 - crafting shapeless com grade de 9 slots
 - entrada opcional de fluido de receita
 - tanque dedicado de coolant para controle termico
-- catalisadores para velocidade, eficiencia, estabilidade e comportamento avancado de output
+- catalisadores para velocidade, energia, calor e resultados extras
 - funcionamento alimentado por AE2
 
 O DMA e a maquina flexivel de bloco unico para progressao inicial, media e para recipes menores ou mais experimentais.
@@ -48,6 +48,7 @@ Receitas gigantes de endgame nao devem mais ser resolvidas inflando o DMA single
 - [Quantum Matter Fabricator](quantum-matter-fabricator.md)
 - [Quantum Slicer](quantum-slicer.md)
 - [Quantum Processor Assembler](quantum-processor-assembler.md)
+- [Quantum Cryoforge](quantum-cryoforge.md)
 
 ## Formato JSON de Receita
 

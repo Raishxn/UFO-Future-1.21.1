@@ -24,8 +24,10 @@ plugins:
           build: true
           nav_translations:
             Home: Inicio
+            Getting Started: Primeiros passos
             Wiki: Wiki
             Multiblock Line: Linha atual de multiblocos
+            Quantum Wireless: Quantum Wireless
             Quantum Cryoforge: Quantum Cryoforge
             Quantum Computation Nexus: Quantum Computation Nexus
             Quantum Pattern Fabrication Matrix: Quantum Pattern Fabrication Matrix
@@ -51,8 +53,10 @@ plugins:
           build: true
           nav_translations:
             Home: Inicio
+            Getting Started: Primeros pasos
             Wiki: Wiki
             Multiblock Line: Linea actual de multibloques
+            Quantum Wireless: Quantum Wireless
             Quantum Cryoforge: Quantum Cryoforge
             Quantum Computation Nexus: Quantum Computation Nexus
             Quantum Pattern Fabrication Matrix: Quantum Pattern Fabrication Matrix
@@ -78,8 +82,10 @@ plugins:
           build: true
           nav_translations:
             Home: 首页
+            Getting Started: 入门指南
             Wiki: Wiki
             Multiblock Line: 当前多方块机器系列
+            Quantum Wireless: 量子无线系统
             Quantum Cryoforge: 量子冷锻炉
             Quantum Computation Nexus: 量子计算枢纽
             Quantum Pattern Fabrication Matrix: 量子样板制造矩阵
@@ -103,6 +109,7 @@ plugins:
 
 nav:
   - Home: index.md
+  - Getting Started: getting-started.md
   - Wiki:
     - Multiblock Line: multiblock-line.md
     - Mega Storage: mega-storage.md
@@ -116,6 +123,7 @@ nav:
     - Quantum Computation Nexus: quantum-computation-nexus.md
     - Quantum Pattern Fabrication Matrix: quantum-pattern-fabrication-matrix.md
     - Infinity Fabrication Singularity: infinity-fabrication-singularity.md
+    - Quantum Wireless: quantum-wireless.md
     - Multiblock Tiers: multiblock-tiers.md
     - Catalysts: catalysts.md
     - KubeJS Recipes: kubejs-recipes.md

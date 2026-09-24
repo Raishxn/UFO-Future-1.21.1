@@ -124,17 +124,18 @@ ufo:stellar_simulation
 |-------|------|-------------|-----------|
 | `simulation_name` | String | Sim | Nome exibido no controller |
 | `item_inputs` | Array | Sim | Itens consumidos da ME |
-| `fluid_inputs` | Array | Nao | Fluidos consumidos da ME |
-| `item_outputs` | Array | Nao | Itens produzidos em formato AE2 GenericStack |
-| `fluid_outputs` | Array | Nao | Fluidos produzidos em formato AE2 GenericStack |
+| `fluid_inputs` | Array | Sim | Fluidos consumidos da ME |
+| `item_outputs` | Array | Sim | Itens produzidos em formato AE2 GenericStack |
+| `fluid_outputs` | Array | Sim | Fluidos produzidos em formato AE2 GenericStack |
 | `energy` | Inteiro | Sim | Energia AE total |
 | `time` | Inteiro | Sim | Duracao em ticks |
 | `cooling_level` | Inteiro | Sim | Stress termico de 0 a 3 |
 | `field_tier` | Inteiro | Sim | Tier minimo do field generator |
 | `fuel_fluid` | String | Nao | Fluido de combustivel |
 | `fuel_amount` | Inteiro | Nao | Quantidade de combustivel em mB |
-| `coolant_fluid` | String | Nao | Fluido de coolant |
 | `coolant_amount` | Inteiro | Nao | Quantidade de coolant em mB |
+
+O tipo de coolant vem do ME Massive Fluid Hatch abastecido externamente; `coolant_amount` e a demanda da receita. O serializer nao possui o campo `coolant_fluid`.
 
 ### GenericStack do AE2
 
@@ -182,7 +183,6 @@ ServerEvents.recipes(event => {
     field_tier: 2,
     fuel_fluid: 'mekanism:hydrogen',
     fuel_amount: 20000,
-    coolant_fluid: 'ufo:source_gelid_cryotheum',
     coolant_amount: 25000
   }).id('kubejs:custom_void_harvest')
 })
@@ -224,6 +224,7 @@ ufo:universal_multiblock
 | `recipe_name` | String | Nao | Nome interno/exibido |
 | `item_inputs` | Array | Sim | Itens de entrada com quantidade |
 | `fluid_inputs` | Array | Nao | Fluidos de entrada com quantidade em mB |
+| `chemical_inputs` | Array | Nao | Quimicos opcionais do Mekanism: `{ "chemical": "mekanism:oxygen", "amount": 1000 }` |
 | `item_output` | Objeto | Nao | Saida unica de item |
 | `fluid_output` | Objeto | Nao | Saida unica de fluido |
 | `fluid_output_amount` | Inteiro | Nao | Quantidade total do fluido de saida em mB |

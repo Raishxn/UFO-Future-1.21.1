@@ -14,7 +14,7 @@ High-capacity item storage cells with BigInteger internal counting. All tiers us
 | **Beacon** | 100M bytes | Hyper Dense Component Matrix | `ufo:white_dwarf_cell_beaco` |
 | **Nexus** | 250M bytes | Tesseract Component Matrix | `ufo:white_dwarf_cell_nexus` |
 | **Core** | 750M bytes | Event Horizon Component Matrix | `ufo:white_dwarf_cell_core` |
-| **Singularity** | ∞ (MAX_INT) | Cosmic String Component Matrix | `ufo:white_dwarf_cell_singularity` |
+| **Singularity** | 2,147,483,647 bytes | Cosmic String Component Matrix | `ufo:white_dwarf_cell_singularity` |
 
 ### Crafting
 Each cell is crafted as a **shapeless recipe** combining:
@@ -46,7 +46,7 @@ High-capacity fluid storage cells. All tiers use the **Neutron Star Fluid Cell H
 | **Beacon** | 100M bytes | Hyper Dense Component Matrix | `ufo:neutron_star_reservoir_beaco` |
 | **Nexus** | 250M bytes | Tesseract Component Matrix | `ufo:neutron_star_reservoir_nexus` |
 | **Core** | 750M bytes | Event Horizon Component Matrix | `ufo:neutron_star_reservoir_core` |
-| **Singularity** | ∞ (MAX_INT) | Cosmic String Component Matrix | `ufo:neutron_star_reservoir_singularity` |
+| **Singularity** | 2,147,483,647 bytes | Cosmic String Component Matrix | `ufo:neutron_star_reservoir_singularity` |
 
 ### Crafting
 Each cell is crafted as a **shapeless recipe** combining:
@@ -67,6 +67,16 @@ I I I
 **ID**: `ufo:neutron_fluid_cell_housing`
 
 ---
+
+## Pulsar Chemical Chambers (optional)
+
+The third BigInteger series stores Mekanism chemicals in **Echo (40M), Beacon (100M), Nexus (250M), Core (750M) and Singularity (2,147,483,647 byte)** tiers. The housing ID is `ufo:pulsar_cell_housing`; cells use `ufo:pulsar_chamber_echo`, `..._beaco`, `..._nexus`, `..._core` and `..._singularity`.
+
+This series requires Mekanism integration. Without Mekanism, Pulsar Chambers and their housing are hidden from Creative and JEI/EMI, while registered IDs remain for existing saves.
+
+## Infinity Genesis Cell
+
+The **Infinity Genesis Cell** (`ufo:infinity_genesis_cell`) learns resource types when they are inserted. It then exposes the learned types as unlimited AE2 storage and supports Cell Workbench partition, inverter and fuzzy settings. The listed resource-specific Infinity Cells remain separate items.
 
 ## Infinity Cells
 
@@ -127,13 +137,7 @@ Single-resource cells that store **unlimited** amounts of a specific item or flu
 | Red Dye | `ufo:infinity_red_dye_cell` |
 | Black Dye | `ufo:infinity_black_dye_cell` |
 
-### Infinity Cell Crafting (DMA Recipe)
-
-All infinity cells follow the same pattern:
-- **Inputs**: Cosmic String Component Matrix ×1, Quantum Anomaly ×1, Target Resource ×64
-- **Fluid**: 2,500 mB Transcending Matter
-- **Energy**: 250,000,000 AE
-- **Time**: 10,000 ticks (8.3 minutes)
+Infinity Cell recipes now run through the **QMF** and vary by resource and tier. Check JEI/EMI for each current recipe.
 
 ---
 

@@ -1,18 +1,21 @@
-# Recipe Balance Audit
+# Balance y cobertura de recetas
 
-Esta pagina resume el estado del audit de balance del conjunto actual de recetas de UFO Future.
+UFO Future 3.0 rebalanceo recetas DMA y QMF, matrices de componentes, generadores de campo, catalizadores, fragmentos estelares e Infinity Cells. La antigua auditoria de esta pagina contaba archivos y proponia cambios de una version anterior; esas cantidades y costos ya no describen la version actual.
 
-## Cobertura
+## Capas de recetas
 
-- Recetas normales generadas
-- Recetas DMA
-- Simulaciones del Stellar Nexus
-- Recetas universales de multibloque
-- Recetas de desmontaje
+| Capa | Funcion |
+|---|---|
+| Crafting normal | Bloques iniciales, carcasas y objetos de apoyo |
+| DMA | Materiales y componentes flexibles del inicio y mitad del juego |
+| Multibloques universales | Procesamiento masivo en QMF, Slicer, Processor Assembler y Cryoforge, limitado por nivel de maquina |
+| Stellar Nexus | Simulaciones estelares costosas con combustible, coolant y control de calor |
+| Desmontaje | Recuperacion de ciertas piezas con recetas separadas |
 
-## Hallazgos Principales
+Una maquina MK superior ejecuta recetas de niveles inferiores mas rapido y con menos energia. La pagina de [niveles de multibloque](multiblock-tiers.md) muestra el bono exacto. La [guia de progresion](progression.md) indica cuando cambiar de capa.
 
-- El DMA ya no debe cargar toda la progresion por si solo
-- Los multibloques cuanticos son la capa correcta para throughput y autocrafting
-- El Stellar Nexus debe seguir siendo la capa mas cara y mas extrema
-- Los tiers MK deben acelerar recetas viejas sin borrar el costo de progresion
+## Verificar una receta
+
+Usa JEI/EMI en la version instalada para cantidades exactas de items y fluidos, energia, tiempo y nivel necesario. Para recetas con scripts, consulta [KubeJS](kubejs-recipes.md). Al actualizar un mundo 2.x, compara patrones AE2 antiguos con las recetas actuales y vuelve a codificar los que cambiaron; consulta la [guia de migracion](../releases/MIGRATION_2.1-to-3.0.md).
+
+[Auditoria historica de recetas](https://github.com/Raishxn/UFO-Future-1.21.1/blob/e8d928c/docs/en/recipe-balance-audit.md)

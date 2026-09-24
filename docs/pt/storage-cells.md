@@ -14,7 +14,7 @@ Células de armazenamento de itens de alta capacidade com contagem interna BigIn
 | **Beacon** | 100M bytes | Matriz Hyper Dense | `ufo:white_dwarf_cell_beaco` |
 | **Nexus** | 250M bytes | Matriz Tesseract | `ufo:white_dwarf_cell_nexus` |
 | **Core** | 750M bytes | Matriz Event Horizon | `ufo:white_dwarf_cell_core` |
-| **Singularity** | ∞ (MAX_INT) | Matriz Cosmic String | `ufo:white_dwarf_cell_singularity` |
+| **Singularity** | 2.147.483.647 bytes | Matriz Cosmic String | `ufo:white_dwarf_cell_singularity` |
 
 ### Fabricação
 Cada célula: 1× Invólucro de Célula Anã Branca + 1× Matriz de Componente (receita sem forma).
@@ -31,11 +31,21 @@ Cada célula: 1× Invólucro de Célula Anã Branca + 1× Matriz de Componente (
 | **Beacon** | 100M bytes | Matriz Hyper Dense | `ufo:neutron_star_reservoir_beaco` |
 | **Nexus** | 250M bytes | Matriz Tesseract | `ufo:neutron_star_reservoir_nexus` |
 | **Core** | 750M bytes | Matriz Event Horizon | `ufo:neutron_star_reservoir_core` |
-| **Singularity** | ∞ (MAX_INT) | Matriz Cosmic String | `ufo:neutron_star_reservoir_singularity` |
+| **Singularity** | 2.147.483.647 bytes | Matriz Cosmic String | `ufo:neutron_star_reservoir_singularity` |
 
 **ID do Invólucro**: `ufo:neutron_fluid_cell_housing`
 
 ---
+
+## Camaras quimicas Pulsar (opcionais)
+
+A terceira serie BigInteger armazena quimicos do Mekanism nos tiers **Echo (40M), Beacon (100M), Nexus (250M), Core (750M) e Singularity (2.147.483.647 bytes)**. O invólucro e `ufo:pulsar_cell_housing`; as celulas usam `ufo:pulsar_chamber_echo`, `..._beaco`, `..._nexus`, `..._core` e `..._singularity`.
+
+A serie depende da integracao com Mekanism. Sem ele, as camaras e seu invólucro ficam ocultos no Criativo e JEI/EMI, mas os IDs registrados permanecem para mundos existentes.
+
+## Celula Infinity Genesis
+
+A **Infinity Genesis Cell** (`ufo:infinity_genesis_cell`) aprende tipos de recurso quando eles sao inseridos. Depois oferece armazenamento AE2 ilimitado para os tipos aprendidos e aceita configuracoes de particao, inverter e fuzzy na Cell Workbench. As Infinity Cells de recurso fixo continuam sendo itens separados.
 
 ## Células Infinitas
 
@@ -71,10 +81,7 @@ Células de recurso único que armazenam quantidades **ilimitadas**. Perfeitas p
 #### Células de Corante (16 Cores)
 Todas seguem o padrão: `ufo:infinity_<cor>_dye_cell`
 
-### Fabricação (Receita DMA)
-- **Entradas**: Matriz Cosmic String ×1, Anomalia Quântica ×1, Recurso ×64
-- **Fluido**: 2.500 mB Matéria Transcendente
-- **Energia**: 250.000.000 AE · **Tempo**: 10.000 ticks (8,3 min)
+As receitas das Infinity Cells agora usam o **QMF** e variam por recurso e tier. Consulte JEI/EMI para cada receita atual.
 
 ---
 

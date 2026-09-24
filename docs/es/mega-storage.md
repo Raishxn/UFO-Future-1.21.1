@@ -29,3 +29,7 @@ Estos bloques no sustituyen al DMA ni a los multibloques.
 - **DMA** y **QMF** producen muchas de sus piezas avanzadas
 - Los **multibloques cuanticos** ejecutan recetas en escala de fabrica
 - El hardware de mega storage evita que planes enormes ahoguen el crafting de AE2
+
+## Quantum Computation Nexus
+
+El [Quantum Computation Nexus](quantum-computation-nexus.md) combina almacenamiento de crafting y coprocesadores UFO instalados en un grupo compartido de CPU AE2. El modo de computacion infinita requiere **25 modulos del nivel maximo de cada tipo**. Los valores de nivel se rebalancearon en 3.0.0-beta.2; consulta las tooltips actuales y no tablas antiguas.

@@ -124,17 +124,18 @@ ufo:stellar_simulation
 |-------|------|----------|-------------|
 | `simulation_name` | String | Yes | Name shown in the controller |
 | `item_inputs` | Array | Yes | Items consumed from the ME network |
-| `fluid_inputs` | Array | No | Fluids consumed from the ME network |
-| `item_outputs` | Array | No | Produced items in AE2 GenericStack format |
-| `fluid_outputs` | Array | No | Produced fluids in AE2 GenericStack format |
+| `fluid_inputs` | Array | Yes | Fluids consumed from the ME network |
+| `item_outputs` | Array | Yes | Produced items in AE2 GenericStack format |
+| `fluid_outputs` | Array | Yes | Produced fluids in AE2 GenericStack format |
 | `energy` | Integer | Yes | Total AE energy |
 | `time` | Integer | Yes | Duration in ticks |
 | `cooling_level` | Integer | Yes | Thermal stress from 0 to 3 |
 | `field_tier` | Integer | Yes | Minimum field generator tier |
 | `fuel_fluid` | String | No | Fuel fluid id |
 | `fuel_amount` | Integer | No | Fuel amount in mB |
-| `coolant_fluid` | String | No | Coolant fluid id |
 | `coolant_amount` | Integer | No | Coolant amount in mB |
+
+The coolant fluid is supplied to the external ME Massive Fluid Hatch; `coolant_amount` is the recipe demand. The serializer has no `coolant_fluid` field.
 
 ### AE2 GenericStack
 
@@ -182,7 +183,6 @@ ServerEvents.recipes(event => {
     field_tier: 2,
     fuel_fluid: 'mekanism:hydrogen',
     fuel_amount: 20000,
-    coolant_fluid: 'ufo:source_gelid_cryotheum',
     coolant_amount: 25000
   }).id('kubejs:custom_void_harvest')
 })
@@ -224,6 +224,7 @@ ufo:universal_multiblock
 | `recipe_name` | String | No | Internal/display name |
 | `item_inputs` | Array | Yes | Item inputs with amounts |
 | `fluid_inputs` | Array | No | Fluid inputs with amounts in mB |
+| `chemical_inputs` | Array | No | Optional Mekanism chemicals: `{ "chemical": "mekanism:oxygen", "amount": 1000 }` |
 | `item_output` | Object | No | Single item output |
 | `fluid_output` | Object | No | Single fluid output |
 | `fluid_output_amount` | Integer | No | Total produced fluid amount in mB |

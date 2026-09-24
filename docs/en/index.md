@@ -2,6 +2,8 @@
 
 This wiki tracks the current 1.21.1 repository state of **UFO Future**.
 
+[Getting Started](getting-started.md): installation, first machine and upgrading an older world.
+
 ## Main Progression
 
 - [Current Multiblock Line](multiblock-line.md): overview of all eight machines and current pattern infrastructure.
@@ -19,6 +21,7 @@ This wiki tracks the current 1.21.1 repository state of **UFO Future**.
 
 ## Support Systems
 
+- [Quantum Wireless](quantum-wireless.md): interface, linking tool and pattern routing.
 - [Mega Storage](mega-storage.md): mega crafting storages and mega co-processors.
 - [Containment](containment.md): SCM and ACC for volatile late-game matter.
 - [Storage Cells](storage-cells.md): White Dwarf, Neutron Star and Infinity cells.

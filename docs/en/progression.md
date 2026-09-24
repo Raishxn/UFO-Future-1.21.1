@@ -1,39 +1,23 @@
 # Crafting Progression
 
-UFO Future now has a clearer machine ladder instead of centering everything on the DMA forever.
+This route follows the current 3.0 machine line. **Use JEI/EMI for exact ingredients, quantities and energy:** the DMA and QMF recipes were rebalanced after the older step-by-step lists were written.
 
-## 1. DMA Stage
+## 1. Build the foundation
 
-Start with the **Dimensional Matter Assembler** for:
+Set up a powered AE2 network, craft an **Obsidian Matrix** and **Graviton Plated Casing**, then build the [DMA](dma.md). Give the DMA its recipe fluid and coolant in their separate tanks. Start with **Gelid Cryotheum** and upgrade to Stable Coolant and Temporal Fluid as throughput grows.
 
-- first advanced materials
-- coolant production
-- catalysts
-- early processor and matter components
+## 2. Make stellar materials and components
 
-This is the flexible single-block phase.
+Progress through **White Dwarf → Neutron Star → Pulsar** fragments. Use the DMA for early processor parts, component matrices and the matter chain (**Proto → Corporeal → stellar matters → Dark Matter**). Recipe inputs and amounts vary by tier; follow the current viewer recipes rather than an old fixed list.
 
-## 2. Universal Multiblock Stage
+## 3. Automate the processing line
 
-Once recipes become too large, too frequent or too expensive for manual DMA use, move into the multiblocks:
+Build the [QMF](quantum-matter-fabricator.md) for bulk DMA-style work, the [Quantum Slicer](quantum-slicer.md) for printed parts, the [Quantum Processor Assembler](quantum-processor-assembler.md) for final processors, and the [Quantum Cryoforge](quantum-cryoforge.md) for cryogenic materials. Upgrade their [MK tiers](multiblock-tiers.md) to unlock recipes and accelerate earlier ones.
 
-- **Quantum Matter Fabricator** for large DMA-style jobs
-- **Quantum Slicer** for printed parts
-- **Quantum Processor Assembler** for final processor assembly
+Each processing multiblock needs a **Pattern Buffer or linked Proxy**, external coolant in the **ME Massive Fluid Hatch**, and external FE in the **FE Energy Input Hatch**. Keep the ME network powered separately.
 
-At this point the intended playstyle shifts from “feed one machine” to “let AE2 dispatch work into a parallel production line”.
+## 4. Build endgame production
 
-## 3. Tier Upgrade Stage
+Use the [Stellar Nexus](stellar-nexus.md) for large simulations. Add the [Quantum Computation Nexus](quantum-computation-nexus.md), [Quantum Pattern Fabrication Matrix](quantum-pattern-fabrication-matrix.md) and [Infinity Fabrication Singularity](infinity-fabrication-singularity.md) for large AE2 crafting jobs. The modular [UFO Armor](armor.md), Dimensional Catalyst and advanced [storage cells](storage-cells.md) are long-term goals.
 
-Upgrading a multiblock tier does two things:
-
-- unlocks higher-tier recipes
-- accelerates lower-tier recipes automatically
-
-That means older production chains never stop mattering; they just become cheaper and faster infrastructure.
-
-## 4. Stellar Nexus Stage
-
-The **Stellar Nexus** sits above the universal multiblocks. It is for huge simulations, enormous AE costs and extreme-scale generation.
-
-It is not just a stronger crafter. It is the long-cycle industrial capstone of the mod.
+Upgrading an older world? Read the [2.1 → 3.0 migration guide](../releases/MIGRATION_2.1-to-3.0.md) before reusing existing structures.

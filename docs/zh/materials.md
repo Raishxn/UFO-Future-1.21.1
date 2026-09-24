@@ -1,60 +1,34 @@
 # 材料与流体
 
-## 星体碎片材料
+当前 3.0 配方沿白矮星、中子星和脉冲星碎片逐步进阶。这些材料用于制作处理器部件、组件矩阵和高级物质。
 
-### 白矮星碎片
-基础星体材料。形式：锭、棒、粒、粉、块。
-- **ID 前缀**: `ufo:white_dwarf_fragment_*`
-- **合成** (DMA): 2x 下界合金锭 + 4x 蓝冰 + 4x AE2 天空石 + 250mB 极寒冰晶 = 100K AE
+## 物质链
 
-### 中子星碎片
-中级材料。形式：锭、棒、粒、粉、块。
-- **ID 前缀**: `ufo:neutron_star_fragment_*`
-- **合成** (DMA): 4x 白矮星锭 + 地狱之星 + 黑曜石矩阵 + 500mB 极寒冰晶 = 500K AE
+原始物质 → 实体物质 → 白矮星／中子星／脉冲星物质 → 暗物质。DMA 负责初期阶段，QMF 后续负责大批量加工。
 
-### 脉冲星碎片
-高级材料。形式：锭、粒、粉、块。
-- **ID 前缀**: `ufo:pulsar_fragment_*`
-- **合成** (DMA): 2x 中子星锭 + 2x 磁石 + 4x 避雷针 + 1000mB 极寒冰晶 = 1M AE
+## 冷却液与配方流体
 
----
+配方流体与冷却液使用不同输入。极寒冰晶适合初期；稳定冷却液和时间流体适合更高负载。量子冷锻炉可生产稳定冷却液及其他低温产物。多方块机器须通过 ME Massive Fluid Hatch 从外部供应冷却液。
 
-## 物质进阶
+## 已注册的源流体
 
-| 物质 | 关键输入 | 能量 | ID |
-|------|---------|------|-----|
-| 中子球 | 9x 中子星锭 | 1M | `ufo:neutronium_sphere` |
-| 富集中子球 | 中子球 + 2x 量子异常 | 8M | `ufo:enriched_neutronium_sphere` |
-| 原始物质 | 富集中子球 + UU 物质 | 2M | `ufo:proto_matter` |
-| 实体物质 | 原始物质 + 64x 铁块 | 5M | `ufo:corporeal_matter` |
-| UU 物质水晶 | 紫水晶碎片 + 10K mB UU | 20M | `ufo:uu_matter_crystal` |
-| 白矮星物质 | 实体 + UU 水晶 + 白矮星块/流体 | 7M | `ufo:white_dwarf_matter` |
-| 中子星物质 | 实体 + UU 水晶 + 中子星块/流体 | 9.5M | `ufo:neutron_star_matter` |
-| 脉冲星物质 | 实体 + UU 水晶 + 脉冲星块/流体 | 12M | `ufo:pulsar_matter` |
-| 暗物质 | 16x 每种高级物质 + 超越物质 | 200M | `ufo:dark_matter` |
+| 名称 | 注册 ID |
+|---|---|
+| Liquid Starlight | `ufo:source_liquid_starlight_fluid` |
+| Gelid Cryotheum | `ufo:source_gelid_cryotheum` |
+| Stable Coolant | `ufo:source_stable_coolant` |
+| Bose-Einstein Condensate | `ufo:source_bose_einstein_condensate` |
+| Temporal Fluid | `ufo:source_temporal_fluid` |
+| Spatial Fluid | `ufo:source_spatial_fluid` |
+| Primordial Matter | `ufo:source_primordial_matter_fluid` |
+| Raw Star Matter Plasma | `ufo:raw_star_matter_plasma` |
+| Transcending Matter | `ufo:transcending_matter` |
+| UU Matter | `ufo:uu_matter` |
+| UU Amplifier | `ufo:source_uu_amplifier_fluid` |
+| White Dwarf Fragment Fluid | `ufo:source_white_dwarf_fragment_fluid` |
+| Neutron Star Fragment Fluid | `ufo:source_neutron_star_fragment_fluid` |
+| Pulsar Fragment Fluid | `ufo:source_pulsar_fragment_fluid` |
 
----
+3.0 配方重新平衡后，原料、数量和能耗均可能变化。请以当前安装版本的 JEI/EMI 配方为准。
 
-## 自定义流体
-
-| 流体 | 用途 | ID |
-|------|------|-----|
-| 液态星光 | 大多数配方的基础流体 | `ufo:source_liquid_starlight_fluid` |
-| 极寒冰晶 | 冷却液 + 合成 | `ufo:source_gelid_cryotheum` |
-| 时间流体 | 最佳冷却液 (100 HU/mB) | `ufo:source_temporal_fluid` |
-| 空间流体 | 量子催化剂 | `ufo:source_spatial_fluid` |
-| 原始物质流体 | 组件合成 | `ufo:source_primordial_matter_fluid` |
-| 原始星体等离子 | 星体加工 | `ufo:raw_star_matter_plasma` |
-| 超越物质 | 终局配方 | `ufo:transcending_matter` |
-| UU 物质 | 复制 | `ufo:uu_matter` |
-| UU 放大器 | UU 前驱体 | `ufo:source_uu_amplifier_fluid` |
-
-### 引导链（无循环依赖）
-1. 水 + 雪球 + 浮冰 → 暴雪粉
-2. 暴雪粉 + 雪球 → 冰晶粉
-3. 暴雪粉 + 水 → 极寒冰晶
-4. 黑曜石矩阵 + 地狱之星 + UU 放大器 → 液态星光
-
----
-
-*另见: [进阶](progression.md) · [DMA](dma.md)*
+[DMA](dma.md) · [Quantum Cryoforge](quantum-cryoforge.md) · [合成进阶](progression.md)

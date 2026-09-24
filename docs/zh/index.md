@@ -2,6 +2,8 @@
 
 本 Wiki 介绍 **UFO Future** 1.21.1 版本仓库中的当前内容。
 
+[入门指南](getting-started.md): 安装、首台机器与旧世界升级。
+
 ## 主要进阶路线
 
 - [当前多方块机器系列](multiblock-line.md): 八台机器及当前样板系统的概览。
@@ -19,6 +21,7 @@
 
 ## 辅助系统
 
+- [量子无线系统](quantum-wireless.md): 无线接口、连接工具与样板分发。
 - [巨型存储](mega-storage.md)：巨型合成存储器和巨型协处理器。
 - [收容系统](containment.md)：处理不稳定物质的 SCM 和 ACC。
 - [存储单元](storage-cells.md)：白矮星、中子星和无限存储单元。

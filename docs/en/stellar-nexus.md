@@ -48,12 +48,6 @@ Safe Mode is the reliable automation option.
 
 This behavior also applies to custom Stellar Nexus recipes, because it is implemented in machine logic.
 
-## Catastrophic Explosion
+## Overheat policy
 
-If Safe Mode is disabled and the machine reaches full heat, the Stellar Nexus enters a real destruction sequence.
-
-- The blast expands in shells instead of a single lag spike
-- Real blocks are destroyed around the controller
-- The inner core turns into lava
-- The outer zone is ignited
-- Nearby entities keep taking damage as the wave expands
+With Safe Mode off, maximum heat causes a local failure with damage and visual effects. **Block destruction is disabled by default.** Server operators can explicitly enable a bounded destructive wave in `config/ufo-server.toml` (`stellar.explosion.enableBlockGrief`), with limits for radius, blocks per tick, total blocks and allowed dimensions. Lava creation and secondary explosions have separate opt-in settings.

@@ -45,3 +45,7 @@ O Safe Mode e a opcao segura para automacao.
 - **5x** coolant
 
 Esse comportamento tambem vale para receitas customizadas.
+
+## Politica de superaquecimento
+
+Com Safe Mode desligado, o calor maximo causa uma falha local com dano e efeitos visuais. **A destruicao de blocos vem desativada por padrao.** O administrador pode ativar uma onda destrutiva limitada em `config/ufo-server.toml` (`stellar.explosion.enableBlockGrief`), com limites de raio, blocos por tick, total de blocos e dimensoes permitidas. Lava e explosoes secundarias tem opcoes separadas.

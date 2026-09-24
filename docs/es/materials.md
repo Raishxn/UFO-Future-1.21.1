@@ -1,60 +1,34 @@
-# Materiales y Fluidos
+# Materiales y fluidos
 
-## Materiales de Fragmentos Estelares
+Las recetas actuales 3.0 avanzan por fragmentos de White Dwarf, Neutron Star y Pulsar. Estos materiales alimentan procesadores, matrices de componentes y la cadena de materia.
 
-### Fragmentos de Enana Blanca
-Material estelar base. Formas: Lingote, Barra, Pepita, Polvo, Bloque.
-- **Prefijo ID**: `ufo:white_dwarf_fragment_*`
-- **Fabricación** (DMA): 2x Netherite + 4x Hielo Azul + 4x Piedra del Cielo + 250mB Criotheum = 100K AE
+## Cadena de materia
 
-### Fragmentos de Estrella de Neutrones
-Nivel intermedio. Formas: Lingote, Barra, Pepita, Polvo, Bloque.
-- **Prefijo ID**: `ufo:neutron_star_fragment_*`
-- **Fabricación** (DMA): 4x Lingote EB + Estrella del Nether + Matriz Obsidiana + 500mB Criotheum = 500K AE
+Proto Matter → Corporeal Matter → materias White Dwarf / Neutron Star / Pulsar → Dark Matter. El DMA inicia la cadena; el QMF procesa grandes lotes despues.
 
-### Fragmentos de Púlsar
-Nivel alto. Formas: Lingote, Pepita, Polvo, Bloque.
-- **Prefijo ID**: `ufo:pulsar_fragment_*`
-- **Fabricación** (DMA): 2x Lingote EN + 2x Magnetita + 4x Pararrayos + 1000mB Criotheum = 1M AE
+## Coolant y fluidos de recetas
 
----
+El fluido de la receta y el coolant son entradas separadas. Gelid Cryotheum es el coolant inicial; Stable Coolant y Temporal Fluid sirven para cargas mayores. El Quantum Cryoforge produce Stable Coolant y otros resultados criogenicos. Suministra coolant externo a los multibloques mediante el ME Massive Fluid Hatch.
 
-## Progresión de Materia
+## Fluidos fuente registrados
 
-| Materia | Entradas Clave | Energía | ID |
-|---------|---------------|---------|-----|
-| Esfera de Neutronio | 9x Lingote EN | 1M | `ufo:neutronium_sphere` |
-| Esfera Neutronio Enriquecida | Esfera + 2x Anomalía Cuántica | 8M | `ufo:enriched_neutronium_sphere` |
-| Proto Materia | Esfera Enr. + Materia UU | 2M | `ufo:proto_matter` |
-| Materia Corpórea | Proto + 64x Bloque Hierro | 5M | `ufo:corporeal_matter` |
-| Cristal UU | Amatista + 10K mB UU | 20M | `ufo:uu_matter_crystal` |
-| Materia EB | Corpórea + Cristal UU + Bloque/Fluido EB | 7M | `ufo:white_dwarf_matter` |
-| Materia EN | Corpórea + Cristal UU + Bloque/Fluido EN | 9.5M | `ufo:neutron_star_matter` |
-| Materia Púlsar | Corpórea + Cristal UU + Bloque/Fluido Púlsar | 12M | `ufo:pulsar_matter` |
-| Materia Oscura | 16x cada EB/EN/Púlsar + Trascendente | 200M | `ufo:dark_matter` |
+| Nombre | ID de registro |
+|---|---|
+| Liquid Starlight | `ufo:source_liquid_starlight_fluid` |
+| Gelid Cryotheum | `ufo:source_gelid_cryotheum` |
+| Stable Coolant | `ufo:source_stable_coolant` |
+| Bose-Einstein Condensate | `ufo:source_bose_einstein_condensate` |
+| Temporal Fluid | `ufo:source_temporal_fluid` |
+| Spatial Fluid | `ufo:source_spatial_fluid` |
+| Primordial Matter | `ufo:source_primordial_matter_fluid` |
+| Raw Star Matter Plasma | `ufo:raw_star_matter_plasma` |
+| Transcending Matter | `ufo:transcending_matter` |
+| UU Matter | `ufo:uu_matter` |
+| UU Amplifier | `ufo:source_uu_amplifier_fluid` |
+| White Dwarf Fragment Fluid | `ufo:source_white_dwarf_fragment_fluid` |
+| Neutron Star Fragment Fluid | `ufo:source_neutron_star_fragment_fluid` |
+| Pulsar Fragment Fluid | `ufo:source_pulsar_fragment_fluid` |
 
----
+Los ingredientes, cantidades y costos de energia cambiaron en el rebalanceo 3.0. Consulta JEI/EMI para la receta de tu version instalada.
 
-## Fluidos Personalizados
-
-| Fluido | Uso | ID |
-|--------|-----|-----|
-| Luz Estelar Líquida | Fluido base para mayoría de recetas | `ufo:source_liquid_starlight_fluid` |
-| Criotheum Gélido | Refrigerante + fabricación | `ufo:source_gelid_cryotheum` |
-| Fluido Temporal | Mejor refrigerante (100 HU/mB) | `ufo:source_temporal_fluid` |
-| Fluido Espacial | Catalizadores cuánticos | `ufo:source_spatial_fluid` |
-| Materia Primordial | Fabricación de componentes | `ufo:source_primordial_matter_fluid` |
-| Plasma Estelar Bruto | Procesamiento estelar | `ufo:raw_star_matter_plasma` |
-| Materia Trascendente | Recetas endgame | `ufo:transcending_matter` |
-| Materia UU | Replicación | `ufo:uu_matter` |
-| Amplificador UU | Precursor de UU | `ufo:source_uu_amplifier_fluid` |
-
-### Cadena Bootstrap
-1. Agua + Bola de Nieve + Hielo Compacto → Polvo Blizz
-2. Polvo Blizz + Bola de Nieve → Polvo Criotheum
-3. Polvo Blizz + Agua → Criotheum Gélido
-4. Matriz Obsidiana + Estrella Nether + Amplificador UU → Luz Estelar Líquida
-
----
-
-*Ver también: [Progresión](progression.md) · [DMA](dma.md)*
+[DMA](dma.md) · [Quantum Cryoforge](quantum-cryoforge.md) · [Progresion](progression.md)

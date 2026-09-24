@@ -124,17 +124,18 @@ ufo:stellar_simulation
 |--------|----------|-------|----------|
 | `simulation_name` | String | 是 | 控制器中显示的名称 |
 | `item_inputs` | Array | 是 | 从 ME 网络消耗的物品 |
-| `fluid_inputs` | Array | 否 | 从 ME 网络消耗的流体 |
-| `item_outputs` | Array | 否 | AE2 GenericStack 格式的物品输出 |
-| `fluid_outputs` | Array | 否 | AE2 GenericStack 格式的流体输出 |
+| `fluid_inputs` | Array | 是 | 从 ME 网络消耗的流体 |
+| `item_outputs` | Array | 是 | AE2 GenericStack 格式的物品输出 |
+| `fluid_outputs` | Array | 是 | AE2 GenericStack 格式的流体输出 |
 | `energy` | Integer | 是 | 总 AE 能量 |
 | `time` | Integer | 是 | 持续时间，单位为 tick |
 | `cooling_level` | Integer | 是 | 热负荷等级，0 至 3 |
 | `field_tier` | Integer | 是 | 所需的最低力场发生器等级 |
 | `fuel_fluid` | String | 否 | 燃料流体 ID |
 | `fuel_amount` | Integer | 否 | 燃料用量，mB |
-| `coolant_fluid` | String | 否 | 冷却液流体 ID |
 | `coolant_amount` | Integer | 否 | 冷却液用量，mB |
+
+冷却液类型由外部注入的 ME Massive Fluid Hatch 决定；`coolant_amount` 是配方需求量。序列化器没有 `coolant_fluid` 字段。
 
 ### AE2 GenericStack
 
@@ -182,7 +183,6 @@ ServerEvents.recipes(event => {
     field_tier: 2,
     fuel_fluid: 'mekanism:hydrogen',
     fuel_amount: 20000,
-    coolant_fluid: 'ufo:source_gelid_cryotheum',
     coolant_amount: 25000
   }).id('kubejs:custom_void_harvest')
 })
@@ -224,6 +224,7 @@ ufo:universal_multiblock
 | `recipe_name` | String | 否 | 内部名称或显示名称 |
 | `item_inputs` | Array | 是 | 物品输入及数量 |
 | `fluid_inputs` | Array | 否 | 流体输入及数量，mB |
+| `chemical_inputs` | Array | 否 | 可选 Mekanism 化学品：`{ "chemical": "mekanism:oxygen", "amount": 1000 }` |
 | `item_output` | Object | 否 | 单项物品输出 |
 | `fluid_output` | Object | 否 | 单项流体输出 |
 | `fluid_output_amount` | Integer | 否 | 流体输出总量，mB |
