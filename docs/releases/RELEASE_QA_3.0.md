@@ -1,8 +1,33 @@
 # UFO Future 3.0 release QA
 
-The remaining human gates are **a real 2.x save upgrade** and **load profiling in
-the actual modpack with player activity**. The already approved Grid Link,
-energy-supply, viewer and idle-lifecycle checks remain closed.
+The author reports completing both human checks: a real 2.x save upgrade and
+load testing in the actual modpack with player activity. No item loss or other
+unexpected change was observed. The author reports that the server stayed at
+20 TPS with the machines running and accelerated. The workload's exact machine
+count, client count, MSPT and logs have not yet been attached to this document;
+the procedures below remain the reference for preserving that evidence.
+The already approved Grid Link, energy-supply, viewer and idle-lifecycle checks
+remain closed.
+
+## Author report — 2026-09-24
+
+- Real 2.x world migration: performed; no missing items or other unexpected
+  differences observed by the author.
+- Real-modpack load test: performed; the author reports 20 server TPS with the
+  machines running and accelerated. Exact workload details and profiler output
+  are pending transcription here.
+- In the 2026-09-21 UFO playtest session, the author reported testing six QMFs,
+  six Quantum Slicers, five Quantum Processor Assemblers and five Quantum
+  Cryoforges in parallel, then testing acceleration with Warden Soul and four
+  Chrono T3 upgrades. On 2026-09-24 the author clarified that server TPS stayed
+  at 20 even with the machines running and accelerated. The reported 66–102,
+  55–105 and 58–91 ranges were controller timing readings for QMF, Slicer and
+  Processor respectively;
+  they are not server TPS readings. No numerical Spark TPS/MSPT result was found
+  in that session transcript.
+- This report is a human observation, not a claim that exact resource balances,
+  traffic rates or the 100+ simultaneously active machine count have been
+  independently verified from artifacts.
 
 ## Current beta.1 result — 2026-09-18
 

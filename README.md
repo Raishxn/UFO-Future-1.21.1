@@ -253,8 +253,21 @@ as the DMA. See the [KubeJS documentation](https://raishxn.github.io/UFO-Future-
 
 ### Configuration
 
-Machine behaviour, energy values and thermal thresholds are tunable through
-`ufo-common.toml`.
+UFO Future keeps its global configuration under `config/ufo/`:
+
+| File | Settings |
+|------|----------|
+| `common.toml` | Infinity Cell idle energy cost |
+| `server.toml` | Stellar safety and coolant, armor caps, external acceleration |
+| `wireless.toml` | Wireless range, link capacity and machine bonuses |
+
+Existing `ufo-common.toml` and `ufo-server.toml` files are moved automatically
+on startup, including server configs stored inside a world save. The migration
+preserves their contents and leaves an older file in place if the new path
+already exists, so it never overwrites a newer configuration.
+NeoForge stores active per-world server settings under
+`saves/<world>/serverconfig/ufo/server.toml` in singleplayer; a dedicated server
+uses its world directory instead.
 
 ---
 

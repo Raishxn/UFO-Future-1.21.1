@@ -86,7 +86,7 @@ public class UFOConfig {
 
     private static final ModConfigSpec.Builder WIRELESS_BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec.IntValue WIRELESS_RANGE = WIRELESS_BUILDER
-            .comment("Quantum wireless range in blocks, same dimension. Zero disables the distance limit.")
+            .comment("Default and maximum Quantum wireless range in blocks, same dimension. Zero disables the distance limit.")
             .defineInRange("wireless.range", 128, 0, 30_000_000);
     public static final ModConfigSpec.IntValue WIRELESS_MAX_LINKS = WIRELESS_BUILDER
             .comment("Maximum face connections per Quantum wireless host.")

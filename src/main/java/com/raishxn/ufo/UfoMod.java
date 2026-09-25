@@ -47,6 +47,10 @@ public class UfoMod {
     }
 
     public UfoMod(IEventBus modEventBus, ModContainer modContainer) {
+        com.raishxn.ufo.config.UfoConfigFileMigration.migrate(
+                net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get(),
+                net.neoforged.fml.loading.FMLPaths.GAMEDIR.get(),
+                net.neoforged.fml.loading.FMLConfig.defaultConfigPath());
         if (net.neoforged.fml.loading.FMLEnvironment.dist == net.neoforged.api.distmarker.Dist.CLIENT) {
             new UfoModClient(modEventBus);
         }
@@ -63,8 +67,8 @@ public class UfoMod {
         com.raishxn.ufo.menu.UFOMenus.INSTANCE.register(modEventBus);
         ModSounds.register(modEventBus);
         com.raishxn.ufo.compat.mekanism.UfoMekanismStorageCompat.initialize(modEventBus);
-        modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC);
-        modContainer.registerConfig(ModConfig.Type.SERVER, UFOConfig.SERVER_SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.SPEC, "ufo/common.toml");
+        modContainer.registerConfig(ModConfig.Type.SERVER, UFOConfig.SERVER_SPEC, "ufo/server.toml");
         modContainer.registerConfig(ModConfig.Type.COMMON, UFOConfig.WIRELESS_SPEC, "ufo/wireless.toml");
         modEventBus.addListener(UFOConfig::onLoad);
         modEventBus.addListener(this::commonSetup);

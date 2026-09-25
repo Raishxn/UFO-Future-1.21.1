@@ -127,6 +127,7 @@ public class QuantumPatternHatchMenu extends AEBaseMenu {
     public void adjustRange(int delta) {
         if (delta != 1 && delta != -1) return;
         if (isClientSide()) { sendClientAction("quantumRange", delta); return; }
+        if (com.raishxn.ufo.UFOConfig.WIRELESS_RANGE.get() == 0) return;
         if (wirelessHost != null) {
             wirelessHost.wirelessLinks().setRange(wirelessHost.wirelessLinks().range() + delta);
             wirelessHost.getBlockEntity().setChanged();

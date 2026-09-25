@@ -21,10 +21,12 @@ public final class QuantumWirelessLinks {
     private final List<Target> targets = new ArrayList<>();
     private boolean enabled;
     private int cursor;
-    private int linkRange = 32;
+    // A negative value follows the configured range. Old hosts persisted the former default of 32.
+    private int linkRange = -1;
     public int range() {
         int maximum = UFOConfig.WIRELESS_RANGE.get();
-        return maximum == 0 ? linkRange : Math.min(linkRange, maximum);
+        if (maximum == 0) return Integer.MAX_VALUE;
+        return linkRange < 0 ? maximum : Math.min(linkRange, maximum);
     }
     public void setRange(int requested) { linkRange = Math.clamp(requested, 1, 30_000_000); }
 
@@ -52,6 +54,7 @@ public final class QuantumWirelessLinks {
     }
 
     public boolean inRange(BlockPos origin, BlockPos destination) {
+        if (UFOConfig.WIRELESS_RANGE.get() == 0) return true;
         int range = range();
         return origin.distSqr(destination) <= (double) range * range;
     }
@@ -92,7 +95,8 @@ public final class QuantumWirelessLinks {
 
     public void save(CompoundTag tag) {
         tag.putBoolean("ufoWirelessEnabled", enabled);
-        tag.putInt("ufoWirelessRange", linkRange);
+        tag.putInt("ufoWirelessRange", linkRange < 0 ? 32 : linkRange);
+        tag.putBoolean("ufoWirelessRangeExplicit", linkRange >= 0);
         var list = new ListTag();
         for (var target : targets) {
             var entry = new CompoundTag();
@@ -106,7 +110,11 @@ public final class QuantumWirelessLinks {
 
     public void load(CompoundTag tag) {
         enabled = tag.getBoolean("ufoWirelessEnabled");
-        linkRange = tag.contains("ufoWirelessRange") ? Math.clamp(tag.getInt("ufoWirelessRange"), 1, 30_000_000) : 32;
+        int savedRange = tag.getInt("ufoWirelessRange");
+        // Before this marker existed, 32 was the hard-coded default, not a chosen range.
+        linkRange = tag.getBoolean("ufoWirelessRangeExplicit")
+                || (tag.contains("ufoWirelessRange") && savedRange != 32)
+                ? Math.clamp(savedRange, 1, 30_000_000) : -1;
         targets.clear();
         var list = tag.getList("ufoWirelessTargets", Tag.TAG_COMPOUND);
         for (int i = 0; i < Math.min(list.size(), 1024); i++) {

@@ -43,6 +43,7 @@ public class QuantumInterfaceMenu extends InterfaceMenu {
     public void adjustRange(int delta) {
         if (delta != 1 && delta != -1) return;
         if (isClientSide()) { sendClientAction("quantumRange", delta); return; }
+        if (com.raishxn.ufo.UFOConfig.WIRELESS_RANGE.get() == 0) return;
         quantum().wirelessLinks().setRange(quantum().wirelessLinks().range() + delta);
         quantum().setChanged();
     }

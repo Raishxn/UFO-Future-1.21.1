@@ -6,7 +6,7 @@
   "gui.ufo.wireless.links_info": "Destinos cadastrados: %s",
   "gui.ufo.wireless.links": "Vínculos",
   "gui.ufo.wireless.range": "Alcance: %s blocos",
-  "gui.ufo.wireless.range_hint": "Clique: +1 bloco. Shift+clique: -1. Padrão: 32. Respeita o máximo do servidor; vínculos fora do alcance ficam suspensos.",
+  "gui.ufo.wireless.range_hint": "Clique: +1 bloco. Shift+clique: -1. Padrão: configuração do servidor; vínculos fora do alcance ficam suspensos.",
   "message.ufo.wireless.out_of_range": "Destino fora do alcance de %s blocos. Ajuste o alcance na origem.",
   "gui.ufo.wireless.connected": "Conectadas",
   "gui.ufo.wireless.eligible": "DMA / Multi",

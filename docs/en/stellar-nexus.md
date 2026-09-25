@@ -50,4 +50,4 @@ This behavior also applies to custom Stellar Nexus recipes, because it is implem
 
 ## Overheat policy
 
-With Safe Mode off, maximum heat causes a local failure with damage and visual effects. **Block destruction is disabled by default.** Server operators can explicitly enable a bounded destructive wave in `config/ufo-server.toml` (`stellar.explosion.enableBlockGrief`), with limits for radius, blocks per tick, total blocks and allowed dimensions. Lava creation and secondary explosions have separate opt-in settings.
+With Safe Mode off, maximum heat causes a local failure with damage and visual effects. **Block destruction is disabled by default.** Server operators can explicitly enable a bounded destructive wave in `config/ufo/server.toml` (`stellar.explosion.enableBlockGrief`), with limits for radius, blocks per tick, total blocks and allowed dimensions. Lava creation and secondary explosions have separate opt-in settings.

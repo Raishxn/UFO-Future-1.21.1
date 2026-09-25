@@ -6,7 +6,7 @@
   "gui.ufo.wireless.links_info": "Registered destinations: %s",
   "gui.ufo.wireless.links": "Links",
   "gui.ufo.wireless.range": "Range: %s blocks",
-  "gui.ufo.wireless.range_hint": "Click: +1 block. Shift-click: -1. Default: 32. Limited by server maximum; out-of-range links are suspended.",
+  "gui.ufo.wireless.range_hint": "Click: +1 block. Shift-click: -1. Default: server configuration; out-of-range links are suspended.",
   "message.ufo.wireless.out_of_range": "Destination exceeds the %s-block range. Adjust the source range.",
   "gui.ufo.wireless.connected": "Connected",
   "gui.ufo.wireless.eligible": "DMA / Multi",

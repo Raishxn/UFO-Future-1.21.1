@@ -48,4 +48,4 @@ Tambien afecta a las recetas personalizadas.
 
 ## Politica de sobrecalentamiento
 
-Con Safe Mode desactivado, el calor maximo causa un fallo local con dano y efectos visuales. **La destruccion de bloques esta desactivada por defecto.** El administrador puede habilitar una onda destructiva limitada en `config/ufo-server.toml` (`stellar.explosion.enableBlockGrief`), con limites de radio, bloques por tick, total de bloques y dimensiones permitidas. Lava y explosiones secundarias tienen opciones separadas.
+Con Safe Mode desactivado, el calor maximo causa un fallo local con dano y efectos visuales. **La destruccion de bloques esta desactivada por defecto.** El administrador puede habilitar una onda destructiva limitada en `config/ufo/server.toml` (`stellar.explosion.enableBlockGrief`), con limites de radio, bloques por tick, total de bloques y dimensiones permitidas. Lava y explosiones secundarias tienen opciones separadas.

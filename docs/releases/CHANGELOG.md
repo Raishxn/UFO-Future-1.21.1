@@ -12,6 +12,11 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+### Bug Fixes
+
+- O Wireless Tool agora usa `config/ufo/wireless.toml` como alcance padrão de cada origem, inclusive para vínculos antigos salvos com o padrão de 32 blocos. Alcances escolhidos manualmente continuam persistidos; `wireless.range = 0` remove o limite de distância como documentado.
+- As configs do UFO ficam reunidas em `config/ufo/`. Arquivos antigos `ufo-common.toml` e `ufo-server.toml` são migrados ao iniciar, inclusive em `defaultconfigs` e saves, preservando os valores existentes.
+
 ## [3.0.0-beta.2] - 2026-09-21
 
 Segundo beta público da linha 3.0, reunindo o polimento e as correções abaixo.
