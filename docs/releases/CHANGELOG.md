@@ -14,8 +14,22 @@ Fluxo combinado daqui para frente:
 
 ### Bug Fixes
 
+### Implementations
+
+## [3.0.0-beta.3] - 2026-09-25
+
+### Bug Fixes
+
 - O Wireless Tool agora usa `config/ufo/wireless.toml` como alcance padrão de cada origem, inclusive para vínculos antigos salvos com o padrão de 32 blocos. Alcances escolhidos manualmente continuam persistidos; `wireless.range = 0` remove o limite de distância como documentado.
 - As configs do UFO ficam reunidas em `config/ufo/`. Arquivos antigos `ufo-common.toml` e `ufo-server.toml` são migrados ao iniciar, inclusive em `defaultconfigs` e saves, preservando os valores existentes.
+- Corrigido o resgate do Reality Anchor após queda no vazio.
+- Corrigidos o alinhamento do coolant, da energia e dos tanques na interface do Stellar Nexus.
+
+### Implementations
+
+- Nova interface do controller e da receita Stellar Nexus em JEI/EMI, com espaço para até 81 saídas de itens e 18 de fluidos, nome da simulação no cabeçalho e MK/tempo/energia na borda superior.
+- O painel interno do EMI acompanha a altura da receita e posiciona o ícone do controller ao lado, sem cobrir a textura.
+- Revisada a wiki de progressão, receitas, equipamentos, multiblocos e wireless em quatro idiomas, incluindo a restauração do chinês simplificado.
 
 ## [3.0.0-beta.2] - 2026-09-21
 
