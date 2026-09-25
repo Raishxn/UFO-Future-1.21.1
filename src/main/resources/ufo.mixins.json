@@ -29,6 +29,8 @@
     "MixinModelBakery",
     "MixinJemiStructureRecipe",
     "MixinEmiStructureInput",
+    "MixinEmiStellarRecipeHeight",
+    "MixinEmiStellarRecipeTab",
     "MixinEmiOptionalChemicalItems"
   ],
   "injectors": {

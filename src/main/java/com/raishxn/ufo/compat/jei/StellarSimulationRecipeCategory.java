@@ -30,12 +30,21 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     public static final RecipeType<StellarSimulationRecipe> RECIPE_TYPE =
             RecipeType.create(UfoMod.MOD_ID, "stellar_simulation", StellarSimulationRecipe.class);
 
-    private static final int WIDTH = 191;
-    private static final int HEIGHT = 128;
-    private static final int CONTROLLER_X = 170;
-    private static final int CONTROLLER_Y = 4;
+    private static final int WIDTH = 256;
+    private static final int HEIGHT = 256;
+    // Slot coordinates point inside the frames in the supplied 256x256 atlas.
+    private static final int[] ITEM_INPUT_X = {53, 76, 53, 76, 163, 186, 163, 186, 119};
+    private static final int[] ITEM_INPUT_Y = {19, 19, 51, 51, 19, 19, 51, 51, 35};
+    private static final int[] FLUID_INPUT_X = {96, 108, 149, 108};
+    private static final int[] FLUID_INPUT_Y = {25, 58, 25, 17};
+    private static final int[] FLUID_INPUT_WIDTH = {9, 38, 9, 38};
+    private static final int[] FLUID_INPUT_HEIGHT = {34, 9, 34, 9};
+    private static final int[] ITEM_OUTPUT_GRID_X = {21, 103, 185};
+    private static final int[] FLUID_OUTPUT_X = {81, 164};
+    private static final int OUTPUT_Y = 84;
+    private static final int FLUID_OUTPUT_Y = 83;
     private static final ResourceLocation BACKGROUND =
-            UfoMod.id("textures/guis/stellar_nexus_jei.png");
+            UfoMod.id("textures/guis/stellar_nexus_jei_v3_ae2_normal.png");
 
     private final IDrawable icon;
     private final IDrawable background;
@@ -79,18 +88,9 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, StellarSimulationRecipe recipe, IFocusGroup focuses) {
-        builder.addInputSlot(CONTROLLER_X, CONTROLLER_Y)
-                .addItemStack(MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get().asItem().getDefaultInstance())
-                .addRichTooltipCallback((recipeSlotView, tooltip) -> {
-                    tooltip.add(Component.literal("Controller"));
-                    tooltip.add(Component.literal("Click to open the 3D multiblock preview"));
-                });
-
         var itemInputs = recipe.getItemInputs();
-        for (int i = 0; i < itemInputs.size() && i < 9; i++) {
+        for (int i = 0; i < itemInputs.size() && i < ITEM_INPUT_X.length; i++) {
             if (!itemInputs.get(i).isEmpty()) {
-                int col = i % 3;
-                int row = i / 3;
                 int finalI = i;
 
                 var visualStacks = java.util.Arrays.stream(UfoJeiPlugin.stackOf(itemInputs.get(i)).getItems())
@@ -100,7 +100,7 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
                             return copy;
                         }).toList();
 
-                builder.addInputSlot(11 + (col * 18), 16 + (row * 18))
+                builder.addInputSlot(ITEM_INPUT_X[i], ITEM_INPUT_Y[i])
                         .addItemStacks(visualStacks)
                         .addRichTooltipCallback((recipeSlotView, tooltip) -> {
                             long amount = itemInputs.get(finalI).getAmount();
@@ -110,17 +110,16 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         }
 
         var fluidInputs = recipe.getFluidInputs();
-        for (int i = 0; i < fluidInputs.size() && i < 3; i++) {
+        for (int i = 0; i < fluidInputs.size() && i < FLUID_INPUT_X.length; i++) {
             if (!fluidInputs.get(i).isEmpty()) {
-                int yPos = 16 + (i * 20);
                 int finalI = i;
 
                 var visualFluids = UfoJeiPlugin.stackOf(fluidInputs.get(i)).stream()
                         .map(stack -> new FluidStack(stack.getFluid(), 1000))
                         .toList();
 
-                var slot = builder.addInputSlot(71, yPos)
-                        .setFluidRenderer(1_000_000, false, 11, 14);
+                var slot = builder.addInputSlot(FLUID_INPUT_X[i], FLUID_INPUT_Y[i])
+                        .setFluidRenderer(1_000, false, FLUID_INPUT_WIDTH[i], FLUID_INPUT_HEIGHT[i]);
                 slot.addIngredients(NeoForgeTypes.FLUID_STACK, visualFluids)
                         .addRichTooltipCallback((recipeSlotView, tooltip) -> {
                             long amount = fluidInputs.get(finalI).getAmount();
@@ -130,12 +129,13 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         }
 
         var itemOutputs = recipe.getItemOutputs();
-        for (int i = 0; i < itemOutputs.size() && i < 9; i++) {
+        for (int i = 0; i < itemOutputs.size() && i < 81; i++) {
             if (itemOutputs.get(i).what() instanceof AEItemKey itemKey) {
+                int grid = i / 27;
                 int col = i % 3;
-                int row = i / 3;
+                int row = (i % 27) / 3;
                 int finalI = i;
-                builder.addOutputSlot(127 + (col * 18), 16 + (row * 18))
+                builder.addOutputSlot(ITEM_OUTPUT_GRID_X[grid] + col * 17, OUTPUT_Y + row * 17)
                         .addItemStack(itemKey.toStack(1))
                         .addRichTooltipCallback((recipeSlotView, tooltip) ->
                                 tooltip.add(Component.literal("Amount Produced: " + formatAmount(itemOutputs.get(finalI).amount()))));
@@ -143,14 +143,13 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         }
 
         var fluidOutputs = recipe.getFluidOutputs();
-        for (int i = 0; i < fluidOutputs.size() && i < 6; i++) {
+        for (int i = 0; i < fluidOutputs.size() && i < 18; i++) {
             if (fluidOutputs.get(i).what() instanceof AEFluidKey fluidKey) {
-                int col = i % 3;
-                int row = i / 3;
+                int col = i / 9;
+                int row = i % 9;
                 int finalI = i;
-                int[] xOffsets = {127, 148, 169};
-                var slot = builder.addOutputSlot(xOffsets[col], 75 + (row * 20))
-                        .setFluidRenderer(1_000_000, false, 11, 14);
+                var slot = builder.addOutputSlot(FLUID_OUTPUT_X[col], FLUID_OUTPUT_Y + row * 17)
+                        .setFluidRenderer(1_000, false, 10, 16);
                 slot.addFluidStack(fluidKey.getFluid(), 1000)
                         .addRichTooltipCallback((recipeSlotView, tooltip) ->
                                 tooltip.add(Component.literal("Amount Produced: " + formatAmount(fluidOutputs.get(finalI).amount()) + " mB")));
@@ -163,139 +162,41 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         this.background.draw(gfx);
         Font font = Minecraft.getInstance().font;
 
-        String simulationName = recipe.getSimulationName();
-        if (simulationName == null || simulationName.isEmpty()) {
-            simulationName = "Unknown Simulation";
-        }
-        drawScaledCenteredString(gfx, font, simulationName, WIDTH / 2, 4, 0x00FFFF, 1.0f);
-
-        int pWidth = 20;
-        int animWidth = (int) ((System.currentTimeMillis() / 40) % pWidth);
-        gfx.fillGradient(94, 38, 94 + animWidth, 49, 0x558B5CF6, 0x556D28D9);
-
-        drawScaledCenteredString(gfx, font, getFuelDisplayShortName(recipe), 29, 76, 0x00FFFF, 0.7f);
-        drawScaledCenteredString(gfx, font, getCoolantDisplayTier(recipe), 75, 76, 0x00FFFF, 0.7f);
-        drawScaledCenteredString(gfx, font, recipe.getFormattedTime(), 29, 88, 0xFFFFFF, 0.8f);
-        drawScaledCenteredString(gfx, font, "Mk." + toRoman(recipe.getFieldTier()), 73, 88, 0xFFFFFF, 0.8f);
-        drawScaledCenteredString(gfx, font, formatAmount(recipe.getTotalEnergy()) + " AE", 51, 100, 0xFFDF00, 0.7f);
-    }
-
-    private static void drawBackground(GuiGraphics gfx) {
-        drawPanel(gfx, 0, 0, WIDTH, HEIGHT, 0xFFC8C8C8, 0xFFFFFFFF, 0xFF6A6A6A);
-        drawPanel(gfx, 5, 12, 186, 123, 0xFFD6D6D6, 0xFFFFFFFF, 0xFF8B8B8B);
-
-        gfx.fill(8, 15, 105, 116, 0xFF111111);
-        gfx.fill(122, 15, 184, 116, 0xFF111111);
-
-        drawSlot(gfx, CONTROLLER_X, CONTROLLER_Y);
-
-        for (int i = 0; i < 9; i++) {
-            int col = i % 3;
-            int row = i / 3;
-            drawSlot(gfx, 11 + (col * 18), 16 + (row * 18));
-            drawSlot(gfx, 127 + (col * 18), 16 + (row * 18));
-        }
-
-        for (int i = 0; i < 3; i++) {
-            drawTankSlot(gfx, 71, 16 + (i * 20));
-        }
-
-        for (int i = 0; i < 6; i++) {
-            int col = i % 3;
-            int row = i / 3;
-            int[] xOffsets = {127, 148, 169};
-            drawTankSlot(gfx, xOffsets[col], 75 + (row * 20));
-        }
-
-        gfx.fill(94, 38, 114, 49, 0xFF171019);
-        gfx.fill(95, 39, 113, 48, 0xFF080808);
-    }
-
-    private static void drawSlot(GuiGraphics gfx, int x, int y) {
-        drawPanel(gfx, x - 1, y - 1, x + 17, y + 17, 0xFF121212, 0xFFBDBDBD, 0xFF414141);
-    }
-
-    private static void drawTankSlot(GuiGraphics gfx, int x, int y) {
-        drawPanel(gfx, x - 1, y - 1, x + 12, y + 15, 0xFF121212, 0xFFBDBDBD, 0xFF414141);
-    }
-
-    private static void drawPanel(GuiGraphics gfx, int left, int top, int right, int bottom, int fill, int light, int dark) {
-        gfx.fill(left, top, right, bottom, dark);
-        gfx.fill(left, top, right - 1, bottom - 1, light);
-        gfx.fill(left + 1, top + 1, right - 1, bottom - 1, fill);
+        String summary = "[ MK. " + toRoman(recipe.getFieldTier()) + " ]  ──  [ "
+                + recipe.getFormattedTime() + " | " + formatEnergy(recipe.getTotalEnergy()) + " AE ]";
+        gfx.fill(34, 1, 222, 13, 0xDD20283D);
+        float scale = Math.min(0.85f, 180.0f / Math.max(1, font.width(summary)));
+        drawScaledCenteredString(gfx, font, summary, WIDTH / 2, 3, 0xFFF4F7FF, scale);
     }
 
     private void drawScaledCenteredString(GuiGraphics gfx, Font font, String text, int x, int y, int color, float scale) {
         gfx.pose().pushPose();
         gfx.pose().translate(x, y, 0);
         gfx.pose().scale(scale, scale, 1.0f);
-        gfx.drawString(font, text, -font.width(text) / 2, 0, color, false);
+        gfx.drawString(font, text, -font.width(text) / 2, 0, color, true);
         gfx.pose().popPose();
     }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, StellarSimulationRecipe recipe,
                            IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-        List<Component> tips = new ArrayList<>();
-
-        if (mouseY >= 74 && mouseY <= 84 && mouseX >= 10 && mouseX <= 49) {
+        if ((mouseY >= 68 && mouseY < 79 && mouseX >= 20 && mouseX <= 236)
+                || (mouseY >= 1 && mouseY < 13 && mouseX >= 34 && mouseX < 222)) {
+            List<Component> tips = new ArrayList<>();
+            tips.add(Component.literal("Duration: " + recipe.getFormattedTime()
+                    + " (" + recipe.getTime() + " ticks)"));
+            tips.add(Component.literal("Field Generator: Mk." + toRoman(recipe.getFieldTier())));
+            tips.add(Component.literal("Energy: " + String.format(Locale.ROOT, "%,d", recipe.getTotalEnergy()) + " AE"));
             if (!recipe.getFuelFluid().isEmpty() && recipe.getFuelAmount() > 0) {
-                tips.add(Component.literal("Fuel Required: " + getFuelDisplayName(recipe)));
-                tips.add(Component.literal("Amount: " + formatAmount(recipe.getFuelAmount()) + " mB"));
-                tips.add(Component.literal("Extracted from ME storage on start."));
-            } else {
-                tips.add(Component.literal("No fuel liquid required."));
+                tips.add(Component.literal("Fuel: " + getFuelDisplayName(recipe) + " × "
+                        + formatAmount(recipe.getFuelAmount()) + " mB"));
             }
-            tooltip.addAll(tips);
-            return;
-        }
-
-        if (mouseY >= 74 && mouseY <= 84 && mouseX >= 53 && mouseX <= 98) {
             if (recipe.getCoolantAmount() > 0) {
-                tips.add(Component.literal("Coolant Required: " + getCoolantDisplayName(recipe)));
-                tips.add(Component.literal("Tier: " + getCoolantDisplayTier(recipe)));
-                tips.add(Component.literal("Amount: " + formatAmount(recipe.getCoolantAmount()) + " mB"));
-                tips.add(Component.literal("Consumed during operation to control heat."));
-            } else {
-                tips.add(Component.literal("Cooling Level: " + recipe.getCoolingLevel() + "/3"));
-                tips.add(Component.literal("Generic coolant from ME network."));
+                tips.add(Component.literal("Coolant: " + getCoolantDisplayName(recipe) + " × "
+                        + formatAmount(recipe.getCoolantAmount()) + " mB"));
             }
+            tips.add(Component.literal("Outputs directly into the ME network"));
             tooltip.addAll(tips);
-            return;
-        }
-
-        if (mouseY >= 86 && mouseY <= 96 && mouseX >= 10 && mouseX <= 49) {
-            tips.add(Component.literal("Duration: " + recipe.getFormattedTime() + " (" + recipe.getTime() + " ticks)"));
-            tooltip.addAll(tips);
-            return;
-        }
-
-        if (mouseY >= 86 && mouseY <= 96 && mouseX >= 53 && mouseX <= 92) {
-            tips.add(Component.literal("Required Stellar Field Generator: Mk." + toRoman(recipe.getFieldTier())));
-            tooltip.addAll(tips);
-            return;
-        }
-
-        if (mouseY >= 98 && mouseY <= 108 && mouseX >= 32 && mouseX <= 71) {
-            tips.add(Component.literal("Total AE Energy Required: " + String.format(Locale.ROOT, "%,d", recipe.getTotalEnergy()) + " AE"));
-            tips.add(Component.literal("Charged passively from AE grid via Energy Hatch."));
-            tooltip.addAll(tips);
-            return;
-        }
-
-        if (mouseX >= CONTROLLER_X && mouseX <= CONTROLLER_X + 16 && mouseY >= CONTROLLER_Y && mouseY <= CONTROLLER_Y + 16) {
-            tips.add(Component.literal("Controller"));
-            tips.add(Component.literal("Click the controller to open Multiblock Info"));
-            tooltip.addAll(tips);
-            return;
-        }
-
-        if (mouseX >= 94 && mouseX <= 114 && mouseY >= 38 && mouseY <= 49) {
-            tooltip.addAll(List.of(
-                    Component.literal(recipe.getFormattedTime()),
-                    Component.literal("(" + recipe.getTime() + " ticks)"),
-                    Component.literal("Outputs directly into ME Network")));
-            return;
         }
     }
 
@@ -311,6 +212,19 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         if (amount >= 1_000L) {
             double value = amount / 1_000.0;
             return value == (long) value ? (long) value + "K" : String.format(Locale.ROOT, "%.1fK", value);
+        }
+        return String.valueOf(amount);
+    }
+
+    private static String formatEnergy(long amount) {
+        if (amount >= 1_000_000_000L) {
+            return String.format(Locale.ROOT, "%.1fB", amount / 1_000_000_000.0);
+        }
+        if (amount >= 1_000_000L) {
+            return String.format(Locale.ROOT, "%.1fM", amount / 1_000_000.0);
+        }
+        if (amount >= 1_000L) {
+            return String.format(Locale.ROOT, "%.1fK", amount / 1_000.0);
         }
         return String.valueOf(amount);
     }
@@ -333,23 +247,11 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         return builder.toString().trim();
     }
 
-    private static String getFuelDisplayShortName(StellarSimulationRecipe recipe) {
-        if (recipe.getFuelFluid().isEmpty()) {
-            return "None";
-        }
-        return abbreviateFluidName(getFuelDisplayName(recipe), 10);
-    }
-
     private static String getFuelDisplayName(StellarSimulationRecipe recipe) {
         if (recipe.getFuelFluid().isEmpty()) {
             return "None";
         }
         return getFluidDisplayName(ResourceLocation.parse(recipe.getFuelFluid()));
-    }
-
-    private static String getCoolantDisplayTier(StellarSimulationRecipe recipe) {
-        int tier = recipe.getCoolingLevel();
-        return tier <= 0 ? "None" : "MK" + Math.min(3, tier);
     }
 
     private static String getCoolantDisplayName(StellarSimulationRecipe recipe) {
@@ -369,30 +271,6 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
 
         String hoverName = new FluidStack(fluid, 1).getHoverName().getString();
         return hoverName == null || hoverName.isBlank() ? formatFluidName(fluidId.getPath()) : hoverName;
-    }
-
-    private static String abbreviateFluidName(String fullName, int maxLength) {
-        if (fullName == null || fullName.isBlank()) {
-            return "None";
-        }
-        if (fullName.length() <= maxLength) {
-            return fullName;
-        }
-
-        String[] words = fullName.trim().split("\\s+");
-        if (words.length > 1) {
-            StringBuilder initials = new StringBuilder();
-            for (String word : words) {
-                if (!word.isEmpty()) {
-                    initials.append(Character.toUpperCase(word.charAt(0)));
-                }
-            }
-            if (!initials.isEmpty()) {
-                return initials.toString();
-            }
-        }
-
-        return fullName.substring(0, Math.max(1, maxLength - 1)).toUpperCase(Locale.ROOT) + ".";
     }
 
     private static String toRoman(int tier) {

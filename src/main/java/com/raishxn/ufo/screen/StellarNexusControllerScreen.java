@@ -48,7 +48,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 /** Compact control screen for the Stellar Nexus. */
 public class StellarNexusControllerScreen extends AbstractContainerScreen<StellarNexusControllerMenu> {
     private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath("ae2", "textures/guis/stellarnexus2.png");
+            ResourceLocation.fromNamespaceAndPath("ae2", "textures/guis/stellarnexus2_v2_ae2_clean.png");
     private static final ResourceLocation UNIVERSAL_WIDGETS =
             ResourceLocation.fromNamespaceAndPath("ae2", "textures/guis/universalgui2.png");
     private static final ResourceLocation AE2_STATES =
@@ -63,11 +63,11 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
     // The supplied "17,40" tank origin is interpreted as atlas 17,140: the
     // panel starts at y=78 and every neighboring supplied coordinate is in the
     // atlas' 136-231 lower panel.
-    private static final int COOLANT_X = 17;
-    private static final int COOLANT_Y = 62;
-    // Coordinates 17..31 are inclusive in the texture specification.
-    private static final int COOLANT_WIDTH = 15;
-    private static final int COOLANT_HEIGHT = 31;
+    // Fill the visible tank through its top edge (atlas x=19..31, y=143..171).
+    private static final int COOLANT_X = 19;
+    private static final int COOLANT_Y = 65;
+    private static final int COOLANT_WIDTH = 13;
+    private static final int COOLANT_HEIGHT = 29;
     // Share the panel's right border, matching the one-pixel docking used by
     // AE2's left toolbar instead of looking like a detached window.
     private static final int REQUIREMENTS_X = PANEL_WIDTH - 1;
@@ -156,8 +156,8 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
                 this.leftPos + 223, this.topPos + 24, 21, 21, TEXTURE, ATLAS_SIZE, ATLAS_SIZE,
                 113, 0, Component.literal("Next simulation"), button -> cycleRecipe(1)));
         this.startPauseButton = this.addRenderableWidget(new UfoAtlasButton(
-                this.leftPos + 106, this.topPos + 90, 43, 43, TEXTURE, ATLAS_SIZE, ATLAS_SIZE,
-                0, 0, Component.literal("Start simulation"), button -> toggleStartPause()));
+                this.leftPos + 104, this.topPos + 88, 48, 48, TEXTURE, ATLAS_SIZE, ATLAS_SIZE,
+                208, 0, Component.literal("Start simulation"), button -> toggleStartPause()));
 
         this.safeModeButton = new UfoStateIconButton(Component.literal("Safe Mode"), button ->
                 ModPackets.sendToServer(new PacketToggleStellarSafeMode(this.menu.getBlockEntity().getBlockPos())));
@@ -248,12 +248,12 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
         if (this.menu.isRunning()) {
             boolean paused = this.menu.isPaused();
-            this.startPauseButton.setSource(paused ? 0 : 45, 0);
+            this.startPauseButton.setSource(paused ? 208 : 155, 0);
             this.startPauseButton.active = true;
             this.startPauseButton.setTooltip(Tooltip.create(Component.literal(paused
                     ? "§aResume stellar simulation" : "§ePause stellar simulation")));
         } else {
-            this.startPauseButton.setSource(0, 0);
+            this.startPauseButton.setSource(208, 0);
             this.startPauseButton.active = canStart();
             this.startPauseButton.setTooltip(Tooltip.create(Component.literal(startTooltip())));
         }
@@ -356,19 +356,19 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
                 : getRecipeDisplayName(this.availableRecipes.get(this.currentRecipeIndex));
         drawCenteredFittedText(graphics, recipeName, 36, 26, 183, 17, 0xFFFFFFFF);
 
-        drawCenteredFittedText(graphics, "Coolant", 38, 59, 43, 6, 0xFF101010);
+        drawCenteredFittedText(graphics, "Coolant", 15, 55, 65, 7, 0xFF101010);
         FluidStack coolant = getCoolantStack();
         if (coolant.isEmpty()) {
             drawCenteredFittedText(graphics, "Empty", 41, 70, 38, 24, 0xFFAAAAAA);
         } else {
             // This area is black in the supplied texture; light text is needed
             // to remain readable, especially after fitting long coolant names.
-            drawCenteredFittedText(graphics, coolant.getHoverName().getString(), 41, 70, 38, 12, 0xFFF2F2F2);
-            drawCenteredFittedText(graphics, compactAmount(coolant.getAmount()), 41, 82, 38, 12, 0xFF55FFFF);
+            drawCenteredFittedText(graphics, coolant.getHoverName().getString(), 41, 69, 38, 10, 0xFFF2F2F2);
+            drawCenteredFittedText(graphics, compactAmount(coolant.getAmount()), 41, 81, 38, 10, 0xFF55FFFF);
         }
         renderFieldTier(graphics);
 
-        drawCenteredFittedText(graphics, "Energy", 175, 58, 65, 10, 0xFF101010);
+        drawCenteredFittedText(graphics, "Energy", 175, 54, 65, 11, 0xFF101010);
         drawCenteredFittedText(graphics, compactAmount(this.menu.getEnergyBuffer()) + "/"
                 + compactAmount(this.menu.getEnergyCapacity()), 177, 73, 60, 16, 0xFFFFFFFF);
         drawCenteredFittedText(graphics, "TEMP " + this.menu.getHeatLevel() / 10 + "%", 176, 117, 63, 10,
