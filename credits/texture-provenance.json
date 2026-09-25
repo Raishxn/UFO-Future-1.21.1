@@ -1,0 +1,540 @@
+{
+  "audit": {
+    "source": "RESOURCE_MATCHES.md",
+    "ufo_snapshot": "db7a369060b2c15b4611147d0a0ed3b709456b75",
+    "gtocore_snapshot": "63f96666886a696e3064bff8361cb9c709e8ac5b",
+    "matched_resources": 53
+  },
+  "resources": [
+    {
+      "id": 1,
+      "path": "src/main/resources/assets/ufo/models/obj/climber.mtl",
+      "sha256": "e3c1473bc68a2e14486063cf28fa93e300eb8b70f16a319915735ab7816f2d7e",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (climber)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "REMOVED"
+    },
+    {
+      "id": 2,
+      "path": "src/main/resources/assets/ufo/models/obj/climber.obj",
+      "sha256": "010b3ac3f743b487f75626f76dc01a94c1b3bf2eb8233dfa95b6477f263f6c12",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (climber)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "REMOVED"
+    },
+    {
+      "id": 3,
+      "path": "src/main/resources/assets/ufo/models/obj/space.mtl",
+      "sha256": "ca31a62d452af1f99bc891318a64b9a8bb343a9f30159cb18a6e7a3462ab503d",
+      "origin": "gtnh",
+      "origin_detail": "TecTech (space/star)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "CHANGED"
+    },
+    {
+      "id": 4,
+      "path": "src/main/resources/assets/ufo/models/obj/space.obj",
+      "sha256": "257d866d58c6a006d866b67e8c89398ca711c00d57e606ba93b5d4124af65dcd",
+      "origin": "gtnh",
+      "origin_detail": "TecTech (space/star)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "CHANGED"
+    },
+    {
+      "id": 5,
+      "path": "src/main/resources/assets/ufo/models/obj/star.mtl",
+      "sha256": "ca31a62d452af1f99bc891318a64b9a8bb343a9f30159cb18a6e7a3462ab503d",
+      "origin": "gtnh",
+      "origin_detail": "TecTech (space/star)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "CHANGED"
+    },
+    {
+      "id": 6,
+      "path": "src/main/resources/assets/ufo/models/obj/star.obj",
+      "sha256": "714b91cac51614b6f9a44d025fcf8390e8da7bb6df31c9c4d3d31d2bafed2b08",
+      "origin": "gtnh",
+      "origin_detail": "TecTech (space/star)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "CHANGED"
+    },
+    {
+      "id": 7,
+      "path": "src/main/resources/assets/ufo/textures/block/fluid/fluid.stable_coolant.png",
+      "sha256": "84c3020ef7dbae3798a558a9aa2cf09443ce32b6efbb6c9347aebbe04bc592f4",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (stable baryonic matter)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 8,
+      "path": "src/main/resources/assets/ufo/textures/block/fluid/gelid_cryotheum_flow.png",
+      "sha256": "f9351851f0eff34bdd3f68fca2e71151604842da5220e0a42f7fdd471afd9d76",
+      "origin": "thermal-foundation",
+      "origin_detail": "Thermal Foundation / CoFH",
+      "license": "All rights reserved",
+      "action": "remove",
+      "status": "REMOVED"
+    },
+    {
+      "id": 9,
+      "path": "src/main/resources/assets/ufo/textures/block/fluid/gelid_cryotheum_still.png",
+      "sha256": "5ca76a7a408f8a18b70428106b5a14b6c94c30ff03763ac14abca99ae59d254d",
+      "origin": "thermal-foundation",
+      "origin_detail": "Thermal Foundation / CoFH",
+      "license": "All rights reserved",
+      "action": "remove",
+      "status": "REMOVED"
+    },
+    {
+      "id": 10,
+      "path": "src/main/resources/assets/ufo/textures/block/fluid/liquid_starlight.png",
+      "sha256": "3b7a7f78b33fb60300dc3995beba381d66801468caac47be487ff1626829a2fc",
+      "origin": "astral-sorcery",
+      "origin_detail": "Astral Sorcery",
+      "license": "All rights reserved",
+      "action": "remove",
+      "status": "REMOVED"
+    },
+    {
+      "id": 11,
+      "path": "src/main/resources/assets/ufo/textures/block/fluid/raw_star_matter_plasma.png",
+      "sha256": "6842a14edac71e42c4245040756bf089019f2ce1682bcd41f7d892a22a851c4b",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (raw star matter / spatial / temporal)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 12,
+      "path": "src/main/resources/assets/ufo/textures/block/fluid/spatial_fluid.png",
+      "sha256": "3f0fa9047765382c3ea39e3e223ef304ad87b939547e252d4da55ae712996934",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (raw star matter / spatial / temporal)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 13,
+      "path": "src/main/resources/assets/ufo/textures/block/fluid/temporal_fluid.png",
+      "sha256": "9ecc926932166df80f1c06a6fea2d240ca6a017a698a9f54a596119f35e55c03",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (raw star matter / spatial / temporal)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 14,
+      "path": "src/main/resources/assets/ufo/textures/item/dust_blizz.png",
+      "sha256": "efd3acc6cf1d25546af800d0ec5b50e844fcc4dc777c579e019b3cb0d5a7913f",
+      "origin": "gto-original",
+      "origin_detail": "GTOCore",
+      "license": "CC BY-NC-SA 4.0 (GTO original)",
+      "action": "attribute",
+      "status": "CHANGED"
+    },
+    {
+      "id": 15,
+      "path": "src/main/resources/assets/ufo/textures/item/dust_cryotheum.png",
+      "sha256": "2607b628ef293d6bff344657543196720b33a5a1d34c4b1a34f6409fa7ccea55",
+      "origin": "gto-original",
+      "origin_detail": "GTOCore",
+      "license": "CC BY-NC-SA 4.0 (GTO original)",
+      "action": "attribute",
+      "status": "CHANGED"
+    },
+    {
+      "id": 16,
+      "path": "src/main/resources/assets/ufo/textures/item/neutron_star_fragment_dust_overlay.png",
+      "sha256": "acea1d19a7c7eeaf9d125734156cc3dcb4c1e52de352fef8436424c52bf2accd",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 17,
+      "path": "src/main/resources/assets/ufo/textures/item/neutron_star_fragment_ingot_overlay.png",
+      "sha256": "585bbd0ce7373ba0bff038eec0860a89b1c001fb6bcf1d437761e8df6964fd95",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 18,
+      "path": "src/main/resources/assets/ufo/textures/item/neutron_star_fragment_nugget_overlay.png",
+      "sha256": "8788b8762d2240a57ed2823dedd8c3f8ee36e0420e7bdfb1412c4f45556fd553",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 19,
+      "path": "src/main/resources/assets/ufo/textures/item/neutron_star_fragment_rod_overlay.png",
+      "sha256": "93c79ea5004f2ba775d12585333c3173836a732c21d2143a707c5f43643e5877",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 20,
+      "path": "src/main/resources/assets/ufo/textures/item/neutron_star_matter.png",
+      "sha256": "eddcbc90aa5623d3838b7636dee6b95a3d1d36041d9532b83a08c76d1b612ac3",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 21,
+      "path": "src/main/resources/assets/ufo/textures/item/obsidian_matrix.png",
+      "sha256": "6188e1740fd8be79066765322a97851168c934760789ee1b45db1aaba14ae791",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 22,
+      "path": "src/main/resources/assets/ufo/textures/item/proto_matter.png",
+      "sha256": "9e17bf5b124fd46b7ec740fc8a24cdd87396ec7fe729be15fe8f80ff0209fc2f",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 23,
+      "path": "src/main/resources/assets/ufo/textures/item/pulsar_matter.png",
+      "sha256": "6a3620a3d9b6df2e20798aa7b16ee5847815a2c72e53ce93719e28ec39139680",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 24,
+      "path": "src/main/resources/assets/ufo/textures/item/thermal_resistor_plating.png",
+      "sha256": "e407e3599edbe5b75764116356d7b2e0333d712356b35b709603fa36a1eddd83",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 25,
+      "path": "src/main/resources/assets/ufo/textures/item/unstable_star.png",
+      "sha256": "86f67a03a041a5647629ee3b2a4329d27ac23249b2cc902f00913b028aa9a063",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 26,
+      "path": "src/main/resources/assets/ufo/textures/item/unstable_white_hole_matter.png",
+      "sha256": "d26a5710cb2fb7d0b0fe17aedf1f42d0b829322960a596ce6f555a8dd4cadfb3",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 27,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_catalyst_bank_components.png",
+      "sha256": "c9b59864dfba777d17f7457bfde4960463dc7408527375c2a1839a8ea724665a",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 28,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_catalyst_bank_components_active.png",
+      "sha256": "29a8f90c5547828b37a717494172bb98bf4f5ce202c660e2f83c21a90761646d",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 29,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_catalyst_bank_components_active_emissive.png",
+      "sha256": "1ca2c0ce663aca4fb4046f61b2c18746ab1cd8adc3ebca7eb3fcb56cd5290fb4",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 30,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_computer_condensation_matrix.png",
+      "sha256": "32565f1286e0a9a047422590cde9ea9db67a4c4daec646044dfa9cf7eccd0732",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 31,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_computer_condensation_matrix_ctm.png",
+      "sha256": "7ea44cd11fe7d058f0be9a32c353193115fc0e0c19b78e641a4c0bc478d269a1",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 32,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_containment_chamber_components.png",
+      "sha256": "bd9b0ec22992e53efe8b43df4570c96344b7b123a76e147e68ab3e1a983c2be8",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 33,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_coolant_matrix_components.png",
+      "sha256": "2a3e9c6addc7e850cb12e0b9621484e13e86ba15846f2ec229f71152cf26316b",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 34,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_coolant_matrix_components_active.png",
+      "sha256": "ff4998b06881f2c0f03e34919e65a9deb3e514555a479c512f9409554a3573a9",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 35,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_coolant_matrix_components_active_emissive.png",
+      "sha256": "30d0bd0b87ccde32beff4bf83d161a251bd6cba7a419eb609a008a2073005602",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 36,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_singularity_casing.png",
+      "sha256": "db6e67937147b0b995ecc3fcc1a66f6a965c643bf3693495eb057bd47c0170cc",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "CHANGED"
+    },
+    {
+      "id": 37,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/entropy_singularity_casing_ctm.png",
+      "sha256": "2b6124502c47d2bac0372fa6c7f2581163a8581221c52cfe9ad7b4993a24a072",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "CHANGED"
+    },
+    {
+      "id": 38,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/overlay_front.png",
+      "sha256": "4d8422df3ebb66b1ce93a83bc273c8a4e5aad3e67f943b4bd443790bfff08846",
+      "origin": "gtnh",
+      "origin_detail": "GTNH multiblock overlay",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 39,
+      "path": "src/main/resources/assets/ufo/textures/block/multiblock/quantum_hyper_mechanical_casing.png",
+      "sha256": "78d1d38ba67c554fc2f8acd2a7ab3bfb6da98f717edf64b4dda669a9db1d9237",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "CHANGED"
+    },
+    {
+      "id": 40,
+      "path": "src/main/resources/assets/ufo/textures/block/general1/overlay_front.png",
+      "sha256": "c5793fe7540dfb45c4b859eefbf6ec996d9f44826adbbfc1b1909eca7cf59088",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 41,
+      "path": "src/main/resources/assets/ufo/textures/block/general1/overlay_front_active.png",
+      "sha256": "c5793fe7540dfb45c4b859eefbf6ec996d9f44826adbbfc1b1909eca7cf59088",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 42,
+      "path": "src/main/resources/assets/ufo/textures/block/general1/overlay_front_active_emissive.png",
+      "sha256": "128ef6c323b6edb5e38126286fe083489de30227daeb21d94f36ff9636eee88e",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 43,
+      "path": "src/main/resources/assets/ufo/textures/block/general1/overlay_front_emissive.png",
+      "sha256": "b7bc03a3cc6df5a3037ccef37de777de30ea796e09dbb65b4122112510c70ecd",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 44,
+      "path": "src/main/resources/assets/ufo/textures/block/obj/climber_cable.png",
+      "sha256": "179cd5e18e5590508a571183c6b0470c1e968a548df829642ebd5aa20c58b3ed",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 45,
+      "path": "src/main/resources/assets/ufo/textures/block/obj/climber_overlay.png",
+      "sha256": "b1a4b5b5918f40d4e9a2a743fe2c8a1cadc5ef4326e5a625ba0f5fd78babe486",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (climber overlay)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "REMOVED"
+    },
+    {
+      "id": 46,
+      "path": "src/main/resources/assets/ufo/textures/block/qmf/overlay_front.png",
+      "sha256": "825af63ad86835ea1cd81c16008ef566c2f84bed025b3960324b9d02bda01ba8",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (DTPF overlay)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 47,
+      "path": "src/main/resources/assets/ufo/textures/block/qmf/overlay_front_active.png",
+      "sha256": "825af63ad86835ea1cd81c16008ef566c2f84bed025b3960324b9d02bda01ba8",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (DTPF overlay)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 48,
+      "path": "src/main/resources/assets/ufo/textures/block/qmf/overlay_front_active_emissive.png",
+      "sha256": "9c7a82167b3544ced4b2d9d45f6724b27ab1c49fe46fffe01c18c955d8e118b2",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (fusion glow overlay)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 49,
+      "path": "src/main/resources/assets/ufo/textures/block/qmf/overlay_front_emissive.png",
+      "sha256": "9c7a82167b3544ced4b2d9d45f6724b27ab1c49fe46fffe01c18c955d8e118b2",
+      "origin": "gtnh",
+      "origin_detail": "GT5-Unofficial (fusion glow overlay)",
+      "license": "Third-party asset; verify license (GT5-Unofficial/TecTech), attribute or replace",
+      "action": "replace-or-attribute",
+      "status": "IDENTICAL"
+    },
+    {
+      "id": 50,
+      "path": "src/main/resources/assets/ufo/textures/block/quantum_processor_assembler/overlay_front.png",
+      "sha256": "4f8665e70927d84389e6bde177c046c1c8c4a8ed4865960d3431a502dfa50903",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 51,
+      "path": "src/main/resources/assets/ufo/textures/block/quantum_processor_assembler/overlay_front_active.png",
+      "sha256": "11edf93f0fd690c5024bc4f1420177f519b41abeb174c11cff673329743e6855",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 52,
+      "path": "src/main/resources/assets/ufo/textures/block/quantum_slicer/overlay_front.png",
+      "sha256": "a23651be5f1f56276bc1452290df7352d26102400d0e47d59e8596d306c92812",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    },
+    {
+      "id": 53,
+      "path": "src/main/resources/assets/ufo/textures/block/quantum_slicer/overlay_front_active.png",
+      "sha256": "2bbb1a3da5d850430ada451a2d0a57058abeee3476e7f1af4a68ae3cedeef2a6",
+      "origin": "unconfirmed",
+      "origin_detail": "GTOCore (unconfirmed)",
+      "license": "Unknown until the GTO authors confirm",
+      "action": "confirm-or-replace",
+      "status": "REMOVED"
+    }
+  ]
+}

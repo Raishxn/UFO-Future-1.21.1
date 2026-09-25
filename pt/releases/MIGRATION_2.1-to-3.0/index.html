@@ -1,0 +1,1375 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://raishxn.github.io/UFO-Future-1.21.1/pt/releases/MIGRATION_2.1-to-3.0/">
+      
+      
+      
+      
+        
+          <link rel="alternate" href="../../../releases/MIGRATION_2.1-to-3.0/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="pt">
+        
+          <link rel="alternate" href="../../../es/releases/MIGRATION_2.1-to-3.0/" hreflang="es">
+        
+          <link rel="alternate" href="../../../zh/releases/MIGRATION_2.1-to-3.0/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Migrating saves from UFO Future 2.1 to 3.0 - UFO Future Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#migrating-saves-from-ufo-future-21-to-30" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../../" title="UFO Future Documentation" class="md-header__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UFO Future Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Migrating saves from UFO Future 2.1 to 3.0
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Selecione o idioma">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../releases/MIGRATION_2.1-to-3.0/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="pt" class="md-select__link">
+              Portugues
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../es/releases/MIGRATION_2.1-to-3.0/" hreflang="es" class="md-select__link">
+              Espanol
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../../zh/releases/MIGRATION_2.1-to-3.0/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Primeiros passos
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../multiblock-line/" class="md-tabs__link">
+          
+  
+  
+  Wiki
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="UFO Future Documentation" class="md-nav__button md-logo" aria-label="UFO Future Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UFO Future Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Primeiros passos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Wiki
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Wiki
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../multiblock-line/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linha atual de multiblocos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mega-storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mega Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../containment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contencao
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Montador de Materia Dimensional
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quantum-matter-fabricator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Matter Fabricator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quantum-slicer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Slicer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quantum-processor-assembler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Processor Assembler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quantum-cryoforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Cryoforge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stellar-nexus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stellar Nexus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quantum-computation-nexus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Computation Nexus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quantum-pattern-fabrication-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Pattern Fabrication Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infinity-fabrication-singularity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infinity Fabrication Singularity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quantum-wireless/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantum Wireless
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../multiblock-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tiers de Multibloco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../catalysts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Catalisadores
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kubejs-recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Receitas KubeJS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ferramentas e Armas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../armor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conjuntos de Armadura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../storage-cells/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Celulas de Armazenamento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../materials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Materiais e Fluidos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../progression/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Progressao
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../recipe-balance-audit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auditoria de Balanceamento
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-new-and-changed-required-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. New and changed required dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-removed-entropic-assembler-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Removed: Entropic Assembler Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-existing-multiblocks-need-supply-hatches-do-this-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Existing multiblocks need supply hatches (do this first)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-stellar-nexus-free-cells-no-longer-become-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Stellar Nexus: free cells no longer become ports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ids-that-were-deliberately-kept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. IDs that were deliberately kept
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-recipe-rebalance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Recipe rebalance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-new-optional-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. New optional content
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-checklist-for-an-existing-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick checklist for an existing world
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automated-evidence-and-remaining-world-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated evidence and remaining world test
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="migrating-saves-from-ufo-future-21-to-30">Migrating saves from UFO Future 2.1 to 3.0</h1>
+<p>This document describes what changes when an existing 2.1 (or 2.1-fix1..fix7) world
+is first loaded with UFO Future 3.0.0-alpha.x. The retained block/item IDs and legacy NBT reader contracts are described below.
+A complete player-world upgrade still requires testing on a copy: the automated
+fixtures cover serialized fields, not every old structure, recipe or modpack.
+Normal Minecraft saves rewrite loaded data; this is not a zero-rewrite migration.</p>
+<h2 id="1-new-and-changed-required-dependencies">1. New and changed required dependencies</h2>
+<p>3.0 declares hard dependencies in <code>neoforge.mods.toml</code> and refuses to load without:</p>
+<ul>
+<li><strong>Applied Energistics 2</strong> 19.2.17+ (as before).</li>
+<li><strong>RaishxCore</strong> (<code>raishxcore-0.1.0-beta.2.jar</code> or compatible) — new shared core mod.
+  If you previously ran the 3.0 alphas with the old <code>ufocore</code> jar, replace it: the
+  core mod id changed from <code>ufocore</code> to <code>raishxcore</code> and the old jar no longer
+  satisfies the dependency. The core registers no content, so there is nothing to
+  migrate on the save side.</li>
+<li><strong>AE2 Addon Lib</strong> 1.0.3 for Minecraft 1.21.1 or compatible.</li>
+</ul>
+<p><strong>Mekanism</strong> 10.7.x remains optional and enables chemical storage/processing.
+Chemical-dependent recipes require it. UFO no longer requires GeckoLib; keep
+GeckoLib installed when another mod, such as AdvancedAE, depends on it. The
+experimental Apocalypse Type-A entity was removed.</p>
+<p>JEI, EMI, Applied Flux, Applied Mekanistics and KubeJS remain optional integrations.</p>
+<p>The experimental <code>ufo:apocalypse_type_a</code> entity and
+<code>ufo:apocalypse_type_a_spawn_egg</code> item are no longer registered. Existing copies
+of that entity and its spawn egg do not carry over to this build.</p>
+<h2 id="2-removed-entropic-assembler-matrix">2. Removed: Entropic Assembler Matrix</h2>
+<p>The legacy <code>Entropic Assembler Matrix</code> multiblock and its casing were retired and
+their IDs (<code>ufo:entropic_assembler_matrix</code>, <code>ufo:entropic_assembler_casing</code>) were
+deleted from the mod together with their recipes, loot tables and models.</p>
+<p>On first 3.0 load:</p>
+<ul>
+<li>Existing matrix/casing blocks in the world disappear (they load as air). There is
+  no drop and no alias.</li>
+<li>Any matrix or casing items stored in chests, machines or inventories are deleted
+  the first time those stacks load.</li>
+<li>Patterns stored for the matrix remain valid AE2 patterns; re-home them as
+  described below.</li>
+</ul>
+<p><strong>Replacement path:</strong> the autocrafting endgame is now the
+<a href="https://github.com/Raishxn/UFO-Future-1.21.1#readme">trio pipeline</a> — Quantum
+Computation Nexus (shared crafting CPUs), Quantum Pattern Fabrication Matrix
+(crafting/smithing/stonecutting pattern library) and Infinity Fabrication
+Singularity (aggregate endgame fabricator). Build the Singularity where the matrix
+used to stand; encoded crafting patterns from the old machine insert directly into
+its pattern pages.</p>
+<h2 id="3-existing-multiblocks-need-supply-hatches-do-this-first">3. Existing multiblocks need supply hatches (do this first)</h2>
+<p>Independent processing machines now require explicit external supply — the
+controller no longer pulls coolant or energy from the ME network by itself. This
+applies to every already-built <strong>Stellar Nexus, QMF, QPA, Quantum Slicer and
+Quantum Cryoforge</strong>:</p>
+<ul>
+<li>Replace <strong>two casing positions adjacent to the controller</strong> with one
+  <code>ME Massive Fluid Hatch</code> and one <code>FE Energy Input Hatch</code> (registry ID remains
+  <code>ufo:ae_energy_input_hatch</code>). The structure does not
+  form until both are present, and the structure preview / Scan Structure highlight
+  exactly which two positions to swap.</li>
+<li><strong>Coolant</strong> is inserted into the fluid hatch tank from outside (export bus,
+  bucket, or another pipe). The network itself is no longer a coolant source.</li>
+<li>The <strong>energy hatch</strong> accepts FE on any face and consumes only its saved local
+  reservoir. Supply it continuously with an FE cable; neither AE2 grid energy nor
+  Applied Flux storage is used as an automatic fallback. The ME network still
+  needs its own power supply for nodes and crafting CPUs.</li>
+</ul>
+<p>Existing <strong>Infinity Fabrication Singularity</strong> structures from earlier 3.0 alphas
+also need one FE Energy Input Hatch in the casing position highlighted by the
+scanner next to the controller. Connect the outward face of its Quantum Grid Link
+to the ME network; supplying the hatch alone does not connect the machine to ME.</p>
+<p>Until the two hatches are placed, affected machines report <code>ESTRUTURA INCOMPLETA</code>
+/ incomplete structure. This is expected after the update, not a corruption.</p>
+<h2 id="4-stellar-nexus-free-cells-no-longer-become-ports">4. Stellar Nexus: free cells no longer become ports</h2>
+<p>Positions in a Stellar Nexus that accept any block are no longer scanned as part
+of the machine. A hatch that previously worked because it sat in a free cell is no
+longer discovered as a port; move hatches into the designated hatch positions
+(highlighted by the preview and listed by Scan Structure). Machines that never
+relied on that quirk are unaffected, and scans of large structures are
+significantly cheaper after this change.</p>
+<h2 id="5-ids-that-were-deliberately-kept">5. IDs that were deliberately kept</h2>
+<ul>
+<li>The registry typos in some big storage cell IDs (the <code>..._beaco</code> family) are kept
+  as-is: no alias, no rename, no save migration. They display under their proper
+  names.</li>
+<li>The DMA recipe id <code>dma/event_horizon_energy_cell</code> was renamed to
+  <code>dma/ufo_energy_cell</code>. AE2 processing patterns describe
+  inputs/outputs rather than this DMA recipe ID. This rename alone needs no pattern
+  conversion. Other controllers persist active recipe IDs; recipe changes still
+  need the separate compatibility check below.</li>
+</ul>
+<h2 id="6-recipe-rebalance">6. Recipe rebalance</h2>
+<p>3.0 rebalanced the DMA and QMF recipe families (F0–F3): component matrix cascades,
+field generator costs, catalysts, fragment chain parity, infinity cell pricing and
+the restored stellar matter energies. If you had autocrafting patterns for these
+families, open them once in JEI and re-encode where inputs or outputs changed.
+Existing patterns keep working mechanically; they may simply no longer match the
+current recipe.</p>
+<h2 id="7-new-optional-content">7. New optional content</h2>
+<ul>
+<li><strong>Productive Bees integration</strong> (optional): three custom bees (Matter Ball, Scrap,
+  Scrap Box) whose only acquisition path is a QMF recipe. Without Productive Bees in
+  the pack nothing bee-related loads.</li>
+<li>Quantum Pattern Matrix buffer and wireless crafting resume are additive
+  content. For an existing 3.0-alpha Singularity, follow the hatch and Grid Link
+  instructions in section 3.</li>
+</ul>
+<h2 id="quick-checklist-for-an-existing-world">Quick checklist for an existing world</h2>
+<ol>
+<li>Make a complete copy of the existing world, including its <code>data</code> directory
+   and <code>data/ae_universal_cell_data</code> UUID files. Test the copy first.</li>
+<li>Update mods: add <code>raishxcore</code>, keep AE2 versions in range, optionally add Mekanism,
+   replace the UFO jar.</li>
+<li>Load the copied world; expect removed Entropic Assembler blocks/items to be gone.</li>
+<li>For each pre-existing processing multiblock, swap the two highlighted casings for
+   the fluid and energy hatches; fill the coolant tank.</li>
+<li>Move any Stellar Nexus hatches that lived in free cells into real hatch slots.</li>
+<li>Re-encode autocraft patterns for rebalanced recipes where JEI shows changes.</li>
+<li>Optionally add Productive Bees to start the bee loop via the QMF.</li>
+</ol>
+<p>No NBT edits, commands or manual save file surgery are required at any step.</p>
+<h2 id="automated-evidence-and-remaining-world-test">Automated evidence and remaining world test</h2>
+<p><code>LegacySaveMigrationGameTests</code> loads literal, synthetic payloads matching the
+serializer contracts in tag <code>v2.1-fix7</code> (<code>db7a369</code>); fixture provenance is in
+<code>src/gameTest/resources/migration/v2.1-fix7/README.md</code>.</p>
+<ul>
+<li>Four parallel-controller identifiers still resolve and retain long buffers,
+  process progress and unversioned/full-batch defaults through a 3.0 rewrite.</li>
+<li>Stellar retains energy/thermal/recipe fields, reads older fuel aliases and
+  gives modern energy fields precedence; no pending outputs are invented.</li>
+<li>The retained <code>white_dwarf_cell_beaco</code> item and <code>cell_uuid</code> component resolve;
+  the UUID opens a legacy-format SavedData file from disk. A 2^80-item balance
+  remains exact through extraction and reserialization while AE2's long view
+  saturates.</li>
+</ul>
+<p>These tests do not execute the historical recipe or import a whole world. For
+final release QA, open a copy of an actual 2.x save, check UUID-backed cell
+balances and inventories, replace the designated supply hatches, then process
+and save/reload representative machines. Check completed/pending resources and
+any in-flight old recipe before resuming it; recipe rebalance and untracked
+legacy buffers require world-specific verification. Keep the original 2.x
+world available until that comparison passes.</p>
+<p>The complete remaining human procedure is in <a href="../RELEASE_QA_3.0/">Release QA</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
