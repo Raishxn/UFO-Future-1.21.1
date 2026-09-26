@@ -68,7 +68,7 @@ public class DimensionalMatterAssemblerScreen extends UpgradeableScreen<Dimensio
         this.addToLeftToolbar(this.outputConfigure);
 
         this.powerAlert = new AlertWidget(style.getImage("powerAlert"));
-        this.powerAlert.setTooltip(Tooltip.create(Component.literal("Insufficient Power")));
+        this.powerAlert.setTooltip(Tooltip.create(Component.translatable("gui.ufo.dma.insufficient_power")));
         this.widgets.add("powerAlert", this.powerAlert);
     }
 
@@ -252,7 +252,7 @@ public class DimensionalMatterAssemblerScreen extends UpgradeableScreen<Dimensio
         // Draw overload text on top of bar if in overload
         if (overload > 0) {
             int seconds = overload / 20;
-            String text = "§l⚠ OVERLOAD " + seconds + "s";
+            String text = Component.translatable("gui.ufo.dma.overload", seconds).getString();
             int textWidth = this.font.width(text);
             int textX = barX + (HEAT_BAR_W - textWidth) / 2;
             int textY = barY + 1;
@@ -301,7 +301,7 @@ public class DimensionalMatterAssemblerScreen extends UpgradeableScreen<Dimensio
             double maxStore = this.menu.getHost().getAEMaxPower();
 
             List<Component> tooltip = List.of(
-                    Component.literal("Energy: " + formatEnergy(stored) + " / " + formatEnergy(maxStore))
+                    Component.translatable("gui.ufo.dma.energy", formatEnergy(stored), formatEnergy(maxStore))
             );
             guiGraphics.renderTooltip(this.font, tooltip, java.util.Optional.empty(), mouseX, mouseY);
             return;
@@ -319,17 +319,18 @@ public class DimensionalMatterAssemblerScreen extends UpgradeableScreen<Dimensio
             int overload = this.menu.overloadTimer;
 
             List<Component> tooltip = new java.util.ArrayList<>();
-            tooltip.add(Component.literal("§6Heat: §f" + temp + " / " + maxTemp + " HU"));
+            tooltip.add(Component.translatable("gui.ufo.dma.heat", temp, maxTemp));
 
             double pct = maxTemp > 0 ? ((double) temp / maxTemp * 100.0) : 0;
-            tooltip.add(Component.literal("§7" + String.format("%.1f%%", pct) + " capacity"));
+            tooltip.add(Component.translatable("gui.ufo.dma.capacity",
+                    String.format(java.util.Locale.ROOT, "%.1f", pct)));
 
             if (overload > 0) {
-                tooltip.add(Component.literal("§c§l⚠ CRITICAL OVERLOAD IN " + (overload / 20) + "s!"));
+                tooltip.add(Component.translatable("gui.ufo.dma.overload_critical", overload / 20));
             } else if (pct >= 80) {
-                tooltip.add(Component.literal("§c⚠ DANGER: Hazard zone active!"));
+                tooltip.add(Component.translatable("gui.ufo.dma.danger"));
             } else if (pct >= 50) {
-                tooltip.add(Component.literal("§e⚠ Warning: High temperature"));
+                tooltip.add(Component.translatable("gui.ufo.dma.warning_high_temp"));
             }
 
             guiGraphics.renderTooltip(this.font, tooltip, java.util.Optional.empty(), mouseX, mouseY);
