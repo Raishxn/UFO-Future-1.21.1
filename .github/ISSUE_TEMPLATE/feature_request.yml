@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest a change to UFO Future
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would this improve?
+      description: Describe the player experience or workflow that needs improvement.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Explain how you would like it to work. Examples or screenshots are welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or related mods
+      description: Optional context that helps evaluate the request.
+    validations:
+      required: false
