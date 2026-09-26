@@ -9,6 +9,7 @@ import com.raishxn.ufo.item.custom.cell.AEBigIntegerCellHandler;
 import com.raishxn.ufo.item.custom.cell.InfinityGenesisCellInventory;
 import com.raishxn.ufo.item.custom.cell.InfinityCellInventory;
 import net.minecraft.world.item.Item;
+import net.neoforged.fml.ModList;
 
 import java.util.List;
 
@@ -82,9 +83,11 @@ public class UFORegistryHandler {
         Upgrades.add(AEItems.CRAFTING_CARD, quantumInterface, 1, "group.interface.name");
         Upgrades.add(AEItems.FUZZY_CARD, quantumInterface, 1, "group.interface.name");
 
-        // AppFlux's induction card needs an explicit (card, machine) association for the
-        // Quantum Pattern Hatch block and part; its mixin already provides the inventory.
-        com.raishxn.ufo.compat.appflux.AppliedFluxPlugin.registerInductionCardUpgrades();
+        // Avoid loading the AppFlux integration class when the optional mod is absent.
+        // Its FluxKey reference can fail class loading before its own availability guard runs.
+        if (ModList.get().isLoaded("appflux")) {
+            com.raishxn.ufo.compat.appflux.AppliedFluxPlugin.registerInductionCardUpgrades();
+        }
     }
 
     private void registerStorageHandler() {
