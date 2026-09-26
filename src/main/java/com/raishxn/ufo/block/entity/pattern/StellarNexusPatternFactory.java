@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity.pattern;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import net.minecraft.network.chat.Component;
@@ -1324,23 +1326,23 @@ public class StellarNexusPatternFactory {
         // Configure the mapping
         // ANY marks free space: the sentinel keeps these cells out of the compiled
         // list, so a scan tests the 1.8k real cells instead of all 41.6k.
-        builder.where(' ', MultiblockPattern.ANY, Component.literal("Any"))
-               .where('A', MultiblockPattern.ANY, Component.literal("Any"))
-               .where('^', MultiblockPattern.ANY, Component.literal("Any"))
+        builder.where(' ', MultiblockPattern.ANY, UfoText.literal("gui.ufo.text.any"))
+               .where('A', MultiblockPattern.ANY, UfoText.literal("gui.ufo.text.any"))
+               .where('^', MultiblockPattern.ANY, UfoText.literal("gui.ufo.text.any"))
                .where('B', (state, level, pos) -> 
                    state.is(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()) ||
                    state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()) ,
-                   Component.literal("Singularity Casing or Hatch"))
+                   UfoText.literal("gui.ufo.text.singularity_casing_or_hatch"))
                .where('C', MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get())
                .where('D', MultiblockBlocks.ENTROPY_COMPUTER_CONDENSATION_MATRIX.get())
                .where('E', (state, level, pos) -> 
                    state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get()) ||
                    state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get()) ||
                    state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get()),
-                   Component.literal("Stellar Field Generator"))
+                   UfoText.literal("gui.ufo.text.stellar_field_generator"))
                .candidates('E', QuantumPatternPredicates.allFieldCandidates())
                .uniform('E', QuantumPatternPredicates.uniformFieldName())
                 .where('F', (state, level, pos) ->
@@ -1349,14 +1351,14 @@ public class StellarNexusPatternFactory {
                    state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()),
-                   Component.literal("Singularity Casing or Hatch"))
+                   UfoText.literal("gui.ufo.text.singularity_casing_or_hatch"))
                .where('G', (state, level, pos) -> 
                    state.is(MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()) ||
                    state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get()) ||
                    state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get()) ,
-                   Component.literal("Singularity Casing or Hatch"))
+                   UfoText.literal("gui.ufo.text.singularity_casing_or_hatch"))
                .where('H', MultiblockBlocks.STELLAR_NEXUS_CONTROLLER.get());
 
         var casingCandidates = java.util.List.of(

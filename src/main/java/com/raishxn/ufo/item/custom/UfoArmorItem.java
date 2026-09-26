@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.armor.UfoArmorModule;
 import com.raishxn.ufo.armor.UfoArmorSetting;
 import com.raishxn.ufo.datagen.ModDataComponents;
@@ -165,7 +167,7 @@ public class UfoArmorItem extends ArmorItem implements IEnergyTool {
                     UfoArmorModule.capacity(getType())).withStyle(ChatFormatting.AQUA));
             for (UfoArmorModule module : modules) {
                 ChatFormatting color = isModuleEnabled(pStack, module) ? ChatFormatting.GREEN : ChatFormatting.DARK_GRAY;
-                pTooltipComponents.add(Component.literal(" • ")
+                pTooltipComponents.add(UfoText.literal(" • ")
                         .append(Component.translatable(module.translationKey())).withStyle(color));
             }
         } else {

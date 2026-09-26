@@ -1,5 +1,7 @@
 package com.raishxn.ufo.screen;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.client.gui.Icon;
 import appeng.client.Point;
 import appeng.client.gui.widgets.VerticalButtonBar;
@@ -120,12 +122,12 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         this.leftToolbar = new VerticalButtonBar();
 
         this.scanButton = new UfoAe2IconButton(Icon.SCHEDULING_DEFAULT,
-                Component.literal("Scan multiblock structure"), button -> scanStructure());
+                UfoText.literal("gui.ufo.text.scan_multiblock_structure"), button -> scanStructure());
         this.leftToolbar.add(this.scanButton);
 
         var quickBuild = new UfoQuickBuildButton(button -> ModPackets.sendToServer(
                 new PacketAutoBuildMultiblock(this.menu.getBlockEntity().getBlockPos())));
-        quickBuild.setTooltip(Tooltip.create(Component.literal("Auto-build structure")));
+        quickBuild.setTooltip(Tooltip.create(UfoText.literal("gui.ufo.text.auto_build_structure")));
         this.autoBuildButton = quickBuild;
         this.leftToolbar.add(quickBuild);
 
@@ -151,27 +153,27 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
         this.prevButton = this.addRenderableWidget(new UfoAtlasButton(
                 this.leftPos + 11, this.topPos + 24, 21, 21, TEXTURE, ATLAS_SIZE, ATLAS_SIZE,
-                90, 0, Component.literal("Previous simulation"), button -> cycleRecipe(-1)));
+                90, 0, UfoText.literal("gui.ufo.text.previous_simulation"), button -> cycleRecipe(-1)));
         this.nextButton = this.addRenderableWidget(new UfoAtlasButton(
                 this.leftPos + 223, this.topPos + 24, 21, 21, TEXTURE, ATLAS_SIZE, ATLAS_SIZE,
-                113, 0, Component.literal("Next simulation"), button -> cycleRecipe(1)));
+                113, 0, UfoText.literal("gui.ufo.text.next_simulation"), button -> cycleRecipe(1)));
         this.startPauseButton = this.addRenderableWidget(new UfoAtlasButton(
                 this.leftPos + 104, this.topPos + 88, 48, 48, TEXTURE, ATLAS_SIZE, ATLAS_SIZE,
-                208, 0, Component.literal("Start simulation"), button -> toggleStartPause()));
+                208, 0, UfoText.literal("gui.ufo.text.start_simulation"), button -> toggleStartPause()));
 
-        this.safeModeButton = new UfoStateIconButton(Component.literal("Safe Mode"), button ->
+        this.safeModeButton = new UfoStateIconButton(UfoText.literal("gui.ufo.text.safe_mode"), button ->
                 ModPackets.sendToServer(new PacketToggleStellarSafeMode(this.menu.getBlockEntity().getBlockPos())));
         this.leftToolbar.add(this.safeModeButton);
 
-        this.autoStartButton = new UfoStateIconButton(Component.literal("Auto-start"), button ->
+        this.autoStartButton = new UfoStateIconButton(UfoText.literal("gui.ufo.text.auto_start"), button ->
                 ModPackets.sendToServer(new PacketToggleStellarAutoStart(this.menu.getBlockEntity().getBlockPos())));
         this.leftToolbar.add(this.autoStartButton);
 
-        this.lockButton = new UfoStateIconButton(Component.literal("Simulation lock"), button ->
+        this.lockButton = new UfoStateIconButton(UfoText.literal("gui.ufo.text.simulation_lock"), button ->
                 ModPackets.sendToServer(new PacketToggleStellarLock(this.menu.getBlockEntity().getBlockPos())));
         this.leftToolbar.add(this.lockButton);
 
-        this.overclockButton = new UfoStateIconButton(Component.literal("Overclock"), button ->
+        this.overclockButton = new UfoStateIconButton(UfoText.literal("gui.ufo.text.overclock"), button ->
                 ModPackets.sendToServer(new PacketToggleStellarOverclock(this.menu.getBlockEntity().getBlockPos())));
         this.leftToolbar.add(this.overclockButton);
         this.leftToolbar.setPosition(new Point(3, 1));
@@ -234,8 +236,7 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
                 com.raishxn.ufo.client.render.StructureHighlightRenderer.highlight(error.pos(), 5000);
             }
         } else {
-            this.minecraft.player.displayClientMessage(Component.literal(
-                    "§e[Stellar Nexus] §cStructure shape is valid, but hatch requirements are not met."), false);
+            this.minecraft.player.displayClientMessage(UfoText.literal("gui.ufo.text.e_stellar_nexus_cstructure_shape_is_valid_but_hatch_requ"), false);
         }
     }
 
@@ -250,21 +251,21 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
             boolean paused = this.menu.isPaused();
             this.startPauseButton.setSource(paused ? 208 : 155, 0);
             this.startPauseButton.active = true;
-            this.startPauseButton.setTooltip(Tooltip.create(Component.literal(paused
+            this.startPauseButton.setTooltip(Tooltip.create(UfoText.literal(paused
                     ? "§aResume stellar simulation" : "§ePause stellar simulation")));
         } else {
             this.startPauseButton.setSource(208, 0);
             this.startPauseButton.active = canStart();
-            this.startPauseButton.setTooltip(Tooltip.create(Component.literal(startTooltip())));
+            this.startPauseButton.setTooltip(Tooltip.create(UfoText.literal(startTooltip())));
         }
 
         if (!this.availableRecipes.isEmpty()) {
             int previous = Math.floorMod(this.currentRecipeIndex - 1, this.availableRecipes.size());
             int next = (this.currentRecipeIndex + 1) % this.availableRecipes.size();
-            this.prevButton.setTooltip(Tooltip.create(Component.literal("Previous: "
-                    + getRecipeDisplayName(this.availableRecipes.get(previous)))));
-            this.nextButton.setTooltip(Tooltip.create(Component.literal("Next: "
-                    + getRecipeDisplayName(this.availableRecipes.get(next)))));
+            this.prevButton.setTooltip(Tooltip.create(UfoText.literal("gui.ufo.text.previous_s",
+                    getRecipeDisplayName(this.availableRecipes.get(previous)))));
+            this.nextButton.setTooltip(Tooltip.create(UfoText.literal("gui.ufo.text.next_s",
+                    getRecipeDisplayName(this.availableRecipes.get(next)))));
         }
         updateSideButtonTooltips();
     }
@@ -275,10 +276,10 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
     }
 
     private String startTooltip() {
-        if (this.availableRecipes.isEmpty()) return "§cNo stellar simulation selected";
-        if (!this.menu.isAssembled()) return "§cStructure not assembled";
-        if (this.menu.getCooldownTimer() > 0) return "§eCooling down";
-        return "§aStart stellar simulation";
+        if (this.availableRecipes.isEmpty()) return UfoText.str("gui.ufo.text.cno_stellar_simulation_selected");
+        if (!this.menu.isAssembled()) return UfoText.str("gui.ufo.text.cstructure_not_assembled");
+        if (this.menu.getCooldownTimer() > 0) return UfoText.str("gui.ufo.text.ecooling_down");
+        return UfoText.str("gui.ufo.text.astart_stellar_simulation");
     }
 
     private void updateSideButtonTooltips() {
@@ -288,19 +289,19 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         } else {
             this.safeModeButton.setAe2Icon(Icon.INVALID);
         }
-        this.safeModeButton.setTooltip(Tooltip.create(Component.literal(safe
+        this.safeModeButton.setTooltip(Tooltip.create(UfoText.literal(safe
                 ? "§aSafe Mode: ON\n§7Auto-shutdown on overheat"
                 : "§cSafe Mode: OFF\n§4Local containment blast on overheat")));
         boolean auto = this.menu.isAutoStart();
         this.autoStartButton.setAtlasSprite(AE2_STATES, 256, 256, 16, 240, 16, 16);
-        this.autoStartButton.setTooltip(Tooltip.create(Component.literal(auto ? "§aAuto-start: ON" : "§cAuto-start: OFF")));
+        this.autoStartButton.setTooltip(Tooltip.create(UfoText.literal(auto ? "§aAuto-start: ON" : "§cAuto-start: OFF")));
         boolean locked = this.menu.isSimulationLocked();
         this.lockButton.setAe2Icon(locked ? Icon.LOCKED : Icon.UNLOCKED);
-        this.lockButton.setTooltip(Tooltip.create(Component.literal(locked ? "§aSimulation locked" : "§cSimulation unlocked")));
+        this.lockButton.setTooltip(Tooltip.create(UfoText.literal(locked ? "§aSimulation locked" : "§cSimulation unlocked")));
         boolean overclocked = this.menu.isOverclocked();
         int overclockU = overclocked ? 0 : 16;
         this.overclockButton.setAtlasSprite(UNIVERSAL_WIDGETS, 256, 256, overclockU, 33, 14, 14);
-        this.overclockButton.setTooltip(Tooltip.create(Component.literal(overclocked
+        this.overclockButton.setTooltip(Tooltip.create(UfoText.literal(overclocked
                 ? "§aOverclock: ON\n§78x energy, 5x heat/fuel/speed" : "§cOverclock: OFF")));
     }
 
@@ -337,29 +338,29 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        String state = !this.menu.isAssembled() ? "INCOMPLETE"
-                : this.menu.getCooldownTimer() > 0 ? "COOLDOWN"
-                : this.menu.isPaused() ? "PAUSED"
-                : this.menu.isRunning() ? "RUNNING" : "ASSEMBLED";
+        String state = !this.menu.isAssembled() ? UfoText.str("gui.ufo.text.incomplete")
+                : this.menu.getCooldownTimer() > 0 ? UfoText.str("gui.ufo.text.cooldown")
+                : this.menu.isPaused() ? UfoText.str("gui.ufo.text.paused")
+                : this.menu.isRunning() ? UfoText.str("gui.ufo.text.running") : UfoText.str("gui.ufo.text.assembled");
         int stateColor = !this.menu.isAssembled() || this.menu.getCooldownTimer() > 0
                 ? 0xFFFF5555 : this.menu.isPaused() ? 0xFFFFAA00 : 0xFF55FF55;
         drawCenteredStatusLine(graphics, 35, 15, 185, 6, List.of(
                 new StatusSegment(state, stateColor),
-                new StatusSegment(this.menu.isSafeMode() ? "SAFE" : "RISK",
+                new StatusSegment(this.menu.isSafeMode() ? UfoText.str("gui.ufo.text.safe") : UfoText.str("gui.ufo.text.risk"),
                         this.menu.isSafeMode() ? 0xFF55FF55 : 0xFFFF5555),
-                new StatusSegment(this.menu.isOverclocked() ? "OC" : "STD",
+                new StatusSegment(this.menu.isOverclocked() ? UfoText.str("gui.ufo.text.oc") : UfoText.str("gui.ufo.text.std"),
                         this.menu.isOverclocked() ? 0xFFFF5555 : 0xFF55FF55),
-                new StatusSegment(this.menu.isAssembled() ? "ONLINE" : "OFFLINE",
+                new StatusSegment(this.menu.isAssembled() ? UfoText.str("gui.ufo.text.online") : UfoText.str("gui.ufo.text.offline"),
                         this.menu.isAssembled() ? 0xFF55FF55 : 0xFFFF5555)));
 
-        String recipeName = this.availableRecipes.isEmpty() ? "No simulation"
+        String recipeName = this.availableRecipes.isEmpty() ? UfoText.str("gui.ufo.text.no_simulation")
                 : getRecipeDisplayName(this.availableRecipes.get(this.currentRecipeIndex));
         drawCenteredFittedText(graphics, recipeName, 36, 26, 183, 17, 0xFFFFFFFF);
 
-        drawCenteredFittedText(graphics, "Coolant", 15, 55, 65, 7, 0xFF101010);
+        drawCenteredFittedText(graphics, UfoText.str("gui.ufo.text.coolant"), 15, 55, 65, 7, 0xFF101010);
         FluidStack coolant = getCoolantStack();
         if (coolant.isEmpty()) {
-            drawCenteredFittedText(graphics, "Empty", 41, 70, 38, 24, 0xFFAAAAAA);
+            drawCenteredFittedText(graphics, UfoText.str("gui.ufo.text.empty"), 41, 70, 38, 24, 0xFFAAAAAA);
         } else {
             // This area is black in the supplied texture; light text is needed
             // to remain readable, especially after fitting long coolant names.
@@ -368,17 +369,17 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         }
         renderFieldTier(graphics);
 
-        drawCenteredFittedText(graphics, "Energy", 175, 54, 65, 11, 0xFF101010);
+        drawCenteredFittedText(graphics, UfoText.str("gui.ufo.text.energy"), 175, 54, 65, 11, 0xFF101010);
         drawCenteredFittedText(graphics, compactAmount(this.menu.getEnergyBuffer()) + "/"
                 + compactAmount(this.menu.getEnergyCapacity()), 177, 73, 60, 16, 0xFFFFFFFF);
-        drawCenteredFittedText(graphics, "TEMP " + this.menu.getHeatLevel() / 10 + "%", 176, 117, 63, 10,
+        drawCenteredFittedText(graphics, UfoText.str("gui.ufo.text.temp_s", this.menu.getHeatLevel() / 10), 176, 117, 63, 10,
                 heatColor(this.menu.getHeatLevel()));
     }
 
     private void renderFieldTier(GuiGraphics graphics) {
         int tier = this.menu.getFieldLevel();
         if (tier < 1 || tier > 3) {
-            drawCenteredFittedText(graphics, "NO FIELD", 16, 118, 63, 35, 0xFF555555);
+            drawCenteredFittedText(graphics, UfoText.str("gui.ufo.text.no_field"), 16, 118, 63, 35, 0xFF555555);
             return;
         }
         ItemStack fieldGenerator = new ItemStack(switch (tier) {
@@ -387,7 +388,7 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
             default -> MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get();
         });
         graphics.renderItem(fieldGenerator, 18, 126);
-        drawCenteredFittedText(graphics, "MK." + toRoman(tier), 38, 118, 41, 35,
+        drawCenteredFittedText(graphics, UfoText.str("gui.ufo.text.mk_s_1", toRoman(tier)), 38, 118, 41, 35,
                 tier == 3 ? 0xFFFF55FF : tier == 2 ? 0xFFAA55FF : 0xFF55AAFF);
     }
 
@@ -404,45 +405,49 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
         int localY = mouseY - this.topPos;
         if (inside(localX, localY, COOLANT_X, COOLANT_Y, COOLANT_WIDTH, COOLANT_HEIGHT)) {
             FluidStack coolant = getCoolantStack();
-            String contents = coolant.isEmpty() ? "Empty" : coolant.getHoverName().getString();
-            graphics.renderTooltip(this.font, List.of(Component.literal("§bCoolant tank"),
-                    Component.literal("§7" + contents), Component.literal("§7" + formatAmount(coolant.getAmount())
-                            + " / " + formatAmount(MassiveOutputHatchBE.COOLANT_CAPACITY) + " mB")),
+            String contents = coolant.isEmpty() ? UfoText.str("gui.ufo.text.empty") : coolant.getHoverName().getString();
+            graphics.renderTooltip(this.font, List.of(UfoText.literal("gui.ufo.text.bcoolant_tank"),
+                    UfoText.literal("gui.ufo.text.7_s", contents), UfoText.literal("gui.ufo.text.7_s_s_mb", formatAmount(coolant.getAmount()),
+                            formatAmount(MassiveOutputHatchBE.COOLANT_CAPACITY))),
                     java.util.Optional.empty(), mouseX, mouseY);
         } else if (inside(localX, localY, 16, 118, 63, 35)) {
             int tier = this.menu.getFieldLevel();
-            graphics.renderTooltip(this.font, Component.literal(tier > 0
-                    ? "Stellar Field Generator Mk." + toRoman(tier) : "No Stellar Field Generator detected"), mouseX, mouseY);
+            graphics.renderTooltip(this.font, tier > 0
+                    ? UfoText.literal("gui.ufo.text.stellar_field_generator_mk_s", toRoman(tier))
+                    : UfoText.literal("gui.ufo.text.no_stellar_field_generator_detected"), mouseX, mouseY);
         } else if (inside(localX, localY, 175, 58, 65, 40)) {
-            graphics.renderTooltip(this.font, Component.literal("Energy: " + String.format("%,d", this.menu.getEnergyBuffer())
-                    + " / " + String.format("%,d", this.menu.getEnergyCapacity()) + " AE"), mouseX, mouseY);
+            graphics.renderTooltip(this.font, UfoText.literal("gui.ufo.text.energy_s_s_ae",
+                    String.format("%,d", this.menu.getEnergyBuffer()),
+                    String.format("%,d", this.menu.getEnergyCapacity())), mouseX, mouseY);
         } else if (inside(localX, localY, 176, 117, 63, 37)) {
             int minimum = Arrays.stream(this.heatHistory).min().orElse(this.menu.getHeatLevel());
             int maximum = Arrays.stream(this.heatHistory).max().orElse(this.menu.getHeatLevel());
             int trendDelta = this.heatHistory[this.heatHistory.length - 1]
                     - this.heatHistory[Math.max(0, this.heatHistory.length - 6)];
-            String trend = trendDelta > 2 ? "§cRising" : trendDelta < -2 ? "§bCooling" : "§aStable";
+            String trend = trendDelta > 2 ? UfoText.str("gui.ufo.text.crising")
+                    : trendDelta < -2 ? UfoText.str("gui.ufo.text.bcooling") : UfoText.str("gui.ufo.text.astable");
             graphics.renderTooltip(this.font, List.of(
-                    Component.literal("Heat: " + String.format("%.1f%%", this.menu.getHeatLevel() / 10.0F)),
-                    Component.literal("§7Range: " + String.format("%.1f%%", minimum / 10.0F)
-                            + " - " + String.format("%.1f%%", maximum / 10.0F)),
-                    Component.literal("§7Trend: " + trend)), java.util.Optional.empty(), mouseX, mouseY);
+                    UfoText.literal("gui.ufo.text.heat_s", String.format(java.util.Locale.ROOT, "%.1f", this.menu.getHeatLevel() / 10.0F)),
+                    UfoText.literal("gui.ufo.text.7range_s_s",
+                            String.format(java.util.Locale.ROOT, "%.1f", minimum / 10.0F),
+                            String.format(java.util.Locale.ROOT, "%.1f", maximum / 10.0F)),
+                    UfoText.literal("gui.ufo.text.7trend_s", trend)), java.util.Optional.empty(), mouseX, mouseY);
         } else if (inside(localX, localY, 93, 146, 69, 7) && this.menu.getTotalTime() > 0) {
-            graphics.renderTooltip(this.font, Component.literal("Simulation progress: " + Math.round(
-                    this.menu.getProgress() * 100.0F / this.menu.getTotalTime()) + "%"), mouseX, mouseY);
+            graphics.renderTooltip(this.font, UfoText.literal("gui.ufo.text.simulation_progress_s", Math.round(
+                    this.menu.getProgress() * 100.0F / this.menu.getTotalTime())), mouseX, mouseY);
         } else if (inside(localX, localY, REQUIREMENTS_X + 2, REQUIREMENTS_Y + 3, 59, 102)) {
             int row = (localY - REQUIREMENTS_Y - 3) / REQUIREMENT_ROW_HEIGHT;
             if (row >= 0 && row < this.displayedRequirements.size() && row < MAX_REQUIREMENT_ROWS) {
                 RequirementEntry requirement = this.displayedRequirements.get(row);
                 long available = this.menu.getRequirementAvailable(row);
                 boolean complete = available >= requirement.amount();
-                String unit = requirement.fluid() ? " mB" : " items";
+                String unit = requirement.fluid() ? UfoText.str("gui.ufo.text.mb") : UfoText.str("gui.ufo.text.items");
                 List<Component> tooltip = new ArrayList<>();
                 tooltip.add(requirement.name());
-                tooltip.add(Component.literal((complete ? "§a" : "§c")
-                        + formatAmount(available) + " / " + formatAmount(requirement.amount()) + unit));
+                tooltip.add(UfoText.literal((complete ? "§a" : "§c") + "%s / %s%s",
+                        formatAmount(available), formatAmount(requirement.amount()), unit));
                 if (requirement.includesFuel()) {
-                    tooltip.add(Component.literal("§6Includes stellar fuel"));
+                    tooltip.add(UfoText.literal("gui.ufo.text.6includes_stellar_fuel"));
                 }
                 graphics.renderTooltip(this.font, tooltip, java.util.Optional.empty(), mouseX, mouseY);
             }
@@ -695,7 +700,7 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
     private String getRecipeDisplayName(RecipeHolder<StellarSimulationRecipe> holder) {
         String name = holder.value().getSimulationName();
-        return name == null || name.isEmpty() ? formatRecipeId(holder.id()) : name;
+        return name == null || name.isEmpty() ? formatRecipeId(holder.id()) : UfoText.str(name);
     }
 
     private static String formatRecipeId(ResourceLocation id) {

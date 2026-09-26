@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity.pattern;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.block.MultiblockBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -104,35 +106,35 @@ public final class QuantumPatternPredicates {
     }
 
     public static Component casingName() {
-        return Component.literal("Quantum Hyper Mechanical Casing");
+        return UfoText.literal("gui.ufo.text.quantum_hyper_mechanical_casing");
     }
 
     public static Component gridLinkName() {
-        return Component.literal("Quantum Grid Link");
+        return UfoText.literal("gui.ufo.text.quantum_grid_link");
     }
 
     public static Component gravitonCasingName() {
-        return Component.literal("Graviton-Plated Casing");
+        return UfoText.literal("gui.ufo.text.graviton_plated_casing");
     }
 
     public static Component casingOrHatchName() {
-        return Component.literal("Quantum Hyper Mechanical Casing or Universal Hatch");
+        return UfoText.literal("gui.ufo.text.quantum_hyper_mechanical_casing_or_universal_hatch");
     }
 
     public static Component casingOrMovableHatchName() {
-        return Component.literal("Quantum Hyper Mechanical Casing, Quantum Pattern Buffer/Proxy, ME Massive Fluid Hatch, or AE Energy Input Hatch");
+        return UfoText.literal("gui.ufo.text.quantum_hyper_mechanical_casing_quantum_pattern_buffer_p");
     }
 
     public static Component patternHatchName() {
-        return Component.literal("Quantum Pattern Buffer or Proxy");
+        return UfoText.literal("gui.ufo.text.quantum_pattern_buffer_or_proxy");
     }
 
     public static Component fieldName() {
-        return Component.literal("Stellar Field Generator Mk.I or better");
+        return UfoText.literal("gui.ufo.text.stellar_field_generator_mk_i_or_better");
     }
 
     public static Component uniformFieldName() {
-        return Component.literal("Same Stellar Field Generator tier as every other field position");
+        return UfoText.literal("gui.ufo.text.same_stellar_field_generator_tier_as_every_other_field_p");
     }
 
     public static List<BlockState> fieldCandidates() {
@@ -148,15 +150,15 @@ public final class QuantumPatternPredicates {
     }
 
     public static Component glassName() {
-        return Component.literal("AE2 Quartz Vibrant Glass");
+        return UfoText.literal("gui.ufo.text.ae2_quartz_vibrant_glass");
     }
 
     public static Component quartzBlockName() {
-        return Component.literal("AE2 Quartz Block");
+        return UfoText.literal("gui.ufo.text.ae2_quartz_block");
     }
 
     public static Component fluixBlockName() {
-        return Component.literal("AE2 Fluix Block");
+        return UfoText.literal("gui.ufo.text.ae2_fluix_block");
     }
 
     public static List<BlockState> glassCandidates() {

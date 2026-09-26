@@ -1,5 +1,7 @@
 package com.raishxn.ufo.compat.mekanism;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.api.client.AEKeyRenderHandler;
 import appeng.api.client.AEKeyRendering;
 import appeng.client.gui.style.Blitter;

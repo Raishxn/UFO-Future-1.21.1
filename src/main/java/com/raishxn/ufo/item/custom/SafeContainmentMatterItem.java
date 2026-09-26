@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.util.ModTags;
 import net.minecraft.ChatFormatting;
@@ -36,23 +38,23 @@ public class SafeContainmentMatterItem extends Item {
                 if (inserted.getCount() < otherHandStack.getCount()) {
                     player.setItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, inserted);
                     // Já está em inglês
-                    player.displayClientMessage(Component.literal("Item contained securely.").withStyle(ChatFormatting.GREEN), true);
+                    player.displayClientMessage(UfoText.literal("gui.ufo.text.item_contained_securely").withStyle(ChatFormatting.GREEN), true);
                     return InteractionResultHolder.consume(ccmStack);
                 }
             } else if (!otherHandStack.isEmpty()) {
                 // Já está em inglês
-                player.displayClientMessage(Component.literal("This item does not require containment.").withStyle(ChatFormatting.RED), true);
+                player.displayClientMessage(UfoText.literal("gui.ufo.text.this_item_does_not_require_containment").withStyle(ChatFormatting.RED), true);
             }
         } else {
             if (otherHandStack.isEmpty()) {
                 player.setItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, inside.copy());
                 handler.setStackInSlot(0, ItemStack.EMPTY);
                 // Já está em inglês
-                player.displayClientMessage(Component.literal("WARNING: Hazardous item removed from containment!").withStyle(ChatFormatting.GOLD), true);
+                player.displayClientMessage(UfoText.literal("gui.ufo.text.warning_hazardous_item_removed_from_containment").withStyle(ChatFormatting.GOLD), true);
                 return InteractionResultHolder.consume(ccmStack);
             } else {
                 // Já está em inglês
-                player.displayClientMessage(Component.literal("Empty your other hand to remove the item.").withStyle(ChatFormatting.RED), true);
+                player.displayClientMessage(UfoText.literal("gui.ufo.text.empty_your_other_hand_to_remove_the_item").withStyle(ChatFormatting.RED), true);
             }
         }
 
@@ -67,7 +69,7 @@ public class SafeContainmentMatterItem extends Item {
         ItemStack inside = handler.getStackInSlot(0);
         if (!inside.isEmpty()) {
             // MUDANÇA: Traduzido de "Contém: " para "Contains: "
-            tooltipComponents.add(Component.literal("Contains: ").append(inside.getHoverName()).withStyle(ChatFormatting.RED));
+            tooltipComponents.add(UfoText.literal("gui.ufo.text.contains").append(inside.getHoverName()).withStyle(ChatFormatting.RED));
         }
     }
 }

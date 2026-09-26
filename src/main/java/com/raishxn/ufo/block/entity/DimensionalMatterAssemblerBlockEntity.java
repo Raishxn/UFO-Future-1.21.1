@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity;
 
+import com.raishxn.ufo.util.UfoText;
+
 import java.util.*;
 import java.util.Comparator;
 
@@ -11,6 +13,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.*;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -406,7 +409,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                             this.worldPosition.getX() + ", Y: " + this.worldPosition.getY() + ", Z: " +
                             this.worldPosition.getZ() + "]!";
                     server.getPlayerList().broadcastSystemMessage(
-                            net.minecraft.network.chat.Component.literal(msg).withStyle(
+                            Component.literal(msg).withStyle(
                                     net.minecraft.ChatFormatting.DARK_RED, net.minecraft.ChatFormatting.BOLD),
                             false);
                 }

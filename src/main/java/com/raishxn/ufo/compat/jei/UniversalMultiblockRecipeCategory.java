@@ -1,5 +1,7 @@
 package com.raishxn.ufo.compat.jei;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.compat.mekanism.MekanismChemicalCompat;
@@ -116,7 +118,7 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
             int row = i / 3;
             builder.addInputSlot(47 + (col * 18), 21 + (row * 18))
                     .addIngredients(UfoJeiPlugin.stackOfUniversal(ingredient))
-                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Required: " + formatAmount(ingredient.amount()) + "x")));
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(UfoText.literal("gui.ufo.text.required_sx", formatAmount(ingredient.amount()))));
         }
 
         var fluidInputs = recipe.getFluidInputs();
@@ -126,7 +128,7 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
             builder.addInputSlot(x, 21)
                     .setFluidRenderer(16000, false, 12, 54)
                     .addIngredient(NeoForgeTypes.FLUID_STACK, ingredient.fluid().copyWithAmount((int) ingredient.amount()))
-                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Required: " + formatAmount(ingredient.amount()) + " mB")));
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(UfoText.literal("gui.ufo.text.required_s_mb", formatAmount(ingredient.amount()))));
         }
 
         var chemicalInputs = recipe.getChemicalInputs();
@@ -142,14 +144,14 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
                             MekanismJEI.TYPE_CHEMICAL,
                             MekanismChemicalCompat.createStack(ingredient.chemicalId(), ingredient.amount()))
                     .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(
-                            Component.literal("Required chemical: " + formatAmount(ingredient.amount()) + " mB")));
+                            UfoText.literal("gui.ufo.text.required_chemical_s_mb", formatAmount(ingredient.amount()))));
         }
 
         if (!recipe.getItemOutput().isEmpty()) {
             ItemStack itemOutput = recipe.getDisplayedItemOutput();
             builder.addOutputSlot(ITEM_OUTPUT_X, ITEM_OUTPUT_Y)
                     .addItemStack(itemOutput)
-                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Output: " + formatAmount(recipe.getItemOutputAmount()) + "x")));
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(UfoText.literal("gui.ufo.text.output_sx", formatAmount(recipe.getItemOutputAmount()))));
         }
 
         if (!recipe.getFluidOutput().isEmpty() && recipe.getFluidOutputAmount() > 0) {
@@ -157,7 +159,7 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
             builder.addOutputSlot(148, 76)
                     .setFluidRenderer(16000, false, 14, 17)
                     .addIngredient(NeoForgeTypes.FLUID_STACK, fluidOutput)
-                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Output: " + formatAmount(recipe.getFluidOutputAmount()) + " mB")));
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(UfoText.literal("gui.ufo.text.output_s_mb", formatAmount(recipe.getFluidOutputAmount()))));
         }
     }
 
@@ -196,17 +198,17 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
         if (mouseX >= ENERGY_BAR_X && mouseX <= ENERGY_BAR_X + ENERGY_BAR_W
                 && mouseY >= ENERGY_BAR_Y && mouseY <= ENERGY_BAR_Y + ENERGY_BAR_H) {
             tooltip.addAll(List.of(
-                    Component.literal("Energy: " + formatEnergy(recipe.getEnergy())),
-                    Component.literal(String.format("Base Time: %.1fs (%d ticks)", recipe.getTime() / 20.0, recipe.getTime())),
-                    Component.literal("Required Tier: MK" + recipe.getRequiredTier())
+                    UfoText.literal("gui.ufo.text.energy_s", formatEnergy(recipe.getEnergy())),
+                    UfoText.literal("gui.ufo.text.base_time_ss_s_ticks", recipe.getTime() / 20.0, recipe.getTime()),
+                    UfoText.literal("gui.ufo.text.required_tier_mk_s", recipe.getRequiredTier())
             ));
             return;
         }
 
         if (mouseX >= 105 && mouseX <= 125 && mouseY >= 42 && mouseY <= 53) {
             tooltip.addAll(List.of(
-                    Component.literal(String.format("Processing Time: %.1fs (%d ticks)", recipe.getTime() / 20.0, recipe.getTime())),
-                    Component.literal("Required Tier: MK" + recipe.getRequiredTier())
+                    UfoText.literal("gui.ufo.text.processing_time_ss_s_ticks", recipe.getTime() / 20.0, recipe.getTime()),
+                    UfoText.literal("gui.ufo.text.required_tier_mk_s", recipe.getRequiredTier())
             ));
             return;
         }
@@ -214,9 +216,9 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
         if (mouseX >= CONTROLLER_X && mouseX <= CONTROLLER_X + 16
                 && mouseY >= CONTROLLER_Y && mouseY <= CONTROLLER_Y + 28) {
             tooltip.addAll(List.of(
-                    Component.literal("Controller"),
-                    Component.literal("Required Machine Tier: MK" + recipe.getRequiredTier()),
-                    Component.literal("Click the controller to open Multiblock Info")
+                    UfoText.literal("gui.ufo.text.controller"),
+                    UfoText.literal("gui.ufo.text.required_machine_tier_mk_s", recipe.getRequiredTier()),
+                    UfoText.literal("gui.ufo.text.click_the_controller_to_open_multiblock_info")
             ));
         }
     }

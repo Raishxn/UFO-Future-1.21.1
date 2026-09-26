@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.api.upgrades.IUpgradeableObject;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -40,7 +42,7 @@ final class CatalystUpgradeUseHelper {
         ItemStack toInsert = heldStack.copyWithCount(1);
         ItemStack remainder = upgrades.addItems(toInsert);
         if (!remainder.isEmpty()) {
-            player.displayClientMessage(Component.literal("This controller cannot accept that catalyst, or its catalyst slots are full.")
+            player.displayClientMessage(UfoText.literal("gui.ufo.text.this_controller_cannot_accept_that_catalyst_or_its_catal")
                     .withStyle(ChatFormatting.RED), true);
             return InteractionResult.sidedSuccess(false);
         }
@@ -49,7 +51,7 @@ final class CatalystUpgradeUseHelper {
             heldStack.shrink(1);
         }
         blockEntity.setChanged();
-        player.displayClientMessage(Component.literal("Catalyst installed.")
+        player.displayClientMessage(UfoText.literal("gui.ufo.text.catalyst_installed")
                 .withStyle(ChatFormatting.GREEN), true);
         return InteractionResult.sidedSuccess(false);
     }

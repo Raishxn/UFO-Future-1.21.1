@@ -1,5 +1,7 @@
 package com.raishxn.ufo.api.multiblock;
 
+import com.raishxn.ufo.util.UfoText;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -52,7 +54,7 @@ public record MultiblockDefinition(
                                                MultiblockScanMode mode) {
         if (!allowedFacings.contains(facing)) {
             MultiblockPattern.PatternError error = new MultiblockPattern.PatternError(
-                    controllerPos, Component.literal("Horizontal controller facing"));
+                    controllerPos, UfoText.literal("gui.ufo.text.horizontal_controller_facing"));
             return new MultiblockPattern.MatchResult(false, List.of(), Optional.of(error), List.of(error), false);
         }
         return mode == MultiblockScanMode.FAST

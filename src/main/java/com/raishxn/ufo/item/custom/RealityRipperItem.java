@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -36,9 +38,9 @@ public class RealityRipperItem extends SwordItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.literal("Infinite Damage").withStyle(ChatFormatting.RED));
-        tooltip.add(Component.literal("Can kill creative players").withStyle(ChatFormatting.DARK_RED));
-        tooltip.add(Component.literal("Reality itself is optional").withStyle(ChatFormatting.LIGHT_PURPLE));
+        tooltip.add(UfoText.literal("gui.ufo.text.infinite_damage").withStyle(ChatFormatting.RED));
+        tooltip.add(UfoText.literal("gui.ufo.text.can_kill_creative_players").withStyle(ChatFormatting.DARK_RED));
+        tooltip.add(UfoText.literal("gui.ufo.text.reality_itself_is_optional").withStyle(ChatFormatting.LIGHT_PURPLE));
         super.appendHoverText(stack, context, tooltip, flag);
     }
 

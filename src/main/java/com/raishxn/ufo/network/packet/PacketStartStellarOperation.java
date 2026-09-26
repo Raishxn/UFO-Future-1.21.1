@@ -1,5 +1,7 @@
 package com.raishxn.ufo.network.packet;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
 import com.raishxn.ufo.network.MachinePacketGuard;
 
@@ -38,14 +40,14 @@ public record PacketStartStellarOperation(BlockPos pos) implements CustomPacketP
             List<Component> errors = controller.startOperation();
             if (!errors.isEmpty()) {
                 player.displayClientMessage(
-                        Component.literal("§c§l[STELLAR NEXUS] §eCannot start simulation:"),
+                        UfoText.literal("gui.ufo.text.c_l_stellar_nexus_ecannot_start_simulation"),
                         false);
                 for (Component error : errors) {
-                    player.displayClientMessage(Component.literal("  ").append(error), false);
+                    player.displayClientMessage(UfoText.literal("  ").append(error), false);
                 }
             } else {
                 player.displayClientMessage(
-                        Component.literal("§a§l[STELLAR NEXUS] §fSimulation started successfully!"),
+                        UfoText.literal("gui.ufo.text.a_l_stellar_nexus_fsimulation_started_successfully"),
                         true);
             }
         });

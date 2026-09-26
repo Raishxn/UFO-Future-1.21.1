@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.util.ModTags;
 import net.minecraft.ChatFormatting;
@@ -52,7 +54,7 @@ public class AetherContainmentCapsuleItem extends Item {
                         player.setItemInHand(hand, accHandler.getContainer());
 
                         // MUDANÇA: CCA -> ACC
-                        player.displayClientMessage(Component.literal("ACC emptied.").withStyle(ChatFormatting.YELLOW), true);
+                        player.displayClientMessage(UfoText.literal("gui.ufo.text.acc_emptied").withStyle(ChatFormatting.YELLOW), true);
                         return InteractionResultHolder.consume(accHandler.getContainer());
                     }
                 }
@@ -70,17 +72,17 @@ public class AetherContainmentCapsuleItem extends Item {
                             player.setItemInHand(hand, newAcc);
 
                             // MUDANÇA: CCA -> ACC
-                            player.displayClientMessage(Component.literal("ACC safely filled.")
+                            player.displayClientMessage(UfoText.literal("gui.ufo.text.acc_safely_filled")
                                     .append(" (" + filled + "mB)")
                                     .withStyle(ChatFormatting.GREEN), true);
                             return InteractionResultHolder.consume(newAcc);
                         } else {
                             // MUDANÇA: CCA -> ACC
-                            player.displayClientMessage(Component.literal("ERROR: ACC is full.").withStyle(ChatFormatting.RED), true);
+                            player.displayClientMessage(UfoText.literal("gui.ufo.text.error_acc_is_full").withStyle(ChatFormatting.RED), true);
                         }
                     } else {
                         // MUDANÇA: CCA -> ACC
-                        player.displayClientMessage(Component.literal("ERROR: ACC only accepts HAZARDOUS fluids.").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(UfoText.literal("gui.ufo.text.error_acc_only_accepts_hazardous_fluids").withStyle(ChatFormatting.RED), true);
                     }
                 }
             }
@@ -97,13 +99,13 @@ public class AetherContainmentCapsuleItem extends Item {
         FluidStack fluid = handler.getFluid();
         if (!fluid.isEmpty()) {
             // Já estava em inglês "Contains:", mantido.
-            tooltipComponents.add(Component.literal("Contains: ")
+            tooltipComponents.add(UfoText.literal("gui.ufo.text.contains")
                     .append(fluid.getHoverName())
                     .append(" (" + fluid.getAmount() + "mB)")
                     .withStyle(ChatFormatting.AQUA));
         } else {
             // Já estava em inglês "Empty", mantido.
-            tooltipComponents.add(Component.literal("Empty").withStyle(ChatFormatting.DARK_GRAY));
+            tooltipComponents.add(UfoText.literal("gui.ufo.text.empty").withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 

@@ -1,5 +1,7 @@
 package com.raishxn.ufo.screen;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.Icon;
 import appeng.client.gui.style.ScreenStyle;
@@ -153,7 +155,7 @@ public final class InfinityFabricationSingularityScreen
             return;
         }
         minecraft.player.displayClientMessage(
-                Component.literal(result.allErrors().size() + " block(s) missing or misplaced.")
+                UfoText.literal("gui.ufo.text.s_block_s_missing_or_misplaced", result.allErrors().size())
                         .withStyle(ChatFormatting.RED), false);
         for (int index = 0; index < Math.min(50, result.allErrors().size()); index++) {
             StructureHighlightRenderer.highlight(result.allErrors().get(index).pos(), 5000);

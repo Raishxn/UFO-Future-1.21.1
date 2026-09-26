@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.util.EnergyToolHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

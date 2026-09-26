@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -31,22 +33,22 @@ public class DimensionalCatalystItem extends UpgradeCardItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
 
         if (Screen.hasShiftDown()) {
-            components.add(Component.literal("CREATIVE MODE CATALYST").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
-            components.add(Component.literal("")); // Espaçador
-            components.add(Component.literal("Effects:").withStyle(ChatFormatting.AQUA));
-            components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("Instant Crafting").withStyle(ChatFormatting.GREEN)));
-            components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("No Energy Cost").withStyle(ChatFormatting.GREEN)));
-            components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("No Heat Generation").withStyle(ChatFormatting.GREEN)));
-            components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("Still Consumes Recipe Inputs").withStyle(ChatFormatting.AQUA)));
+            components.add(UfoText.literal("gui.ufo.text.creative_mode_catalyst").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
+            components.add(UfoText.literal("")); // Espaçador
+            components.add(UfoText.literal("gui.ufo.text.effects").withStyle(ChatFormatting.AQUA));
+            components.add(UfoText.literal(" - ").withStyle(ChatFormatting.GRAY)
+                    .append(UfoText.literal("gui.ufo.text.instant_crafting").withStyle(ChatFormatting.GREEN)));
+            components.add(UfoText.literal(" - ").withStyle(ChatFormatting.GRAY)
+                    .append(UfoText.literal("gui.ufo.text.no_energy_cost").withStyle(ChatFormatting.GREEN)));
+            components.add(UfoText.literal(" - ").withStyle(ChatFormatting.GRAY)
+                    .append(UfoText.literal("gui.ufo.text.no_heat_generation").withStyle(ChatFormatting.GREEN)));
+            components.add(UfoText.literal(" - ").withStyle(ChatFormatting.GRAY)
+                    .append(UfoText.literal("gui.ufo.text.still_consumes_recipe_inputs").withStyle(ChatFormatting.AQUA)));
 
         } else {
-            components.add(Component.literal("Hold <").withStyle(ChatFormatting.DARK_GRAY)
-                    .append(Component.literal("SHIFT").withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC))
-                    .append(Component.literal("> for details.").withStyle(ChatFormatting.DARK_GRAY)));
+            components.add(UfoText.literal("gui.ufo.text.hold").withStyle(ChatFormatting.DARK_GRAY)
+                    .append(UfoText.literal("gui.ufo.text.shift").withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC))
+                    .append(UfoText.literal("gui.ufo.text.for_details").withStyle(ChatFormatting.DARK_GRAY)));
         }
 
         super.appendHoverText(stack, context, components, flag);

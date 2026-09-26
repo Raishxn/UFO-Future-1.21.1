@@ -1,5 +1,7 @@
 package com.raishxn.ufo.network.packet;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.item.custom.HammerItem;
@@ -43,10 +45,10 @@ public record ToggleAutoSmeltPacket() implements CustomPacketPayload {
                     stack.set(ModDataComponents.AUTO_SMELT.get(), newStatus);
 
                     // Envia mensagem para o jogador
-                    String statusText = newStatus ? "ON" : "OFF";
+                    String statusText = newStatus ? UfoText.str("gui.ufo.text.on") : UfoText.str("gui.ufo.text.off");
                     ChatFormatting color = newStatus ? ChatFormatting.GREEN : ChatFormatting.RED;
 
-                    player.sendSystemMessage(Component.literal("Auto-Smelt: " + statusText).withStyle(color));
+                    player.sendSystemMessage(UfoText.literal("gui.ufo.text.auto_smelt_s", statusText).withStyle(color));
                 }
             }
         });

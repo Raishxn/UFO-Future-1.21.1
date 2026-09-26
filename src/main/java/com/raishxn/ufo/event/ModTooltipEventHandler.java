@@ -1,5 +1,7 @@
 package com.raishxn.ufo.event;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.custom.MegaCoProcessorBlockItem;
@@ -56,45 +58,45 @@ public class ModTooltipEventHandler {
             CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
             boolean chargedPreview = customData != null
                     && customData.copyTag().getBoolean("ufoQuantumEnergyCellChargedPreview");
-            event.getToolTip().add(Component.literal(chargedPreview
+            event.getToolTip().add(UfoText.literal(chargedPreview
                     ? "Creative preview: Charged"
                     : "Creative preview: Discharged").withStyle(ChatFormatting.DARK_GRAY));
             event.getToolTip().add(Component.translatable("tooltip.ufo.stored_energy_infinite").withStyle(ChatFormatting.GRAY));
         }
         else if (stack.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().asItem())) {
-            event.getToolTip().add(Component.literal("Universal field tier: MK1").withStyle(ChatFormatting.GRAY));
-            event.getToolTip().add(Component.literal("Nexus charge: 500K AE/t; Nexus fields must all match.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.universal_field_tier_mk1").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.nexus_charge_500k_ae_t_nexus_fields_must_all_match").withStyle(ChatFormatting.DARK_GRAY));
         }
         else if (stack.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get().asItem())) {
-            event.getToolTip().add(Component.literal("Universal field tier: MK2").withStyle(ChatFormatting.GRAY));
-            event.getToolTip().add(Component.literal("Over-tier universal recipes run faster and cheaper.").withStyle(ChatFormatting.DARK_GRAY));
-            event.getToolTip().add(Component.literal("Nexus charge: 1M AE/t; Nexus fields must all match.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.universal_field_tier_mk2").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.over_tier_universal_recipes_run_faster_and_cheaper").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.nexus_charge_1m_ae_t_nexus_fields_must_all_match").withStyle(ChatFormatting.DARK_GRAY));
         }
         else if (stack.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get().asItem())) {
-            event.getToolTip().add(Component.literal("Universal field tier: MK3").withStyle(ChatFormatting.GRAY));
-            event.getToolTip().add(Component.literal("Required for Stable Coolant in the Quantum Cryoforge.").withStyle(ChatFormatting.DARK_GRAY));
-            event.getToolTip().add(Component.literal("Nexus charge: 2M AE/t; Nexus fields must all match.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.universal_field_tier_mk3").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.required_for_stable_coolant_in_the_quantum_cryoforge").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.nexus_charge_2m_ae_t_nexus_fields_must_all_match").withStyle(ChatFormatting.DARK_GRAY));
         }
         else if (stack.is(MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get().asItem())) {
-            event.getToolTip().add(Component.literal("Stable Coolant requires machine tier MK3.").withStyle(ChatFormatting.GRAY));
-            event.getToolTip().add(Component.literal("Use MK3 field generators in every field position.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.stable_coolant_requires_machine_tier_mk3").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.use_mk3_field_generators_in_every_field_position").withStyle(ChatFormatting.DARK_GRAY));
         }
         else if (stack.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get().asItem())) {
-            event.getToolTip().add(Component.literal("Hybrid coolant hatch: 16,000,000 mB local tank + ME fallback.").withStyle(ChatFormatting.GRAY));
-            event.getToolTip().add(Component.literal("External fluid pipes may fill it from any side; connect ME cable to the indicated face.").withStyle(ChatFormatting.DARK_GRAY));
-            event.getToolTip().add(Component.literal("Accepts Gelid Cryotheum, Stable Coolant, or Bose-Einstein Condensate only.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.hybrid_coolant_hatch_16_000_000_mb_local_tank_me_fallbac").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.external_fluid_pipes_may_fill_it_from_any_side_connect_m").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.accepts_gelid_cryotheum_stable_coolant_or_bose_einstein").withStyle(ChatFormatting.DARK_GRAY));
         }
         else if (isAeHatch(stack)) {
-            event.getToolTip().add(Component.literal("AE2 grid hatch: connect ME cable to the indicated face.").withStyle(ChatFormatting.GRAY));
-            event.getToolTip().add(Component.literal("Items and AE are read from ME storage, not sided pipes.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.ae2_grid_hatch_connect_me_cable_to_the_indicated_face").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.items_and_ae_are_read_from_me_storage_not_sided_pipes").withStyle(ChatFormatting.DARK_GRAY));
         }
         else if (stack.is(ModItems.STABLE_COOLANT_BUCKET.get())) {
-            event.getToolTip().add(Component.literal("Stable Coolant: 50 HU/mB, up to 10 mB/tick.").withStyle(ChatFormatting.GRAY));
-            event.getToolTip().add(Component.literal("Crafted in the Quantum Cryoforge at machine tier MK3.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.stable_coolant_50_hu_mb_up_to_10_mb_tick").withStyle(ChatFormatting.GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.crafted_in_the_quantum_cryoforge_at_machine_tier_mk3").withStyle(ChatFormatting.DARK_GRAY));
         }
         else if (stack.is(ModItems.BOSE_EINSTEIN_CONDENSATE_BUCKET.get())) {
-            event.getToolTip().add(Component.literal("Bose-Einstein Condensate: 200 HU/mB, up to 10 mB/tick.").withStyle(ChatFormatting.AQUA));
-            event.getToolTip().add(Component.literal("Extreme-tier coolant for MK3 thermal systems.").withStyle(ChatFormatting.DARK_GRAY));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.bose_einstein_condensate_200_hu_mb_up_to_10_mb_tick").withStyle(ChatFormatting.AQUA));
+            event.getToolTip().add(UfoText.literal("gui.ufo.text.extreme_tier_coolant_for_mk3_thermal_systems").withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 

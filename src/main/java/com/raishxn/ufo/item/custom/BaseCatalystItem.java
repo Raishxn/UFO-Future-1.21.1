@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -152,12 +154,12 @@ public class BaseCatalystItem extends UpgradeCardItem {
             }
 
             // --- Constrói a Tooltip ---
-            components.add(Component.literal("Family: ").withStyle(ChatFormatting.GRAY)
+            components.add(UfoText.literal("gui.ufo.text.family").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal(capitalize(family)).withStyle(ChatFormatting.AQUA)));
-            components.add(Component.literal("Tier: ").withStyle(ChatFormatting.GRAY)
+            components.add(UfoText.literal("gui.ufo.text.tier").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal(String.valueOf(tier)).withStyle(ChatFormatting.AQUA)));
 
-            components.add(Component.literal("")); // Espaçador
+            components.add(UfoText.literal("")); // Espaçador
 
             // Efeito Principal
             double finalStat = baseStat * tierMultiplier;
@@ -165,7 +167,7 @@ public class BaseCatalystItem extends UpgradeCardItem {
             ChatFormatting statColor = (finalStat > 0) ? ChatFormatting.GREEN : ChatFormatting.RED;
             String statText = String.format("%s%.1f%% %s", sign, finalStat, statName);
 
-            components.add(Component.literal("Effect: ").withStyle(ChatFormatting.GRAY)
+            components.add(UfoText.literal("gui.ufo.text.effect").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal(statText).withStyle(statColor)));
 
             // Efeito Térmico
@@ -173,22 +175,22 @@ public class BaseCatalystItem extends UpgradeCardItem {
             String heatColorFormat = (heatMult > 1.0) ? "§c" : "§b"; // Vermelho para debuff de calor, Azul nulo/bom
             String heatText = String.format("%sx%.1f Heat Production", heatColorFormat, heatMult);
 
-            components.add(Component.literal("Thermal: ").withStyle(ChatFormatting.GRAY)
+            components.add(UfoText.literal("gui.ufo.text.thermal").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal(heatText)));
 
             // Efeito de Stacking
-            components.add(Component.literal("")); // Espaçador
-            components.add(Component.literal("Stacking Effect (Soft Cap):").withStyle(ChatFormatting.GOLD));
-            components.add(Component.literal(" 2x: ").withStyle(ChatFormatting.GRAY).append(Component.literal("175%").withStyle(ChatFormatting.WHITE))); //
-            components.add(Component.literal(" 3x: ").withStyle(ChatFormatting.GRAY).append(Component.literal("225%").withStyle(ChatFormatting.WHITE))); //
-            components.add(Component.literal(" 4x: ").withStyle(ChatFormatting.GRAY).append(Component.literal("250%").withStyle(ChatFormatting.WHITE))); //
+            components.add(UfoText.literal("")); // Espaçador
+            components.add(UfoText.literal("gui.ufo.text.stacking_effect_soft_cap").withStyle(ChatFormatting.GOLD));
+            components.add(UfoText.literal("gui.ufo.text.2x").withStyle(ChatFormatting.GRAY).append(UfoText.literal("175%").withStyle(ChatFormatting.WHITE))); //
+            components.add(UfoText.literal("gui.ufo.text.3x").withStyle(ChatFormatting.GRAY).append(UfoText.literal("225%").withStyle(ChatFormatting.WHITE))); //
+            components.add(UfoText.literal("gui.ufo.text.4x").withStyle(ChatFormatting.GRAY).append(UfoText.literal("250%").withStyle(ChatFormatting.WHITE))); //
 
 
         } else {
             // 2. Adiciona o prompt "Pressione SHIFT"
-            components.add(Component.literal("Hold <").withStyle(ChatFormatting.DARK_GRAY)
-                    .append(Component.literal("SHIFT").withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC))
-                    .append(Component.literal("> for details.").withStyle(ChatFormatting.DARK_GRAY)));
+            components.add(UfoText.literal("gui.ufo.text.hold").withStyle(ChatFormatting.DARK_GRAY)
+                    .append(UfoText.literal("gui.ufo.text.shift").withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC))
+                    .append(UfoText.literal("gui.ufo.text.for_details").withStyle(ChatFormatting.DARK_GRAY)));
         }
 
         super.appendHoverText(stack, context, components, flag);

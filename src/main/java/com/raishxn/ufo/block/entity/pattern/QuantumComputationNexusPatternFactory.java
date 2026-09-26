@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity.pattern;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.api.multiblock.MultiblockCellRole;
 import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
@@ -67,8 +69,8 @@ public final class QuantumComputationNexusPatternFactory {
                 .candidates('Q', QuantumPatternPredicates.quartzBlockCandidates())
                 .where('X', (state, level, pos) -> QuantumPatternPredicates.isFluixBlock(state), QuantumPatternPredicates.fluixBlockName())
                 .candidates('X', QuantumPatternPredicates.fluixBlockCandidates())
-                .where('I', MultiblockPattern.ANY, Component.literal("Internal module space"))
-                .where('A', MultiblockPattern.ANY, Component.literal("Internal module space"));
+                .where('I', MultiblockPattern.ANY, UfoText.literal("gui.ufo.text.internal_module_space"))
+                .where('A', MultiblockPattern.ANY, UfoText.literal("gui.ufo.text.internal_module_space"));
         QuantumComputationNexusTopologySchema.layers().forEach(builder::layer);
         return builder.build();
     }

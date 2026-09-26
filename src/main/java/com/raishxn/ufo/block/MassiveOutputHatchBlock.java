@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
 import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
@@ -79,14 +81,14 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
                     ? net.minecraft.network.chat.Component.translatable("message.ufo.energy_hatch.external_only")
                             .withStyle(net.minecraft.ChatFormatting.YELLOW)
                     : be.isNetworkReady()
-                    ? net.minecraft.network.chat.Component.literal(
+                    ? UfoText.literal(
                             be.isLinked() ? "Online — Linked to Controller" : "Online — Standalone")
                             .withStyle(net.minecraft.ChatFormatting.GREEN)
-                    : net.minecraft.network.chat.Component.literal("ME disconnected")
+                    : UfoText.literal("gui.ufo.text.me_disconnected")
                             .withStyle(net.minecraft.ChatFormatting.RED);
             player.displayClientMessage(
                     state.getBlock().getName().copy()
-                            .append(net.minecraft.network.chat.Component.literal(": "))
+                            .append(UfoText.literal(": "))
                             .append(status)
                             .append(coolantStatus(be))
                             .append(energyStatus(be)),
@@ -102,7 +104,7 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
                 appeng.api.config.PowerUnit.FE, be.getStoredExternalEnergyAE());
         long capacityFe = (long) appeng.api.config.PowerUnit.AE.convertTo(
                 appeng.api.config.PowerUnit.FE, be.getExternalEnergyCapacityAE());
-        return net.minecraft.network.chat.Component.literal(" — ").append(
+        return UfoText.literal(" — ").append(
                 net.minecraft.network.chat.Component.translatable("message.ufo.energy_hatch.stored", storedFe, capacityFe))
                 .withStyle(net.minecraft.ChatFormatting.AQUA);
     }
@@ -113,12 +115,12 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
         }
         FluidStack stored = be.getStoredCoolant();
         if (stored.isEmpty()) {
-            return net.minecraft.network.chat.Component.literal(" — Coolant tank empty")
+            return UfoText.literal("gui.ufo.text.coolant_tank_empty")
                     .withStyle(net.minecraft.ChatFormatting.GRAY);
         }
-        return net.minecraft.network.chat.Component.literal(" — ")
+        return UfoText.literal(" — ")
                 .append(stored.getHoverName())
-                .append(net.minecraft.network.chat.Component.literal(
+                .append(UfoText.literal(
                         " " + stored.getAmount() + "/" + MassiveOutputHatchBE.COOLANT_CAPACITY + " mB"))
                 .withStyle(net.minecraft.ChatFormatting.AQUA);
     }
