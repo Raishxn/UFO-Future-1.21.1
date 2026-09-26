@@ -1,5 +1,7 @@
 package com.raishxn.ufo.mixin;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.core.localization.Tooltips;
 import appeng.menu.me.crafting.CraftingStatusMenu;
 import com.raishxn.ufo.client.CpuAmountFormatter;

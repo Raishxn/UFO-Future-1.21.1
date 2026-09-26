@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity.pattern;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.api.multiblock.MultiblockCellRole;
 import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
@@ -79,7 +81,7 @@ public final class QuantumCryoforgePatternFactory {
                         QuantumPatternPredicates.casingOrHatchName())
                 .candidates('B', QuantumPatternPredicates.casingAndHatchCandidates())
                 .where('D', (state, level, pos) -> state.is(net.minecraft.world.level.block.Blocks.BLUE_ICE),
-                        net.minecraft.network.chat.Component.literal("Blue Ice"))
+                        UfoText.literal("gui.ufo.text.blue_ice"))
                 .candidates('D', net.minecraft.world.level.block.Blocks.BLUE_ICE.defaultBlockState())
                 .where('F', (state, level, pos) -> QuantumPatternPredicates.isAnyFieldGenerator(state),
                         QuantumPatternPredicates.fieldName())
@@ -94,7 +96,7 @@ public final class QuantumCryoforgePatternFactory {
                 .where('L', (state, level, pos) -> QuantumPatternPredicates.isFluixBlock(state),
                         QuantumPatternPredicates.fluixBlockName())
                 .candidates('L', QuantumPatternPredicates.fluixBlockCandidates())
-                .where('A', MultiblockPattern.ANY, Component.literal("Any"));
+                .where('A', MultiblockPattern.ANY, UfoText.literal("gui.ufo.text.any"));
         QuantumCryoforgeTopologySchema.layers().forEach(builder::layer);
         return builder.serviceHatches('B', MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get(),
                 MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()).build();

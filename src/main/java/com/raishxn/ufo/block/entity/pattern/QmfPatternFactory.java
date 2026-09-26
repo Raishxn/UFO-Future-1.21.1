@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity.pattern;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.api.multiblock.MultiblockCellRole;
 import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
@@ -59,7 +61,7 @@ public class QmfPatternFactory {
                 .where('G', (state, level, pos) -> QuantumPatternPredicates.isQuartzVibrantGlass(state), QuantumPatternPredicates.glassName())
                 .where('Q', (state, level, pos) -> QuantumPatternPredicates.isQuartzBlock(state), QuantumPatternPredicates.quartzBlockName())
                 .where('X', (state, level, pos) -> QuantumPatternPredicates.isFluixBlock(state), QuantumPatternPredicates.fluixBlockName())
-                .where('A', MultiblockPattern.ANY, Component.literal("Any"));
+                .where('A', MultiblockPattern.ANY, UfoText.literal("gui.ufo.text.any"));
         QmfTopologySchema.layers().forEach(builder::layer);
         return builder.serviceHatches('C', MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get(),
                 MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()).build();

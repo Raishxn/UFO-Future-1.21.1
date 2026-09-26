@@ -1,5 +1,7 @@
 package com.raishxn.ufo.event;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.UfoMod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -91,7 +93,7 @@ public class HazardHandler {
         player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 100, 5, false, false));
 
         if (player instanceof ServerPlayer && player.tickCount % 100 == 0) {
-            player.displayClientMessage(Component.literal("WARNING: Dimensional Containment Failed!").withStyle(ChatFormatting.RED), true);
+            player.displayClientMessage(UfoText.literal("gui.ufo.text.warning_dimensional_containment_failed").withStyle(ChatFormatting.RED), true);
         }
     }
 

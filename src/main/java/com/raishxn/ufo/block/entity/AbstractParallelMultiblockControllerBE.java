@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.crafting.IPatternDetails;
@@ -891,7 +893,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                     ? (primaryOutput.fluid().isEmpty() ? Component.literal(recipe.name()) : primaryOutput.fluid().getHoverName())
                     : primaryOutput.item().getHoverName();
             if (!MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())) {
-                label = label.copy().append(Component.literal(" [Locked: MK" + recipe.requiredTier() + "]"));
+                label = label.copy().append(UfoText.literal("gui.ufo.text.locked_mk_s", recipe.requiredTier()));
             }
             this.displayedRecipes.add(new UniversalDisplayedRecipe(
                     primaryOutput.item(),
@@ -1293,7 +1295,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.cachedCraftingMachineInfo = new PatternContainerGroup(
                     AEItemKey.of(this.getBlockState().getBlock().asItem()),
                     Component.translatable(getControllerTranslationKey()),
-                    List.of(Component.literal("MK" + this.machineTier)));
+                    List.of(UfoText.literal("gui.ufo.text.mk_s", this.machineTier)));
         }
         return this.cachedCraftingMachineInfo;
     }

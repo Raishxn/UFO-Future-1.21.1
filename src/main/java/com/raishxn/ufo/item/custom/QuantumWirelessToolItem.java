@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.wireless.QuantumWirelessHost;
 import com.raishxn.ufo.wireless.QuantumWirelessLinks;
 import net.minecraft.core.BlockPos;

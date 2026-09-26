@@ -1,5 +1,7 @@
 package com.raishxn.ufo.event;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
@@ -37,9 +39,9 @@ public class ClientForgeEvents {
                 com.raishxn.ufo.client.GhostHologramRenderer.toggleHologram(event.getPos(), facing);
 
                 if (com.raishxn.ufo.client.GhostHologramRenderer.isActive(event.getPos())) {
-                    event.getEntity().displayClientMessage(Component.literal("Ghost multiblock hologram enabled.").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE), true);
+                    event.getEntity().displayClientMessage(UfoText.literal("gui.ufo.text.ghost_multiblock_hologram_enabled").withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE), true);
                 } else {
-                    event.getEntity().displayClientMessage(Component.literal("Ghost multiblock hologram disabled.").withStyle(net.minecraft.ChatFormatting.GRAY), true);
+                    event.getEntity().displayClientMessage(UfoText.literal("gui.ufo.text.ghost_multiblock_hologram_disabled").withStyle(net.minecraft.ChatFormatting.GRAY), true);
                 }
                 event.setCanceled(true);
                 event.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);
