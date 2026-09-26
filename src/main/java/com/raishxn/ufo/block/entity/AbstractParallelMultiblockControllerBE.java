@@ -226,6 +226,34 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
     @Override
     protected boolean validateMatchedStructure(Level level, MultiblockPattern.MatchResult result, Direction facing) {
+        int[] counts = countValidationParts(level, result);
+        return counts[0] == 1 && counts[1] >= 1 && counts[2] >= 1;
+    }
+
+    @Override
+    public java.util.List<net.minecraft.network.chat.Component> getStructureValidationIssues(Level level,
+            MultiblockPattern.MatchResult result, Direction facing) {
+        int[] counts = countValidationParts(level, result);
+        java.util.List<net.minecraft.network.chat.Component> issues = new ArrayList<>();
+        if (counts[1] < 1) {
+            issues.add(net.minecraft.network.chat.Component.translatable("message.ufo.scan.missing_part",
+                    net.minecraft.network.chat.Component.translatable("block.ufo.me_massive_fluid_hatch"), 1));
+        }
+        if (counts[2] < 1) {
+            issues.add(net.minecraft.network.chat.Component.translatable("message.ufo.scan.missing_part",
+                    net.minecraft.network.chat.Component.translatable("block.ufo.ae_energy_input_hatch"), 1));
+        }
+        if (counts[0] < 1) {
+            issues.add(net.minecraft.network.chat.Component.translatable("message.ufo.scan.missing_part",
+                    net.minecraft.network.chat.Component.translatable("message.ufo.scan.pattern_endpoint"), 1));
+        } else if (counts[0] > 1) {
+            issues.add(net.minecraft.network.chat.Component.translatable("message.ufo.scan.require_one",
+                    net.minecraft.network.chat.Component.translatable("message.ufo.scan.pattern_endpoint"), counts[0]));
+        }
+        return issues;
+    }
+
+    private int[] countValidationParts(Level level, MultiblockPattern.MatchResult result) {
         int patternEndpoints = 0, coolantHatches = 0, energyHatches = 0;
         for (BlockPos partPos : result.partPositions()) {
             var state = level.getBlockState(partPos);
@@ -234,7 +262,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             if (state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())) coolantHatches++;
             if (state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())) energyHatches++;
         }
-        return coolantHatches >= 1 && energyHatches >= 1 && patternEndpoints == 1;
+        return new int[]{patternEndpoints, coolantHatches, energyHatches};
     }
 
     private void rebuildChemicalPorts(Level level) {

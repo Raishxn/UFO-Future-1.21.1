@@ -25,6 +25,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
@@ -188,6 +191,12 @@ public final class MultiblockAutoBuildService {
             BlockPos world = work.position();
             if (!level.isLoaded(world)) continue;
             if (work.removeOnly()) {
+                if (!canBreak(level, player, world)) {
+                    iterator.remove();
+                    message(player, "Structure operation stopped: no permission at " + position(world) + ".", ChatFormatting.RED);
+                    refresh(level, key.controllerPos());
+                    continue;
+                }
                 boolean removed = level.getBlockState(world).isAir() || level.destroyBlock(world, true, player);
                 advance(entry, session, removed, player, level, key, iterator);
                 continue;
@@ -200,6 +209,12 @@ public final class MultiblockAutoBuildService {
             if (!current.isAir() && !work.replace()) {
                 iterator.remove();
                 message(player, "Auto-build interrupted by an occupied block at " + position(world) + ".", ChatFormatting.RED);
+                refresh(level, key.controllerPos());
+                continue;
+            }
+            if ((!current.isAir() && !canBreak(level, player, world)) || !canPlace(level, player, world)) {
+                iterator.remove();
+                message(player, "Structure operation stopped: no permission at " + position(world) + ".", ChatFormatting.RED);
                 refresh(level, key.controllerPos());
                 continue;
             }
@@ -350,6 +365,23 @@ public final class MultiblockAutoBuildService {
     }
 
     private static String position(BlockPos pos) { return pos.getX() + ", " + pos.getY() + ", " + pos.getZ(); }
+
+    private static boolean canBreak(ServerLevel level, ServerPlayer player, BlockPos pos) {
+        if (!player.mayInteract(level, pos)) {
+            return false;
+        }
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
+        return !NeoForge.EVENT_BUS.post(event).isCanceled();
+    }
+
+    private static boolean canPlace(ServerLevel level, ServerPlayer player, BlockPos pos) {
+        if (!player.mayInteract(level, pos)) {
+            return false;
+        }
+        BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
+        BlockEvent.EntityPlaceEvent event = new BlockEvent.EntityPlaceEvent(snapshot, level.getBlockState(pos), player);
+        return !NeoForge.EVENT_BUS.post(event).isCanceled();
+    }
     private static void message(ServerPlayer player, String text, ChatFormatting color) {
         player.displayClientMessage(net.minecraft.network.chat.Component.literal(text).withStyle(color), false);
     }

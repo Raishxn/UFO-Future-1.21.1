@@ -423,11 +423,22 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
                 this.minecraft.player.displayClientMessage(
                         Component.translatable("message.ufo.structure_formed").withStyle(ChatFormatting.GREEN), true);
             } else {
-                this.minecraft.player.displayClientMessage(
-                        definition.get().name().copy().append(Component.literal(
-                                ": structure shape is valid, but extra controller validation failed.")
-                                .withStyle(ChatFormatting.RED)),
-                        false);
+                List<Component> issues = controller.getStructureValidationIssues(
+                        this.minecraft.level, result, facing);
+                if (issues.isEmpty()) {
+                    this.minecraft.player.displayClientMessage(
+                            definition.get().name().copy().append(Component.literal(
+                                    ": structure shape is valid, but extra controller validation failed.")
+                                    .withStyle(ChatFormatting.RED)),
+                            false);
+                } else {
+                    this.minecraft.player.displayClientMessage(
+                            Component.translatable("message.ufo.scan.issues_header").withStyle(ChatFormatting.RED),
+                            false);
+                    for (Component issue : issues) {
+                        this.minecraft.player.displayClientMessage(issue.copy().withStyle(ChatFormatting.YELLOW), false);
+                    }
+                }
             }
             return;
         }

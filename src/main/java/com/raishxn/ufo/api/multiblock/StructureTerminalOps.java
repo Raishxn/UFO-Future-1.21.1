@@ -5,9 +5,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import appeng.api.AECapabilities;
+import appeng.api.implementations.blockentities.IWirelessAccessPoint;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.IInWorldGridNodeHost;
+import appeng.api.storage.MEStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +50,35 @@ public final class StructureTerminalOps {
             }
         }
         return false;
+    }
+
+    @Nullable
+    public static MEStorage findMeStorage(Level level, @Nullable GlobalPos bound) {
+        if (bound == null || bound.dimension() != level.dimension() || !level.isLoaded(bound.pos())) {
+            return null;
+        }
+        if (level.getBlockEntity(bound.pos()) instanceof IWirelessAccessPoint wap) {
+            IGrid grid = wap.getGrid();
+            if (grid == null || !wap.isActive()) {
+                return null;
+            }
+            return grid.getStorageService().getInventory();
+        }
+        var host = level.getCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST, bound.pos(), null);
+        if (host == null) {
+            return null;
+        }
+        IGridNode node = null;
+        for (Direction dir : Direction.values()) {
+            node = host.getGridNode(dir);
+            if (node != null) {
+                break;
+            }
+        }
+        if (node == null || node.getGrid() == null) {
+            return null;
+        }
+        return node.getGrid().getStorageService().getInventory();
     }
 
     @Nullable

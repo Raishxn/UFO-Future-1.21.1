@@ -11,7 +11,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record PacketTerminalSettings(int handOrdinal, boolean replace, boolean dismantle, boolean ae,
+public record PacketTerminalSettings(int handOrdinal, boolean build, boolean replace, boolean dismantle, boolean ae,
                                      int tier) implements CustomPacketPayload {
 
     public static final Type<PacketTerminalSettings> TYPE = new Type<>(UfoMod.id("terminal_settings"));
@@ -19,13 +19,14 @@ public record PacketTerminalSettings(int handOrdinal, boolean replace, boolean d
     public static final StreamCodec<FriendlyByteBuf, PacketTerminalSettings> STREAM_CODEC = StreamCodec.of(
             (buf, p) -> {
                 buf.writeVarInt(p.handOrdinal);
+                buf.writeBoolean(p.build);
                 buf.writeBoolean(p.replace);
                 buf.writeBoolean(p.dismantle);
                 buf.writeBoolean(p.ae);
                 buf.writeVarInt(p.tier);
             },
             buf -> new PacketTerminalSettings(
-                    buf.readVarInt(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(),
+                    buf.readVarInt(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(),
                     buf.readVarInt())
     );
 
@@ -40,6 +41,7 @@ public record PacketTerminalSettings(int handOrdinal, boolean replace, boolean d
             if (packet.handOrdinal < 0 || packet.handOrdinal >= InteractionHand.values().length) return;
             ItemStack stack = context.player().getItemInHand(InteractionHand.values()[packet.handOrdinal]);
             if (!(stack.getItem() instanceof StructureScannerItem)) return;
+            StructureTerminalSettings.setBuildMode(stack, packet.build());
             StructureTerminalSettings.setReplaceMode(stack, packet.replace());
             StructureTerminalSettings.setDismantleMode(stack, packet.dismantle());
             StructureTerminalSettings.setAeMode(stack, packet.ae());
