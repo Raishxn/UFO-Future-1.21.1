@@ -33,8 +33,9 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
     private static final int WIDTH = 256;
     private static final int HEIGHT = 256;
     // Slot coordinates point inside the frames in the supplied 256x256 atlas.
-    private static final int[] ITEM_INPUT_X = {53, 76, 53, 76, 163, 186, 163, 186, 119};
-    private static final int[] ITEM_INPUT_Y = {19, 19, 51, 51, 19, 19, 51, 51, 35};
+    // Put the first ingredient in the center; swap it with the former ninth slot.
+    private static final int[] ITEM_INPUT_X = {119, 76, 53, 76, 163, 186, 163, 186, 53};
+    private static final int[] ITEM_INPUT_Y = {35, 19, 51, 51, 19, 19, 51, 51, 19};
     private static final int[] FLUID_INPUT_X = {96, 108, 149, 108};
     private static final int[] FLUID_INPUT_Y = {25, 58, 25, 17};
     private static final int[] FLUID_INPUT_WIDTH = {9, 38, 9, 38};
@@ -104,7 +105,8 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
                         .addItemStacks(visualStacks)
                         .addRichTooltipCallback((recipeSlotView, tooltip) -> {
                             long amount = itemInputs.get(finalI).getAmount();
-                            tooltip.add(Component.literal("Amount Required: " + formatAmount(amount)));
+                            tooltip.add(Component.translatable("jei.ufo.stellar_simulation.amount_required",
+                                    formatAmount(amount)));
                         });
             }
         }
@@ -123,7 +125,8 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
                 slot.addIngredients(NeoForgeTypes.FLUID_STACK, visualFluids)
                         .addRichTooltipCallback((recipeSlotView, tooltip) -> {
                             long amount = fluidInputs.get(finalI).getAmount();
-                            tooltip.add(Component.literal("Amount Required: " + formatAmount(amount) + " mB"));
+                            tooltip.add(Component.translatable("jei.ufo.stellar_simulation.amount_required_fluid",
+                                    formatAmount(amount)));
                         });
             }
         }
@@ -138,7 +141,8 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
                 builder.addOutputSlot(ITEM_OUTPUT_GRID_X[grid] + col * 17, OUTPUT_Y + row * 17)
                         .addItemStack(itemKey.toStack(1))
                         .addRichTooltipCallback((recipeSlotView, tooltip) ->
-                                tooltip.add(Component.literal("Amount Produced: " + formatAmount(itemOutputs.get(finalI).amount()))));
+                                tooltip.add(Component.translatable("jei.ufo.stellar_simulation.amount_produced",
+                                        formatAmount(itemOutputs.get(finalI).amount()))));
             }
         }
 
@@ -152,7 +156,8 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
                         .setFluidRenderer(1_000, false, 10, 16);
                 slot.addFluidStack(fluidKey.getFluid(), 1000)
                         .addRichTooltipCallback((recipeSlotView, tooltip) ->
-                                tooltip.add(Component.literal("Amount Produced: " + formatAmount(fluidOutputs.get(finalI).amount()) + " mB")));
+                                tooltip.add(Component.translatable("jei.ufo.stellar_simulation.amount_produced_fluid",
+                                        formatAmount(fluidOutputs.get(finalI).amount()))));
             }
         }
     }
@@ -183,19 +188,20 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         if ((mouseY >= 68 && mouseY < 79 && mouseX >= 20 && mouseX <= 236)
                 || (mouseY >= 1 && mouseY < 13 && mouseX >= 34 && mouseX < 222)) {
             List<Component> tips = new ArrayList<>();
-            tips.add(Component.literal("Duration: " + recipe.getFormattedTime()
-                    + " (" + recipe.getTime() + " ticks)"));
-            tips.add(Component.literal("Field Generator: Mk." + toRoman(recipe.getFieldTier())));
-            tips.add(Component.literal("Energy: " + String.format(Locale.ROOT, "%,d", recipe.getTotalEnergy()) + " AE"));
+            tips.add(Component.translatable("jei.ufo.stellar_simulation.duration_detail",
+                    recipe.getFormattedTime(), recipe.getTime()));
+            tips.add(Component.translatable("jei.ufo.stellar_simulation.field", toRoman(recipe.getFieldTier())));
+            tips.add(Component.translatable("jei.ufo.stellar_simulation.energy_detail",
+                    String.format(Locale.ROOT, "%,d", recipe.getTotalEnergy())));
             if (!recipe.getFuelFluid().isEmpty() && recipe.getFuelAmount() > 0) {
-                tips.add(Component.literal("Fuel: " + getFuelDisplayName(recipe) + " × "
-                        + formatAmount(recipe.getFuelAmount()) + " mB"));
+                tips.add(Component.translatable("jei.ufo.stellar_simulation.fuel_detail",
+                        getFuelDisplayName(recipe), formatAmount(recipe.getFuelAmount())));
             }
             if (recipe.getCoolantAmount() > 0) {
-                tips.add(Component.literal("Coolant: " + getCoolantDisplayName(recipe) + " × "
-                        + formatAmount(recipe.getCoolantAmount()) + " mB"));
+                tips.add(Component.translatable("jei.ufo.stellar_simulation.coolant_detail",
+                        getCoolantDisplayName(recipe), formatAmount(recipe.getCoolantAmount())));
             }
-            tips.add(Component.literal("Outputs directly into the ME network"));
+            tips.add(Component.translatable("jei.ufo.stellar_simulation.direct_output"));
             tooltip.addAll(tips);
         }
     }
