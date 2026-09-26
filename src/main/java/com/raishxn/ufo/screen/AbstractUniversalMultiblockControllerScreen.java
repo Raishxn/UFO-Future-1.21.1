@@ -64,7 +64,7 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
 
         this.addToLeftToolbar(new UfoAe2IconButton(
                 Icon.SCHEDULING_DEFAULT,
-                Component.literal("Scan multiblock structure"),
+                Component.translatable("gui.ufo.controller.scan"),
                 button -> {
                     BlockPos pos = this.menu.getBlockEntity().getBlockPos();
                     ModPackets.sendToServer(new PacketScanUniversalStructure(pos));
@@ -73,15 +73,15 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
 
         var quickBuild = new UfoQuickBuildButton(button -> ModPackets.sendToServer(
                 new PacketAutoBuildMultiblock(this.menu.getBlockEntity().getBlockPos())));
-        quickBuild.setTooltip(Tooltip.create(Component.literal("Auto-build structure")));
+        quickBuild.setTooltip(Tooltip.create(Component.translatable("gui.ufo.controller.auto_build")));
         this.autoBuildButton = this.addToLeftToolbar(quickBuild);
 
         this.safeModeButton = this.addToLeftToolbar(new UfoStateIconButton(
-                Component.literal("Safe Mode"), button -> ModPackets.sendToServer(
+                Component.translatable("gui.ufo.controller.safe_mode"), button -> ModPackets.sendToServer(
                         new PacketToggleUniversalSafeMode(this.menu.getBlockEntity().getBlockPos()))));
 
         this.overclockButton = this.addToLeftToolbar(new UfoStateIconButton(
-                Component.literal("Overclock"), button -> ModPackets.sendToServer(
+                Component.translatable("gui.ufo.controller.overclock"), button -> ModPackets.sendToServer(
                         new PacketToggleUniversalOverclock(this.menu.getBlockEntity().getBlockPos()))));
     }
 
@@ -94,17 +94,17 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         this.previousPageButton = new UfoAtlasButton(
                 this.leftPos + 57, this.topPos + 151, 16, 16,
                 MAIN_TEXTURE, 256, 256, 0, 0,
-                Component.literal("Previous process page"),
+                Component.translatable("gui.ufo.controller.page.previous"),
                 button -> setCurrentPage(this.currentPage - 1));
-        this.previousPageButton.setTooltip(Tooltip.create(Component.literal("Previous process page")));
+        this.previousPageButton.setTooltip(Tooltip.create(Component.translatable("gui.ufo.controller.page.previous")));
         this.addRenderableWidget(this.previousPageButton);
 
         this.nextPageButton = new UfoAtlasButton(
                 this.leftPos + 105, this.topPos + 151, 16, 16,
                 MAIN_TEXTURE, 256, 256, 0, 17,
-                Component.literal("Next process page"),
+                Component.translatable("gui.ufo.controller.page.next"),
                 button -> setCurrentPage(this.currentPage + 1));
-        this.nextPageButton.setTooltip(Tooltip.create(Component.literal("Next process page")));
+        this.nextPageButton.setTooltip(Tooltip.create(Component.translatable("gui.ufo.controller.page.next")));
         this.addRenderableWidget(this.nextPageButton);
 
         this.processActionButtons.clear();
@@ -114,7 +114,7 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
                     this.leftPos + 8 + SLOT_X[slot] + 38,
                     this.topPos + 36 + SLOT_Y[slot] + 22,
                     11, 10, MAIN_TEXTURE, 256, 256, 239, 0,
-                    Component.literal("Pause process"),
+                    Component.translatable("gui.ufo.controller.process.pause"),
                     button -> toggleVisibleProcess(visibleSlot));
             this.processActionButtons.add(actionButton);
             this.addRenderableWidget(actionButton);
@@ -148,13 +148,17 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
 
     private void renderInformationBar(GuiGraphics guiGraphics) {
         String status = this.menu.isAssembled()
-                ? (this.menu.isRunning() ? "RUNNING" : "IDLE")
-                : "INCOMPLETE";
+                ? (this.menu.isRunning()
+                        ? Component.translatable("gui.ufo.controller.status.running").getString()
+                        : Component.translatable("gui.ufo.controller.status.idle").getString())
+                : Component.translatable("gui.ufo.controller.status.incomplete").getString();
         String[] fields = {
                 status,
                 "MK" + this.menu.getMachineTier(),
-                this.menu.isSafeMode() ? "SAFE" : "RISK",
-                this.menu.isOverclocked() ? "OC" : "STD"
+                Component.translatable(this.menu.isSafeMode()
+                        ? "gui.ufo.controller.status.safe" : "gui.ufo.controller.status.risk").getString(),
+                Component.translatable(this.menu.isOverclocked()
+                        ? "gui.ufo.controller.status.overclock" : "gui.ufo.controller.status.standard").getString()
         };
         for (int i = 0; i < fields.length; i++) {
             int fieldX = this.leftPos + 23 + i * 32;
@@ -209,7 +213,8 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
             guiGraphics.fill(x + 3, y + 23, x + 3 + progressWidth, y + 25, 0xFF4ED5E7);
         }
 
-        String state = recipe.paused() ? "PAUSED" : "RUNNING";
+        String state = Component.translatable(recipe.paused()
+                ? "gui.ufo.controller.process.paused" : "gui.ufo.controller.process.running").getString();
         drawCenteredHalfScaleString(guiGraphics, state, x + 2, y + 27, 24, 5,
                 recipe.paused() ? 0xFFFFC36B : 0xFF8DFFB3);
     }
@@ -252,7 +257,8 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         boolean controlsAvailable = !this.menu.isRunning() && this.menu.getDisplayedRecipes().isEmpty();
         if (this.safeModeButton != null) {
             boolean safe = this.menu.isSafeMode();
-            Component tooltip = Component.literal(safe ? "Safe Mode enabled" : "Safe Mode disabled");
+            Component tooltip = Component.translatable(safe
+                    ? "gui.ufo.controller.safe_mode.enabled" : "gui.ufo.controller.safe_mode.disabled");
             this.safeModeButton.setMessage(tooltip);
             if (safe) {
                 this.safeModeButton.setAtlasSprite(MAIN_TEXTURE, 256, 256, 0, 47, 14, 12);
@@ -263,7 +269,8 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         }
         if (this.overclockButton != null) {
             boolean overclocked = this.menu.isOverclocked();
-            Component tooltip = Component.literal(overclocked ? "Overclock enabled" : "Overclock disabled");
+            Component tooltip = Component.translatable(overclocked
+                    ? "gui.ufo.controller.overclock.enabled" : "gui.ufo.controller.overclock.disabled");
             this.overclockButton.setMessage(tooltip);
             int overclockU = overclocked ? 0 : 16;
             this.overclockButton.setAtlasSprite(MAIN_TEXTURE, 256, 256, overclockU, 33, 14, 14);
@@ -306,7 +313,8 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
             button.visible = true;
             button.active = true;
             button.setSource(recipe.paused() ? 227 : 239, 0);
-            button.setMessage(Component.literal(recipe.paused() ? "Resume process" : "Pause process"));
+            button.setMessage(Component.translatable(recipe.paused()
+                    ? "gui.ufo.controller.process.resume" : "gui.ufo.controller.process.pause"));
             button.setTooltip(Tooltip.create(button.getMessage()));
         }
     }
@@ -337,8 +345,8 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         }
         if (isHovering(15, 19, 147, 11, mouseX, mouseY)) {
             guiGraphics.renderTooltip(this.font,
-                    Component.literal("Temperature: " + this.menu.getTemperature()
-                            + " / " + this.menu.getMaxTemperature()),
+                    Component.translatable("gui.ufo.controller.temperature",
+                            this.menu.getTemperature(), this.menu.getMaxTemperature()),
                     mouseX, mouseY);
             return;
         }
@@ -372,10 +380,10 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
     private List<Component> buildRecipeTooltip(UniversalDisplayedRecipe recipe) {
         List<Component> lines = new ArrayList<>();
         lines.add(recipe.label());
-        lines.add(Component.literal("Output: " + formatAmount(recipe.outputAmount())
-                + (recipe.fluidIcon().isEmpty() ? "x" : " mB")));
-        lines.add(Component.literal("Progress: " + formatSeconds(recipe.progress())
-                + " / " + formatSeconds(recipe.maxProgress()) + " s"));
+        lines.add(Component.translatable("gui.ufo.controller.output", formatAmount(recipe.outputAmount()),
+                recipe.fluidIcon().isEmpty() ? "x" : " mB"));
+        lines.add(Component.translatable("gui.ufo.controller.progress", formatSeconds(recipe.progress()),
+                formatSeconds(recipe.maxProgress())));
         return lines;
     }
 
@@ -424,8 +432,8 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
                         Component.translatable("message.ufo.structure_formed").withStyle(ChatFormatting.GREEN), true);
             } else {
                 this.minecraft.player.displayClientMessage(
-                        definition.get().name().copy().append(Component.literal(
-                                ": structure shape is valid, but extra controller validation failed.")
+                        definition.get().name().copy().append(Component.translatable(
+                                "message.ufo.controller.validation_failed")
                                 .withStyle(ChatFormatting.RED)),
                         false);
             }
@@ -444,23 +452,23 @@ public abstract class AbstractUniversalMultiblockControllerScreen<M extends Abst
         int shown = Math.min(errors.size(), 10);
         this.minecraft.player.displayClientMessage(
                 definition.name().copy()
-                        .append(Component.literal(": " + errors.size() + " block(s) missing or misplaced.")
+                        .append(Component.translatable("message.ufo.controller.blocks_missing", errors.size())
                                 .withStyle(ChatFormatting.RED)),
                 false);
 
         for (int i = 0; i < shown; i++) {
             var error = errors.get(i);
             BlockPos errorPos = error.pos();
-            Component message = Component.literal("  [" + errorPos.getX() + ", "
-                            + errorPos.getY() + ", " + errorPos.getZ() + "] Expected: ")
-                    .withStyle(ChatFormatting.GRAY)
-                    .append(error.expected().copy().withStyle(ChatFormatting.YELLOW));
+            Component message = Component.translatable("message.ufo.structure_error",
+                            errorPos.getX(), errorPos.getY(), errorPos.getZ(),
+                            error.expected().copy().withStyle(ChatFormatting.YELLOW))
+                    .withStyle(ChatFormatting.GRAY);
             this.minecraft.player.displayClientMessage(message, false);
         }
 
         if (errors.size() > shown) {
             this.minecraft.player.displayClientMessage(
-                    Component.literal("  ... and " + (errors.size() - shown) + " more.")
+                    Component.translatable("message.ufo.controller.more_errors", errors.size() - shown)
                             .withStyle(ChatFormatting.GRAY),
                     false);
         }
