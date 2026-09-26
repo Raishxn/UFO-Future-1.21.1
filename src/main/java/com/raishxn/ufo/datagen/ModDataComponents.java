@@ -8,6 +8,7 @@ import com.raishxn.ufo.item.custom.cell.BigIntegerCodec;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs; // Importe este
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.bus.api.IEventBus;
@@ -101,6 +102,10 @@ public class ModDataComponents {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SimpleFluidContent>> FLUID_CONTENT = register("fluid_content",
             builder -> builder.persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<CompoundTag>> TERMINAL_SETTINGS =
+            register("terminal_settings", builder -> builder.persistent(CompoundTag.CODEC)
+                    .networkSynchronized(ByteBufCodecs.COMPOUND_TAG));
 
     // Correção para SAVED_INVENTORY (caso tenhas adicionado o do CCM anteriormente com o nome errado)
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ItemContainerContents>> SAVED_INVENTORY = register("saved_inventory",
