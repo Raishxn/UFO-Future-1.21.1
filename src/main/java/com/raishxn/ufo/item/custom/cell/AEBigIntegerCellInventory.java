@@ -66,6 +66,10 @@ public class AEBigIntegerCellInventory implements StorageCell
         if (storage.isEmpty()) return CellState.EMPTY;
         long maxBytes = cellType.getMaxBytes(itemStack);
         if (maxBytes == Long.MAX_VALUE) return CellState.NOT_EMPTY;
+        // The byte display rounds a partial byte up. Once it shows the full
+        // capacity, the drive LED should show FULL too, even if a few units of
+        // an existing type could still fit in that final byte.
+        if (usedBytesCached.compareTo(BigInteger.valueOf(maxBytes)) >= 0) return CellState.FULL;
 
         int types = storage.size();
         long amountPerByte = Math.max(1, cellType.getKeyType().getAmountPerByte());
