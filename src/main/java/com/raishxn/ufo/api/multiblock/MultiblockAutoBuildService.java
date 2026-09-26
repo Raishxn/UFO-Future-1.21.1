@@ -8,6 +8,7 @@ import com.raishxn.ufo.util.LoadedBlockEntityLookup;
  */
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -59,6 +60,11 @@ public final class MultiblockAutoBuildService {
                 || !(controllerBlockEntity instanceof IMultiblockController controller)) return;
         var definitionOptional = MultiblockControllerDefinitions.getDefinition(controllerBlockEntity);
         if (definitionOptional.isEmpty()) return;
+        if (!player.mayUseItemAt(controllerBlockEntity.getBlockPos(), Direction.UP, ItemStack.EMPTY)
+                || !level.mayInteract(player, controllerBlockEntity.getBlockPos())) {
+            message(player, "Auto-build blocked: you may not modify blocks here.", ChatFormatting.RED);
+            return;
+        }
         SessionKey key = new SessionKey(level.dimension(), controllerBlockEntity.getBlockPos().immutable());
         if (SESSIONS.containsKey(key)) {
             message(player, "Auto-build is already in progress.", ChatFormatting.YELLOW);
