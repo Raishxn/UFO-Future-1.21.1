@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
-/** Held-item Structure Terminal: replace/dismantle/AE modes, field tier and AE binding. */
+/** Held-item Structure Terminal: scan/build/replace/dismantle modes, AE mode, field tier and AE binding. */
 public final class StructureScannerScreen extends Screen {
 
     private static final int PANEL_WIDTH = 200;
@@ -19,10 +19,12 @@ public final class StructureScannerScreen extends Screen {
 
     private final InteractionHand hand;
     private final ItemStack stack;
+    private boolean build;
     private boolean replace;
     private boolean dismantle;
     private boolean ae;
     private int tier;
+    private Button buildButton;
     private Button replaceButton;
     private Button dismantleButton;
     private Button aeButton;
@@ -32,6 +34,7 @@ public final class StructureScannerScreen extends Screen {
         super(Component.translatable("gui.ufo.terminal.title"));
         this.hand = hand;
         this.stack = stack;
+        this.build = StructureTerminalSettings.getBuildMode(stack);
         this.replace = StructureTerminalSettings.getReplaceMode(stack);
         this.dismantle = StructureTerminalSettings.getDismantleMode(stack);
         this.ae = StructureTerminalSettings.getAeMode(stack);
@@ -41,56 +44,77 @@ public final class StructureScannerScreen extends Screen {
     @Override
     protected void init() {
         int x = this.width / 2 - PANEL_WIDTH / 2;
-        int y = this.height / 2 - 76;
+        int y = this.height / 2 - 88;
+
+        buildButton = addRenderableWidget(Button.builder(toggleLabel("gui.ufo.terminal.build", build), ignored -> {
+            build = !build;
+            if (!build) {
+                replace = false;
+                dismantle = false;
+            }
+            StructureTerminalSettings.setBuildMode(stack, build);
+            StructureTerminalSettings.setReplaceMode(stack, replace);
+            StructureTerminalSettings.setDismantleMode(stack, dismantle);
+            refreshLabels();
+            sync();
+        }).bounds(x, y, PANEL_WIDTH, 20).build());
 
         replaceButton = addRenderableWidget(Button.builder(toggleLabel("gui.ufo.terminal.replace", replace), ignored -> {
             replace = !replace;
             if (replace) {
+                build = true;
                 dismantle = false;
             }
             StructureTerminalSettings.setReplaceMode(stack, replace);
+            StructureTerminalSettings.setBuildMode(stack, build);
             StructureTerminalSettings.setDismantleMode(stack, dismantle);
-            replaceButton.setMessage(toggleLabel("gui.ufo.terminal.replace", replace));
-            dismantleButton.setMessage(toggleLabel("gui.ufo.terminal.dismantle", dismantle));
+            refreshLabels();
             sync();
-        }).bounds(x, y, PANEL_WIDTH, 20).build());
+        }).bounds(x, y + ROW_HEIGHT, PANEL_WIDTH, 20).build());
 
         dismantleButton = addRenderableWidget(Button.builder(toggleLabel("gui.ufo.terminal.dismantle", dismantle), ignored -> {
             dismantle = !dismantle;
             if (dismantle) {
+                build = true;
                 replace = false;
             }
             StructureTerminalSettings.setDismantleMode(stack, dismantle);
+            StructureTerminalSettings.setBuildMode(stack, build);
             StructureTerminalSettings.setReplaceMode(stack, replace);
-            dismantleButton.setMessage(toggleLabel("gui.ufo.terminal.dismantle", dismantle));
-            replaceButton.setMessage(toggleLabel("gui.ufo.terminal.replace", replace));
+            refreshLabels();
             sync();
-        }).bounds(x, y + ROW_HEIGHT, PANEL_WIDTH, 20).build());
+        }).bounds(x, y + ROW_HEIGHT * 2, PANEL_WIDTH, 20).build());
 
         aeButton = addRenderableWidget(Button.builder(toggleLabel("gui.ufo.terminal.ae_mode", ae), ignored -> {
             ae = !ae;
             StructureTerminalSettings.setAeMode(stack, ae);
             aeButton.setMessage(toggleLabel("gui.ufo.terminal.ae_mode", ae));
             sync();
-        }).bounds(x, y + ROW_HEIGHT * 2, PANEL_WIDTH, 20).build());
+        }).bounds(x, y + ROW_HEIGHT * 3, PANEL_WIDTH, 20).build());
 
         tierButton = addRenderableWidget(Button.builder(tierLabel(), ignored -> {
             tier = tier % 3 + 1;
             StructureTerminalSettings.setFieldTier(stack, tier);
             tierButton.setMessage(tierLabel());
             sync();
-        }).bounds(x, y + ROW_HEIGHT * 3, PANEL_WIDTH, 20).build());
+        }).bounds(x, y + ROW_HEIGHT * 4, PANEL_WIDTH, 20).build());
 
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), ignored -> onClose())
-                .bounds(x, y + ROW_HEIGHT * 5 + 8, PANEL_WIDTH, 20).build());
+                .bounds(x, y + ROW_HEIGHT * 6 + 8, PANEL_WIDTH, 20).build());
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
         int centerX = this.width / 2;
-        int y = this.height / 2 - 76;
-        graphics.drawCenteredString(this.font, boundLabel(), centerX, y + ROW_HEIGHT * 4 + 4, 0xFFAAAAAA);
+        int y = this.height / 2 - 88;
+        graphics.drawCenteredString(this.font, boundLabel(), centerX, y + ROW_HEIGHT * 5 + 4, 0xFFAAAAAA);
+    }
+
+    private void refreshLabels() {
+        buildButton.setMessage(toggleLabel("gui.ufo.terminal.build", build));
+        replaceButton.setMessage(toggleLabel("gui.ufo.terminal.replace", replace));
+        dismantleButton.setMessage(toggleLabel("gui.ufo.terminal.dismantle", dismantle));
     }
 
     private Component toggleLabel(String key, boolean value) {
@@ -113,6 +137,6 @@ public final class StructureScannerScreen extends Screen {
     }
 
     private void sync() {
-        ModPackets.sendToServer(new PacketTerminalSettings(hand.ordinal(), replace, dismantle, ae, tier));
+        ModPackets.sendToServer(new PacketTerminalSettings(hand.ordinal(), build, replace, dismantle, ae, tier));
     }
 }

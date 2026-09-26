@@ -4,6 +4,8 @@ import appeng.api.config.Actionable;
 import appeng.api.implementations.blockentities.IWirelessAccessPoint;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEItemKey;
+import appeng.api.storage.MEStorage;
+import com.raishxn.ufo.api.multiblock.StructureTerminalOps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.component.DataComponents;
@@ -17,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
-/** AE2 Wireless Access Point link used by the Structure Scanner's material source. */
+/** AE2 material source link used by the Structure Scanner/terminal and auto-build sessions. */
 public final class StructureScannerAe2Link {
     private static final String ACCESS_POINT = "UfoStructureAccessPoint";
 
@@ -35,6 +37,10 @@ public final class StructureScannerAe2Link {
     }
 
     public static @Nullable GlobalPos linkedPosition(ItemStack scanner) {
+        GlobalPos terminalBound = StructureTerminalSettings.getBoundPos(scanner);
+        if (terminalBound != null) {
+            return terminalBound;
+        }
         CompoundTag tag = scanner.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         if (!tag.contains(ACCESS_POINT)) return null;
         return GlobalPos.CODEC.parse(NbtOps.INSTANCE, tag.get(ACCESS_POINT)).result().orElse(null);
@@ -53,27 +59,33 @@ public final class StructureScannerAe2Link {
     }
 
     public static boolean insertOne(ItemStack scanner, ServerPlayer player, Item item) {
-        GlobalPos linked = linkedPosition(scanner);
-        if (linked == null || !linked.dimension().equals(player.level().dimension())) return false;
-        if (!player.level().isLoaded(linked.pos())) return false;
-        if (!(player.level().getBlockEntity(linked.pos()) instanceof IWirelessAccessPoint accessPoint)
-                || !accessPoint.isActive() || accessPoint.getGrid() == null) return false;
+        MEStorage storage = storage(scanner, player);
+        if (storage == null) return false;
         AEItemKey key = AEItemKey.of(new ItemStack(item));
-        return key != null && accessPoint.getGrid().getStorageService().getInventory().insert(
-                key, 1L, Actionable.MODULATE, IActionSource.ofPlayer(player)) == 1L;
+        return key != null && storage.insert(key, 1L, Actionable.MODULATE, IActionSource.ofPlayer(player)) == 1L;
     }
 
     private static long access(ItemStack scanner, ServerPlayer player, Item item, long amount, Actionable mode) {
-        GlobalPos linked = linkedPosition(scanner);
-        if (linked == null || !linked.dimension().equals(player.level().dimension())) return 0L;
-        if (!player.level().isLoaded(linked.pos())) return 0L;
-        if (!(player.level().getBlockEntity(linked.pos()) instanceof IWirelessAccessPoint accessPoint)
-                || !accessPoint.isActive() || accessPoint.getGrid() == null) return 0L;
-        double range = accessPoint.getRange();
-        if (linked.pos().distSqr(player.blockPosition()) > range * range) return 0L;
+        MEStorage storage = storage(scanner, player);
+        if (storage == null) return 0L;
         AEItemKey key = AEItemKey.of(new ItemStack(item));
         if (key == null) return 0L;
-        return accessPoint.getGrid().getStorageService().getInventory().extract(
-                key, amount, mode, IActionSource.ofPlayer(player));
+        return storage.extract(key, amount, mode, IActionSource.ofPlayer(player));
+    }
+
+    private static @Nullable MEStorage storage(ItemStack scanner, ServerPlayer player) {
+        GlobalPos linked = linkedPosition(scanner);
+        Level level = player.level();
+        if (linked == null || !linked.dimension().equals(level.dimension()) || !level.isLoaded(linked.pos())) {
+            return null;
+        }
+        BlockEntity blockEntity = level.getBlockEntity(linked.pos());
+        if (blockEntity instanceof IWirelessAccessPoint accessPoint) {
+            if (!accessPoint.isActive() || accessPoint.getGrid() == null) return null;
+            double range = accessPoint.getRange();
+            if (linked.pos().distSqr(player.blockPosition()) > range * range) return null;
+            return accessPoint.getGrid().getStorageService().getInventory();
+        }
+        return StructureTerminalOps.findMeStorage(level, linked);
     }
 }

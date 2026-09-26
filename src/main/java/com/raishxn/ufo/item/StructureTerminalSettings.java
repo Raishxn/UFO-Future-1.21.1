@@ -14,6 +14,7 @@ public final class StructureTerminalSettings {
 
     private static final String TAG_REPLACE = "replace";
     private static final String TAG_DISMANTLE = "dismantle";
+    private static final String TAG_BUILD = "build";
     private static final String TAG_AE = "ae";
     private static final String TAG_TIER = "tier";
     private static final String TAG_BOUND_X = "boundX";
@@ -50,6 +51,16 @@ public final class StructureTerminalSettings {
     public static void setDismantleMode(ItemStack stack, boolean dismantle) {
         CompoundTag tag = getTag(stack).copy();
         tag.putBoolean(TAG_DISMANTLE, dismantle);
+        saveTag(stack, tag);
+    }
+
+    public static boolean getBuildMode(ItemStack stack) {
+        return getTag(stack).getBoolean(TAG_BUILD);
+    }
+
+    public static void setBuildMode(ItemStack stack, boolean build) {
+        CompoundTag tag = getTag(stack).copy();
+        tag.putBoolean(TAG_BUILD, build);
         saveTag(stack, tag);
     }
 

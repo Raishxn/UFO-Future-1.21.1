@@ -4,6 +4,7 @@ import com.raishxn.ufo.api.multiblock.IMultiblockController;
 import com.raishxn.ufo.api.multiblock.MultiblockAutoBuildService;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
+import com.raishxn.ufo.api.multiblock.MultiblockPattern;
 import com.raishxn.ufo.api.multiblock.StructureTerminalOps;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -84,13 +85,26 @@ public class StructureScannerItem extends Item {
             StructureScannerSettings settings = toScannerSettings(stack);
             if (settings.mode() == StructureScannerSettings.Mode.SCAN) {
                 controller.scanStructure(level);
-                if (controller.isAssembled()) {
+                MultiblockPattern.MatchResult result = definition.pattern().match(level, pos, facing);
+                if (!result.isValid()) {
+                    serverPlayer.displayClientMessage(Component.translatable("message.ufo.terminal.scan_result",
+                            result.allErrors().size()).withStyle(ChatFormatting.YELLOW), true);
+                } else if (controller.isAssembled()) {
                     serverPlayer.displayClientMessage(Component.translatable("message.ufo.structure_formed")
                             .withStyle(ChatFormatting.GREEN), true);
                 } else {
-                    serverPlayer.sendSystemMessage(definition.name().copy()
-                            .append(Component.translatable("message.ufo.terminal.incomplete")
-                                    .withStyle(ChatFormatting.RED)));
+                    List<Component> issues = controller.getStructureValidationIssues(level, result, facing);
+                    if (issues.isEmpty()) {
+                        serverPlayer.sendSystemMessage(definition.name().copy()
+                                .append(Component.translatable("message.ufo.terminal.incomplete")
+                                        .withStyle(ChatFormatting.RED)));
+                    } else {
+                        serverPlayer.sendSystemMessage(Component.translatable("message.ufo.scan.issues_header")
+                                .withStyle(ChatFormatting.RED));
+                        for (Component issue : issues) {
+                            serverPlayer.sendSystemMessage(issue.copy().withStyle(ChatFormatting.YELLOW));
+                        }
+                    }
                 }
             } else {
                 MultiblockAutoBuildService.start(serverPlayer, be, settings, stack);
@@ -120,9 +134,15 @@ public class StructureScannerItem extends Item {
     private static StructureScannerSettings toScannerSettings(ItemStack stack) {
         boolean dismantle = StructureTerminalSettings.getDismantleMode(stack);
         boolean replace = StructureTerminalSettings.getReplaceMode(stack);
-        StructureScannerSettings.Mode mode = dismantle
-                ? StructureScannerSettings.Mode.DEMOLISH
-                : replace ? StructureScannerSettings.Mode.REPLACE : StructureScannerSettings.Mode.BUILD;
+        boolean build = StructureTerminalSettings.getBuildMode(stack);
+        StructureScannerSettings.Mode mode;
+        if (dismantle) {
+            mode = StructureScannerSettings.Mode.DEMOLISH;
+        } else if (!build) {
+            mode = StructureScannerSettings.Mode.SCAN;
+        } else {
+            mode = replace ? StructureScannerSettings.Mode.REPLACE : StructureScannerSettings.Mode.BUILD;
+        }
         return new StructureScannerSettings(mode, true, StructureTerminalSettings.getFieldTier(stack),
                 StructureTerminalSettings.getAeMode(stack));
     }
