@@ -1,14 +1,18 @@
 package com.raishxn.ufo.item;
 
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
+import com.raishxn.ufo.api.multiblock.MultiblockAutoBuildService;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
-import com.raishxn.ufo.api.multiblock.MultiblockPattern;
+import com.raishxn.ufo.api.multiblock.StructureTerminalOps;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -20,8 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
-import net.minecraft.server.level.ServerPlayer;
 
 public class StructureScannerItem extends Item {
 
@@ -32,7 +34,12 @@ public class StructureScannerItem extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (level.isClientSide) ClientProxy.openSettings(hand, stack);
+        if (player.isShiftKeyDown()) {
+            return InteractionResultHolder.pass(stack);
+        }
+        if (level.isClientSide) {
+            ClientProxy.openSettings(hand, stack);
+        }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
 
@@ -44,118 +51,89 @@ public class StructureScannerItem extends Item {
         if (player == null) {
             return InteractionResult.PASS;
         }
+        ItemStack stack = context.getItemInHand();
 
         BlockEntity be = level.getBlockEntity(pos);
-        if (StructureScannerAe2Link.isAccessPoint(be)) {
-            if (!level.isClientSide) {
-                StructureScannerAe2Link.link(context.getItemInHand(), level, pos);
-                player.displayClientMessage(Component.translatable(
-                        "message.ufo.structure_scanner.ae_linked", pos.getX(), pos.getY(), pos.getZ())
-                        .withStyle(ChatFormatting.GREEN), true);
+        if (be instanceof IMultiblockController controller) {
+            MultiblockControllerDefinition definition = StructureTerminalOps.definitionOf(be);
+            if (definition == null) {
+                return InteractionResult.PASS;
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
-        if (!(be instanceof IMultiblockController controller)) {
-            return InteractionResult.PASS;
-        }
+            var facing = MultiblockControllerDefinitions.getPatternFacing(be, level.getBlockState(pos));
 
-        Optional<MultiblockControllerDefinition> definitionOpt = MultiblockControllerDefinitions.getDefinition(be);
-        if (definitionOpt.isEmpty()) {
-            return InteractionResult.PASS;
-        }
-
-        MultiblockControllerDefinition definition = definitionOpt.get();
-        var state = level.getBlockState(pos);
-        var facing = MultiblockControllerDefinitions.getPatternFacing(be, state);
-        StructureScannerSettings settings = StructureScannerSettings.read(context.getItemInHand());
-
-        if (player.isShiftKeyDown() && settings.mode() != StructureScannerSettings.Mode.SCAN) {
-            if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-                com.raishxn.ufo.api.multiblock.MultiblockAutoBuildService.start(
-                        serverPlayer, be, settings, context.getItemInHand());
+            if (level.isClientSide) {
+                if (!StructureTerminalOps.isFormed(definition.pattern(), level, pos, facing)) {
+                    var mismatches = StructureTerminalOps.findMismatches(definition.pattern(), level, pos, facing);
+                    int maxHighlight = Math.min(mismatches.size(), 50);
+                    for (int i = 0; i < maxHighlight; i++) {
+                        ClientProxy.highlight(mismatches.get(i), 15000);
+                    }
+                }
+                return InteractionResult.sidedSuccess(true);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
 
-        MultiblockPattern.MatchResult result = definition.pattern().match(level, pos, facing);
+            if (!(level instanceof ServerLevel serverLevel) || !(player instanceof ServerPlayer serverPlayer)) {
+                return InteractionResult.PASS;
+            }
+            if (!player.mayUseItemAt(pos, context.getClickedFace(), stack) || !level.mayInteract(player, pos)) {
+                serverPlayer.displayClientMessage(Component.translatable("message.ufo.terminal.denied")
+                        .withStyle(ChatFormatting.RED), true);
+                return InteractionResult.FAIL;
+            }
 
-        if (result.isValid()) {
-            if (!level.isClientSide) {
+            StructureScannerSettings settings = toScannerSettings(stack);
+            if (settings.mode() == StructureScannerSettings.Mode.SCAN) {
                 controller.scanStructure(level);
                 if (controller.isAssembled()) {
-                    player.displayClientMessage(Component.translatable("message.ufo.structure_formed").withStyle(ChatFormatting.GREEN), true);
+                    serverPlayer.displayClientMessage(Component.translatable("message.ufo.structure_formed")
+                            .withStyle(ChatFormatting.GREEN), true);
                 } else {
-                    player.sendSystemMessage(definition.name().copy()
-                            .append(Component.literal(": structure shape is valid, but extra controller validation failed.").withStyle(ChatFormatting.RED)));
-                }
-            }
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
-
-        List<MultiblockPattern.PatternError> errors = result.allErrors();
-        if (errors != null && !errors.isEmpty()) {
-            if (!level.isClientSide) {
-                int shown = Math.min(errors.size(), 10);
-                player.sendSystemMessage(definition.name().copy()
-                        .append(Component.literal(": " + errors.size() + " block(s) missing or misplaced.").withStyle(ChatFormatting.RED)));
-                for (int i = 0; i < shown; i++) {
-                    MultiblockPattern.PatternError error = errors.get(i);
-                    BlockPos errorPos = error.pos();
-                    Component message = Component.literal("  [" + errorPos.getX() + ", " + errorPos.getY() + ", " + errorPos.getZ() + "] Expected: ")
-                            .withStyle(ChatFormatting.GRAY)
-                            .append(error.expected().copy().withStyle(ChatFormatting.YELLOW));
-                    player.sendSystemMessage(message);
-                }
-                if (errors.size() > shown) {
-                    player.sendSystemMessage(Component.literal("  ... and " + (errors.size() - shown) + " more.").withStyle(ChatFormatting.GRAY));
+                    serverPlayer.sendSystemMessage(definition.name().copy()
+                            .append(Component.translatable("message.ufo.terminal.incomplete")
+                                    .withStyle(ChatFormatting.RED)));
                 }
             } else {
-                int maxHighlight = Math.min(errors.size(), 50);
-                for (int i = 0; i < maxHighlight; i++) {
-                    ClientProxy.highlight(errors.get(i).pos(), 15000);
-                }
+                MultiblockAutoBuildService.start(serverPlayer, be, settings, stack);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(false);
         }
 
-        Optional<MultiblockPattern.PatternError> errOpt = result.error();
-        if (errOpt.isPresent()) {
-            MultiblockPattern.PatternError error = errOpt.get();
-            BlockPos errorPos = error.pos();
-            if (!level.isClientSide) {
-                Component message = Component.translatable("message.ufo.structure_error",
-                        errorPos.getX(), errorPos.getY(), errorPos.getZ(),
-                        error.expected().copy().withStyle(ChatFormatting.YELLOW));
-                player.sendSystemMessage(message);
+        var gridHost = level.getCapability(appeng.api.AECapabilities.IN_WORLD_GRID_NODE_HOST, pos, null);
+        boolean isWap = level.getBlockEntity(pos) instanceof appeng.api.implementations.blockentities.IWirelessAccessPoint;
+        if (gridHost == null || (!isWap && !StructureTerminalOps.hasExposedGridNode(gridHost))) {
+            return InteractionResult.PASS;
+        }
+
+        if (!level.isClientSide) {
+            StructureTerminalSettings.setBoundPos(stack, new GlobalPos(level.dimension(), pos));
+            if (isWap) {
+                StructureScannerAe2Link.link(stack, level, pos);
+                player.displayClientMessage(Component.translatable("message.ufo.terminal.wap_bound", pos.toShortString()), true);
             } else {
-                ClientProxy.highlight(errorPos, 15000);
+                player.displayClientMessage(Component.translatable("message.ufo.terminal.bound", pos.toShortString()), true);
             }
         }
-
         return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    /** Maps the terminal UI state onto the guarded auto-build settings used by the server flow. */
+    private static StructureScannerSettings toScannerSettings(ItemStack stack) {
+        boolean dismantle = StructureTerminalSettings.getDismantleMode(stack);
+        boolean replace = StructureTerminalSettings.getReplaceMode(stack);
+        StructureScannerSettings.Mode mode = dismantle
+                ? StructureScannerSettings.Mode.DEMOLISH
+                : replace ? StructureScannerSettings.Mode.REPLACE : StructureScannerSettings.Mode.BUILD;
+        return new StructureScannerSettings(mode, true, StructureTerminalSettings.getFieldTier(stack),
+                StructureTerminalSettings.getAeMode(stack));
     }
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context,
                                 @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.0").withStyle(ChatFormatting.GRAY));
-        tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.1").withStyle(ChatFormatting.DARK_GRAY));
-        StructureScannerSettings settings = StructureScannerSettings.read(stack);
-        tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.configure").withStyle(ChatFormatting.AQUA));
-        tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.execute").withStyle(ChatFormatting.YELLOW));
-        tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.mode",
-                Component.translatable("gui.ufo.structure_scanner.mode."
-                        + settings.mode().name().toLowerCase(java.util.Locale.ROOT))).withStyle(ChatFormatting.LIGHT_PURPLE));
-        tooltipComponents.add(Component.translatable("item.ufo.structure_scanner.tooltip.field", settings.fieldTier())
-                .withStyle(ChatFormatting.AQUA));
-        var linked = StructureScannerAe2Link.linkedPosition(stack);
-        tooltipComponents.add(Component.translatable(linked == null
-                        ? "item.ufo.structure_scanner.tooltip.ae_unlinked"
-                        : "item.ufo.structure_scanner.tooltip.ae_linked",
-                linked == null ? "" : linked.pos().getX(),
-                linked == null ? "" : linked.pos().getY(),
-                linked == null ? "" : linked.pos().getZ()).withStyle(
-                linked == null ? ChatFormatting.RED : ChatFormatting.GREEN));
+        tooltipComponents.add(Component.translatable("item.ufo.terminal.tooltip.0").withStyle(ChatFormatting.GRAY));
+        tooltipComponents.add(Component.translatable("item.ufo.terminal.tooltip.1").withStyle(ChatFormatting.DARK_GRAY));
+        tooltipComponents.add(Component.translatable("item.ufo.terminal.tooltip.2").withStyle(ChatFormatting.YELLOW));
+        tooltipComponents.add(Component.translatable("tooltip.ufo.structure_scanner.creative_tooltip").withStyle(ChatFormatting.YELLOW));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 
