@@ -1,0 +1,76 @@
+name: Bug report
+description: Report a reproducible UFO Future problem
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please search existing issues before opening a new one. For crashes, attach the **complete** `logs/latest.log` from the failed launch, starting at its first line. A pasted stack trace alone often hides the original error. Remove access tokens or other private information before sharing logs.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior and what you expected instead.
+      placeholder: The ME Drive LED stays orange when the White Dwarf Cell shows its full byte capacity; I expected a red LED.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the setup and the smallest sequence that triggers the problem.
+      placeholder: |
+        1. Install the versions listed below.
+        2. Put a White Dwarf Cell in an ME Drive.
+        3. Fill the cell until its byte counter reaches the limit.
+        4. Observe the drive LED.
+    validations:
+      required: true
+  - type: input
+    id: ufo-version
+    attributes:
+      label: UFO Future version
+      placeholder: 3.0.0-beta.3
+    validations:
+      required: true
+  - type: input
+    id: minecraft-version
+    attributes:
+      label: Minecraft version
+      placeholder: 1.21.1
+    validations:
+      required: true
+  - type: input
+    id: neoforge-version
+    attributes:
+      label: NeoForge version
+      placeholder: 21.1.251
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Other relevant mods and versions
+      description: At minimum include AE2, RaishxCore and AE2AddonLib. For compatibility problems, include the affected mod and any connector or modpack version.
+      placeholder: |
+        AE2:
+        RaishxCore:
+        AE2AddonLib:
+        Other relevant mods:
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs, crash report or screenshots
+      description: For crashes, attach the complete `logs/latest.log` and any file from `crash-reports/` for the same attempt. For visual bugs, attach a screenshot. If evidence is unavailable, explain why.
+      placeholder: Drag files here or link to complete, untruncated files. Do not paste only the final exception.
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Does the problem still happen with only UFO Future and its required dependencies?
+    validations:
+      required: false

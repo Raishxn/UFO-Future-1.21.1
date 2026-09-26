@@ -70,7 +70,12 @@ jobs:
           fi
 
       - name: Build with Gradle
-        run: ./gradlew build runGameTestServer --stacktrace
+        run: ./gradlew build --stacktrace
+
+      # runData and runGameTestServer both write run/logs/latest.log. Keep the
+      # GameTest launch after the build so the assertion reads the server log.
+      - name: Run the GameTests after the build
+        run: ./gradlew runGameTestServer --stacktrace
 
       - name: Assert the GameTests actually ran
         run: |
