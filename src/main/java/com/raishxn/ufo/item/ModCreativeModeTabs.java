@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.ModBlocks;
 import com.raishxn.ufo.block.MultiblockBlocks;

@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.util.EnergyToolHelper; // Importante: Importar o Helper
 import net.minecraft.ChatFormatting;

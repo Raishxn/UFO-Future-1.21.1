@@ -1,5 +1,7 @@
 package com.raishxn.ufo.screen;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.api.client.AEKeyRendering;
 import appeng.api.config.LockCraftingMode;
 import appeng.api.stacks.AmountFormat;
@@ -85,8 +87,8 @@ public class QuantumPatternHatchLockReason implements ICompositeWidget {
                     stackName = AEKeyRendering.getDisplayName(stack.what());
                     stackAmount = Component.literal(stack.what().formatAmount(stack.amount(), AmountFormat.FULL));
                 } else {
-                    stackName = Component.literal("ERROR");
-                    stackAmount = Component.literal("ERROR");
+                    stackName = UfoText.literal("gui.ufo.text.error");
+                    stackAmount = UfoText.literal("gui.ufo.text.error");
                 }
                 yield InGameTooltip.CraftingLockedUntilResult.text(stackName, stackAmount);
             }

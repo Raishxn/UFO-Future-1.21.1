@@ -1,5 +1,7 @@
 package com.raishxn.ufo.util;
 
+import com.raishxn.ufo.util.UfoText;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

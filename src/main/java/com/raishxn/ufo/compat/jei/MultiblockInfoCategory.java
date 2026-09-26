@@ -1,5 +1,7 @@
 package com.raishxn.ufo.compat.jei;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
 import com.raishxn.ufo.block.MultiblockBlocks;
@@ -36,7 +38,7 @@ public final class MultiblockInfoCategory implements IRecipeCategory<StructurePr
     }
 
     @Override public @NotNull RecipeType<StructurePreviewModel> getRecipeType() { return RECIPE_TYPE; }
-    @Override public @NotNull Component getTitle() { return Component.literal("Multiblock Structures"); }
+    @Override public @NotNull Component getTitle() { return UfoText.literal("gui.ufo.text.multiblock_structures"); }
     @Override public int getWidth() { return WIDTH; }
     @Override public int getHeight() { return HEIGHT; }
     @Override public @NotNull IDrawable getIcon() { return icon; }

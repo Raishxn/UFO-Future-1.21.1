@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.api.stacks.GenericStack;
 import appeng.api.config.FuzzyMode;
 import appeng.api.ids.AEComponents;
@@ -62,7 +64,7 @@ public class InfinityGenesisCell extends AEBaseItem implements ICellWorkbenchIte
             lines.add(Component.translatable("item.ufo.infinity_genesis_cell.learned").withStyle(ChatFormatting.DARK_AQUA));
             int shown = 0;
             for (var key : keys) {
-                lines.add(Component.literal(" - ").append(key.what().getDisplayName()));
+                lines.add(UfoText.literal(" - ").append(key.what().getDisplayName()));
                 if (++shown >= 8) {
                     if (keys.size() > shown) {
                         lines.add(Component.translatable("item.ufo.infinity_genesis_cell.more", keys.size() - shown)

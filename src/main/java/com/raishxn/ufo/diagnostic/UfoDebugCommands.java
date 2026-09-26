@@ -1,5 +1,7 @@
 package com.raishxn.ufo.diagnostic;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.raishxn.ufo.UfoMod;
@@ -43,7 +45,7 @@ public final class UfoDebugCommands {
     private static int showPerformance(CommandSourceStack source) {
         var snapshots = MachinePerformanceRegistry.INSTANCE.snapshots();
         if (snapshots.isEmpty()) {
-            source.sendSuccess(() -> Component.literal("UFO perf: nenhuma amostra coletada."), false);
+            source.sendSuccess(() -> UfoText.literal("gui.ufo.text.ufo_perf_nenhuma_amostra_coletada"), false);
             return 0;
         }
 
@@ -75,8 +77,8 @@ public final class UfoDebugCommands {
                             .add(snapshot));
         }
 
-        source.sendSuccess(() -> Component.literal("UFO perf: " + snapshots.size() + " máquinas instrumentadas"), false);
-        byType.forEach((type, summary) -> source.sendSuccess(() -> Component.literal(String.format(
+        source.sendSuccess(() -> UfoText.literal("gui.ufo.text.ufo_perf" + snapshots.size() + " máquinas instrumentadas"), false);
+        byType.forEach((type, summary) -> source.sendSuccess(() -> UfoText.literal(String.format(
                 "%s count=%d avg=%.2fµs worstP95=%.2fµs worstP99=%.2fµs scans=%d blocks=%d storageOps=%d energy=%d/%dAE attempts=%d sync=%d/%dB",
                 type,
                 summary.machines(),
@@ -93,7 +95,7 @@ public final class UfoDebugCommands {
         String dimension = source.getLevel().dimension().location().toString();
         var snapshot = MachinePerformanceRegistry.INSTANCE.snapshot(dimension, pos.asLong());
         if (snapshot.isEmpty()) {
-            source.sendFailure(Component.literal("Nenhuma métrica UFO para " + pos.toShortString()));
+            source.sendFailure(UfoText.literal("gui.ufo.text.nenhuma_m_trica_ufo_para" + pos.toShortString()));
             return 0;
         }
 
@@ -129,7 +131,7 @@ public final class UfoDebugCommands {
         } else {
             runtime = "";
         }
-        source.sendSuccess(() -> Component.literal(String.format(
+        source.sendSuccess(() -> UfoText.literal(String.format(
                 "%s %s%s avg=%.2fµs p95=%.2fµs p99=%.2fµs ticks=%d scans=%d blocks=%d storageOps=%d sync=%d/%dB",
                 value.key().machineType(), pos.toShortString(),
                 runtime,
@@ -143,14 +145,14 @@ public final class UfoDebugCommands {
 
     private static int resetPerformance(CommandSourceStack source) {
         MachinePerformanceRegistry.INSTANCE.reset();
-        source.sendSuccess(() -> Component.literal("Métricas de performance UFO zeradas."), true);
+        source.sendSuccess(() -> UfoText.literal("gui.ufo.text.m_tricas_de_performance_ufo_zeradas"), true);
         return 1;
     }
 
     private static int exportPerformance(CommandSourceStack source, String scenario) {
         var snapshots = MachinePerformanceRegistry.INSTANCE.snapshots();
         if (snapshots.isEmpty()) {
-            source.sendFailure(Component.literal("Nenhuma amostra UFO para exportar."));
+            source.sendFailure(UfoText.literal("gui.ufo.text.nenhuma_amostra_ufo_para_exportar"));
             return 0;
         }
         try {
@@ -159,11 +161,11 @@ public final class UfoDebugCommands {
             // User labels are metadata only, never part of a filesystem path.
             var output = Files.createTempFile(directory, "perf-", ".json");
             Files.writeString(output, MachinePerformanceReport.toJson(scenario, Instant.now().toString(), snapshots));
-            source.sendSuccess(() -> Component.literal("Diagnóstico UFO exportado: " + output.toAbsolutePath()), false);
+            source.sendSuccess(() -> UfoText.literal("gui.ufo.text.diagn_stico_ufo_exportado" + output.toAbsolutePath()), false);
             return snapshots.size();
         } catch (IOException exception) {
             UfoMod.LOGGER.error("Could not export UFO performance report", exception);
-            source.sendFailure(Component.literal("Falha ao exportar diagnóstico UFO; consulte o log do servidor."));
+            source.sendFailure(UfoText.literal("gui.ufo.text.falha_ao_exportar_diagn_stico_ufo_consulte_o_log_do_serv"));
             return 0;
         }
     }

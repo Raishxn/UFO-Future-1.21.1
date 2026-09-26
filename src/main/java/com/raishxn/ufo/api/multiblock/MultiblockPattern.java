@@ -1,5 +1,7 @@
 package com.raishxn.ufo.api.multiblock;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 
 import net.minecraft.core.BlockPos;
@@ -76,7 +78,7 @@ public class MultiblockPattern {
     public int getControllerRow() { return controllerRow; }
     public int getControllerCol() { return controllerCol; }
     public int getTestedPositionCount() { return testedPositionCount; }
-    public Component getLegendName(char symbol) { return legendNames.getOrDefault(symbol, Component.literal("Unknown Block")); }
+    public Component getLegendName(char symbol) { return legendNames.getOrDefault(symbol, UfoText.literal("gui.ufo.text.unknown_block")); }
     public boolean matchesSlot(char symbol, BlockState state, Level level, BlockPos pos) {
         BlockPredicate predicate = legend.get(symbol);
         return predicate == null || predicate.test(state, level, pos);
@@ -133,7 +135,7 @@ public class MultiblockPattern {
                     if (symbol != controllerChar && predicate != null && predicate != ANY) {
                         compiledCells.add(new PatternCell(
                                 symbol, offset, predicate,
-                                this.legendNames.getOrDefault(symbol, Component.literal("Expected part"))));
+                                this.legendNames.getOrDefault(symbol, UfoText.literal("gui.ufo.text.expected_part"))));
                     }
                 }
             }
@@ -178,7 +180,7 @@ public class MultiblockPattern {
             if (state == null) {
                 valid = false;
                 hasUnloadedPositions = true;
-                PatternError err = new PatternError(worldPos, Component.literal("Chunk not loaded"));
+                PatternError err = new PatternError(worldPos, UfoText.literal("gui.ufo.text.chunk_not_loaded"));
                 allErrors.add(err);
                 if (firstError == null) firstError = err;
                 if (!diagnostic) {
@@ -360,7 +362,7 @@ public class MultiblockPattern {
          * Defines what block a character in the pattern maps to.
          */
         public Builder where(char c, BlockPredicate predicate) {
-            return where(c, predicate, Component.literal("Unknown Block"));
+            return where(c, predicate, UfoText.literal("gui.ufo.text.unknown_block"));
         }
 
         public Builder where(char c, BlockPredicate predicate, Component expectedName) {

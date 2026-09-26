@@ -1,5 +1,7 @@
 package com.raishxn.ufo.screen;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.client.Point;
 import appeng.client.gui.Icon;
 import appeng.client.gui.widgets.OpenGuideButton;
@@ -68,12 +70,12 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
 
         this.leftToolbar.add(new UfoAe2IconButton(
                 Icon.SCHEDULING_DEFAULT,
-                Component.literal("Scan multiblock structure"),
+                UfoText.literal("gui.ufo.text.scan_multiblock_structure"),
                 button -> scanStructure()));
 
         UfoQuickBuildButton quickBuild = new UfoQuickBuildButton(button ->
                 ModPackets.sendToServer(new PacketAutoBuildMultiblock(menu.getBlockEntity().getBlockPos())));
-        quickBuild.setTooltip(Tooltip.create(Component.literal("Auto-build structure")));
+        quickBuild.setTooltip(Tooltip.create(UfoText.literal("gui.ufo.text.auto_build_structure")));
         this.autoBuildButton = quickBuild;
         this.leftToolbar.add(quickBuild);
 
@@ -217,13 +219,13 @@ public final class QuantumComputationNexusScreen extends AbstractContainerScreen
 
         int shown = Math.min(10, result.allErrors().size());
         minecraft.player.displayClientMessage(
-                Component.literal(result.allErrors().size() + " block(s) missing or misplaced.")
+                UfoText.literal("gui.ufo.text.s_block_s_missing_or_misplaced", result.allErrors().size())
                         .withStyle(ChatFormatting.RED), false);
         for (int index = 0; index < shown; index++) {
             var error = result.allErrors().get(index);
             minecraft.player.displayClientMessage(
-                    Component.literal("  [" + error.pos().getX() + ", " + error.pos().getY() + ", "
-                                    + error.pos().getZ() + "] Expected: ")
+                    UfoText.literal("gui.ufo.text.s_s_s_expected_1", error.pos().getX(), error.pos().getY(),
+                                    error.pos().getZ())
                             .withStyle(ChatFormatting.GRAY)
                             .append(error.expected().copy().withStyle(ChatFormatting.YELLOW)), false);
         }

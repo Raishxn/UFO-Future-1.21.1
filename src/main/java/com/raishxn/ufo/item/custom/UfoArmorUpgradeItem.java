@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.armor.UfoArmorModule;
 import com.raishxn.ufo.armor.UfoArmorSetting;
 import net.minecraft.ChatFormatting;
@@ -34,7 +36,7 @@ public class UfoArmorUpgradeItem extends Item {
             if (!settings.isEmpty()) {
                 tooltip.add(Component.translatable("tooltip.ufo.module.configurable").withStyle(ChatFormatting.AQUA));
                 for (UfoArmorSetting setting : settings) {
-                    tooltip.add(Component.literal(" • ")
+                    tooltip.add(UfoText.literal(" • ")
                             .append(Component.translatable(setting.translationKey()))
                             .withStyle(ChatFormatting.DARK_AQUA));
                 }

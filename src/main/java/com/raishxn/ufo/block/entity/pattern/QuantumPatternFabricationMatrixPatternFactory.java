@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity.pattern;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.api.multiblock.MultiblockCellRole;
 import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
@@ -73,7 +75,7 @@ public final class QuantumPatternFabricationMatrixPatternFactory {
                 .where('X', (state, level, pos) -> QuantumPatternPredicates.isFluixBlock(state),
                         QuantumPatternPredicates.fluixBlockName())
                 .candidates('X', QuantumPatternPredicates.fluixBlockCandidates())
-                .where('A', MultiblockPattern.ANY, Component.literal("Open interior space"));
+                .where('A', MultiblockPattern.ANY, UfoText.literal("gui.ufo.text.open_interior_space"));
         QuantumPatternFabricationMatrixTopologySchema.layers().forEach(builder::layer);
         return builder.build();
     }

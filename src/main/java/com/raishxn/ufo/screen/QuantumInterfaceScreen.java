@@ -1,5 +1,7 @@
 package com.raishxn.ufo.screen;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.Icon;
 import appeng.client.gui.style.ScreenStyle;

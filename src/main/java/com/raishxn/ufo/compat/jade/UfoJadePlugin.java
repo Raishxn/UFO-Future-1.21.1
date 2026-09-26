@@ -1,5 +1,7 @@
 package com.raishxn.ufo.compat.jade;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.MassiveOutputHatchBlock;
 import com.raishxn.ufo.block.entity.MassiveOutputHatchBE;

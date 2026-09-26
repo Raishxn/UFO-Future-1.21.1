@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
 import com.raishxn.ufo.api.multiblock.IMultiblockPart;
 import com.raishxn.ufo.api.multiblock.MultiblockMachineTier;
