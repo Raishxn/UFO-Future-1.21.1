@@ -75,7 +75,7 @@ public final class StructureTerminalOps {
                 break;
             }
         }
-        if (node == null || node.getGrid() == null) {
+        if (node == null || !node.isActive() || node.getGrid() == null) {
             return null;
         }
         return node.getGrid().getStorageService().getInventory();

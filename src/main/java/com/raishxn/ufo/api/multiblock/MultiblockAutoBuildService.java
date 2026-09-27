@@ -367,7 +367,8 @@ public final class MultiblockAutoBuildService {
     private static String position(BlockPos pos) { return pos.getX() + ", " + pos.getY() + ", " + pos.getZ(); }
 
     private static boolean canBreak(ServerLevel level, ServerPlayer player, BlockPos pos) {
-        if (!player.mayInteract(level, pos)) {
+        if (!player.mayInteract(level, pos)
+                || !player.mayUseItemAt(pos, Direction.UP, ItemStack.EMPTY)) {
             return false;
         }
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
@@ -375,7 +376,8 @@ public final class MultiblockAutoBuildService {
     }
 
     private static boolean canPlace(ServerLevel level, ServerPlayer player, BlockPos pos) {
-        if (!player.mayInteract(level, pos)) {
+        if (!player.mayInteract(level, pos)
+                || !player.mayUseItemAt(pos, Direction.UP, ItemStack.EMPTY)) {
             return false;
         }
         BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);

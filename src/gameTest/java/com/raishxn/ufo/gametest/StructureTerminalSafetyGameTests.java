@@ -31,6 +31,8 @@ public final class StructureTerminalSafetyGameTests {
     @GameTest(template = "empty", timeoutTicks = 20)
     public static void terminalModesDefaultToSafeValues(GameTestHelper helper) {
         ItemStack stack = new ItemStack(ModItems.STRUCTURE_SCANNER.get());
+        helper.assertFalse(StructureTerminalSettings.getBuildMode(stack),
+                "Build mode must default to off so the terminal scans by default");
         helper.assertFalse(StructureTerminalSettings.getReplaceMode(stack),
                 "Replace mode must default to off");
         helper.assertFalse(StructureTerminalSettings.getDismantleMode(stack),
