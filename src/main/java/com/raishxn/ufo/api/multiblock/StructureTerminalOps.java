@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -41,6 +42,41 @@ public final class StructureTerminalOps {
             }
         }
         return mismatches;
+    }
+
+    /** Select only currently matching structural blocks; never select foreign blocks or the controller. */
+    public static DemolitionScan scanDemolition(MultiblockControllerDefinition definition, Level level,
+                                                BlockPos controllerPos, Direction facing) {
+        MultiblockPattern pattern = definition.pattern();
+        List<DemolitionTarget> targets = new ArrayList<>();
+        char[][][] template = pattern.getPattern();
+        for (int y = 0; y < template.length; y++) {
+            for (int z = 0; z < template[y].length; z++) {
+                for (int x = 0; x < template[y][z].length; x++) {
+                    char symbol = template[y][z][x];
+                    BlockState expected = definition.defaultCreativeStates().get(symbol);
+                    if (symbol == pattern.getControllerChar() || expected == null || expected.isAir()) continue;
+                    BlockPos world = MultiblockPattern.getRotatedPos(controllerPos,
+                            x - pattern.getControllerCol(), y - pattern.getControllerLayer(),
+                            z - pattern.getControllerRow(), facing);
+                    if (!level.isInWorldBounds(world) || !level.isLoaded(world)) {
+                        return new DemolitionScan(false, List.of());
+                    }
+                    BlockState current = level.getBlockState(world);
+                    if (!current.isAir() && pattern.matchesSlot(symbol, current, level, world)) {
+                        targets.add(new DemolitionTarget(world.immutable(), current));
+                    }
+                }
+            }
+        }
+        return new DemolitionScan(true, targets);
+    }
+
+    public record DemolitionTarget(BlockPos position, BlockState state) { }
+    public record DemolitionScan(boolean available, List<DemolitionTarget> targets) {
+        public DemolitionScan {
+            targets = List.copyOf(targets);
+        }
     }
 
     public static boolean hasExposedGridNode(IInWorldGridNodeHost host) {

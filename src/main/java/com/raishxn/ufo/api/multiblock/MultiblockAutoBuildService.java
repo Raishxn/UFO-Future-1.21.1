@@ -86,7 +86,7 @@ public final class MultiblockAutoBuildService {
                 controllerBlockEntity, controllerBlockEntity.getBlockState());
         var unavailable = new ArrayList<BlockPos>();
         if (mode == StructureScannerSettings.Mode.DEMOLISH) {
-            startDemolition(player, level, key, controllerBlockEntity, controller, pattern, facing);
+            startDemolition(player, level, key, controllerBlockEntity, controller, definition, facing);
             return;
         }
         boolean replace = mode == StructureScannerSettings.Mode.REPLACE;
@@ -152,22 +152,23 @@ public final class MultiblockAutoBuildService {
 
     private static void startDemolition(ServerPlayer player, ServerLevel level, SessionKey key,
                                         BlockEntity controllerBlockEntity, IMultiblockController controller,
-                                        MultiblockPattern pattern, net.minecraft.core.Direction facing) {
-        MultiblockPattern.MatchResult result = pattern.match(level, controllerBlockEntity.getBlockPos(), facing);
-        List<Work> work = result.allErrors().stream()
-                .map(MultiblockPattern.PatternError::pos)
-                .filter(level::isLoaded)
-                .filter(pos -> !level.getBlockState(pos).isAir())
-                .map(pos -> new Work(pos.immutable(), null, false, true))
+                                        MultiblockControllerDefinition definition, Direction facing) {
+        var scan = StructureTerminalOps.scanDemolition(definition, level, controllerBlockEntity.getBlockPos(), facing);
+        if (!scan.available()) {
+            message(player, "Demolition stopped: part of the structure is outside loaded chunks or world bounds.", ChatFormatting.RED);
+            return;
+        }
+        List<Work> work = scan.targets().stream()
+                .map(target -> new Work(target.position(), target.state(), false, true))
                 .toList();
         if (work.isEmpty()) {
             controller.scanStructure(level);
-            message(player, "Demolition found no invalid occupied structure slots.", ChatFormatting.GREEN);
+            message(player, "Demolition found no matching structural blocks.", ChatFormatting.GREEN);
             return;
         }
         SESSIONS.put(key, new Session(player.getUUID(), StructureScannerSettings.Mode.DEMOLISH, work, 0, 0,
                 StructureScannerSettings.DEFAULT, ItemStack.EMPTY));
-        message(player, "Demolition started: " + work.size() + " invalid block(s).", ChatFormatting.YELLOW);
+        message(player, "Demolition started: " + work.size() + " structural block(s).", ChatFormatting.YELLOW);
     }
 
     @SubscribeEvent
@@ -193,13 +194,20 @@ public final class MultiblockAutoBuildService {
             BlockPos world = work.position();
             if (!level.isLoaded(world)) continue;
             if (work.removeOnly()) {
+                BlockState current = level.getBlockState(world);
+                if (!current.equals(work.target())) {
+                    iterator.remove();
+                    message(player, "Demolition interrupted by a changed block at " + position(world) + ".", ChatFormatting.RED);
+                    refresh(level, key.controllerPos());
+                    continue;
+                }
                 if (!canBreak(level, player, world)) {
                     iterator.remove();
                     message(player, "Structure operation stopped: no permission at " + position(world) + ".", ChatFormatting.RED);
                     refresh(level, key.controllerPos());
                     continue;
                 }
-                boolean removed = level.getBlockState(world).isAir() || level.destroyBlock(world, true, player);
+                boolean removed = level.destroyBlock(world, true, player);
                 advance(entry, session, removed, player, level, key, iterator);
                 continue;
             }
