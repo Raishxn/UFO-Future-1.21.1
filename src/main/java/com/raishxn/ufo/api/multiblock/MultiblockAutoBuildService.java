@@ -41,6 +41,7 @@ import java.util.UUID;
 import com.raishxn.ufo.item.StructureScannerSettings;
 import com.raishxn.ufo.item.StructureScannerAe2Link;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import com.raishxn.ufo.block.entity.StellarNexusPartBE;
 
 /** Server-owned gradual auto-build sessions. Wrong occupied blocks are never replaced. */
 @EventBusSubscriber(modid = "ufo")
@@ -107,7 +108,8 @@ public final class MultiblockAutoBuildService {
                         return MultiblockAutoBuildPlan.SlotState.MATCHING;
                     }
                     if (current.isAir()) return MultiblockAutoBuildPlan.SlotState.EMPTY;
-                    return replace ? MultiblockAutoBuildPlan.SlotState.REPLACE
+                    return replace && canReplaceBlockEntity(level.getBlockEntity(world))
+                            ? MultiblockAutoBuildPlan.SlotState.REPLACE
                             : MultiblockAutoBuildPlan.SlotState.BLOCKED;
                 });
         if (!unavailable.isEmpty()) {
@@ -209,6 +211,14 @@ public final class MultiblockAutoBuildService {
             if (!current.isAir() && !work.replace()) {
                 iterator.remove();
                 message(player, "Auto-build interrupted by an occupied block at " + position(world) + ".", ChatFormatting.RED);
+                refresh(level, key.controllerPos());
+                continue;
+            }
+            if (!current.isAir() && work.replace()
+                    && !canReplaceBlockEntity(level.getBlockEntity(world))) {
+                iterator.remove();
+                message(player, "Auto-build stopped: block data at " + position(world)
+                        + " cannot be safely replaced.", ChatFormatting.RED);
                 refresh(level, key.controllerPos());
                 continue;
             }
@@ -365,6 +375,11 @@ public final class MultiblockAutoBuildService {
     }
 
     private static String position(BlockPos pos) { return pos.getX() + ", " + pos.getY() + ", " + pos.getZ(); }
+
+    /** Only this structural entity stores disposable controller-link metadata. */
+    private static boolean canReplaceBlockEntity(BlockEntity blockEntity) {
+        return blockEntity == null || blockEntity.getClass() == StellarNexusPartBE.class;
+    }
 
     private static boolean canBreak(ServerLevel level, ServerPlayer player, BlockPos pos) {
         if (!player.mayInteract(level, pos)
