@@ -16,6 +16,20 @@ Fluxo combinado daqui para frente:
 
 ### Implementations
 
+## [3.0.0-beta.4] - 2026-09-27
+
+### Bug Fixes
+
+- Evitado erro na inicialização quando Applied Flux não está instalado.
+- Corrigidos textos de interfaces e tooltips em inglês e chinês simplificado.
+- O Terminal de Estruturas respeita permissões em cada bloco editado e não substitui blocos com dados persistentes.
+
+### Implementations
+
+- O Terminal de Estruturas abre em modo de leitura por padrão, pode obter materiais de uma rede AE ativa e desmonta apenas componentes válidos da estrutura.
+- A receita do terminal usa um Processador Dimensional cercado por oito livros.
+- Centralizada a entrada inicial no Stellar Nexus e atualizado o visual das células Dwarf.
+
 ## [3.0.0-beta.3] - 2026-09-25
 
 ### Bug Fixes
