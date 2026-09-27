@@ -1491,14 +1491,11 @@ public class ModRecipeProvider extends RecipeProvider {
 
     private void buildToolAndUtilityRecipes(RecipeOutput c) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.STRUCTURE_SCANNER.get())
-                .pattern(" Q ")
-                .pattern("SDE")
-                .pattern(" O ")
-                .define('Q', ModItems.QUANTUM_ANOMALY.get())
-                .define('S', AEItems.SINGULARITY)
+                .pattern("BBB")
+                .pattern("BDB")
+                .pattern("BBB")
+                .define('B', Items.BOOK)
                 .define('D', ModItems.DIMENSIONAL_PROCESSOR.get())
-                .define('E', AEBlocks.CONTROLLER)
-                .define('O', ModItems.OBSIDIAN_MATRIX.get())
                 .unlockedBy("has_dimensional_processor", has(ModItems.DIMENSIONAL_PROCESSOR.get()))
                 .save(c);
 

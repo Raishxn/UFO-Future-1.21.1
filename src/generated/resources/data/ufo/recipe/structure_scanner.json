@@ -2,26 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
+    "B": {
+      "item": "minecraft:book"
+    },
     "D": {
       "item": "ufo:dimensional_processor"
-    },
-    "E": {
-      "item": "ae2:controller"
-    },
-    "O": {
-      "item": "ufo:obsidian_matrix"
-    },
-    "Q": {
-      "item": "ufo:quantum_anomaly"
-    },
-    "S": {
-      "item": "ae2:singularity"
     }
   },
   "pattern": [
-    " Q ",
-    "SDE",
-    " O "
+    "BBB",
+    "BDB",
+    "BBB"
   ],
   "result": {
     "count": 1,

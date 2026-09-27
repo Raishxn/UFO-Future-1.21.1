@@ -1,4 +1,4 @@
-// 1.21.1	2026-09-20T06:49:04.964503808	Recipes
+// 1.21.1	2026-09-27T01:17:17.906553383	Recipes
 1d246551720da7a4278e01eabd033d544a6bdb32 data/ufo/advancement/recipes/combat/ufo_abyssal_sight_card.json
 273fbc64cfd42799ed2e94dcd62220d18b0be8db data/ufo/advancement/recipes/combat/ufo_adaptive_biosphere_card.json
 2ac858c09ad8edb63ed3f1aa10865d0083affd12 data/ufo/advancement/recipes/combat/ufo_aegis_singularity_card.json
@@ -235,7 +235,7 @@ ce8be5a4b326e9dfcde6d0d6a4051ebb47d95eb8 data/ufo/recipe/storage_1b.json
 9ffb9b7c3eda44ec4dcf0028e376fc48ed010e15 data/ufo/recipe/storage_1t.json
 3307d6fab038421af9f316e1a3b301182c958a08 data/ufo/recipe/storage_250t.json
 7daee64c93f49f340363dd62eea0ef707d27a408 data/ufo/recipe/storage_50b.json
-2cea925876ee0e0ecdcf94134d6c8143d676f547 data/ufo/recipe/structure_scanner.json
+7f9b00e7c621a9d8db51aff8e162619e12242745 data/ufo/recipe/structure_scanner.json
 79d3c01d2451589fd965c0cf804b399d566e3cca data/ufo/recipe/ufo_abyssal_sight_card.json
 6674d95fdfb80cc1747392688e9f05d0f89156fd data/ufo/recipe/ufo_adaptive_biosphere_card.json
 bf3fe6fdb88b1aea5e5d4203b13c94807c71f6b4 data/ufo/recipe/ufo_aegis_singularity_card.json
