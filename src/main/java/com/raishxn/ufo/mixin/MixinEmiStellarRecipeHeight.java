@@ -1,5 +1,7 @@
 package com.raishxn.ufo.mixin;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.raishxn.ufo.compat.jei.StellarSimulationRecipeCategory;
 import com.raishxn.ufo.recipe.StellarSimulationRecipe;

@@ -1,5 +1,7 @@
 package com.raishxn.ufo.compat.jei;
 
+import com.raishxn.ufo.util.UfoText;
+
 /*
  * Ported and adapted from AE2 Lightning Tech's InteractiveMultiblockPreview.
  * Copyright AE2 Lightning Tech contributors. Licensed under LGPL-3.0.
@@ -87,7 +89,7 @@ public final class StructurePreviewWidget implements IRecipeWidget, IJeiInputHan
         drawToolbar(g, font, mouseX, mouseY);
         drawViewport(g);
         drawPanel(g, font, mouseX, mouseY);
-        drawCentered(g, font, "Drag: rotate | Shift/middle: pan | Wheel: zoom | Click: inspect",
+        drawCentered(g, font, UfoText.str("gui.ufo.text.drag_rotate_shift_middle_pan_wheel_zoom_click_inspect"),
                 2, height - FOOTER_H + 3, width - 4, 0xFF000000);
     }
 
@@ -198,7 +200,7 @@ public final class StructurePreviewWidget implements IRecipeWidget, IJeiInputHan
             var material = model.materials().get(i);
             g.renderItem(material.stack(), panelX + 4, y + 4);
             drawTrimmed(g, f, material.stack().getHoverName().getString(), panelX + 27, y + 3, PANEL_W - 34, TEXT);
-            drawTrimmed(g, f, "x" + material.count(), panelX + 27, y + 14, PANEL_W - 34, MUTED);
+            drawTrimmed(g, f, UfoText.str("gui.ufo.text.x_s", material.count()), panelX + 27, y + 14, PANEL_W - 34, MUTED);
         }
         g.disableScissor();
         drawScrollbar(g);
@@ -208,7 +210,7 @@ public final class StructurePreviewWidget implements IRecipeWidget, IJeiInputHan
         int top = contentTop();
         if (selectedCell == null) {
             int y = top + 5;
-            for (var line : f.split(Component.literal("Click a block in the preview to inspect its role and valid alternatives."), PANEL_W - 10)) {
+            for (var line : f.split(UfoText.literal("gui.ufo.text.click_a_block_in_the_preview_to_inspect_its_role_and_val"), PANEL_W - 10)) {
                 g.drawString(f, line, panelX + 5, y, MUTED, false);
                 y += f.lineHeight + 2;
             }
@@ -216,14 +218,14 @@ public final class StructurePreviewWidget implements IRecipeWidget, IJeiInputHan
         }
         drawItemSlot(g, selectedCell.state().getBlock().asItem().getDefaultInstance(), panelX + 4, top + 2);
         drawTrimmed(g, f, selectedCell.state().getBlock().getName().getString(), panelX + 25, top + 3, PANEL_W - 27, TEXT);
-        drawTrimmed(g, f, "Role: " + selectedCell.role().getString(), panelX + 4, top + 24, PANEL_W - 8, MUTED);
+        drawTrimmed(g, f, UfoText.str("gui.ufo.text.role_s", selectedCell.role().getString()), panelX + 4, top + 24, PANEL_W - 8, MUTED);
         var p = selectedCell.localPos();
-        drawTrimmed(g, f, "Position: " + p.getX() + ", " + p.getY() + ", " + p.getZ(), panelX + 4, top + 35, PANEL_W - 8, MUTED);
-        g.drawString(f, "Alternatives", panelX + 4, top + 48, TEXT, false);
+        drawTrimmed(g, f, UfoText.str("gui.ufo.text.position_s_s_s", p.getX(), p.getY(), p.getZ()), panelX + 4, top + 35, PANEL_W - 8, MUTED);
+        g.drawString(f, UfoText.str("gui.ufo.text.alternatives"), panelX + 4, top + 48, TEXT, false);
         List<BlockState> alternatives = visibleAlternatives();
         boolean allowsAir = selectedCell.alternatives().stream().anyMatch(BlockState::isAir);
         if (alternatives.size() == 1 && !allowsAir) {
-            g.drawString(f, "Fixed block", panelX + 4, top + 62, MUTED, false);
+            g.drawString(f, UfoText.str("gui.ufo.text.fixed_block"), panelX + 4, top + 62, MUTED, false);
         } else {
             for (int i = 0; i < Math.min(8, alternatives.size()); i++) {
                 drawItemSlot(g, alternatives.get(i).getBlock().asItem().getDefaultInstance(),
@@ -291,8 +293,8 @@ public final class StructurePreviewWidget implements IRecipeWidget, IJeiInputHan
             var cell = pickCell(mx, my);
             if (cell != null) {
                 tooltip.add(cell.state().getBlock().getName());
-                tooltip.add(Component.literal("Role: " + cell.role().getString()));
-                tooltip.add(Component.literal("Click for details"));
+                tooltip.add(UfoText.literal("gui.ufo.text.role_s", cell.role().getString()));
+                tooltip.add(UfoText.literal("gui.ufo.text.click_for_details"));
             }
         }
     }

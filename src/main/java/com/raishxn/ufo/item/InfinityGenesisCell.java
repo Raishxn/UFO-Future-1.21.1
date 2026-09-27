@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.api.stacks.GenericStack;
 import appeng.api.config.FuzzyMode;
 import appeng.api.ids.AEComponents;

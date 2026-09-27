@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity.pattern;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.api.multiblock.MultiblockCellRole;
 import com.raishxn.ufo.api.multiblock.MultiblockDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
@@ -62,7 +64,7 @@ public final class InfinityFabricationSingularityPatternFactory {
                 .candidates('L', MultiblockBlocks.QUANTUM_GRID_LINK.get().defaultBlockState())
                 .where('C', (state, level, pos) -> QuantumPatternPredicates.isQuantumCasing(state)
                                 || state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get()),
-                        Component.literal("Quantum casing or FE Energy Input Hatch"))
+                        UfoText.literal("gui.ufo.text.quantum_casing_or_fe_energy_input_hatch"))
                 .candidates('C', MultiblockBlocks.QUANTUM_HYPER_MECHANICAL_CASING.get().defaultBlockState(),
                         MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get().defaultBlockState())
                 .where('K', MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
@@ -83,7 +85,7 @@ public final class InfinityFabricationSingularityPatternFactory {
                 .where('X', (state, level, pos) -> QuantumPatternPredicates.isFluixBlock(state),
                         QuantumPatternPredicates.fluixBlockName())
                 .candidates('X', QuantumPatternPredicates.fluixBlockCandidates())
-                .where('A', MultiblockPattern.ANY, Component.literal("Open interior space"));
+                .where('A', MultiblockPattern.ANY, UfoText.literal("gui.ufo.text.open_interior_space"));
         InfinityFabricationSingularityTopologySchema.layers().forEach(builder::layer);
         return builder.build();
     }

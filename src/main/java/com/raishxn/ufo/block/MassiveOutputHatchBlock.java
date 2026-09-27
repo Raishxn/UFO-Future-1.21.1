@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.api.multiblock.IMultiblockController;
 import com.raishxn.ufo.api.multiblock.MultiblockCasingStyle;
 import com.raishxn.ufo.block.entity.AbstractSimpleMultiblockControllerBE;
@@ -79,10 +81,10 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
                     ? net.minecraft.network.chat.Component.translatable("message.ufo.energy_hatch.external_only")
                             .withStyle(net.minecraft.ChatFormatting.YELLOW)
                     : be.isNetworkReady()
-                    ? net.minecraft.network.chat.Component.literal(
-                            be.isLinked() ? "Online — Linked to Controller" : "Online — Standalone")
+                    ? UfoText.literal(be.isLinked()
+                            ? "gui.ufo.text.online_linked" : "gui.ufo.text.online_standalone")
                             .withStyle(net.minecraft.ChatFormatting.GREEN)
-                    : net.minecraft.network.chat.Component.literal("ME disconnected")
+                    : UfoText.literal("gui.ufo.text.me_disconnected")
                             .withStyle(net.minecraft.ChatFormatting.RED);
             player.displayClientMessage(
                     state.getBlock().getName().copy()
@@ -113,13 +115,13 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
         }
         FluidStack stored = be.getStoredCoolant();
         if (stored.isEmpty()) {
-            return net.minecraft.network.chat.Component.literal(" — Coolant tank empty")
+            return UfoText.literal("gui.ufo.text.coolant_tank_empty")
                     .withStyle(net.minecraft.ChatFormatting.GRAY);
         }
         return net.minecraft.network.chat.Component.literal(" — ")
                 .append(stored.getHoverName())
-                .append(net.minecraft.network.chat.Component.literal(
-                        " " + stored.getAmount() + "/" + MassiveOutputHatchBE.COOLANT_CAPACITY + " mB"))
+                .append(UfoText.literal("gui.ufo.text.coolant_amount",
+                        stored.getAmount(), MassiveOutputHatchBE.COOLANT_CAPACITY))
                 .withStyle(net.minecraft.ChatFormatting.AQUA);
     }
 

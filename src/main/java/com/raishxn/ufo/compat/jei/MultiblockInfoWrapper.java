@@ -1,5 +1,7 @@
 package com.raishxn.ufo.compat.jei;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
@@ -121,7 +123,7 @@ public class MultiblockInfoWrapper {
             if (candidates.isEmpty()) {
                 lines.add(Component.literal(symbol + " - ").append(base));
             } else {
-                lines.add(Component.literal(symbol + " - ").append(base).append(" (variants: " + candidates.size() + ")"));
+                lines.add(Component.literal(symbol + " - ").append(base).append(UfoText.literal("gui.ufo.text.variants_s", candidates.size())));
             }
         }
         return lines;

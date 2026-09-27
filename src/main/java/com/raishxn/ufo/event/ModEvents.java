@@ -1,5 +1,7 @@
 package com.raishxn.ufo.event;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.datagen.ModDataComponents;
 import com.raishxn.ufo.item.custom.*;
@@ -138,7 +140,7 @@ public class ModEvents {
                     combo++;
                     if (combo >= 5) {
                         extraDmg *= 1.5f;
-                        player.displayClientMessage(Component.literal("COMBO!").withStyle(ChatFormatting.GOLD), true);
+                        player.displayClientMessage(UfoText.literal("gui.ufo.text.combo").withStyle(ChatFormatting.GOLD), true);
                         combo = 0;
                     }
                 } else {
@@ -190,7 +192,7 @@ public class ModEvents {
                     int newKills = Math.max(0, kills - 1);
                     stack.set(ModDataComponents.KILL_COUNT.get(), newKills);
                     if (kills > newKills) {
-                        attacker.sendSystemMessage(Component.literal("The sword's power weakens after a non-hostile kill.").withStyle(ChatFormatting.RED));
+                        attacker.sendSystemMessage(UfoText.literal("gui.ufo.text.the_sword_s_power_weakens_after_a_non_hostile_kill").withStyle(ChatFormatting.RED));
                     }
                 }
             }

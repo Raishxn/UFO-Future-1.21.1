@@ -1,5 +1,7 @@
 package com.raishxn.ufo.block.entity;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.crafting.IPatternDetails;
@@ -226,6 +228,34 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
 
     @Override
     protected boolean validateMatchedStructure(Level level, MultiblockPattern.MatchResult result, Direction facing) {
+        int[] counts = countValidationParts(level, result);
+        return counts[0] == 1 && counts[1] >= 1 && counts[2] >= 1;
+    }
+
+    @Override
+    public java.util.List<net.minecraft.network.chat.Component> getStructureValidationIssues(Level level,
+            MultiblockPattern.MatchResult result, Direction facing) {
+        int[] counts = countValidationParts(level, result);
+        java.util.List<net.minecraft.network.chat.Component> issues = new ArrayList<>();
+        if (counts[1] < 1) {
+            issues.add(net.minecraft.network.chat.Component.translatable("message.ufo.scan.missing_part",
+                    net.minecraft.network.chat.Component.translatable("block.ufo.me_massive_fluid_hatch"), 1));
+        }
+        if (counts[2] < 1) {
+            issues.add(net.minecraft.network.chat.Component.translatable("message.ufo.scan.missing_part",
+                    net.minecraft.network.chat.Component.translatable("block.ufo.ae_energy_input_hatch"), 1));
+        }
+        if (counts[0] < 1) {
+            issues.add(net.minecraft.network.chat.Component.translatable("message.ufo.scan.missing_part",
+                    net.minecraft.network.chat.Component.translatable("message.ufo.scan.pattern_endpoint"), 1));
+        } else if (counts[0] > 1) {
+            issues.add(net.minecraft.network.chat.Component.translatable("message.ufo.scan.require_one",
+                    net.minecraft.network.chat.Component.translatable("message.ufo.scan.pattern_endpoint"), counts[0]));
+        }
+        return issues;
+    }
+
+    private int[] countValidationParts(Level level, MultiblockPattern.MatchResult result) {
         int patternEndpoints = 0, coolantHatches = 0, energyHatches = 0;
         for (BlockPos partPos : result.partPositions()) {
             var state = level.getBlockState(partPos);
@@ -234,7 +264,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             if (state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())) coolantHatches++;
             if (state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())) energyHatches++;
         }
-        return coolantHatches >= 1 && energyHatches >= 1 && patternEndpoints == 1;
+        return new int[]{patternEndpoints, coolantHatches, energyHatches};
     }
 
     private void rebuildChemicalPorts(Level level) {
@@ -891,7 +921,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
                     ? (primaryOutput.fluid().isEmpty() ? Component.literal(recipe.name()) : primaryOutput.fluid().getHoverName())
                     : primaryOutput.item().getHoverName();
             if (!MultiblockTierScaling.canRunRecipe(this.machineTier, recipe.requiredTier())) {
-                label = label.copy().append(Component.literal(" [Locked: MK" + recipe.requiredTier() + "]"));
+                label = label.copy().append(UfoText.literal("gui.ufo.text.locked_mk_s", recipe.requiredTier()));
             }
             this.displayedRecipes.add(new UniversalDisplayedRecipe(
                     primaryOutput.item(),
@@ -1293,7 +1323,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
             this.cachedCraftingMachineInfo = new PatternContainerGroup(
                     AEItemKey.of(this.getBlockState().getBlock().asItem()),
                     Component.translatable(getControllerTranslationKey()),
-                    List.of(Component.literal("MK" + this.machineTier)));
+                    List.of(UfoText.literal("gui.ufo.text.mk_s", this.machineTier)));
         }
         return this.cachedCraftingMachineInfo;
     }

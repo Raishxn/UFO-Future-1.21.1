@@ -1,6 +1,8 @@
 package com.raishxn.ufo.api.multiblock;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -53,4 +55,14 @@ public interface IMultiblockController {
      * @return the controller's own position in the world.
      */
     BlockPos getControllerPos();
+
+    /**
+     * Describes the parts or conditions that prevent a pattern-valid structure
+     * from validating, e.g. missing hatches or pattern endpoints. Empty when the
+     * controller has no additional requirements.
+     */
+    default List<Component> getStructureValidationIssues(Level level, MultiblockPattern.MatchResult result,
+            Direction facing) {
+        return List.of();
+    }
 }

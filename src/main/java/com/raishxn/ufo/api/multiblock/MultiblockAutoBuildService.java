@@ -8,6 +8,7 @@ import com.raishxn.ufo.util.LoadedBlockEntityLookup;
  */
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -24,6 +25,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.BlockSnapshot;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
@@ -37,6 +41,7 @@ import java.util.UUID;
 import com.raishxn.ufo.item.StructureScannerSettings;
 import com.raishxn.ufo.item.StructureScannerAe2Link;
 import com.raishxn.ufo.block.MultiblockBlocks;
+import com.raishxn.ufo.block.entity.StellarNexusPartBE;
 
 /** Server-owned gradual auto-build sessions. Wrong occupied blocks are never replaced. */
 @EventBusSubscriber(modid = "ufo")
@@ -59,6 +64,11 @@ public final class MultiblockAutoBuildService {
                 || !(controllerBlockEntity instanceof IMultiblockController controller)) return;
         var definitionOptional = MultiblockControllerDefinitions.getDefinition(controllerBlockEntity);
         if (definitionOptional.isEmpty()) return;
+        if (!player.mayUseItemAt(controllerBlockEntity.getBlockPos(), Direction.UP, ItemStack.EMPTY)
+                || !level.mayInteract(player, controllerBlockEntity.getBlockPos())) {
+            message(player, "Auto-build blocked: you may not modify blocks here.", ChatFormatting.RED);
+            return;
+        }
         SessionKey key = new SessionKey(level.dimension(), controllerBlockEntity.getBlockPos().immutable());
         if (SESSIONS.containsKey(key)) {
             message(player, "Auto-build is already in progress.", ChatFormatting.YELLOW);
@@ -76,7 +86,7 @@ public final class MultiblockAutoBuildService {
                 controllerBlockEntity, controllerBlockEntity.getBlockState());
         var unavailable = new ArrayList<BlockPos>();
         if (mode == StructureScannerSettings.Mode.DEMOLISH) {
-            startDemolition(player, level, key, controllerBlockEntity, controller, pattern, facing);
+            startDemolition(player, level, key, controllerBlockEntity, controller, definition, facing);
             return;
         }
         boolean replace = mode == StructureScannerSettings.Mode.REPLACE;
@@ -98,7 +108,8 @@ public final class MultiblockAutoBuildService {
                         return MultiblockAutoBuildPlan.SlotState.MATCHING;
                     }
                     if (current.isAir()) return MultiblockAutoBuildPlan.SlotState.EMPTY;
-                    return replace ? MultiblockAutoBuildPlan.SlotState.REPLACE
+                    return replace && canReplaceBlockEntity(level.getBlockEntity(world))
+                            ? MultiblockAutoBuildPlan.SlotState.REPLACE
                             : MultiblockAutoBuildPlan.SlotState.BLOCKED;
                 });
         if (!unavailable.isEmpty()) {
@@ -141,22 +152,23 @@ public final class MultiblockAutoBuildService {
 
     private static void startDemolition(ServerPlayer player, ServerLevel level, SessionKey key,
                                         BlockEntity controllerBlockEntity, IMultiblockController controller,
-                                        MultiblockPattern pattern, net.minecraft.core.Direction facing) {
-        MultiblockPattern.MatchResult result = pattern.match(level, controllerBlockEntity.getBlockPos(), facing);
-        List<Work> work = result.allErrors().stream()
-                .map(MultiblockPattern.PatternError::pos)
-                .filter(level::isLoaded)
-                .filter(pos -> !level.getBlockState(pos).isAir())
-                .map(pos -> new Work(pos.immutable(), null, false, true))
+                                        MultiblockControllerDefinition definition, Direction facing) {
+        var scan = StructureTerminalOps.scanDemolition(definition, level, controllerBlockEntity.getBlockPos(), facing);
+        if (!scan.available()) {
+            message(player, "Demolition stopped: part of the structure is outside loaded chunks or world bounds.", ChatFormatting.RED);
+            return;
+        }
+        List<Work> work = scan.targets().stream()
+                .map(target -> new Work(target.position(), target.state(), false, true))
                 .toList();
         if (work.isEmpty()) {
             controller.scanStructure(level);
-            message(player, "Demolition found no invalid occupied structure slots.", ChatFormatting.GREEN);
+            message(player, "Demolition found no matching structural blocks.", ChatFormatting.GREEN);
             return;
         }
         SESSIONS.put(key, new Session(player.getUUID(), StructureScannerSettings.Mode.DEMOLISH, work, 0, 0,
                 StructureScannerSettings.DEFAULT, ItemStack.EMPTY));
-        message(player, "Demolition started: " + work.size() + " invalid block(s).", ChatFormatting.YELLOW);
+        message(player, "Demolition started: " + work.size() + " structural block(s).", ChatFormatting.YELLOW);
     }
 
     @SubscribeEvent
@@ -182,7 +194,20 @@ public final class MultiblockAutoBuildService {
             BlockPos world = work.position();
             if (!level.isLoaded(world)) continue;
             if (work.removeOnly()) {
-                boolean removed = level.getBlockState(world).isAir() || level.destroyBlock(world, true, player);
+                BlockState current = level.getBlockState(world);
+                if (!current.equals(work.target())) {
+                    iterator.remove();
+                    message(player, "Demolition interrupted by a changed block at " + position(world) + ".", ChatFormatting.RED);
+                    refresh(level, key.controllerPos());
+                    continue;
+                }
+                if (!canBreak(level, player, world)) {
+                    iterator.remove();
+                    message(player, "Structure operation stopped: no permission at " + position(world) + ".", ChatFormatting.RED);
+                    refresh(level, key.controllerPos());
+                    continue;
+                }
+                boolean removed = level.destroyBlock(world, true, player);
                 advance(entry, session, removed, player, level, key, iterator);
                 continue;
             }
@@ -194,6 +219,20 @@ public final class MultiblockAutoBuildService {
             if (!current.isAir() && !work.replace()) {
                 iterator.remove();
                 message(player, "Auto-build interrupted by an occupied block at " + position(world) + ".", ChatFormatting.RED);
+                refresh(level, key.controllerPos());
+                continue;
+            }
+            if (!current.isAir() && work.replace()
+                    && !canReplaceBlockEntity(level.getBlockEntity(world))) {
+                iterator.remove();
+                message(player, "Auto-build stopped: block data at " + position(world)
+                        + " cannot be safely replaced.", ChatFormatting.RED);
+                refresh(level, key.controllerPos());
+                continue;
+            }
+            if ((!current.isAir() && !canBreak(level, player, world)) || !canPlace(level, player, world)) {
+                iterator.remove();
+                message(player, "Structure operation stopped: no permission at " + position(world) + ".", ChatFormatting.RED);
                 refresh(level, key.controllerPos());
                 continue;
             }
@@ -344,6 +383,30 @@ public final class MultiblockAutoBuildService {
     }
 
     private static String position(BlockPos pos) { return pos.getX() + ", " + pos.getY() + ", " + pos.getZ(); }
+
+    /** Only this structural entity stores disposable controller-link metadata. */
+    private static boolean canReplaceBlockEntity(BlockEntity blockEntity) {
+        return blockEntity == null || blockEntity.getClass() == StellarNexusPartBE.class;
+    }
+
+    private static boolean canBreak(ServerLevel level, ServerPlayer player, BlockPos pos) {
+        if (!player.mayInteract(level, pos)
+                || !player.mayUseItemAt(pos, Direction.UP, ItemStack.EMPTY)) {
+            return false;
+        }
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
+        return !NeoForge.EVENT_BUS.post(event).isCanceled();
+    }
+
+    private static boolean canPlace(ServerLevel level, ServerPlayer player, BlockPos pos) {
+        if (!player.mayInteract(level, pos)
+                || !player.mayUseItemAt(pos, Direction.UP, ItemStack.EMPTY)) {
+            return false;
+        }
+        BlockSnapshot snapshot = BlockSnapshot.create(level.dimension(), level, pos);
+        BlockEvent.EntityPlaceEvent event = new BlockEvent.EntityPlaceEvent(snapshot, level.getBlockState(pos), player);
+        return !NeoForge.EVENT_BUS.post(event).isCanceled();
+    }
     private static void message(ServerPlayer player, String text, ChatFormatting color) {
         player.displayClientMessage(net.minecraft.network.chat.Component.literal(text).withStyle(color), false);
     }

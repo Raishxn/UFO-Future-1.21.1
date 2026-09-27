@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.armor.UfoArmorModule;
 import com.raishxn.ufo.armor.UfoArmorSetting;
 import com.raishxn.ufo.datagen.ModDataComponents;

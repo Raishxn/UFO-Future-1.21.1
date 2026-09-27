@@ -1,5 +1,7 @@
 package com.raishxn.ufo.compat.jei;
 
+import com.raishxn.ufo.util.UfoText;
+
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.recipe.QMFRecipe;
@@ -84,7 +86,7 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
             int row = i / 3;
             builder.addInputSlot(47 + (col * 18), 21 + (row * 18))
                     .addIngredients(UfoJeiPlugin.stackOfQmf(ingredient))
-                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Required: " + formatAmount(ingredient.amount()) + "x")));
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(UfoText.literal("gui.ufo.text.required_sx", formatAmount(ingredient.amount()))));
         }
 
         var fluidInputs = recipe.getFluidInputs();
@@ -94,13 +96,13 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
             builder.addInputSlot(x, 21)
                     .setFluidRenderer(16000, false, 12, 54)
                     .addIngredient(NeoForgeTypes.FLUID_STACK, ingredient.fluid().copyWithAmount((int) ingredient.amount()))
-                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Required: " + formatAmount(ingredient.amount()) + " mB")));
+                    .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(UfoText.literal("gui.ufo.text.required_s_mb", formatAmount(ingredient.amount()))));
         }
 
         ItemStack output = recipe.getResultItem();
         builder.addOutputSlot(132, 21)
                 .addItemStack(output.copy())
-                .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("Output: " + formatAmount(output.getCount()) + "x")));
+                .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(UfoText.literal("gui.ufo.text.output_sx", formatAmount(output.getCount()))));
     }
 
     @Override
@@ -132,17 +134,17 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
         if (mouseX >= ENERGY_BAR_X && mouseX <= ENERGY_BAR_X + ENERGY_BAR_W
                 && mouseY >= ENERGY_BAR_Y && mouseY <= ENERGY_BAR_Y + ENERGY_BAR_H) {
             tooltip.addAll(List.of(
-                    Component.literal("Energy: " + formatEnergy(recipe.getEnergy())),
-                    Component.literal(String.format("Base Time: %.1fs (%d ticks)", recipe.getTime() / 20.0, recipe.getTime())),
-                    Component.literal("Required Tier: MK" + recipe.getRequiredTier())
+                    UfoText.literal("gui.ufo.text.energy_s", formatEnergy(recipe.getEnergy())),
+                    UfoText.literal("gui.ufo.text.base_time_ss_s_ticks", recipe.getTime() / 20.0, recipe.getTime()),
+                    UfoText.literal("gui.ufo.text.required_tier_mk_s", recipe.getRequiredTier())
             ));
             return;
         }
 
         if (mouseX >= 105 && mouseX <= 125 && mouseY >= 42 && mouseY <= 53) {
             tooltip.addAll(List.of(
-                    Component.literal(String.format("Processing Time: %.1fs (%d ticks)", recipe.getTime() / 20.0, recipe.getTime())),
-                    Component.literal("Required Tier: MK" + recipe.getRequiredTier())
+                    UfoText.literal("gui.ufo.text.processing_time_ss_s_ticks", recipe.getTime() / 20.0, recipe.getTime()),
+                    UfoText.literal("gui.ufo.text.required_tier_mk_s", recipe.getRequiredTier())
             ));
         }
     }

@@ -1,5 +1,7 @@
 package com.raishxn.ufo.compat.jei;
 
+import com.raishxn.ufo.util.UfoText;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -181,9 +183,9 @@ public class DimensionalMatterAssemblerRecipeCategory implements IRecipeCategory
             int baseTicks = recipe.getTime();
             double seconds = baseTicks / 20.0;
             tooltip.addAll(List.of(
-                    Component.literal("Energy: " + formatEnergy(recipe.getEnergy())),
-                    Component.literal(String.format("Base Time: %.1fs (%d ticks)", seconds, baseTicks)),
-                    Component.literal("§7Chrono Catalysts reduce processing time")
+                    UfoText.literal("gui.ufo.text.energy_s", formatEnergy(recipe.getEnergy())),
+                    UfoText.literal("gui.ufo.text.base_time_ss_s_ticks", seconds, baseTicks),
+                    UfoText.literal("gui.ufo.text.7chrono_catalysts_reduce_processing_time")
             ));
             return;
         }
@@ -193,8 +195,8 @@ public class DimensionalMatterAssemblerRecipeCategory implements IRecipeCategory
             int baseTicks = recipe.getTime();
             double seconds = baseTicks / 20.0;
             tooltip.addAll(List.of(
-                    Component.literal(String.format("Processing Time: %.1fs", seconds)),
-                    Component.literal("§7(base, without Chrono Catalysts)")
+                    UfoText.literal("gui.ufo.text.processing_time_ss", seconds),
+                    UfoText.literal("gui.ufo.text.7_base_without_chrono_catalysts")
             ));
         }
     }

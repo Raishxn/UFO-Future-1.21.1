@@ -1,5 +1,7 @@
 package com.raishxn.ufo.client.gui.widget;
 
+import com.raishxn.ufo.util.UfoText;
+
 /*
  * Adapted from AE2 Lightning Tech's TextureToggleButton.
  * Source code: LGPL-3.0. quick_build.png: original UFO Future asset.
@@ -14,6 +16,6 @@ import net.minecraft.network.chat.Component;
 public final class UfoQuickBuildButton extends UfoToolbarTextureButton {
     public UfoQuickBuildButton(OnPress onPress) {
         super(UfoMod.id("textures/gui/buttons/quick_build.png"),
-                Component.literal("Auto-build structure"), onPress);
+                UfoText.literal("gui.ufo.text.auto_build_structure"), onPress);
     }
 }

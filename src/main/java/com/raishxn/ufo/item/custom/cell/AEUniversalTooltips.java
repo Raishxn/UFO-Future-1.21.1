@@ -1,5 +1,7 @@
 package com.raishxn.ufo.item.custom.cell;
 
+import com.raishxn.ufo.util.UfoText;
+
 import appeng.core.localization.GuiText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
