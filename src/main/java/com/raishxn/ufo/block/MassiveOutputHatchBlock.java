@@ -81,14 +81,14 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
                     ? net.minecraft.network.chat.Component.translatable("message.ufo.energy_hatch.external_only")
                             .withStyle(net.minecraft.ChatFormatting.YELLOW)
                     : be.isNetworkReady()
-                    ? UfoText.literal(
-                            be.isLinked() ? "Online — Linked to Controller" : "Online — Standalone")
+                    ? UfoText.literal(be.isLinked()
+                            ? "gui.ufo.text.online_linked" : "gui.ufo.text.online_standalone")
                             .withStyle(net.minecraft.ChatFormatting.GREEN)
                     : UfoText.literal("gui.ufo.text.me_disconnected")
                             .withStyle(net.minecraft.ChatFormatting.RED);
             player.displayClientMessage(
                     state.getBlock().getName().copy()
-                            .append(UfoText.literal(": "))
+                            .append(net.minecraft.network.chat.Component.literal(": "))
                             .append(status)
                             .append(coolantStatus(be))
                             .append(energyStatus(be)),
@@ -104,7 +104,7 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
                 appeng.api.config.PowerUnit.FE, be.getStoredExternalEnergyAE());
         long capacityFe = (long) appeng.api.config.PowerUnit.AE.convertTo(
                 appeng.api.config.PowerUnit.FE, be.getExternalEnergyCapacityAE());
-        return UfoText.literal(" — ").append(
+        return net.minecraft.network.chat.Component.literal(" — ").append(
                 net.minecraft.network.chat.Component.translatable("message.ufo.energy_hatch.stored", storedFe, capacityFe))
                 .withStyle(net.minecraft.ChatFormatting.AQUA);
     }
@@ -118,10 +118,10 @@ public class MassiveOutputHatchBlock extends DirectionalBlock implements net.min
             return UfoText.literal("gui.ufo.text.coolant_tank_empty")
                     .withStyle(net.minecraft.ChatFormatting.GRAY);
         }
-        return UfoText.literal(" — ")
+        return net.minecraft.network.chat.Component.literal(" — ")
                 .append(stored.getHoverName())
-                .append(UfoText.literal(
-                        " " + stored.getAmount() + "/" + MassiveOutputHatchBE.COOLANT_CAPACITY + " mB"))
+                .append(UfoText.literal("gui.ufo.text.coolant_amount",
+                        stored.getAmount(), MassiveOutputHatchBE.COOLANT_CAPACITY))
                 .withStyle(net.minecraft.ChatFormatting.AQUA);
     }
 

@@ -167,7 +167,7 @@ public class UfoArmorItem extends ArmorItem implements IEnergyTool {
                     UfoArmorModule.capacity(getType())).withStyle(ChatFormatting.AQUA));
             for (UfoArmorModule module : modules) {
                 ChatFormatting color = isModuleEnabled(pStack, module) ? ChatFormatting.GREEN : ChatFormatting.DARK_GRAY;
-                pTooltipComponents.add(UfoText.literal(" • ")
+                pTooltipComponents.add(Component.literal(" • ")
                         .append(Component.translatable(module.translationKey())).withStyle(color));
             }
         } else {

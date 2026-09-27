@@ -36,7 +36,7 @@ public class UfoArmorUpgradeItem extends Item {
             if (!settings.isEmpty()) {
                 tooltip.add(Component.translatable("tooltip.ufo.module.configurable").withStyle(ChatFormatting.AQUA));
                 for (UfoArmorSetting setting : settings) {
-                    tooltip.add(UfoText.literal(" • ")
+                    tooltip.add(Component.literal(" • ")
                             .append(Component.translatable(setting.translationKey()))
                             .withStyle(ChatFormatting.DARK_AQUA));
                 }

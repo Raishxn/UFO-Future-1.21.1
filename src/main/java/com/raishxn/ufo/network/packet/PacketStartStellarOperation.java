@@ -43,7 +43,7 @@ public record PacketStartStellarOperation(BlockPos pos) implements CustomPacketP
                         UfoText.literal("gui.ufo.text.c_l_stellar_nexus_ecannot_start_simulation"),
                         false);
                 for (Component error : errors) {
-                    player.displayClientMessage(UfoText.literal("  ").append(error), false);
+                    player.displayClientMessage(Component.literal("  ").append(error), false);
                 }
             } else {
                 player.displayClientMessage(

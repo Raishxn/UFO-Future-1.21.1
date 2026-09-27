@@ -252,11 +252,11 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
             this.startPauseButton.setSource(paused ? 208 : 155, 0);
             this.startPauseButton.active = true;
             this.startPauseButton.setTooltip(Tooltip.create(UfoText.literal(paused
-                    ? "§aResume stellar simulation" : "§ePause stellar simulation")));
+                    ? "gui.ufo.text.resume_stellar_simulation" : "gui.ufo.text.pause_stellar_simulation")));
         } else {
             this.startPauseButton.setSource(208, 0);
             this.startPauseButton.active = canStart();
-            this.startPauseButton.setTooltip(Tooltip.create(UfoText.literal(startTooltip())));
+            this.startPauseButton.setTooltip(Tooltip.create(Component.literal(startTooltip())));
         }
 
         if (!this.availableRecipes.isEmpty()) {
@@ -290,19 +290,21 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
             this.safeModeButton.setAe2Icon(Icon.INVALID);
         }
         this.safeModeButton.setTooltip(Tooltip.create(UfoText.literal(safe
-                ? "§aSafe Mode: ON\n§7Auto-shutdown on overheat"
-                : "§cSafe Mode: OFF\n§4Local containment blast on overheat")));
+                ? "gui.ufo.text.safe_mode_enabled_tooltip"
+                : "gui.ufo.text.safe_mode_disabled_tooltip")));
         boolean auto = this.menu.isAutoStart();
         this.autoStartButton.setAtlasSprite(AE2_STATES, 256, 256, 16, 240, 16, 16);
-        this.autoStartButton.setTooltip(Tooltip.create(UfoText.literal(auto ? "§aAuto-start: ON" : "§cAuto-start: OFF")));
+        this.autoStartButton.setTooltip(Tooltip.create(UfoText.literal(auto
+                ? "gui.ufo.text.auto_start_enabled_tooltip" : "gui.ufo.text.auto_start_disabled_tooltip")));
         boolean locked = this.menu.isSimulationLocked();
         this.lockButton.setAe2Icon(locked ? Icon.LOCKED : Icon.UNLOCKED);
-        this.lockButton.setTooltip(Tooltip.create(UfoText.literal(locked ? "§aSimulation locked" : "§cSimulation unlocked")));
+        this.lockButton.setTooltip(Tooltip.create(UfoText.literal(locked
+                ? "gui.ufo.text.simulation_locked_tooltip" : "gui.ufo.text.simulation_unlocked_tooltip")));
         boolean overclocked = this.menu.isOverclocked();
         int overclockU = overclocked ? 0 : 16;
         this.overclockButton.setAtlasSprite(UNIVERSAL_WIDGETS, 256, 256, overclockU, 33, 14, 14);
         this.overclockButton.setTooltip(Tooltip.create(UfoText.literal(overclocked
-                ? "§aOverclock: ON\n§78x energy, 5x heat/fuel/speed" : "§cOverclock: OFF")));
+                ? "gui.ufo.text.overclock_enabled_tooltip" : "gui.ufo.text.overclock_disabled_tooltip")));
     }
 
     private void cycleRecipe(int delta) {
@@ -444,7 +446,9 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
                 String unit = requirement.fluid() ? UfoText.str("gui.ufo.text.mb") : UfoText.str("gui.ufo.text.items");
                 List<Component> tooltip = new ArrayList<>();
                 tooltip.add(requirement.name());
-                tooltip.add(UfoText.literal((complete ? "§a" : "§c") + "%s / %s%s",
+                tooltip.add(UfoText.literal(complete
+                                ? "gui.ufo.text.requirement_complete"
+                                : "gui.ufo.text.requirement_incomplete",
                         formatAmount(available), formatAmount(requirement.amount()), unit));
                 if (requirement.includesFuel()) {
                     tooltip.add(UfoText.literal("gui.ufo.text.6includes_stellar_fuel"));
@@ -700,7 +704,7 @@ public class StellarNexusControllerScreen extends AbstractContainerScreen<Stella
 
     private String getRecipeDisplayName(RecipeHolder<StellarSimulationRecipe> holder) {
         String name = holder.value().getSimulationName();
-        return name == null || name.isEmpty() ? formatRecipeId(holder.id()) : UfoText.str(name);
+        return name == null || name.isEmpty() ? formatRecipeId(holder.id()) : name;
     }
 
     private static String formatRecipeId(ResourceLocation id) {

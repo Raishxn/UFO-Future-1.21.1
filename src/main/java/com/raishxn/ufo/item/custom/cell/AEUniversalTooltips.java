@@ -58,7 +58,7 @@ public class AEUniversalTooltips
     public static Component bytesUsed(long bytes, long max)
     {
         if (max <= 0) {
-            MutableComponent inf = UfoText.literal("∞").withStyle(GREEN);
+            MutableComponent inf = Component.literal("∞").withStyle(GREEN);
             return of(GuiText.BytesUsed,
                     of(
                             ofUnformattedNumberWithRatioColor(bytes, 0.0, false),
@@ -88,7 +88,7 @@ public class AEUniversalTooltips
         MutableComponent bytesString = Component.literal(bytesFormatted).withStyle(GREEN).withStyle(colorFromRatio(0.0, false));
 
         if (max <= 0) {
-            MutableComponent inf = UfoText.literal("∞").withStyle(GREEN);
+            MutableComponent inf = Component.literal("∞").withStyle(GREEN);
             return of(GuiText.BytesUsed,
                     of(
                             bytesString,
@@ -117,7 +117,7 @@ public class AEUniversalTooltips
     public static Component typesUsed(long types, long max)
     {
         if (max <= 0) {
-            MutableComponent inf = UfoText.literal("∞").withStyle(GREEN);
+            MutableComponent inf = Component.literal("∞").withStyle(GREEN);
             return of(
                     ofUnformattedNumberWithRatioColor(types, 0.0, false),
                     of(" "),

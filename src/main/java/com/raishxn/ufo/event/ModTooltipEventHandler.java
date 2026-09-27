@@ -59,8 +59,8 @@ public class ModTooltipEventHandler {
             boolean chargedPreview = customData != null
                     && customData.copyTag().getBoolean("ufoQuantumEnergyCellChargedPreview");
             event.getToolTip().add(UfoText.literal(chargedPreview
-                    ? "Creative preview: Charged"
-                    : "Creative preview: Discharged").withStyle(ChatFormatting.DARK_GRAY));
+                    ? "gui.ufo.text.creative_preview_charged"
+                    : "gui.ufo.text.creative_preview_discharged").withStyle(ChatFormatting.DARK_GRAY));
             event.getToolTip().add(Component.translatable("tooltip.ufo.stored_energy_infinite").withStyle(ChatFormatting.GRAY));
         }
         else if (stack.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get().asItem())) {

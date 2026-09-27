@@ -77,8 +77,8 @@ public final class UfoDebugCommands {
                             .add(snapshot));
         }
 
-        source.sendSuccess(() -> UfoText.literal("gui.ufo.text.ufo_perf" + snapshots.size() + " máquinas instrumentadas"), false);
-        byType.forEach((type, summary) -> source.sendSuccess(() -> UfoText.literal(String.format(
+        source.sendSuccess(() -> UfoText.literal("gui.ufo.debug.instrumented_machines", snapshots.size()), false);
+        byType.forEach((type, summary) -> source.sendSuccess(() -> Component.literal(String.format(
                 "%s count=%d avg=%.2fµs worstP95=%.2fµs worstP99=%.2fµs scans=%d blocks=%d storageOps=%d energy=%d/%dAE attempts=%d sync=%d/%dB",
                 type,
                 summary.machines(),
@@ -95,7 +95,7 @@ public final class UfoDebugCommands {
         String dimension = source.getLevel().dimension().location().toString();
         var snapshot = MachinePerformanceRegistry.INSTANCE.snapshot(dimension, pos.asLong());
         if (snapshot.isEmpty()) {
-            source.sendFailure(UfoText.literal("gui.ufo.text.nenhuma_m_trica_ufo_para" + pos.toShortString()));
+            source.sendFailure(UfoText.literal("gui.ufo.debug.no_metrics_for", pos.toShortString()));
             return 0;
         }
 
@@ -131,7 +131,7 @@ public final class UfoDebugCommands {
         } else {
             runtime = "";
         }
-        source.sendSuccess(() -> UfoText.literal(String.format(
+        source.sendSuccess(() -> Component.literal(String.format(
                 "%s %s%s avg=%.2fµs p95=%.2fµs p99=%.2fµs ticks=%d scans=%d blocks=%d storageOps=%d sync=%d/%dB",
                 value.key().machineType(), pos.toShortString(),
                 runtime,
@@ -161,7 +161,7 @@ public final class UfoDebugCommands {
             // User labels are metadata only, never part of a filesystem path.
             var output = Files.createTempFile(directory, "perf-", ".json");
             Files.writeString(output, MachinePerformanceReport.toJson(scenario, Instant.now().toString(), snapshots));
-            source.sendSuccess(() -> UfoText.literal("gui.ufo.text.diagn_stico_ufo_exportado" + output.toAbsolutePath()), false);
+            source.sendSuccess(() -> UfoText.literal("gui.ufo.debug.exported", output.toAbsolutePath()), false);
             return snapshots.size();
         } catch (IOException exception) {
             UfoMod.LOGGER.error("Could not export UFO performance report", exception);

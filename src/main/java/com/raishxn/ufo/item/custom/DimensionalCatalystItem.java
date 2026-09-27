@@ -36,13 +36,13 @@ public class DimensionalCatalystItem extends UpgradeCardItem {
             components.add(UfoText.literal("gui.ufo.text.creative_mode_catalyst").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
             components.add(UfoText.literal("")); // Espaçador
             components.add(UfoText.literal("gui.ufo.text.effects").withStyle(ChatFormatting.AQUA));
-            components.add(UfoText.literal(" - ").withStyle(ChatFormatting.GRAY)
+            components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
                     .append(UfoText.literal("gui.ufo.text.instant_crafting").withStyle(ChatFormatting.GREEN)));
-            components.add(UfoText.literal(" - ").withStyle(ChatFormatting.GRAY)
+            components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
                     .append(UfoText.literal("gui.ufo.text.no_energy_cost").withStyle(ChatFormatting.GREEN)));
-            components.add(UfoText.literal(" - ").withStyle(ChatFormatting.GRAY)
+            components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
                     .append(UfoText.literal("gui.ufo.text.no_heat_generation").withStyle(ChatFormatting.GREEN)));
-            components.add(UfoText.literal(" - ").withStyle(ChatFormatting.GRAY)
+            components.add(Component.literal(" - ").withStyle(ChatFormatting.GRAY)
                     .append(UfoText.literal("gui.ufo.text.still_consumes_recipe_inputs").withStyle(ChatFormatting.AQUA)));
 
         } else {

@@ -181,9 +181,9 @@ public class BaseCatalystItem extends UpgradeCardItem {
             // Efeito de Stacking
             components.add(UfoText.literal("")); // Espaçador
             components.add(UfoText.literal("gui.ufo.text.stacking_effect_soft_cap").withStyle(ChatFormatting.GOLD));
-            components.add(UfoText.literal("gui.ufo.text.2x").withStyle(ChatFormatting.GRAY).append(UfoText.literal("175%").withStyle(ChatFormatting.WHITE))); //
-            components.add(UfoText.literal("gui.ufo.text.3x").withStyle(ChatFormatting.GRAY).append(UfoText.literal("225%").withStyle(ChatFormatting.WHITE))); //
-            components.add(UfoText.literal("gui.ufo.text.4x").withStyle(ChatFormatting.GRAY).append(UfoText.literal("250%").withStyle(ChatFormatting.WHITE))); //
+            components.add(UfoText.literal("gui.ufo.text.2x").withStyle(ChatFormatting.GRAY).append(Component.literal("175%").withStyle(ChatFormatting.WHITE))); //
+            components.add(UfoText.literal("gui.ufo.text.3x").withStyle(ChatFormatting.GRAY).append(Component.literal("225%").withStyle(ChatFormatting.WHITE))); //
+            components.add(UfoText.literal("gui.ufo.text.4x").withStyle(ChatFormatting.GRAY).append(Component.literal("250%").withStyle(ChatFormatting.WHITE))); //
 
 
         } else {

@@ -91,7 +91,8 @@ public class UfoEnergyPickaxeItem extends PickaxeItem implements IEnergyTool, IH
         if (!level.isClientSide && player.isShiftKeyDown()) {
             boolean currentSmelt = stack.getOrDefault(ModDataComponents.AUTO_SMELT.get(), false);
             stack.set(ModDataComponents.AUTO_SMELT.get(), !currentSmelt);
-            player.sendSystemMessage(UfoText.literal("gui.ufo.text.auto_smelt_s", UfoText.str(!currentSmelt ? "ON" : "OFF"))
+            player.sendSystemMessage(UfoText.literal("gui.ufo.text.auto_smelt_s",
+                    UfoText.str(!currentSmelt ? "gui.ufo.text.on" : "gui.ufo.text.off"))
                     .withStyle(!currentSmelt ? ChatFormatting.GREEN : ChatFormatting.RED));
             return InteractionResultHolder.success(stack);
         }
@@ -105,7 +106,9 @@ public class UfoEnergyPickaxeItem extends PickaxeItem implements IEnergyTool, IH
         boolean smite = pStack.getOrDefault(ModDataComponents.AUTO_SMELT.get(), false);
         int fortune = pStack.getOrDefault(ModDataComponents.PROGRESSIVE_FORTUNE.get(), 0);
 
-        pTooltipComponents.add(UfoText.literal("gui.ufo.text.auto_smelt_s", UfoText.str(smite ? "ON" : "OFF")).withStyle(smite ? ChatFormatting.GOLD : ChatFormatting.GRAY));
+        pTooltipComponents.add(UfoText.literal("gui.ufo.text.auto_smelt_s",
+                UfoText.str(smite ? "gui.ufo.text.on" : "gui.ufo.text.off"))
+                .withStyle(smite ? ChatFormatting.GOLD : ChatFormatting.GRAY));
         pTooltipComponents.add(UfoText.literal("gui.ufo.text.prog_fortune_s_300", fortune).withStyle(ChatFormatting.AQUA));
     }
 
