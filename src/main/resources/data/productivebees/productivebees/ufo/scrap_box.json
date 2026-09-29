@@ -8,7 +8,7 @@
   "selfbreed": false,
   "renderer": "default",
   "attributes": {
-    "productivity": 3,
-    "weather_tolerance": 3
+    "productivity": "productivity.high",
+    "weather_tolerance": "weather_tolerance.any"
   }
 }

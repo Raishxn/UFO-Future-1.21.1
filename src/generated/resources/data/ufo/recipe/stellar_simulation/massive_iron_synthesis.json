@@ -20,22 +20,22 @@
   ],
   "fluid_outputs": [
     {
-      "#": 2000000,
+      "#": 100000000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     },
     {
-      "#": 1500000,
+      "#": 75000000,
       "#t": "ae2:f",
       "id": "ufo:source_uu_amplifier_fluid"
     },
     {
-      "#": 750000,
+      "#": 37500000,
       "#t": "ae2:f",
       "id": "ufo:source_stable_coolant"
     },
     {
-      "#": 500000,
+      "#": 25000000,
       "#t": "ae2:f",
       "id": "ufo:source_white_dwarf_fragment_fluid"
     }
@@ -64,27 +64,27 @@
   ],
   "item_outputs": [
     {
-      "#": 15000000,
+      "#": 150000000,
       "#t": "ae2:i",
       "id": "minecraft:iron_ingot"
     },
     {
-      "#": 8000000,
+      "#": 80000000,
       "#t": "ae2:i",
       "id": "minecraft:redstone"
     },
     {
-      "#": 6000000,
+      "#": 60000000,
       "#t": "ae2:i",
       "id": "minecraft:quartz"
     },
     {
-      "#": 30000000,
+      "#": 300000000,
       "#t": "ae2:i",
       "id": "minecraft:cobblestone"
     },
     {
-      "#": 4000000,
+      "#": 40000000,
       "#t": "ae2:i",
       "id": "minecraft:obsidian"
     }

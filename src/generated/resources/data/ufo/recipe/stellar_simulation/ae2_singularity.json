@@ -26,22 +26,22 @@
   ],
   "fluid_outputs": [
     {
-      "#": 2500000,
+      "#": 125000000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     },
     {
-      "#": 3000000,
+      "#": 150000000,
       "#t": "ae2:f",
       "id": "ufo:source_uu_amplifier_fluid"
     },
     {
-      "#": 1000000,
+      "#": 50000000,
       "#t": "ae2:f",
       "id": "ufo:source_spatial_fluid"
     },
     {
-      "#": 1000000,
+      "#": 50000000,
       "#t": "ae2:f",
       "id": "ufo:source_stable_coolant"
     }
@@ -64,27 +64,27 @@
   ],
   "item_outputs": [
     {
-      "#": 15000000,
+      "#": 150000000,
       "#t": "ae2:i",
       "id": "ae2:singularity"
     },
     {
-      "#": 24000000,
+      "#": 240000000,
       "#t": "ae2:i",
       "id": "ae2:matter_ball"
     },
     {
-      "#": 32000000,
+      "#": 320000000,
       "#t": "ae2:i",
       "id": "ae2:sky_dust"
     },
     {
-      "#": 24000000,
+      "#": 240000000,
       "#t": "ae2:i",
       "id": "ae2:certus_quartz_crystal"
     },
     {
-      "#": 18000000,
+      "#": 180000000,
       "#t": "ae2:i",
       "id": "ae2:fluix_crystal"
     }

@@ -27,6 +27,7 @@ import com.raishxn.ufo.block.entity.processing.StellarExplosionPolicy;
 import com.raishxn.ufo.block.entity.processing.ThermalSystem;
 import com.raishxn.ufo.block.entity.processing.TransactionalAmountLedger;
 import com.raishxn.ufo.recipe.StellarSimulationRecipe;
+import com.raishxn.ufo.recipe.StellarSimulationRecipeIds;
 import com.raishxn.ufo.util.LoadedBlockEntityLookup;
 import net.pedroksl.ae2addonlib.recipes.IngredientStack;
 
@@ -1361,7 +1362,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
     }
 
     public void setActiveRecipe(ResourceLocation activeRecipeId) {
-        this.activeRecipeId = activeRecipeId;
+        this.activeRecipeId = StellarSimulationRecipeIds.canonical(activeRecipeId);
         this.progress = 0;
         invalidateDisplayedRequirementAvailability();
         this.setChanged();
@@ -1934,7 +1935,8 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         }
 
         if (tag.contains("activeRecipeId", Tag.TAG_STRING)) {
-            this.activeRecipeId = ResourceLocation.parse(tag.getString("activeRecipeId"));
+            this.activeRecipeId = StellarSimulationRecipeIds.canonical(
+                    ResourceLocation.parse(tag.getString("activeRecipeId")));
         } else {
             this.activeRecipeId = null;
         }

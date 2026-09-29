@@ -1,0 +1,492 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "advanced_ae"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "extendedae"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "megacells"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanismgenerators"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "appflux"
+    }
+  ],
+  "type": "ufo:stellar_simulation",
+  "coolant_amount": 4000000,
+  "cooling_level": 3,
+  "energy": 20000000000,
+  "field_tier": 3,
+  "fluid_inputs": [
+    {
+      "amount": 40000000,
+      "ingredient": {
+        "fluid": "ufo:raw_star_matter_plasma"
+      }
+    },
+    {
+      "amount": 12000000,
+      "ingredient": {
+        "fluid": "ufo:transcending_matter"
+      }
+    },
+    {
+      "amount": 10000000,
+      "ingredient": {
+        "fluid": "ufo:uu_matter"
+      }
+    }
+  ],
+  "fluid_outputs": [
+    {
+      "#": 150000000,
+      "#t": "ae2:f",
+      "id": "ufo:source_liquid_starlight_fluid"
+    },
+    {
+      "#": 150000000,
+      "#t": "ae2:f",
+      "id": "ufo:source_uu_amplifier_fluid"
+    },
+    {
+      "#": 75000000,
+      "#t": "ae2:f",
+      "id": "ufo:source_stable_coolant"
+    },
+    {
+      "#": 50000000,
+      "#t": "ae2:f",
+      "id": "ufo:source_white_dwarf_fragment_fluid"
+    },
+    {
+      "#": 22500000,
+      "#t": "ae2:f",
+      "id": "ufo:source_pulsar_fragment_fluid"
+    },
+    {
+      "#": 62500000,
+      "#t": "ae2:f",
+      "id": "ufo:source_spatial_fluid"
+    },
+    {
+      "#": 50000000,
+      "#t": "ae2:f",
+      "id": "ufo:source_neutron_star_fragment_fluid"
+    },
+    {
+      "#": 90000000,
+      "#t": "ae2:f",
+      "id": "ufo:source_temporal_fluid"
+    },
+    {
+      "#": 40000000,
+      "#t": "ae2:f",
+      "id": "ufo:source_primordial_matter_fluid"
+    },
+    {
+      "#": 30000000,
+      "#t": "ae2:f",
+      "id": "ufo:raw_star_matter_plasma"
+    },
+    {
+      "#": 100000000,
+      "#t": "ae2:f",
+      "id": "ufo:uu_matter"
+    },
+    {
+      "#": 60000000,
+      "#t": "ae2:f",
+      "id": "ufo:source_gelid_cryotheum"
+    },
+    {
+      "#": 50000000,
+      "#t": "ae2:f",
+      "id": "ufo:transcending_matter"
+    },
+    {
+      "#": 50000000,
+      "#t": "ae2:f",
+      "id": "ufo:source_bose_einstein_condensate"
+    },
+    {
+      "#": 50000000,
+      "#t": "ae2:f",
+      "id": "mekanismgenerators:deuterium"
+    },
+    {
+      "#": 50000000,
+      "#t": "ae2:f",
+      "id": "mekanismgenerators:tritium"
+    },
+    {
+      "#": 50000000,
+      "#t": "ae2:f",
+      "id": "mekanismgenerators:fusion_fuel"
+    }
+  ],
+  "fuel_amount": 2000000,
+  "fuel_fluid": "ufo:raw_star_matter_plasma",
+  "item_inputs": [
+    {
+      "amount": 1024,
+      "ingredient": {
+        "item": "ufo:charged_enriched_neutronium_sphere"
+      }
+    },
+    {
+      "amount": 4096,
+      "ingredient": {
+        "item": "ufo:quantum_anomaly"
+      }
+    },
+    {
+      "amount": 4096,
+      "ingredient": {
+        "item": "ufo:dimensional_processor"
+      }
+    },
+    {
+      "amount": 262144,
+      "ingredient": {
+        "item": "ae2:matter_ball"
+      }
+    }
+  ],
+  "item_outputs": [
+    {
+      "#": 180000000,
+      "#t": "ae2:i",
+      "id": "minecraft:iron_ingot"
+    },
+    {
+      "#": 300000000,
+      "#t": "ae2:i",
+      "id": "minecraft:redstone"
+    },
+    {
+      "#": 100000000,
+      "#t": "ae2:i",
+      "id": "minecraft:quartz"
+    },
+    {
+      "#": 150000000,
+      "#t": "ae2:i",
+      "id": "minecraft:copper_ingot"
+    },
+    {
+      "#": 35000000,
+      "#t": "ae2:i",
+      "id": "minecraft:amethyst_shard"
+    },
+    {
+      "#": 300000000,
+      "#t": "ae2:i",
+      "id": "minecraft:glowstone_dust"
+    },
+    {
+      "#": 150000000,
+      "#t": "ae2:i",
+      "id": "minecraft:gold_ingot"
+    },
+    {
+      "#": 15000000,
+      "#t": "ae2:i",
+      "id": "minecraft:diamond"
+    },
+    {
+      "#": 15000000,
+      "#t": "ae2:i",
+      "id": "minecraft:emerald"
+    },
+    {
+      "#": 90000000,
+      "#t": "ae2:i",
+      "id": "minecraft:lapis_lazuli"
+    },
+    {
+      "#": 50000000,
+      "#t": "ae2:i",
+      "id": "minecraft:netherite_ingot"
+    },
+    {
+      "#": 120000000,
+      "#t": "ae2:i",
+      "id": "minecraft:netherite_scrap"
+    },
+    {
+      "#": 120000000,
+      "#t": "ae2:i",
+      "id": "ufo:pulsar_fragment_dust"
+    },
+    {
+      "#": 70000000,
+      "#t": "ae2:i",
+      "id": "ufo:white_dwarf_matter"
+    },
+    {
+      "#": 50000000,
+      "#t": "ae2:i",
+      "id": "ufo:neutron_star_matter"
+    },
+    {
+      "#": 35000000,
+      "#t": "ae2:i",
+      "id": "ufo:pulsar_matter"
+    },
+    {
+      "#": 7500000,
+      "#t": "ae2:i",
+      "id": "ufo:quantum_anomaly"
+    },
+    {
+      "#": 180000000,
+      "#t": "ae2:i",
+      "id": "advanced_ae:quantum_alloy"
+    },
+    {
+      "#": 120000000,
+      "#t": "ae2:i",
+      "id": "advanced_ae:printed_quantum_processor"
+    },
+    {
+      "#": 60000000,
+      "#t": "ae2:i",
+      "id": "advanced_ae:quantum_processor"
+    },
+    {
+      "#": 150000000,
+      "#t": "ae2:i",
+      "id": "ae2:singularity"
+    },
+    {
+      "#": 30000000,
+      "#t": "ae2:i",
+      "id": "ufo:dimensional_processor"
+    },
+    {
+      "#": 240000000,
+      "#t": "ae2:i",
+      "id": "ae2:matter_ball"
+    },
+    {
+      "#": 320000000,
+      "#t": "ae2:i",
+      "id": "ae2:sky_dust"
+    },
+    {
+      "#": 240000000,
+      "#t": "ae2:i",
+      "id": "ae2:certus_quartz_crystal"
+    },
+    {
+      "#": 180000000,
+      "#t": "ae2:i",
+      "id": "ae2:fluix_crystal"
+    },
+    {
+      "#": 180000000,
+      "#t": "ae2:i",
+      "id": "extendedae:entro_crystal"
+    },
+    {
+      "#": 150000000,
+      "#t": "ae2:i",
+      "id": "extendedae:concurrent_processor_print"
+    },
+    {
+      "#": 75000000,
+      "#t": "ae2:i",
+      "id": "extendedae:concurrent_processor"
+    },
+    {
+      "#": 150000000,
+      "#t": "ae2:i",
+      "id": "megacells:sky_steel_block"
+    },
+    {
+      "#": 120000000,
+      "#t": "ae2:i",
+      "id": "megacells:printed_accumulation_processor"
+    },
+    {
+      "#": 60000000,
+      "#t": "ae2:i",
+      "id": "megacells:accumulation_processor"
+    },
+    {
+      "#": 150000000,
+      "#t": "ae2:i",
+      "id": "mekanism:hdpe_sheet"
+    },
+    {
+      "#": 450000000,
+      "#t": "ae2:i",
+      "id": "mekanism:hdpe_pellet"
+    },
+    {
+      "#": 300000000,
+      "#t": "ae2:i",
+      "id": "mekanism:substrate"
+    },
+    {
+      "#": 60000000,
+      "#t": "ae2:i",
+      "id": "ufo:dust_blizz"
+    },
+    {
+      "#": 30000000,
+      "#t": "ae2:i",
+      "id": "ufo:dust_cryotheum"
+    },
+    {
+      "#": 25000000,
+      "#t": "ae2:i",
+      "id": "mekanism:pellet_antimatter"
+    },
+    {
+      "#": 180000000,
+      "#t": "ae2:i",
+      "id": "mekanism:pellet_polonium"
+    },
+    {
+      "#": 150000000,
+      "#t": "ae2:i",
+      "id": "mekanism:pellet_plutonium"
+    },
+    {
+      "#": 180000000,
+      "#t": "ae2:i",
+      "id": "mekanism:ingot_lead"
+    },
+    {
+      "#": 180000000,
+      "#t": "ae2:i",
+      "id": "mekanism:ingot_tin"
+    },
+    {
+      "#": 180000000,
+      "#t": "ae2:i",
+      "id": "mekanism:ingot_osmium"
+    },
+    {
+      "#": 150000000,
+      "#t": "ae2:i",
+      "id": "mekanism:ingot_uranium"
+    },
+    {
+      "#": 120000000,
+      "#t": "ae2:i",
+      "id": "mekanism:ingot_refined_glowstone"
+    },
+    {
+      "#": 120000000,
+      "#t": "ae2:i",
+      "id": "mekanism:ingot_refined_obsidian"
+    },
+    {
+      "#": 240000000,
+      "#t": "ae2:i",
+      "id": "mekanism:ingot_steel"
+    },
+    {
+      "#": 240000000,
+      "#t": "ae2:i",
+      "id": "mekanism:ingot_bronze"
+    },
+    {
+      "#": 150000000,
+      "#t": "ae2:i",
+      "id": "minecraft:ghast_tear"
+    },
+    {
+      "#": 180000000,
+      "#t": "ae2:i",
+      "id": "minecraft:magma_cream"
+    },
+    {
+      "#": 240000000,
+      "#t": "ae2:i",
+      "id": "minecraft:sugar"
+    },
+    {
+      "#": 240000000,
+      "#t": "ae2:i",
+      "id": "minecraft:gunpowder"
+    },
+    {
+      "#": 15000000,
+      "#t": "ae2:i",
+      "id": "minecraft:nether_star"
+    },
+    {
+      "#": 200000000,
+      "#t": "ae2:i",
+      "id": "minecraft:slime_ball"
+    },
+    {
+      "#": 30000000,
+      "#t": "ae2:i",
+      "id": "ufo:white_dwarf_fragment_ingot"
+    },
+    {
+      "#": 25000000,
+      "#t": "ae2:i",
+      "id": "ufo:neutron_star_fragment_ingot"
+    },
+    {
+      "#": 20000000,
+      "#t": "ae2:i",
+      "id": "ufo:pulsar_fragment_ingot"
+    },
+    {
+      "#": 25000000,
+      "#t": "ae2:i",
+      "id": "ufo:obsidian_matrix"
+    },
+    {
+      "#": 10000000,
+      "#t": "ae2:i",
+      "id": "ufo:charged_enriched_neutronium_sphere"
+    },
+    {
+      "#": 30000000,
+      "#t": "ae2:i",
+      "id": "ufo:uu_matter_crystal"
+    },
+    {
+      "#": 40000000,
+      "#t": "ae2:i",
+      "id": "appflux:harden_insulating_resin"
+    },
+    {
+      "#": 40000000,
+      "#t": "ae2:i",
+      "id": "appflux:charged_redstone"
+    },
+    {
+      "#": 30000000,
+      "#t": "ae2:i",
+      "id": "advanced_ae:quantum_infused_dust"
+    },
+    {
+      "#": 15000000,
+      "#t": "ae2:i",
+      "id": "advanced_ae:shattered_singularity"
+    }
+  ],
+  "simulation_name": "Stellar Omnibus",
+  "time": 4800
+}

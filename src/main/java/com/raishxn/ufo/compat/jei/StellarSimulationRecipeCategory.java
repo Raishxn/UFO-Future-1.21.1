@@ -134,9 +134,9 @@ public class StellarSimulationRecipeCategory implements IRecipeCategory<StellarS
         var itemOutputs = recipe.getItemOutputs();
         for (int i = 0; i < itemOutputs.size() && i < 81; i++) {
             if (itemOutputs.get(i).what() instanceof AEItemKey itemKey) {
-                int grid = i / 27;
+                int grid = (i % 9) / 3;
                 int col = i % 3;
-                int row = (i % 27) / 3;
+                int row = i / 9;
                 int finalI = i;
                 builder.addOutputSlot(ITEM_OUTPUT_GRID_X[grid] + col * 17, OUTPUT_Y + row * 17)
                         .addItemStack(itemKey.toStack(1))

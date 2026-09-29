@@ -20,22 +20,22 @@
   ],
   "fluid_outputs": [
     {
-      "#": 1800000,
+      "#": 90000000,
       "#t": "ae2:f",
       "id": "ufo:source_temporal_fluid"
     },
     {
-      "#": 1500000,
+      "#": 75000000,
       "#t": "ae2:f",
       "id": "ufo:source_stable_coolant"
     },
     {
-      "#": 1200000,
+      "#": 60000000,
       "#t": "ae2:f",
       "id": "ufo:source_spatial_fluid"
     },
     {
-      "#": 1000000,
+      "#": 50000000,
       "#t": "ae2:f",
       "id": "ufo:uu_matter"
     }
@@ -58,27 +58,27 @@
   ],
   "item_outputs": [
     {
-      "#": 2500000,
+      "#": 25000000,
       "#t": "ae2:i",
       "id": "mekanism:pellet_antimatter"
     },
     {
-      "#": 18000000,
+      "#": 180000000,
       "#t": "ae2:i",
       "id": "mekanism:pellet_polonium"
     },
     {
-      "#": 15000000,
+      "#": 150000000,
       "#t": "ae2:i",
       "id": "mekanism:pellet_plutonium"
     },
     {
-      "#": 6000000,
+      "#": 60000000,
       "#t": "ae2:i",
       "id": "mekanism:hdpe_sheet"
     },
     {
-      "#": 8000000,
+      "#": 80000000,
       "#t": "ae2:i",
       "id": "mekanism:substrate"
     }

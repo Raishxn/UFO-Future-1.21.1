@@ -799,5 +799,10 @@
     "gui.ufo.text.requirement_incomplete": "§c%s / %s%s",
     "gui.ufo.debug.instrumented_machines": "[UFO 性能] 已监测 %s 台机器",
     "gui.ufo.debug.no_metrics_for": "位置 %s 没有 UFO 指标",
-    "gui.ufo.debug.exported": "UFO 诊断已导出：%s"
+    "gui.ufo.debug.exported": "UFO 诊断已导出：%s",
+    "message.ufo.autobuild.no_slot": "自动建造需要一个空余的机壳位置来安装 %s。可使用替换模式更换现有机壳，或手动安装。",
+    "message.ufo.autobuild.no_slot_replace": "自动建造找不到可安装 %s 的机壳位置。请手动安装。",
+    "message.ufo.autobuild.complete": "结构已完成，无需放置方块。",
+    "message.ufo.autobuild.no_placeable": "没有可放置的方块，但结构仍未形成。请扫描控制器查看剩余问题。",
+    "message.ufo.autobuild.incomplete_after": "结构仍未完成。请扫描控制器查看剩余问题。"
 }

@@ -8,8 +8,8 @@
   "selfbreed": false,
   "renderer": "default_crystal",
   "attributes": {
-    "productivity": 3,
-    "weather_tolerance": 3
+    "productivity": "productivity.high",
+    "weather_tolerance": "weather_tolerance.any"
   },
   "conditions": [
     {

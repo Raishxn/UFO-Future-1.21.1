@@ -20,22 +20,22 @@
   ],
   "fluid_outputs": [
     {
-      "#": 1200000,
+      "#": 60000000,
       "#t": "ae2:f",
       "id": "ufo:source_gelid_cryotheum"
     },
     {
-      "#": 1000000,
+      "#": 50000000,
       "#t": "ae2:f",
       "id": "ufo:source_stable_coolant"
     },
     {
-      "#": 900000,
+      "#": 45000000,
       "#t": "ae2:f",
       "id": "ufo:source_uu_amplifier_fluid"
     },
     {
-      "#": 750000,
+      "#": 37500000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     }
@@ -58,27 +58,27 @@
   ],
   "item_outputs": [
     {
-      "#": 15000000,
+      "#": 150000000,
       "#t": "ae2:i",
       "id": "mekanism:hdpe_sheet"
     },
     {
-      "#": 45000000,
+      "#": 450000000,
       "#t": "ae2:i",
       "id": "mekanism:hdpe_pellet"
     },
     {
-      "#": 30000000,
+      "#": 300000000,
       "#t": "ae2:i",
       "id": "mekanism:substrate"
     },
     {
-      "#": 6000000,
+      "#": 60000000,
       "#t": "ae2:i",
       "id": "ufo:dust_blizz"
     },
     {
-      "#": 3000000,
+      "#": 30000000,
       "#t": "ae2:i",
       "id": "ufo:dust_cryotheum"
     }

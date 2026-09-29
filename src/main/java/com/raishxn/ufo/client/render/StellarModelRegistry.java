@@ -32,6 +32,7 @@ public class StellarModelRegistry {
         RECIPE_MODEL_MAPPING.put("Diamond Pressure", STAR);
         RECIPE_MODEL_MAPPING.put("Iron Core Fusion", STAR);
         RECIPE_MODEL_MAPPING.put("Red Giant Collapse", STAR);
+        RECIPE_MODEL_MAPPING.put("Stellar Omnibus", NEUTRON_STAR);
     }
 
     public static void registerAdditional(ModelEvent.RegisterAdditional event) {

@@ -26,22 +26,22 @@
   ],
   "fluid_outputs": [
     {
-      "#": 2500000,
+      "#": 125000000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     },
     {
-      "#": 1500000,
+      "#": 75000000,
       "#t": "ae2:f",
       "id": "ufo:uu_matter"
     },
     {
-      "#": 750000,
+      "#": 37500000,
       "#t": "ae2:f",
       "id": "ufo:source_spatial_fluid"
     },
     {
-      "#": 750000,
+      "#": 37500000,
       "#t": "ae2:f",
       "id": "ufo:source_temporal_fluid"
     }
@@ -70,27 +70,27 @@
   ],
   "item_outputs": [
     {
-      "#": 18000000,
+      "#": 180000000,
       "#t": "ae2:i",
       "id": "advanced_ae:quantum_alloy"
     },
     {
-      "#": 12000000,
+      "#": 120000000,
       "#t": "ae2:i",
       "id": "advanced_ae:printed_quantum_processor"
     },
     {
-      "#": 6000000,
+      "#": 60000000,
       "#t": "ae2:i",
       "id": "advanced_ae:quantum_processor"
     },
     {
-      "#": 1500000,
+      "#": 15000000,
       "#t": "ae2:i",
       "id": "ae2:singularity"
     },
     {
-      "#": 3000000,
+      "#": 30000000,
       "#t": "ae2:i",
       "id": "ufo:dimensional_processor"
     }

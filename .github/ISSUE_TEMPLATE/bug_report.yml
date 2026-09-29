@@ -30,7 +30,7 @@ body:
     id: ufo-version
     attributes:
       label: UFO Future version
-      placeholder: 3.0.0-beta.4
+      placeholder: 3.0.0-beta.5
     validations:
       required: true
   - type: input

@@ -11,6 +11,14 @@ El **Stellar Nexus** es el multibloque final de simulacion de UFO Future. Consum
 - Usa calor, safe mode y overclock como ejes principales
 - Requiere los hatches de entrada y salida de items, un ME Massive Fluid Hatch para coolant externo y un FE Energy Input Hatch para energia externa
 
+## Programas de simulacion
+
+Beta 5 conserva las **13 simulaciones originales** y sus tipos de recursos, pero aumenta la producción a **280 millones–1,625 mil millones de items** y **107–375 millones de mB** por ciclo. Se eliminan los bloques de mineral de las salidas; los metales se entregan procesados.
+
+La nueva simulación **Stellar Omnibus (MK3)** reúne los recursos de esas recetas, con dos sustituciones en **64 salidas de items y 17 de fluidos**. Requiere Advanced AE, ExtendedAE, Mega Cells, Mekanism, Mekanism Generators y Applied Flux para disponer de todos los recursos opcionales. En Omnibus, la piedra y la obsidiana se sustituyen por los tres lingotes de UFO Future, materiales avanzados y fluidos de fusión. Ethylene y Sky Steel siguen disponibles en MK2.
+
+En JEI, las salidas llenan primero los tres espacios de cada panel de izquierda a derecha y luego bajan a la siguiente fila. Las selecciones del catálogo experimental se reasignan a una receta original al cargar el mundo.
+
 ## Tiers De Field Generator
 
 Las cuatro posiciones de field generator deben ser del mismo tier:

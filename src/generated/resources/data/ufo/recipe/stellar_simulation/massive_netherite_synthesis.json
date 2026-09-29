@@ -26,22 +26,22 @@
   ],
   "fluid_outputs": [
     {
-      "#": 3000000,
+      "#": 150000000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     },
     {
-      "#": 1200000,
+      "#": 60000000,
       "#t": "ae2:f",
       "id": "ufo:source_temporal_fluid"
     },
     {
-      "#": 1000000,
+      "#": 50000000,
       "#t": "ae2:f",
       "id": "ufo:source_spatial_fluid"
     },
     {
-      "#": 800000,
+      "#": 40000000,
       "#t": "ae2:f",
       "id": "ufo:source_primordial_matter_fluid"
     }
@@ -70,27 +70,22 @@
   ],
   "item_outputs": [
     {
-      "#": 5000000,
+      "#": 50000000,
       "#t": "ae2:i",
       "id": "minecraft:netherite_ingot"
     },
     {
-      "#": 12000000,
+      "#": 120000000,
       "#t": "ae2:i",
       "id": "minecraft:netherite_scrap"
     },
     {
-      "#": 3000000,
-      "#t": "ae2:i",
-      "id": "minecraft:ancient_debris"
-    },
-    {
-      "#": 9000000,
+      "#": 90000000,
       "#t": "ae2:i",
       "id": "minecraft:gold_ingot"
     },
     {
-      "#": 10000000,
+      "#": 100000000,
       "#t": "ae2:i",
       "id": "minecraft:quartz"
     }

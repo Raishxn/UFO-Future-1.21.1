@@ -1,6 +1,7 @@
 package com.raishxn.ufo.gametest;
 
 import com.raishxn.ufo.api.multiblock.MultiblockAutoBuildService;
+import com.raishxn.ufo.api.multiblock.MultiblockBuildDefaults;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
 import com.raishxn.ufo.api.multiblock.StructureTerminalOps;
 import com.raishxn.ufo.block.MultiblockBlocks;
@@ -30,6 +31,23 @@ public final class StructureTerminalSafetyGameTests {
 
     private static final BlockPos CONTROLLER = new BlockPos(1, 1, 1);
     private static final BlockPos PROBE = new BlockPos(0, 1, 0);
+
+    @GameTest(template = "empty", timeoutTicks = 20)
+    public static void defaultBuildIncludesMandatoryServiceParts(GameTestHelper helper) {
+        var entries = MultiblockControllerDefinitions.getPreviewEntries();
+        var stellar = MultiblockBuildDefaults.previewOverrides(entries.get(0));
+        helper.assertTrue(stellar.values().stream().anyMatch(state ->
+                        state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())),
+                "Stellar default build must include an item input hatch");
+        helper.assertTrue(stellar.values().stream().anyMatch(state ->
+                        state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())),
+                "Stellar default build must include an item output hatch");
+        var matterFabricator = MultiblockBuildDefaults.previewOverrides(entries.get(1));
+        helper.assertTrue(matterFabricator.values().stream().anyMatch(state ->
+                        state.is(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get())),
+                "Parallel default build must include one pattern endpoint");
+        helper.succeed();
+    }
 
     @GameTest(template = "empty", timeoutTicks = 20)
     public static void terminalModesDefaultToSafeValues(GameTestHelper helper) {

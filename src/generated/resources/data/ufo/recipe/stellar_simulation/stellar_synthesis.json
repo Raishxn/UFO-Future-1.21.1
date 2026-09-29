@@ -26,22 +26,22 @@
   ],
   "fluid_outputs": [
     {
-      "#": 1000000,
+      "#": 50000000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     },
     {
-      "#": 600000,
+      "#": 30000000,
       "#t": "ae2:f",
       "id": "ufo:raw_star_matter_plasma"
     },
     {
-      "#": 300000,
+      "#": 15000000,
       "#t": "ae2:f",
       "id": "ufo:source_primordial_matter_fluid"
     },
     {
-      "#": 250000,
+      "#": 12500000,
       "#t": "ae2:f",
       "id": "ufo:source_temporal_fluid"
     }
@@ -76,27 +76,27 @@
   ],
   "item_outputs": [
     {
-      "#": 12000000,
+      "#": 120000000,
       "#t": "ae2:i",
       "id": "ufo:pulsar_fragment_dust"
     },
     {
-      "#": 7000000,
+      "#": 70000000,
       "#t": "ae2:i",
       "id": "ufo:white_dwarf_matter"
     },
     {
-      "#": 5000000,
+      "#": 50000000,
       "#t": "ae2:i",
       "id": "ufo:neutron_star_matter"
     },
     {
-      "#": 3500000,
+      "#": 35000000,
       "#t": "ae2:i",
       "id": "ufo:pulsar_matter"
     },
     {
-      "#": 500000,
+      "#": 5000000,
       "#t": "ae2:i",
       "id": "ufo:quantum_anomaly"
     }

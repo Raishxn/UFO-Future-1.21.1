@@ -508,5 +508,10 @@
   "gui.ufo.infinity_fabrication_singularity.mode.efficiency.detail": "Até 32 rotas/tick com metade do custo de AE",
   "entity.productivebees.matter_ball_bee": "Abelha de Bola de Matéria",
   "entity.productivebees.scrap_bee": "Abelha de Sucata",
-  "entity.productivebees.scrap_box_bee": "Abelha de Caixa de Sucata"
+  "entity.productivebees.scrap_box_bee": "Abelha de Caixa de Sucata",
+  "message.ufo.autobuild.no_slot": "A montagem automática precisa de uma posição de casing livre para %s. Use o modo Substituir para trocar um casing existente ou instale a peça manualmente.",
+  "message.ufo.autobuild.no_slot_replace": "A montagem automática não encontrou uma posição de casing compatível para %s. Instale a peça manualmente.",
+  "message.ufo.autobuild.complete": "A estrutura está completa; não há blocos para colocar.",
+  "message.ufo.autobuild.no_placeable": "Não restam blocos para colocar, mas a estrutura não foi formada. Escaneie o controlador para ver os problemas restantes.",
+  "message.ufo.autobuild.incomplete_after": "A estrutura ainda está incompleta. Escaneie o controlador para ver os problemas restantes."
 }

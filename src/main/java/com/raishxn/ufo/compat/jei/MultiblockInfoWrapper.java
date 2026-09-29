@@ -5,6 +5,8 @@ import com.raishxn.ufo.util.UfoText;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinition;
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
+import com.raishxn.ufo.api.multiblock.MultiblockAutoBuildPlan;
+import com.raishxn.ufo.api.multiblock.MultiblockBuildDefaults;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -75,13 +77,16 @@ public class MultiblockInfoWrapper {
         Map<String, MaterialStack> materials = new LinkedHashMap<>();
         MultiblockPattern pattern = definition.pattern();
         BlockState controllerState = resolveControllerState(entry.iconStack());
+        var overrides = MultiblockBuildDefaults.previewOverrides(entry);
 
-        for (char[][] layer : chars) {
-            for (char[] row : layer) {
-                for (char symbol : row) {
+        for (int y = 0; y < chars.length; y++) {
+            for (int z = 0; z < chars[y].length; z++) {
+                for (int x = 0; x < chars[y][z].length; x++) {
+                    char symbol = chars[y][z][x];
                     BlockState state = symbol == pattern.getControllerChar()
                             ? controllerState
-                            : definition.defaultCreativeStates().get(symbol);
+                            : overrides.getOrDefault(new MultiblockAutoBuildPlan.LocalPos(x, y, z),
+                                    definition.defaultCreativeStates().get(symbol));
                     if (state == null || state.isAir()) {
                         continue;
                     }

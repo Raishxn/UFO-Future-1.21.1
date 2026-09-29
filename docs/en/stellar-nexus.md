@@ -11,6 +11,14 @@ The **Stellar Nexus** is the final simulation multiblock in UFO Future. It consu
 - Uses heat, safe mode and overclock as core balancing mechanics
 - Requires the designated item input/output hatches, an ME Massive Fluid Hatch for external coolant, and an FE Energy Input Hatch for external power
 
+## Simulation programs
+
+Beta 5 retains the **13 original simulations** and their resource types while increasing yields to **280 million–1.625 billion items** and **107–375 million mB** per cycle. Ore blocks are removed from outputs; metals are provided in processed form.
+
+A new **Stellar Omnibus (MK3)** simulation combines the resources from those recipes, with two substitutions into **64 item and 17 fluid outputs**. It requires Advanced AE, ExtendedAE, Mega Cells, Mekanism, Mekanism Generators, and Applied Flux so all optional resources are available. In the Omnibus, cobblestone and obsidian give way to the three UFO Future ingots, advanced materials, and fusion fluids. The Ethylene and Sky Steel recipes remain accessible at MK2.
+
+In JEI, item outputs fill the first three slots in each panel from left to right before moving down to the next row. Worlds with a selection from the experimental consolidated catalog map it back to an original recipe on load.
+
 ## Field Generator Tiers
 
 The four field positions must all be the same tier:

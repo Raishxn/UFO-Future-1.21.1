@@ -11,6 +11,14 @@
 - 以热量、安全模式和超频构成主要风险机制
 - 需要指定的物品输入与输出仓、供外部冷却液使用的 ME Massive Fluid Hatch，以及供外部电力使用的 FE Energy Input Hatch
 
+## 模拟程序
+
+Beta 5 保留 **13 个原有模拟程序**及其资源种类，同时将每轮产量提高到 **2.8 亿至 16.25 亿件物品**和 **1.07 亿至 3.75 亿 mB 流体**。输出中不再包含矿石方块，金属直接以加工后的形式产出。
+
+新增的 **Stellar Omnibus（MK3）** 汇集这些配方的资源，并替换其中两种，提供 **64 种物品和 17 种流体输出**。该程序要求安装 Advanced AE、ExtendedAE、Mega Cells、Mekanism、Mekanism Generators 和 Applied Flux，以保证所有可选资源都存在。在 Omnibus 中，圆石和黑曜石被 UFO Future 的三种锭、高级材料和聚变流体取代。Ethylene 和 Sky Steel 程序仍可在 MK2 使用。
+
+JEI 中的物品输出会先从左到右填满各面板顶部的三个格子，再进入下一行。实验性合并目录中的旧选择会在加载世界时映射回原有配方。
+
 ## 力场发生器等级
 
 四个力场位置必须使用相同等级：

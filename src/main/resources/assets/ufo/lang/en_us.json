@@ -799,5 +799,10 @@
   "gui.ufo.text.requirement_incomplete": "§c%s / %s%s",
   "gui.ufo.debug.instrumented_machines": "[UFO PERF] %s instrumented machines",
   "gui.ufo.debug.no_metrics_for": "No UFO metrics for %s",
-  "gui.ufo.debug.exported": "UFO diagnostic exported: %s"
+  "gui.ufo.debug.exported": "UFO diagnostic exported: %s",
+  "message.ufo.autobuild.no_slot": "Auto-build needs a free casing position for %s. Use Replace mode to swap an existing casing, or install it manually.",
+  "message.ufo.autobuild.no_slot_replace": "Auto-build found no compatible casing position for %s. Install the part manually.",
+  "message.ufo.autobuild.complete": "The structure is complete; no blocks need to be placed.",
+  "message.ufo.autobuild.no_placeable": "No placeable blocks remain, but the structure is not formed. Scan the controller for remaining issues.",
+  "message.ufo.autobuild.incomplete_after": "The structure is still incomplete. Scan the controller for remaining issues."
 }

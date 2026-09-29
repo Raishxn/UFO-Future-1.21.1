@@ -2,6 +2,7 @@ package com.raishxn.ufo.datagen;
 
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import com.raishxn.ufo.UfoMod;
 import com.raishxn.ufo.recipe.StellarSimulationRecipe;
@@ -15,6 +16,8 @@ import net.pedroksl.ae2addonlib.recipes.IngredientStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class StellarSimulationRecipeBuilder {
     private final String name;
@@ -30,6 +33,8 @@ public class StellarSimulationRecipeBuilder {
     private String fuelFluid = "";
     private long fuelAmount = 0;
     private long coolantAmount = 0;
+    private long itemOutputMultiplier = 1;
+    private long fluidOutputMultiplier = 1;
 
     private StellarSimulationRecipeBuilder(String name) {
         this.name = name;
@@ -44,6 +49,13 @@ public class StellarSimulationRecipeBuilder {
         return this;
     }
 
+    public StellarSimulationRecipeBuilder outputMultipliers(long items, long fluids) {
+        if (items <= 0 || fluids <= 0) throw new IllegalArgumentException("Output multipliers must be positive");
+        this.itemOutputMultiplier = items;
+        this.fluidOutputMultiplier = fluids;
+        return this;
+    }
+
     public StellarSimulationRecipeBuilder inputItem(ItemLike item, int count) {
         this.itemInputs.add(new IngredientStack.Item(Ingredient.of(item), count));
         return this;
@@ -55,12 +67,31 @@ public class StellarSimulationRecipeBuilder {
     }
 
     public StellarSimulationRecipeBuilder output(ItemLike item, long amount) {
-        this.itemOutputs.add(new GenericStack(AEItemKey.of(item), amount));
+        this.itemOutputs.add(new GenericStack(AEItemKey.of(item), Math.multiplyExact(amount, itemOutputMultiplier)));
         return this;
     }
 
     public StellarSimulationRecipeBuilder outputFluid(Fluid fluid, long amount) {
-        this.fluidOutputs.add(new GenericStack(AEFluidKey.of(fluid), amount));
+        this.fluidOutputs.add(new GenericStack(AEFluidKey.of(fluid), Math.multiplyExact(amount, fluidOutputMultiplier)));
+        return this;
+    }
+
+    /** Include every distinct output of the focused programs at its largest focused yield. */
+    public StellarSimulationRecipeBuilder mergeOutputsFrom(List<StellarSimulationRecipeBuilder> programs) {
+        Map<AEKey, Long> items = new LinkedHashMap<>();
+        Map<AEKey, Long> fluids = new LinkedHashMap<>();
+        for (var program : programs) {
+            for (var output : program.itemOutputs) items.merge(output.what(), output.amount(), Math::max);
+            for (var output : program.fluidOutputs) fluids.merge(output.what(), output.amount(), Math::max);
+        }
+        items.forEach((key, amount) -> this.itemOutputs.add(new GenericStack(key, amount)));
+        fluids.forEach((key, amount) -> this.fluidOutputs.add(new GenericStack(key, amount)));
+        return this;
+    }
+
+    public StellarSimulationRecipeBuilder removeOutput(ItemLike item) {
+        AEItemKey key = AEItemKey.of(item);
+        this.itemOutputs.removeIf(output -> output.what().equals(key));
         return this;
     }
 

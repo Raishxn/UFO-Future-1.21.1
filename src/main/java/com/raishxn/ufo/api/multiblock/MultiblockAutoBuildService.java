@@ -8,6 +8,7 @@ import com.raishxn.ufo.util.LoadedBlockEntityLookup;
  */
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.BlockPos;
@@ -42,6 +43,8 @@ import com.raishxn.ufo.item.StructureScannerSettings;
 import com.raishxn.ufo.item.StructureScannerAe2Link;
 import com.raishxn.ufo.block.MultiblockBlocks;
 import com.raishxn.ufo.block.entity.StellarNexusPartBE;
+import com.raishxn.ufo.block.entity.StellarNexusControllerBE;
+import com.raishxn.ufo.block.entity.QuantumCryoforgeControllerBE;
 
 /** Server-owned gradual auto-build sessions. Wrong occupied blocks are never replaced. */
 @EventBusSubscriber(modid = "ufo")
@@ -59,7 +62,6 @@ public final class MultiblockAutoBuildService {
     public static void start(ServerPlayer player, BlockEntity controllerBlockEntity,
                              StructureScannerSettings settings, ItemStack scanner) {
         StructureScannerSettings.Mode mode = settings.mode();
-        boolean hatchMode = settings.hatchMode();
         if (!(player.level() instanceof ServerLevel level)
                 || !(controllerBlockEntity instanceof IMultiblockController controller)) return;
         var definitionOptional = MultiblockControllerDefinitions.getDefinition(controllerBlockEntity);
@@ -90,8 +92,12 @@ public final class MultiblockAutoBuildService {
             return;
         }
         boolean replace = mode == StructureScannerSettings.Mode.REPLACE;
+        int fieldTier = mode == StructureScannerSettings.Mode.BUILD
+                ? installedFieldTier(level, pattern, controllerBlockEntity.getBlockPos(), facing,
+                        definition.defaultCreativeStates(), settings.fieldTier())
+                : settings.fieldTier();
         Map<Character, BlockState> selectedStates = selectFieldTier(
-                definition.defaultCreativeStates(), settings.fieldTier());
+                definition.defaultCreativeStates(), fieldTier);
         var plan = MultiblockAutoBuildPlan.create(
                 pattern.getPattern(), pattern.getControllerChar(), pattern.getControllerCol(), pattern.getControllerRow(),
                 selectedStates, target -> !target.isAir(), (local, symbol, target) -> {
@@ -101,10 +107,10 @@ public final class MultiblockAutoBuildService {
                         return MultiblockAutoBuildPlan.SlotState.BLOCKED;
                     }
                     BlockState current = level.getBlockState(world);
-                    boolean exactTarget = current.getBlock() == target.getBlock();
-                    boolean preservedHatch = hatchMode && isInstalledHatch(current);
+                    // A slot can accept several blocks. Keep any valid installed hatch or
+                    // casing; only fields must follow the selected uniform tier.
                     if (pattern.matchesSlot(symbol, current, level, world)
-                            && (exactTarget || preservedHatch)) {
+                            && (!isFieldGenerator(target) || current.getBlock() == target.getBlock())) {
                         return MultiblockAutoBuildPlan.SlotState.MATCHING;
                     }
                     if (current.isAir()) return MultiblockAutoBuildPlan.SlotState.EMPTY;
@@ -122,11 +128,19 @@ public final class MultiblockAutoBuildService {
                     + position(first) + ".", ChatFormatting.RED);
             return;
         }
-        List<Work> work = plan.placements().stream()
+        List<Work> work = new ArrayList<>(plan.placements().stream()
                 .map(placement -> new Work(
                         worldPos(pattern, controllerBlockEntity.getBlockPos(), placement.localPos(), facing),
                         placement.target(), placement.replace(), false))
-                .toList();
+                .toList());
+        Component missingSlots = addRequiredHatches(level, controllerBlockEntity, pattern, facing,
+                work, replace);
+        if (missingSlots != null) {
+            message(player, Component.translatable(replace
+                    ? "message.ufo.autobuild.no_slot_replace" : "message.ufo.autobuild.no_slot",
+                    missingSlots), ChatFormatting.RED);
+            return;
+        }
         Map<Item, Integer> requirements = requirements(work);
         Item unsupported = requirements.keySet().stream().filter(item -> item == Items.AIR).findFirst().orElse(null);
         if (unsupported != null) {
@@ -140,14 +154,18 @@ public final class MultiblockAutoBuildService {
                 return;
             }
         }
-        if (plan.placements().isEmpty()) {
+        if (work.isEmpty()) {
             controller.scanStructure(level);
-            message(player, "No structural blocks need to be placed.", ChatFormatting.GREEN);
+            if (controller.isAssembled()) {
+                message(player, Component.translatable("message.ufo.autobuild.complete"), ChatFormatting.GREEN);
+            } else {
+                message(player, Component.translatable("message.ufo.autobuild.no_placeable"), ChatFormatting.YELLOW);
+            }
             return;
         }
         SESSIONS.put(key, new Session(player.getUUID(), mode, List.copyOf(work), 0, 0,
                 settings, scanner.copy()));
-        message(player, "Auto-build started: " + plan.placements().size() + " block(s).", ChatFormatting.GREEN);
+        message(player, "Auto-build started: " + work.size() + " block(s).", ChatFormatting.GREEN);
     }
 
     private static void startDemolition(ServerPlayer player, ServerLevel level, SessionKey key,
@@ -289,8 +307,14 @@ public final class MultiblockAutoBuildService {
         iterator.remove();
         refresh(level, key.controllerPos());
         String verb = next.mode() == StructureScannerSettings.Mode.DEMOLISH ? "removed" : "placed/replaced";
+        boolean assembled = LoadedBlockEntityLookup.get(level, key.controllerPos())
+                instanceof IMultiblockController controller && controller.isAssembled();
         message(player, "Structure operation " + verb + " " + next.placed() + " block(s).",
-                ChatFormatting.GREEN);
+                next.mode() == StructureScannerSettings.Mode.DEMOLISH || assembled
+                        ? ChatFormatting.GREEN : ChatFormatting.YELLOW);
+        if (next.mode() != StructureScannerSettings.Mode.DEMOLISH && !assembled) {
+            message(player, Component.translatable("message.ufo.autobuild.incomplete_after"), ChatFormatting.YELLOW);
+        }
     }
 
     private static void refresh(ServerLevel level, BlockPos pos) {
@@ -305,6 +329,71 @@ public final class MultiblockAutoBuildService {
                 local.x() - pattern.getControllerCol(),
                 local.y() - pattern.getControllerLayer(),
                 local.z() - pattern.getControllerRow(), facing);
+    }
+
+    /** Add the service parts required by controller validation to otherwise ordinary casing slots. */
+    private static Component addRequiredHatches(ServerLevel level, BlockEntity controller,
+            MultiblockPattern pattern, Direction facing,
+            List<Work> work, boolean replace) {
+        List<Block> required = MultiblockBuildDefaults.requiredHatches(controller);
+        if (required.isEmpty()) return null;
+
+        // Inspect the pattern rather than assuming a hatch has a fixed location.
+        // J/K are illustrative defaults; an existing valid service hatch counts anywhere.
+        char[][][] template = pattern.getPattern();
+        Map<BlockPos, Character> symbols = new LinkedHashMap<>();
+        String eligible = controller instanceof StellarNexusControllerBE ? "BFGJK"
+                : controller instanceof QuantumCryoforgeControllerBE ? "BJK" : "CJK";
+        for (int y = 0; y < template.length; y++) for (int z = 0; z < template[y].length; z++) {
+            for (int x = 0; x < template[y][z].length; x++) {
+                char symbol = template[y][z][x];
+                if (symbol == pattern.getControllerChar() || eligible.indexOf(symbol) < 0) continue;
+                var local = new MultiblockAutoBuildPlan.LocalPos(x, y, z);
+                symbols.put(worldPos(pattern, controller.getBlockPos(), local, facing), symbol);
+            }
+        }
+        for (Block hatch : required) {
+            BlockState target = hatch.defaultBlockState();
+            boolean present = symbols.entrySet().stream().anyMatch(entry -> {
+                BlockPos pos = entry.getKey();
+                BlockState state = level.getBlockState(pos);
+                boolean sameHatch = state.is(hatch) || hatch == MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get()
+                        && state.is(MultiblockBlocks.QUANTUM_PATTERN_PROXY.get());
+                return sameHatch
+                        && pattern.matchesSlot(entry.getValue(), state, level, pos);
+            }) || work.stream().anyMatch(entry -> entry.target().is(hatch));
+            if (present) continue;
+
+            int candidate = -1;
+            for (int i = 0; i < work.size(); i++) {
+                Work entry = work.get(i);
+                Character symbol = symbols.get(entry.position());
+                if (symbol != null && MultiblockBuildDefaults.isCasing(entry.target())
+                        && pattern.matchesSlot(symbol, target, level, entry.position())) {
+                    candidate = i;
+                    break;
+                }
+            }
+            if (candidate >= 0) {
+                Work old = work.get(candidate);
+                work.set(candidate, new Work(old.position(), target, old.replace(), false));
+                continue;
+            }
+            if (replace) {
+                for (var entry : symbols.entrySet()) {
+                    BlockPos pos = entry.getKey();
+                    BlockState current = level.getBlockState(pos);
+                    if (MultiblockBuildDefaults.isCasing(current) && pattern.matchesSlot(entry.getValue(), target, level, pos)
+                            && work.stream().noneMatch(slot -> slot.position().equals(pos))) {
+                        work.add(new Work(pos, target, true, false));
+                        candidate = work.size() - 1;
+                        break;
+                    }
+                }
+            }
+            if (candidate < 0) return hatch.getName();
+        }
+        return null;
     }
 
     private static Map<Item, Integer> requirements(List<Work> placements) {
@@ -359,27 +448,30 @@ public final class MultiblockAutoBuildService {
         return result;
     }
 
+    /** Continue a partially built uniform field with its installed tier. */
+    private static int installedFieldTier(ServerLevel level, MultiblockPattern pattern, BlockPos controller,
+            Direction facing, Map<Character, BlockState> defaults, int fallback) {
+        int found = 0;
+        for (var entry : defaults.entrySet()) {
+            if (!isFieldGenerator(entry.getValue())) continue;
+            for (BlockPos pos : pattern.getExpectedPositions(controller, facing, entry.getKey())) {
+                if (!level.isLoaded(pos)) continue;
+                BlockState state = level.getBlockState(pos);
+                int tier = state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get()) ? 1
+                        : state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get()) ? 2
+                        : state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get()) ? 3 : 0;
+                if (tier == 0) continue;
+                if (found != 0 && found != tier) return fallback;
+                found = tier;
+            }
+        }
+        return found == 0 ? fallback : found;
+    }
+
     private static boolean isFieldGenerator(BlockState state) {
         return state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T1.get())
                 || state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T2.get())
                 || state.is(MultiblockBlocks.STELLAR_FIELD_GENERATOR_T3.get());
-    }
-
-    /**
-     * Preserve only actual service hatches. Structural parts such as Stellar Field Generators also
-     * implement IMultiblockPart, so using that interface here makes Replace silently skip every field.
-     * This mirrors the GTCEu terminal behavior, which distinguishes hatches from ordinary pattern blocks.
-     */
-    private static boolean isInstalledHatch(BlockState state) {
-        return state.is(MultiblockBlocks.ME_MASSIVE_INPUT_HATCH.get())
-                || state.is(MultiblockBlocks.ME_MASSIVE_OUTPUT_HATCH.get())
-                || state.is(MultiblockBlocks.ME_MASSIVE_FLUID_HATCH.get())
-                || state.is(MultiblockBlocks.AE_ENERGY_INPUT_HATCH.get())
-                || state.is(MultiblockBlocks.QUANTUM_PATTERN_HATCH.get())
-                || state.is(MultiblockBlocks.QUANTUM_PATTERN_BUFFER.get())
-                || state.is(MultiblockBlocks.QUANTUM_PATTERN_PROXY.get())
-                || state.is(MultiblockBlocks.QUANTUM_INTERFACE.get())
-                || state.is(MultiblockBlocks.QUANTUM_GRID_LINK.get());
     }
 
     private static String position(BlockPos pos) { return pos.getX() + ", " + pos.getY() + ", " + pos.getZ(); }
@@ -409,6 +501,9 @@ public final class MultiblockAutoBuildService {
     }
     private static void message(ServerPlayer player, String text, ChatFormatting color) {
         player.displayClientMessage(net.minecraft.network.chat.Component.literal(text).withStyle(color), false);
+    }
+    private static void message(ServerPlayer player, Component text, ChatFormatting color) {
+        player.displayClientMessage(text.copy().withStyle(color), false);
     }
 
     @SubscribeEvent public static void onServerStopped(ServerStoppedEvent event) { SESSIONS.clear(); }

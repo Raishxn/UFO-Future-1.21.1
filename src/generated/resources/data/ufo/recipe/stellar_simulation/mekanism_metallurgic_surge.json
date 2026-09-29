@@ -32,22 +32,22 @@
   ],
   "fluid_outputs": [
     {
-      "#": 2500000,
+      "#": 125000000,
       "#t": "ae2:f",
       "id": "ufo:source_liquid_starlight_fluid"
     },
     {
-      "#": 2000000,
+      "#": 100000000,
       "#t": "ae2:f",
       "id": "ufo:uu_matter"
     },
     {
-      "#": 1000000,
+      "#": 50000000,
       "#t": "ae2:f",
       "id": "ufo:source_neutron_star_fragment_fluid"
     },
     {
-      "#": 1000000,
+      "#": 50000000,
       "#t": "ae2:f",
       "id": "ufo:source_white_dwarf_fragment_fluid"
     }
@@ -82,42 +82,42 @@
   ],
   "item_outputs": [
     {
-      "#": 18000000,
+      "#": 180000000,
       "#t": "ae2:i",
       "id": "mekanism:ingot_lead"
     },
     {
-      "#": 18000000,
+      "#": 180000000,
       "#t": "ae2:i",
       "id": "mekanism:ingot_tin"
     },
     {
-      "#": 18000000,
+      "#": 180000000,
       "#t": "ae2:i",
       "id": "mekanism:ingot_osmium"
     },
     {
-      "#": 15000000,
+      "#": 150000000,
       "#t": "ae2:i",
       "id": "mekanism:ingot_uranium"
     },
     {
-      "#": 12000000,
+      "#": 120000000,
       "#t": "ae2:i",
       "id": "mekanism:ingot_refined_glowstone"
     },
     {
-      "#": 12000000,
+      "#": 120000000,
       "#t": "ae2:i",
       "id": "mekanism:ingot_refined_obsidian"
     },
     {
-      "#": 24000000,
+      "#": 240000000,
       "#t": "ae2:i",
       "id": "mekanism:ingot_steel"
     },
     {
-      "#": 24000000,
+      "#": 240000000,
       "#t": "ae2:i",
       "id": "mekanism:ingot_bronze"
     }

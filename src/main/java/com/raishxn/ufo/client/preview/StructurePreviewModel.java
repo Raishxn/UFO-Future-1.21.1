@@ -2,6 +2,8 @@ package com.raishxn.ufo.client.preview;
 
 import com.raishxn.ufo.api.multiblock.MultiblockControllerDefinitions;
 import com.raishxn.ufo.api.multiblock.MultiblockPattern;
+import com.raishxn.ufo.api.multiblock.MultiblockAutoBuildPlan;
+import com.raishxn.ufo.api.multiblock.MultiblockBuildDefaults;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -37,12 +39,14 @@ public record StructurePreviewModel(ResourceLocation id, Component title, int si
         BlockState controllerState = entry.iconStack().getItem() instanceof BlockItem blockItem
                 ? blockItem.getBlock().defaultBlockState() : Blocks.IRON_BLOCK.defaultBlockState();
         List<Cell> cells = new ArrayList<>();
+        var overrides = MultiblockBuildDefaults.previewOverrides(entry);
         Map<String, Material> materials = new LinkedHashMap<>();
         LinkedHashSet<net.minecraft.world.level.block.Block> focusBlocks = new LinkedHashSet<>();
         for (int y = 0; y < sizeY; y++) for (int z = 0; z < sizeZ; z++) for (int x = 0; x < sizeX; x++) {
             char symbol = template[y][z][x];
             BlockState state = symbol == pattern.getControllerChar() ? controllerState
-                    : definition.defaultCreativeStates().get(symbol);
+                    : overrides.getOrDefault(new MultiblockAutoBuildPlan.LocalPos(x, y, z),
+                            definition.defaultCreativeStates().get(symbol));
             if (state == null) state = Blocks.AIR.defaultBlockState();
             List<BlockState> alternatives = pattern.getDisplayCandidates(symbol);
             if (alternatives.isEmpty()) alternatives = List.of(state);
