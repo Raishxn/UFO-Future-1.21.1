@@ -5,7 +5,7 @@ UFO Future 3.0 适用于 **Minecraft 1.21.1** 与 **NeoForge 21.1.x**。请从[�
 ## 必需模组
 
 - Applied Energistics 2 **19.2.17+**，限 19.x 系列
-- RaishxCore **0.1.0-beta.2+**，限 0.1.x 系列
+- RaishxCore **0.1.0-beta.3+**，限 0.1.x 系列
 - AE2 Addon Lib **1.0.3-1.21.1+**，限 1.x 系列
 
 将 UFO 与以上三个模组的 JAR 一同放入 `mods/`。Mekanism 为可选依赖，提供化学品存储和相关配方；建议安装 JEI 查看配方和多方块预览。EMI、Applied Mekanistics 和 Applied Flux 提供可选集成。UFO 本身不要求 GeckoLib。

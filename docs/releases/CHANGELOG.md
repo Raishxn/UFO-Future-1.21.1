@@ -14,7 +14,26 @@ Fluxo combinado daqui para frente:
 
 ### Bug Fixes
 
+- Corrigida a ponte de CPUs compartilhadas do RaishxCore: ela substituía o retorno de `getCpus`, `insertIntoCpus` e `getRequestedAmount` no `CraftingService`, o que pulava silenciosamente os hooks de outros add-ons de CPU. Com o Advanced AE instalado, o Quantum Computer sumia da lista de CPUs e não recebia itens, mesmo com o planner desativado.
+
 ### Implementations
+
+- RaishxCore 0.1.0-beta.3 como dependência versionada, com a ponte de CPUs compartilhadas recomposta.
+
+## [3.0.0-beta.5] - 2026-09-28
+
+### Bug Fixes
+
+- A montagem automática preserva peças já válidas, considera hatches obrigatórios e informa quando a estrutura continua incompleta.
+- A prévia de estruturas e os textos do JEI refletem melhor as posições e peças aceitas pela máquina.
+- Corrigidos os atributos genéticos das abelhas de sucata, caixa de sucata e bola de matéria, que podiam derrubar o mundo após a geração por ovo.
+
+### Implementations
+
+- Restauradas as 13 simulações originais do Stellar Nexus com quantidades maiores de itens e fluidos e sem minérios brutos nas saídas.
+- Adicionada a simulação MK3 Stellar Omnibus com 64 saídas de itens e 17 de fluidos, incluindo materiais do UFO Future, Applied Flux, Advanced AE e Mekanism Generators.
+- O JEI preenche as saídas de itens horizontalmente entre os três quadros antes de avançar para a próxima linha.
+- Seleções do catálogo experimental de simulações são remapeadas ao carregar mundos existentes.
 
 ## [3.0.0-beta.4] - 2026-09-27
 
