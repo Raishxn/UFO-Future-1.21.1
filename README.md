@@ -139,7 +139,7 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
 | **Minecraft** | required | 1.21.1 | — |
 | **NeoForge** | required | 21.1.216+ | — |
 | **[Applied Energistics 2](https://github.com/AppliedEnergistics/Applied-Energistics-2)** | required | `[19.2.17, 20)` | The network, storage and autocrafting UFO builds on |
-| **[RaishxCore](https://github.com/Raishxn/RaishxCore)** | required | `[0.1.0-beta.3, 0.2)` | Multiblock, exact-amount and GUI foundations |
+| **[RaishxCore](https://github.com/Raishxn/RaishxCore)** | required | `[0.2, 1.0)` | Multiblock, exact-amount and GUI foundations |
 | **[AE2 Addon Lib](https://github.com/pedroksl/AE2AddonLib)** | required | `[1.0.3-1.21.1, 2)` | Recipes, registries, menus and widgets |
 | **[Mekanism](https://github.com/mekanism/Mekanism)** | optional | `[10.7.18, 11)` | Mekanism-backed cells and chemical integration |
 | **[JEI](https://www.curseforge.com/minecraft/mc-mods/jei)** | optional | — | UFO recipe categories and multiblock previews |

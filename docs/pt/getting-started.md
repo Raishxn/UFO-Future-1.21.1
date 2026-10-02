@@ -5,7 +5,7 @@ UFO Future 3.0 usa **Minecraft 1.21.1** com **NeoForge 21.1.x**. Consulte a [pag
 ## Mods obrigatorios
 
 - Applied Energistics 2 **19.2.17+** na linha 19.x
-- RaishxCore **0.1.0-beta.3+** na linha 0.1.x
+- RaishxCore **0.2+** na linha 0.x
 - AE2 Addon Lib **1.0.3-1.21.1+** na linha 1.x
 
 Instale os quatro JARs em `mods/`. Mekanism e opcional e libera armazenamento e receitas quimicas; JEI e recomendado para receitas e previews de multiblocos. EMI, Applied Mekanistics e Applied Flux oferecem integracoes opcionais. O proprio UFO nao exige GeckoLib.
