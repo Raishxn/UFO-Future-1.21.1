@@ -3,6 +3,9 @@ navigation:
   parent: ufo_intro/materials.md
   title: 封存机制（ACC 与 SCM）
   position: 80
+item_ids:
+  - ufo:aether_containment_capsule
+  - ufo:safe_containment_matter
 ---
 
 # 安全封存与以太胶囊

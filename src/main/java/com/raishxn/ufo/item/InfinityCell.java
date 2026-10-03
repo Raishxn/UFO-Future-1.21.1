@@ -39,7 +39,7 @@ public class InfinityCell extends AEBaseItem {
     @Override
     public @NotNull Component getName(@NotNull ItemStack is) {
         if (getRecord() == null) {
-            return Component.translatable("item.ufo.infinity_cell_invalid");
+            return Component.translatable("item.ufo.infinity_cell_name_invalid");
         }
 
         String text = Component.translatable("item.ufo.infinity_cell_name", getRecord().getDisplayName()).getString();

@@ -3,6 +3,12 @@ navigation:
   parent: ufo_intro/equipment.md
   title: UFO 工具
   position: 60
+item_ids:
+  - ufo:ufo_pickaxe
+  - ufo:ufo_sword
+  - ufo:ufo_hammer
+  - ufo:ufo_staff
+  - ufo:structure_scanner
 ---
 
 # UFO Future 工具

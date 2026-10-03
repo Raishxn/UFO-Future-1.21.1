@@ -3,6 +3,8 @@ navigation:
   parent: ufo_intro/machines.md
   title: 量子处理器组装机
   position: 44
+item_ids:
+  - ufo:quantum_processor_assembler_controller
 ---
 
 # 量子处理器组装机

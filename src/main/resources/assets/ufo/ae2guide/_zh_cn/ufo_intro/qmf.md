@@ -3,6 +3,8 @@ navigation:
   parent: ufo_intro/machines.md
   title: 量子物质制造机
   position: 42
+item_ids:
+  - ufo:quantum_matter_fabricator_controller
 ---
 
 # 量子物质制造机

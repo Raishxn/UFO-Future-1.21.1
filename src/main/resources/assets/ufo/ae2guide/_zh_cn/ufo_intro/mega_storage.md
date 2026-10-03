@@ -3,6 +3,17 @@ navigation:
   parent: ufo_intro/infrastructure.md
   title: 巨型协处理器与合成存储
   position: 50
+item_ids:
+  - ufo:1b_mega_crafting_storage
+  - ufo:50b_mega_crafting_storage
+  - ufo:1t_mega_crafting_storage
+  - ufo:250t_mega_crafting_storage
+  - ufo:1qd_mega_crafting_storage
+  - ufo:50m_mega_co_processor
+  - ufo:150m_mega_co_processor
+  - ufo:300m_mega_co_processor
+  - ufo:750m_mega_co_processor
+  - ufo:2b_mega_co_processor
 ---
 
 # 巨型合成存储与协处理器
