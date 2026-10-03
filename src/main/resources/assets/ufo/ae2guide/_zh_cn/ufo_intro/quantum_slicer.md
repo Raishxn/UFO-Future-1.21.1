@@ -3,6 +3,8 @@ navigation:
   parent: ufo_intro/machines.md
   title: 量子切片机
   position: 43
+item_ids:
+  - ufo:quantum_slicer_controller
 ---
 
 # 量子切片机
