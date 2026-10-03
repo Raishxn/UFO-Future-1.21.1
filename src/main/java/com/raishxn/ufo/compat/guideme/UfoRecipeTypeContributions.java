@@ -1,6 +1,7 @@
 package com.raishxn.ufo.compat.guideme;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,7 +37,10 @@ public final class UfoRecipeTypeContributions implements RecipeTypeMappingSuppli
         List<Ingredient> itemInputs = new ArrayList<>();
         for (var input : recipe.getItemInputs()) {
             if (!input.isEmpty()) {
-                itemInputs.add(input.getIngredient());
+                // Preserve the recipe quantity for every item/tag alternative without
+                // mutating the ingredient's shared display stacks.
+                itemInputs.add(Ingredient.of(Arrays.stream(input.getIngredient().getItems())
+                        .map(stack -> stack.copyWithCount(input.getAmount()))));
             }
         }
 
