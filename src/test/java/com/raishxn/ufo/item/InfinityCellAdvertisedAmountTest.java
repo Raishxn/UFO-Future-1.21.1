@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InfinityCellAdvertisedAmountTest {
     @Test
-    void advertisesTheLargestAmountSupportedByAe2() {
-        assertEquals(Long.MAX_VALUE, InfiniteSourceCapacity.advertisedAmount());
+    void advertisesTheSameQuantityAsAe2CreativeCells() {
+        assertEquals((long) Integer.MAX_VALUE, InfiniteSourceCapacity.advertisedAmount());
     }
 }
