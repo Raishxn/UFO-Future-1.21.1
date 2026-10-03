@@ -178,7 +178,10 @@ class GuideContentIntegrityTest {
 
     @Test
     void guideNavigationDoesNotIndexTheSameItemTwice() throws IOException {
-        Map<String, Path> ownerByItem = new HashMap<>();
+        // GuideME loads exactly one page variant per language at runtime, so an item may be
+        // indexed once per locale (e.g. both the source and the translated page), but not twice
+        // within the same locale.
+        Map<String, Path> ownerByLocalizedItem = new HashMap<>();
         List<String> errors = new ArrayList<>();
         for (Path page : guidePages()) {
             var blocks = ITEM_IDS_BLOCK.matcher(Files.readString(page));
@@ -186,7 +189,8 @@ class GuideContentIntegrityTest {
                 var ids = ITEM_ID_LINE.matcher(blocks.group(1));
                 while (ids.find()) {
                     String id = ids.group(1);
-                    Path previous = ownerByItem.putIfAbsent(id, page);
+                    String key = pageLocale(page) + "|" + id;
+                    Path previous = ownerByLocalizedItem.putIfAbsent(key, page);
                     if (previous != null && !previous.equals(page)) {
                         errors.add("duplicate navigation item " + id + " in " + previous + " and " + page);
                     }
@@ -265,6 +269,14 @@ class GuideContentIntegrityTest {
                     .sorted()
                     .toList();
         }
+    }
+
+    private static String pageLocale(Path page) {
+        Path relative = GUIDE_ROOT.relativize(page);
+        if (relative.getNameCount() > 1 && relative.getName(0).toString().matches("_[a-z]{2}_[a-z]{2}")) {
+            return relative.getName(0).toString();
+        }
+        return "default";
     }
 
     private static Set<String> modeledGuideIds() throws IOException {
