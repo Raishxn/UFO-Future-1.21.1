@@ -3,6 +3,8 @@ navigation:
   parent: ufo_intro/machines.md
   title: 恒星联结
   position: 50
+item_ids:
+  - ufo:stellar_nexus_controller
 ---
 
 # 恒星联结

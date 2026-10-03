@@ -321,6 +321,8 @@
     "item.ufo.structure_scanner.tooltip.field": "Field Generator selecionado: MK%s",
     "item.ufo.structure_scanner.tooltip.ae_linked": "ME vinculado em %s, %s, %s",
     "item.ufo.structure_scanner.tooltip.ae_unlinked": "ME não vinculado — use em um Wireless Access Point",
+    "tooltip.ufo.structure_scanner.creative_tooltip": "Modo criativo: Shift + clique com o botão direito no controlador para construir automaticamente",
+    "guide.ufo.dma.fluids": "Fluidos: %s",
     "gui.ufo.structure_scanner.title": "Terminal de Estruturas",
     "gui.ufo.structure_scanner.mode": "Operação: %s",
     "gui.ufo.structure_scanner.mode.scan": "Escanear",
