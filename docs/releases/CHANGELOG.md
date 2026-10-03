@@ -12,6 +12,23 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+## [3.0.0-beta.7] - 2026-10-03
+
+### Bug Fixes
+
+- Corrigido o desaparecimento de recursos no terminal ME quando células Infinity ou Infinity Genesis e armazenamentos externos forneciam o mesmo item. A quantidade anunciada agora segue o padrão da célula criativa do AE2, evitando overflow na soma; a extração continua infinita.
+- Receitas do DMA agora são exibidas no GuideME com quantidades de ingredientes, produtos, fluidos, energia e tempo.
+- Corrigida a chave de tradução do nome de células Infinity sem recurso válido e adicionada a descrição de construção automática do Structure Scanner em modo criativo.
+- A validação de navegação do guia agora verifica itens duplicados por idioma.
+
+### Implementations
+
+- Adicionadas 21 páginas do guia em chinês simplificado e vínculos de itens nas páginas traduzidas, contribuição de yongaishide no PR #24.
+- Atualizado o Gradle Actions de 6.3.0 para 6.4.0 nos fluxos de CI e release (PR #23).
+- Adicionados testes de regressão para células Infinity/Genesis junto a fontes externas, incluindo fontes duplicadas, prioridades, retirada/recolocação e extração infinita.
+
+## [3.0.0-beta.6] - 2026-10-02
+
 ### Bug Fixes
 
 - Corrigida a incompatibilidade com o RaishxCore estável: o UFO agora declara a faixa `[0.2, 1.0)`, então a versão 0.2 e as próximas 0.x carregam sem o erro de dependência que rejeitava a 0.2.
