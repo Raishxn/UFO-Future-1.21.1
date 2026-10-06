@@ -6,7 +6,7 @@ El **Quantum Computation Nexus** combina modulos UFO de almacenamiento de crafti
 
 - Instala almacenamiento de crafting UFO para aumentar la capacidad y coprocesadores UFO para aumentar el paralelismo.
 - **25 modulos de almacenamiento del nivel maximo y 25 coprocesadores del nivel maximo** desbloquean el modo de computacion infinita.
-- El paralelismo se adapta a la energia almacenada en la red y reduce la demanda cuando el buffer es bajo.
+- Por defecto el crafting del Nexus no consume la energia almacenada de la red; el Grid Link sigue consumiendo 32 AE/t. El administrador puede restaurar el coste por patron del AE2 y el throttle de buffer bajo en `config/ufo/server.toml`.
 - El Nexus no toma control de modulos CPU AE2 normales ni de otros addons colocados en su interior.
 
 Consulta el controlador y la vista previa del juego para ver los modulos y sus posiciones.

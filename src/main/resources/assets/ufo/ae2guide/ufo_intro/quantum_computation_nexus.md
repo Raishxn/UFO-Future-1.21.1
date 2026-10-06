@@ -56,6 +56,10 @@ bytes and creates one temporary virtual CPU. All remaining bytes stay available
 for simultaneous jobs. Co-Processors are one shared dispatch budget, divided
 fairly between active jobs rather than duplicated for every job.
 
+Nexus crafting does not consume the network's stored energy by default: jobs
+only need the Grid Link powered. Server operators can restore AE2's native
+per-pattern energy cost and low-buffer throttling in `config/ufo/server.toml`.
+
 ### Infinite computation mode
 
 Installing at least **25 Cosmic String Crafting Storages** (the 1 TiB tier) and

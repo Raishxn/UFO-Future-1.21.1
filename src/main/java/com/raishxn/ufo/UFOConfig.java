@@ -64,6 +64,22 @@ public class UFOConfig {
     public static final ModConfigSpec.IntValue MAX_EXTERNAL_ACCELERATION_TICKS = SERVER_BUILDER
             .comment("Maximum updates a UFO ticked block entity may run in one real game tick when an external mod accelerates it. Limits TPS cost while preserving up to this much acceleration.")
             .defineInRange("performance.maxExternalAccelerationTicksPerGameTick", 64, 1, 256);
+    public static final ModConfigSpec.IntValue NEXUS_MAX_PATTERN_DISPATCHES_PER_TICK = SERVER_BUILDER
+            .comment("Pattern dispatches the Quantum Computation Nexus shares between all active jobs per tick.",
+                    "Newly loaded jobs ramp up over four ticks, so this is also the per-tick safety ceiling.",
+                    "Lower this on servers with many parallel jobs; raise it only if the server can absorb the extra pattern pushes.")
+            .defineInRange("nexus.maxPatternDispatchesPerTick", 16_384, 256, 1_048_576);
+    public static final ModConfigSpec.BooleanValue NEXUS_IGNORE_PATTERN_ENERGY = SERVER_BUILDER
+            .comment("When true, Quantum Computation Nexus jobs do not pay AE2's per-pattern crafting energy.",
+                    "The Nexus still needs its Grid Link powered (32 AE/t) and every other machine pays energy normally.",
+                    "Set to false to restore AE2's native per-pattern cost.")
+            .define("nexus.ignorePatternEnergy", true);
+    public static final ModConfigSpec.BooleanValue NEXUS_ENERGY_THROTTLE = SERVER_BUILDER
+            .comment("When true, the Nexus scales its dispatch window down when the stored grid buffer is low:",
+                    "below 10% one lane per job, below 25% one eighth, below 50% one half.",
+                    "Off by default because AE2 and CPU addons do not throttle dispatch by stored energy.",
+                    "Only meaningful when nexus.ignorePatternEnergy is false and the network cannot sustain the craft drain.")
+            .define("nexus.energyThrottle", false);
 
     /**
      * Operator caps for the armor module settings. The enum maximum stays the design limit the
@@ -131,6 +147,21 @@ public class UFOConfig {
     /** Safe before server config loading, which is relevant during early block-entity ticks. */
     public static int maxExternalAccelerationTicks() {
         return SERVER_SPEC.isLoaded() ? MAX_EXTERNAL_ACCELERATION_TICKS.get() : 64;
+    }
+
+    /** Dispatch ceiling shared by all Quantum Computation Nexus jobs. Safe before server config loading. */
+    public static int maxNexusPatternDispatchesPerTick() {
+        return SERVER_SPEC.isLoaded() ? NEXUS_MAX_PATTERN_DISPATCHES_PER_TICK.get() : 16_384;
+    }
+
+    /** Whether Nexus jobs skip AE2's native per-pattern energy cost. Enabled by default. */
+    public static boolean nexusIgnoresPatternEnergy() {
+        return !SERVER_SPEC.isLoaded() || NEXUS_IGNORE_PATTERN_ENERGY.get();
+    }
+
+    /** Whether low grid buffers throttle the Nexus dispatch window. Disabled by default. */
+    public static boolean nexusEnergyThrottleEnabled() {
+        return SERVER_SPEC.isLoaded() && NEXUS_ENERGY_THROTTLE.get();
     }
 
     private static boolean isResourceLocation(Object value) {

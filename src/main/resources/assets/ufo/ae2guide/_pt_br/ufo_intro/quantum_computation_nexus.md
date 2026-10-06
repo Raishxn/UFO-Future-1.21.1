@@ -54,6 +54,11 @@ exigidos pelo plano e cria uma CPU virtual temporaria. O restante do armazenamen
 continua disponivel para outros jobs. Os Co-Processadores formam uma capacidade
 compartilhada, repartida de forma justa entre os jobs ativos.
 
+Por padrao, o crafting do Nexus nao consome a energia armazenada da rede: os
+jobs so precisam que o Grid Link esteja energizado. O administrador do servidor
+pode restaurar o custo por padrao do AE2 e o throttle de buffer baixo em
+`config/ufo/server.toml`.
+
 ### Modo de computacao infinita
 
 Instalar pelo menos **25 Armazenamentos de Crafting Cosmic String** (tier de 1 TiB)

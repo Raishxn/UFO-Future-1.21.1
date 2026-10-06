@@ -12,6 +12,19 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+## [3.0.0-beta.9] - 2026-10-06
+
+### Bug Fixes
+
+- Corrigido o paralelismo do Quantum Computation Nexus: as lanes instaladas agora são compartilhadas entre os jobs ativos em vez de limitadas a um teto fixo de 2.048 despachos para o pool inteiro. Com quatro jobs e 16.384 lanes, o Nexus faz 32.776 despachos em oito rodadas, exatamente o mesmo que quatro CPUs AE2 equivalentes (antes eram 4.096).
+- O Nexus não cobra mais o custo de energia por padrão do AE2: por padrão os jobs não consomem a energia armazenada da rede (o Grid Link continua com 32 AE/t e as demais máquinas pagam normalmente). O comportamento nativo do AE2 pode ser restaurado por `nexus.ignorePatternEnergy=false`.
+- O throttle por percentual de buffer virou opção de servidor (`nexus.energyThrottle`, desligado por padrão). AE2 e addons de CPU não reduzem despacho por energia armazenada; a proteção contra brownout continua disponível para quem restaurar o custo por padrão.
+- Novo ajuste `nexus.maxPatternDispatchesPerTick` (padrão 16.384) define o teto de despachos do Nexus por tick. Jobs persistidos rampeiam em quatro ticks, evitando o pico de load que causava a rede piscando (L-0052) sem perder throughput.
+
+### Implementations
+
+- Novo teste de carga/TPS do agendador do Nexus no pipeline de release: 16 jobs em 1.638.400 lanes pelo caminho real do RaishxCore, com orçamento padrão de 50 ms por tick (medido ~23 ms) e exercício do teto completo de despachos a cada tick.
+
 ## [3.0.0-beta.8] - 2026-10-05
 
 ### Bug Fixes

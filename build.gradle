@@ -288,6 +288,11 @@ neoForge.runs {
         systemProperty 'ufo.load.machines', providers.gradleProperty('loadMachines').orElse('102').get()
         systemProperty 'ufo.load.ticks', providers.gradleProperty('loadTicks').orElse('10000').get()
         systemProperty 'ufo.load.maxAverageTickMillis', providers.gradleProperty('loadMaxAverageTickMillis').orElse('50').get()
+        systemProperty 'ufo.nexus.loadJobs', providers.gradleProperty('nexusLoadJobs').orElse('16').get()
+        systemProperty 'ufo.nexus.loadLanes', providers.gradleProperty('nexusLoadLanes').orElse('1638400').get()
+        systemProperty 'ufo.nexus.loadTicks', providers.gradleProperty('nexusLoadTicks').orElse('1000').get()
+        systemProperty 'ufo.nexus.loadMaxAverageTickMillis',
+                providers.gradleProperty('nexusLoadMaxAverageTickMillis').orElse('50').get()
         logLevel = org.slf4j.event.Level.INFO
     }
 }

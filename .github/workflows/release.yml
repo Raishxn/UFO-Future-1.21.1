@@ -127,6 +127,20 @@ jobs:
             exit 1
           fi
 
+      - name: Verify Nexus scheduler TPS
+        run: >-
+          ./gradlew runLoadGameTestServer
+          -PloadMachines=3 -PloadTicks=200 -PnexusLoadTicks=600
+          --stacktrace
+
+      - name: Assert the Nexus TPS load actually ran
+        run: |
+          if ! grep -q "GAME TESTS COMPLETE" run-load/logs/latest.log; then
+            echo "::error::runLoadGameTestServer completed no GameTest"
+            tail -n 120 run-load/logs/latest.log
+            exit 1
+          fi
+
       - name: Generate checksums
         run: |
           cd build/libs

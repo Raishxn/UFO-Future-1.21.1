@@ -18,6 +18,7 @@ import appeng.crafting.execution.CraftingSubmitResult;
 import appeng.hooks.ticking.TickHandler;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.me.service.CraftingService;
+import com.raishxn.ufo.UFOConfig;
 import com.raishxn.ufo.api.ae.NexusVirtualCpuHost;
 import com.raishxn.ufo.api.ae.NexusVirtualCraftingClusterBridge;
 import com.raishxn.ufocore.api.crafting.SharedCraftingCpuPool;
@@ -37,15 +38,15 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
-/** Shared-capacity Nexus pool: idle capacity is one CPU; every active job gets one temporary CPU. */
+/**
+ * Shared-capacity Nexus pool: idle capacity is one CPU; every active job gets one temporary CPU.
+ *
+ * <p>Installed lanes are one shared budget divided fairly between active jobs instead of being
+ * duplicated for every job. AE2 meters CPU operations over a rolling four-tick window, so
+ * {@link NexusDispatchBudget} converts the operator's per-tick dispatch ceiling into that window
+ * and keeps at least one lane per job while energy throttling is active.
+ */
 public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
-    /**
-     * AE2 executes one Java call per dispatched pattern. UFO crafting units can advertise billions of lanes, but
-     * passing that raw number to AE2 would make a single server tick attempt billions of calls. Time-slice the
-     * physical execution while retaining the full lane count for capacity, selection and sharing.
-     */
-    private static final int MAX_PATTERN_DISPATCH_SLOTS = 2_048;
-
     private static final String TAG_CPUS = "cpus";
     private static final String TAG_ID = "id";
     private static final String TAG_RESERVED = "reserved";
@@ -94,40 +95,32 @@ public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
         List<Entry> scheduled = new ArrayList<>(active.values());
         if (scheduled.isEmpty()) return Long.MIN_VALUE;
         int count = scheduled.size();
-        int advertisedSlots = sharedCoProcessors >= Integer.MAX_VALUE - 1
-                ? Integer.MAX_VALUE : sharedCoProcessors + 1;
-        int dispatchSlots = Math.min(advertisedSlots, MAX_PATTERN_DISPATCH_SLOTS);
-        dispatchSlots = throttleToNetworkPower(energyService, dispatchSlots);
-        int scheduledCount = Math.min(count, dispatchSlots);
+        boolean freeEnergy = UFOConfig.nexusIgnoresPatternEnergy();
+        // Installed lanes are one budget shared between jobs; the operator ceiling keeps a
+        // billion-lane pool from turning a single tick into an unbounded number of provider calls.
+        int dispatchWindow = NexusDispatchBudget.windowFor(
+                energyService.getStoredPower(),
+                energyService.getMaxStoredPower(),
+                sharedCoProcessors,
+                count,
+                UFOConfig.maxNexusPatternDispatchesPerTick(),
+                !freeEnergy && UFOConfig.nexusEnergyThrottleEnabled());
+        IEnergyService jobEnergy = freeEnergy ? new NexusCraftingEnergy(energyService) : energyService;
+        int scheduledCount = Math.min(count, dispatchWindow);
         long latest = Long.MIN_VALUE;
         for (int index = 0; index < scheduledCount; index++) {
             Entry entry = scheduled.get(index);
-            int allocation = dispatchSlots / scheduledCount + (index < dispatchSlots % scheduledCount ? 1 : 0);
+            int allocation = dispatchWindow / scheduledCount + (index < dispatchWindow % scheduledCount ? 1 : 0);
+            allocation = entry.rampedAllocation(allocation);
             ((NexusVirtualCraftingClusterBridge) (Object) entry.cpu())
                     .ufo$setVirtualCoProcessors(Math.max(0, allocation - 1));
-            entry.cpu().craftingLogic.tickCraftingLogic(energyService, concrete);
+            entry.cpu().craftingLogic.tickCraftingLogic(jobEnergy, concrete);
+            entry.advanceWarmup();
             latest = Math.max(latest, entry.cpu().craftingLogic.getLastModifiedOnTick());
         }
         rotateOrder();
         removeDrained();
         return latest;
-    }
-
-    /**
-     * A persisted job resumes at full lane count on every world load and can out-draw the
-     * network's generation, brown-out every node and leave the whole grid flickering.
-     * Scale dispatch lanes with the network's stored power: healthy buffers run full
-     * speed, draining buffers sip until generation catches back up.
-     */
-    private static int throttleToNetworkPower(IEnergyService energyService, int dispatchSlots) {
-        double maxStored = energyService.getMaxStoredPower();
-        if (maxStored <= 0.0D) return dispatchSlots;
-        double stored = energyService.getStoredPower();
-        double ratio = stored / maxStored;
-        if (ratio < 0.10D) return 1;
-        if (ratio < 0.25D) return Math.max(1, dispatchSlots / 8);
-        if (ratio < 0.50D) return Math.max(1, dispatchSlots / 2);
-        return dispatchSlots;
     }
 
     @Override
@@ -287,6 +280,47 @@ public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
         remainingStorage = Math.max(0L, totalStorage - used);
     }
 
-    private record Entry(UUID id, long reserved, CraftingCPUCluster cpu) {
+    /**
+     * One active virtual job CPU. Newly submitted and freshly loaded entries ramp their window
+     * over four ticks so a resumed job cannot empty a full network buffer in a single tick;
+     * AE2 still rounds the ramped window into the same steady throughput.
+     */
+    private static final class Entry {
+        private final UUID id;
+        private final long reserved;
+        private final CraftingCPUCluster cpu;
+        private int warmupTicks;
+
+        private Entry(UUID id, long reserved, CraftingCPUCluster cpu) {
+            this.id = id;
+            this.reserved = reserved;
+            this.cpu = cpu;
+        }
+
+        private UUID id() {
+            return id;
+        }
+
+        private long reserved() {
+            return reserved;
+        }
+
+        private CraftingCPUCluster cpu() {
+            return cpu;
+        }
+
+        private int rampedAllocation(int allocation) {
+            if (allocation <= 1 || warmupTicks >= NexusDispatchBudget.OPERATION_WINDOW_TICKS - 1) {
+                return allocation;
+            }
+            int step = warmupTicks + 1;
+            return Math.max(1, allocation / NexusDispatchBudget.OPERATION_WINDOW_TICKS * step);
+        }
+
+        private void advanceWarmup() {
+            if (warmupTicks < NexusDispatchBudget.OPERATION_WINDOW_TICKS) {
+                warmupTicks++;
+            }
+        }
     }
 }
