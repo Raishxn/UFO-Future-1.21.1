@@ -12,6 +12,18 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+## [3.0.0-beta.8] - 2026-10-05
+
+### Bug Fixes
+
+- Corrigida a leitura da posição do controlador pelo Quantum Grid Link ao carregar dados salvos, preservando a entrega de lotes da Matrix após reload.
+- Tarefas de uma única cópia agora passam pelo agendador agregado junto às tarefas em lote.
+
+### Implementations
+
+- A Quantum Pattern Fabrication Matrix aceita e entrega até 16/32/64 lotes de receitas por tick conforme os Fields MK1/MK2/MK3, substituindo a fila de uma única rota.
+- Adicionados GameTests para todos os tiers, lotes de um milhão de cópias, fila cheia, entrega parcial, persistência e contabilidade exata de ingredientes/resultados.
+
 ## [3.0.0-beta.7] - 2026-10-03
 
 ### Bug Fixes

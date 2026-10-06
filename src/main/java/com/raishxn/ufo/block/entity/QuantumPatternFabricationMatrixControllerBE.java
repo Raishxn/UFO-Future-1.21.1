@@ -326,6 +326,14 @@ public final class QuantumPatternFabricationMatrixControllerBE extends AENetwork
 
     public int getPatternCapacity() { return patternCapacity; }
 
+    /** Bounded recipe batches in flight, also used as the output delivery budget per tick. */
+    public int getCraftingRouteLimit() {
+        if (!formed) return 0;
+        if (tier3Fields > 0) return 64;
+        if (tier2Fields > 0) return 32;
+        return 16;
+    }
+
     /** Includes overflow after a field downgrade so stored patterns never become inaccessible. */
     public int getManagementSlotCount() {
         int highestUsed = 0;

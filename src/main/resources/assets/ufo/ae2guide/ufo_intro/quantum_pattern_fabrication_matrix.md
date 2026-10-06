@@ -115,3 +115,5 @@ upload selection; it does not change the number of slots.
 
 The dashboard's Field panel lists the live MK1/MK2/MK3 counts and the library bar
 shows occupied slots against the capacity calculated from those Fields.
+
+The Matrix executes identical crafts in batches and supports up to **16 / 32 / 64 pending recipe batches** with MK1 / MK2 / MK3 Fields. It can return that many batches to ME storage per tick. Actual throughput depends on crafting CPU operations, available ingredients, network energy and output storage space.

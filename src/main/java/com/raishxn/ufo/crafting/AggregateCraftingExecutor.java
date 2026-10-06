@@ -84,7 +84,7 @@ public final class AggregateCraftingExecutor {
                     providerPriority = priority;
                 }
             }
-            if (aggregateProvider == null || providerCapacity <= 1L || remainingTaskCopies <= 1L) continue;
+            if (aggregateProvider == null || providerCapacity <= 0L) continue;
 
             int operationCost = Math.max(1, aggregateProvider.getAggregateOperationCost());
             if (operationCost > operationBudget - consumedOperations) continue;

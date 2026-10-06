@@ -113,3 +113,5 @@ do envio automatico e nao altera a capacidade.
 
 O painel de Fields mostra as quantidades MK1/MK2/MK3 em tempo real. A barra da
 biblioteca mostra os espacos ocupados e a capacidade calculada a partir dos Fields.
+
+A Matrix executa crafts iguais em lote e suporta até **16 / 32 / 64 lotes de receitas pendentes** com Fields MK1 / MK2 / MK3. Ela pode devolver essa quantidade de lotes ao armazenamento ME por tick. A velocidade efetiva depende das operações da CPU de crafting, dos ingredientes disponíveis, da energia da rede e do espaço para os resultados.

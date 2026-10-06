@@ -290,7 +290,7 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     public long getAggregateCapacity(IPatternDetails details) {
         QuantumPatternFabricationMatrixControllerBE matrix = getPatternMatrixController();
         if (matrix != null) {
-            return getGrid() != null && pendingCraftingRoutes.isEmpty()
+            return getGrid() != null && pendingCraftingRoutes.size() < matrix.getCraftingRouteLimit()
                     && matrix.getAvailablePatterns().contains(details) ? Long.MAX_VALUE : 0L;
         }
         InfinityFabricationSingularityControllerBE singularity = getSingularityController();
@@ -304,7 +304,8 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         QuantumPatternFabricationMatrixControllerBE matrix = getPatternMatrixController();
         InfinityFabricationSingularityControllerBE singularity = getSingularityController();
         IGrid grid = getGrid();
-        boolean matrixReady = matrix != null && pendingCraftingRoutes.isEmpty()
+        boolean matrixReady = matrix != null
+                && pendingCraftingRoutes.size() < matrix.getCraftingRouteLimit()
                 && matrix.getAvailablePatterns().contains(details);
         boolean singularityReady = singularity != null && singularity.isOperational()
                 && pendingCraftingRoutes.size() < singularity.getRouteLimit()
@@ -353,7 +354,8 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     @Override
     public boolean isBusy() {
         QuantumPatternFabricationMatrixControllerBE matrix = getPatternMatrixController();
-        if (matrix != null) return getGrid() == null || !pendingCraftingRoutes.isEmpty();
+        if (matrix != null) return getGrid() == null
+                || pendingCraftingRoutes.size() >= matrix.getCraftingRouteLimit();
         InfinityFabricationSingularityControllerBE singularity = getSingularityController();
         return singularity == null || !singularity.isOperational() || getGrid() == null
                 || pendingCraftingRoutes.size() >= singularity.getRouteLimit();
@@ -383,8 +385,10 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
         var storage = grid.getStorageService().getInventory();
         boolean movedAnything = false;
         InfinityFabricationSingularityControllerBE singularity = getSingularityController();
+        QuantumPatternFabricationMatrixControllerBE matrix = getPatternMatrixController();
         int routeBudget = Math.min(pendingCraftingRoutes.size(),
-                singularity == null ? 1 : singularity.getCraftingMode().routesPerTick());
+                singularity != null ? singularity.getCraftingMode().routesPerTick()
+                        : matrix != null ? matrix.getCraftingRouteLimit() : 1);
         Iterator<Map<AEKey, Long>> routes = pendingCraftingRoutes.iterator();
         while (routes.hasNext() && routeBudget-- > 0) {
             Map<AEKey, Long> route = routes.next();
@@ -778,7 +782,7 @@ public final class QuantumGridLinkBE extends AENetworkedBlockEntity
     public void loadTag(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.loadTag(tag, registries);
         controllerPos = tag.contains("controllerPos")
-                ? NbtUtils.readBlockPos(tag.getCompound("controllerPos"), "").orElse(null)
+                ? NbtUtils.readBlockPos(tag, "controllerPos").orElse(null)
                 : null;
         pendingCraftingRoutes.clear();
         ListTag routes = tag.getList(TAG_PENDING_CRAFTING_ROUTES, Tag.TAG_COMPOUND);
