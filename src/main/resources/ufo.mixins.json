@@ -12,7 +12,6 @@
     "InvokerCraftingCPUCluster",
     "InvokerPatternProviderLogic",
     "MixinQuantumPatternDelivery",
-    "MixinCPUSelectionList",
     "MixinCraftingCPUCluster",
     "MixinAggregatePatternRecovery",
     "MixinAggregateCraftingCpuLogic",
@@ -24,6 +23,7 @@
     "MixinNexusVirtualCraftingCluster"
   ],
   "client": [
+    "MixinCPUSelectionList",
     "AccessorAbstractContainerScreen",
     "MixinMEStorageScreen",
     "MixinModelBakery",

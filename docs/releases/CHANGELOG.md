@@ -12,6 +12,22 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-10-12
+
+### Bug Fixes
+
+- Corrigida a desconexão ao abrir a tela de status de crafting com AE2 19.2.18: os hooks de armazenamento e coprocessadores agora aceitam os caminhos de 19.2.17 e 19.2.18.
+- O Mixin da lista de CPUs agora é carregado somente no cliente.
+- Atualizada a dependência RaishxCore para 0.2.1: ciclos de receitas que consomem todo o estoque de trabalho não registram mais um ingrediente reutilizável de quantidade zero, evitando `reusable input amount must be positive`.
+
+### Implementations
+
+- UFO FUTURE 3.0.0 oficial, encerrando a sequência de versões beta.
+- Adicionado teste que verifica os alvos do Mixin da lista de CPUs no bytecode real do AE2.
+- O log do RaishxCore informa o motivo real de interrupção do planejamento (tempo, operações ou profundidade), com item, quantidade e métricas do pedido.
+- Documentada a opção já existente `planner.enabled=false` em `config/raishxcore/core.toml` para usar temporariamente o planejador padrão do AE2.
+- O erro relatado ao solicitar mais de três Enhancement Cores ou Infinity Templates ainda precisa ser validado na rede do jogador; esta versão não declara esse caso resolvido.
+
 ## [3.0.0-beta.9] - 2026-10-06
 
 ### Bug Fixes

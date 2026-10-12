@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/Minecraft-1.21.1-62B47A?style=for-the-badge&logo=mojang-studios&logoColor=white" alt="Minecraft 1.21.1"/>
   <img src="https://img.shields.io/badge/NeoForge-21.1.216-orange?style=for-the-badge" alt="NeoForge 21.1.216"/>
   <img src="https://img.shields.io/badge/AE2-19.2.17+-5C7CFA?style=for-the-badge" alt="AE2 addon"/>
-  <img src="https://img.shields.io/badge/version-3.0.0--beta.9-8E44AD?style=for-the-badge" alt="Version 3.0.0-beta.9"/>
+  <img src="https://img.shields.io/badge/version-3.0.0-8E44AD?style=for-the-badge" alt="Version 3.0.0"/>
   <img src="https://img.shields.io/badge/License-LGPLv3%20%2F%20CC%20BY--NC--SA%203.0-blue?style=for-the-badge" alt="License"/>
 </p>
 
@@ -139,7 +139,7 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
 | **Minecraft** | required | 1.21.1 | — |
 | **NeoForge** | required | 21.1.216+ | — |
 | **[Applied Energistics 2](https://github.com/AppliedEnergistics/Applied-Energistics-2)** | required | `[19.2.17, 20)` | The network, storage and autocrafting UFO builds on |
-| **[RaishxCore](https://github.com/Raishxn/RaishxCore)** | required | `[0.2, 1.0)` | Multiblock, exact-amount and GUI foundations |
+| **[RaishxCore](https://github.com/Raishxn/RaishxCore)** | required | `[0.2.1, 1.0)` | Multiblock, exact-amount and GUI foundations |
 | **[AE2 Addon Lib](https://github.com/pedroksl/AE2AddonLib)** | required | `[1.0.3-1.21.1, 2)` | Recipes, registries, menus and widgets |
 | **[Mekanism](https://github.com/mekanism/Mekanism)** | optional | `[10.7.18, 11)` | Mekanism-backed cells and chemical integration |
 | **[JEI](https://www.curseforge.com/minecraft/mc-mods/jei)** | optional | — | UFO recipe categories and multiblock previews |
@@ -153,6 +153,21 @@ Liquid Starlight · Gelid Cryotheum · Stable Coolant · Temporal Fluid · Spati
 2. Download the compatible Core JAR from [RaishxCore Releases](https://github.com/Raishxn/RaishxCore/releases), then drop `ufo-<version>.jar` **and** `raishxcore-<version>.jar` into your `mods/` folder
 3. Make sure AE2 and AE2 Addon Lib are installed too
 4. Launch the game
+
+If autocrafting fails with `RaishxCore planning deadline exceeded` or another
+RaishxCore planning error, you can temporarily use AE2's built-in planner. Close
+the game (or stop the server), open `config/raishxcore/core.toml` in that instance,
+and change the existing `enabled` setting under `[planner]`:
+
+```toml
+[planner]
+enabled = false
+```
+
+Keep the other settings in the file and restart. For multiplayer, the server
+administrator must change the server's file. This option is already available
+with beta.9 and RaishxCore 0.2. To enable the Core planner again after an update,
+set `enabled = true` and restart.
 
 Mekanism enables chemical processing and Mekanism-specific cells. Those cells
 remain inactive without it, and recipes that require its resources need Mekanism.
