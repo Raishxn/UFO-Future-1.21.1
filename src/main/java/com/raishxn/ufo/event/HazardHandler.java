@@ -47,7 +47,7 @@ public class HazardHandler {
         }
 
         // DEBUG: Verificar se o evento está a correr
-        // LOGGER.info("HazardHandler ticking for {}", player.getName().getString());
+        // LOGGER.debug("HazardHandler ticking for {}", player.getName().getString());
 
         if (player.isCreative() || player.isSpectator()) {
             return;
@@ -63,7 +63,7 @@ public class HazardHandler {
         // Verifica inventário principal
         for (ItemStack stack : player.getInventory().items) {
             if (!stack.isEmpty() && stack.is(HAZARDOUS)) {
-                LOGGER.info("HAZARD DETECTED in inventory: {}", stack.getItem().toString());
+                LOGGER.debug("HAZARD DETECTED in inventory: {}", stack.getItem().toString());
                 hasHazard = true;
                 break;
             }
@@ -71,7 +71,7 @@ public class HazardHandler {
 
         // Verifica offhand
         if (!hasHazard && player.getOffhandItem().is(HAZARDOUS)) {
-            LOGGER.info("Hazard detected in the offhand : {}", player.getOffhandItem().getItem().toString());
+            LOGGER.debug("Hazard detected in the offhand : {}", player.getOffhandItem().getItem().toString());
             hasHazard = true;
         }
 
@@ -81,7 +81,7 @@ public class HazardHandler {
     }
 
     private static void applyHazardEffects(Player player) {
-        LOGGER.info("Aplicando efeitos de hazard em {}", player.getName().getString());
+        LOGGER.debug("Aplicando efeitos de hazard em {}", player.getName().getString());
         player.hurt(player.damageSources().magic(), 2.0f);
         player.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 5, false, false));
         player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 5, false, false));

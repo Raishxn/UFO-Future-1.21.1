@@ -89,6 +89,14 @@ public final class NexusSharedCraftingCpuPool implements SharedCraftingCpuPool {
         return active.values().stream().map(Entry::cpu).toList();
     }
 
+    /** AE2 asks this for every crafting link on every tick; answer without building the CPU list. */
+    @Override
+    public boolean containsCpu(ICraftingCPU candidate) {
+        if (candidate == this) return true;
+        for (Entry entry : active.values()) if (entry.cpu() == candidate) return true;
+        return false;
+    }
+
     @Override
     public long tickCraftingLogic(IEnergyService energyService, ICraftingService craftingService) {
         if (!(craftingService instanceof CraftingService concrete)) return Long.MIN_VALUE;

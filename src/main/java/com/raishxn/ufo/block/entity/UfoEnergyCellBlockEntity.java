@@ -14,6 +14,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class UfoEnergyCellBlockEntity extends EnergyCellBlockEntity {
     private final TickAccelerationLimiter tickAccelerationLimiter = new TickAccelerationLimiter();
+    private final AdjacentEnergyExporter.Targets energyTargets = new AdjacentEnergyExporter.Targets();
     private final IEnergyStorage exposedEnergy = new IEnergyStorage() {
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
@@ -77,7 +78,7 @@ public class UfoEnergyCellBlockEntity extends EnergyCellBlockEntity {
             return;
         }
         int totalBudget = getForgeExportRate();
-        AdjacentEnergyExporter.pushEnergy(this.level, this.worldPosition, this.exposedEnergy, totalBudget, totalBudget);
+        AdjacentEnergyExporter.pushEnergy(this.energyTargets, this.level, this.worldPosition, this.exposedEnergy, totalBudget, totalBudget);
     }
 
     public IEnergyStorage getExposedEnergy() {

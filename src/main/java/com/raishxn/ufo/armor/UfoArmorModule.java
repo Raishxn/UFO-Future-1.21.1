@@ -4,6 +4,8 @@ import net.minecraft.world.item.ArmorItem;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /** The server-authoritative catalogue of UFO armor upgrades. */
 public enum UfoArmorModule {
@@ -52,8 +54,12 @@ public enum UfoArmorModule {
         return "module.ufo." + id();
     }
 
+    // Read for every installed module id on each armor check, several times per player tick.
+    private static final Map<String, UfoArmorModule> BY_ID = Arrays.stream(values())
+            .collect(Collectors.toUnmodifiableMap(UfoArmorModule::id, module -> module));
+
     public static UfoArmorModule byId(String id) {
-        return Arrays.stream(values()).filter(module -> module.id().equals(id)).findFirst().orElse(null);
+        return id == null ? null : BY_ID.get(id);
     }
 
     public static int capacity(ArmorItem.Type type) {

@@ -69,7 +69,8 @@ public class UfoArmorItem extends ArmorItem implements IEnergyTool {
     }
 
     public static boolean isModuleEnabled(ItemStack stack, UfoArmorModule module) {
-        return installedModules(stack).contains(module)
+        // Same answer as installedModules(stack).contains(module): ids map one-to-one to modules.
+        return stack.getOrDefault(ModDataComponents.ARMOR_MODULES.get(), List.<String>of()).contains(module.id())
                 && !stack.getOrDefault(ModDataComponents.DISABLED_ARMOR_MODULES.get(), List.<String>of()).contains(module.id());
     }
 

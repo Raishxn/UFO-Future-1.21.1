@@ -13,6 +13,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 public class QuantumEnergyCellBlockEntity extends CreativeEnergyCellBlockEntity {
     private static final int CREATIVE_EXPORT_RATE = Integer.MAX_VALUE;
     private final TickAccelerationLimiter tickAccelerationLimiter = new TickAccelerationLimiter();
+    private final AdjacentEnergyExporter.Targets energyTargets = new AdjacentEnergyExporter.Targets();
 
     private final IEnergyStorage exposedEnergy = new IEnergyStorage() {
         @Override
@@ -65,7 +66,7 @@ public class QuantumEnergyCellBlockEntity extends CreativeEnergyCellBlockEntity 
                 com.raishxn.ufo.UFOConfig.maxExternalAccelerationTicks())) {
             return;
         }
-        AdjacentEnergyExporter.pushEnergy(this.level, this.worldPosition, this.exposedEnergy, CREATIVE_EXPORT_RATE, CREATIVE_EXPORT_RATE);
+        AdjacentEnergyExporter.pushEnergy(this.energyTargets, this.level, this.worldPosition, this.exposedEnergy, CREATIVE_EXPORT_RATE, CREATIVE_EXPORT_RATE);
     }
 
     public IEnergyStorage getExposedEnergy() {

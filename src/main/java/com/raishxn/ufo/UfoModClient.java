@@ -46,6 +46,7 @@ public class UfoModClient {
         eventBus.addListener(this::onAddLayers);
         eventBus.addListener(this::registerClientExtensions);
         eventBus.addListener(com.raishxn.ufo.client.render.StellarModelRegistry::registerAdditional);
+        eventBus.addListener(com.raishxn.ufo.client.render.StellarModelRegistry::onBakingCompleted);
     }
 
     private void registerClientExtensions(RegisterClientExtensionsEvent event) {

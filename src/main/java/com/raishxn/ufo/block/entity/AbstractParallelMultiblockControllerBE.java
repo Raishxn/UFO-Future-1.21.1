@@ -58,6 +58,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -103,6 +104,12 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     private FluidPortGroup<AEFluidKey> coolantPorts = FluidPortGroup.empty();
     private List<MassiveOutputHatchBE> coolantHatches = List.of();
     private List<AENetworkedBlockEntity> networkNodeCandidates = List.of();
+    // Positions of the pattern endpoints inside this.parts, in parts order. this.parts is the
+    // whole footprint, so resolving the endpoint by walking it cost one chunk lookup per block
+    // every tick. Until a scan has indexed the current layout, the full walk is still used.
+    private List<BlockPos> patternHatchPositions = List.of();
+    private List<BlockPos> patternProxyPositions = List.of();
+    private boolean patternEndpointsIndexed;
     @Nullable
     private CatalystProfile cachedCatalystProfile;
 
@@ -129,7 +136,14 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.coolantPorts = FluidPortGroup.empty();
         this.coolantHatches = List.of();
         this.networkNodeCandidates = List.of();
+        clearPatternEndpointIndex();
         super.markStructureDirty();
+    }
+
+    private void clearPatternEndpointIndex() {
+        this.patternHatchPositions = List.of();
+        this.patternProxyPositions = List.of();
+        this.patternEndpointsIndexed = false;
     }
 
     private void rebuildCoolantPorts(Level level) {
@@ -290,15 +304,32 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     private void rebuildNetworkNodeCandidates(Level level) {
         if (!this.assembled) {
             this.networkNodeCandidates = List.of();
+            // An unassembled controller has no parts, so the full walk finds nothing either.
+            this.patternHatchPositions = List.of();
+            this.patternProxyPositions = List.of();
+            this.patternEndpointsIndexed = true;
             return;
         }
         List<AENetworkedBlockEntity> candidates = new ArrayList<>();
+        List<BlockPos> hatches = new ArrayList<>();
+        List<BlockPos> proxies = new ArrayList<>();
         for (BlockPos partPos : this.parts) {
-            if (LoadedBlockEntityLookup.get(level, partPos) instanceof AENetworkedBlockEntity nodeBE) {
+            BlockEntity partBE = LoadedBlockEntityLookup.get(level, partPos);
+            if (partBE instanceof AENetworkedBlockEntity nodeBE) {
                 candidates.add(nodeBE);
+            }
+            if (partBE instanceof QuantumPatternHatchBE) {
+                hatches.add(partPos);
+            } else if (partBE instanceof QuantumPatternProxyBE) {
+                proxies.add(partPos);
             }
         }
         this.networkNodeCandidates = List.copyOf(candidates);
+        // An assembled match has read every footprint position (it rejects unloaded chunks),
+        // and placing or removing an endpoint marks the structure dirty, so the index stays exact.
+        this.patternHatchPositions = List.copyOf(hatches);
+        this.patternProxyPositions = List.copyOf(proxies);
+        this.patternEndpointsIndexed = true;
     }
 
     public long getPendingPromisedOutputAmount() {
@@ -1128,7 +1159,9 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         // particular, the coolant hatch may itself be attached to another AE
         // network through an export bus, but that connection is input-only and
         // must never receive promised crafting outputs.
-        for (BlockPos partPos : this.parts) {
+        List<BlockPos> hatchPositions = this.patternEndpointsIndexed ? this.patternHatchPositions : this.parts;
+        List<BlockPos> proxyPositions = this.patternEndpointsIndexed ? this.patternProxyPositions : this.parts;
+        for (BlockPos partPos : hatchPositions) {
             if (LoadedBlockEntityLookup.get(this.level, partPos) instanceof QuantumPatternHatchBE buffer) {
                 IGridNode node = buffer.getActionableNode();
                 return Ae2NodeAvailability.isUsable(
@@ -1141,7 +1174,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         // A Proxy intentionally has no cable-facing AE node of its own. Its
         // reciprocal Buffer link is the same authoritative route when the
         // endpoint is remote.
-        for (BlockPos partPos : this.parts) {
+        for (BlockPos partPos : proxyPositions) {
             if (LoadedBlockEntityLookup.get(this.level, partPos) instanceof QuantumPatternProxyBE proxy) {
                 QuantumPatternHatchBE buffer = proxy.getLinkedPatternBuffer();
                 IGridNode node = buffer != null ? buffer.getActionableNode() : null;
@@ -1684,6 +1717,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
     @Override
     protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.loadAdditional(tag, registries);
+        clearPatternEndpointIndex();
         wirelessHeatRemainder = Math.clamp(tag.getDouble("wirelessHeatRemainder"), 0, .999999);
         if (tag.contains("processStates", Tag.TAG_LIST)) {
             ListTag processTags = tag.getList("processStates", Tag.TAG_COMPOUND);
@@ -1704,6 +1738,7 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         this.coolantPorts = FluidPortGroup.empty();
         this.coolantHatches = List.of();
         this.networkNodeCandidates = List.of();
+        clearPatternEndpointIndex();
         this.cachedCatalystProfile = null;
         invalidateRecipeCache();
         for (ParallelProcessState processState : this.processStates) {

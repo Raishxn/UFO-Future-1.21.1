@@ -14,6 +14,8 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 /** Selected source and face links, following AE2 Lightning's in-world interaction. */
 public final class QuantumWirelessRenderer {
+    private static final Direction[] DIRECTIONS = Direction.values();
+
     public static void render(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
         var mc = Minecraft.getInstance();
@@ -21,7 +23,9 @@ public final class QuantumWirelessRenderer {
         var stack = mc.player.getMainHandItem();
         if (!(stack.getItem() instanceof QuantumWirelessToolItem)) stack = mc.player.getOffhandItem();
         if (!(stack.getItem() instanceof QuantumWirelessToolItem)) return;
-        var tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        // Read-only view: copyTag() deep-copied the whole link list (up to 1024 entries) every frame.
+        @SuppressWarnings("deprecation")
+        var tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).getUnsafe();
         if (!tag.hasUUID("ufoWirelessSourceIdentity")
                 || !tag.getString("ufoWirelessDimension").equals(mc.level.dimension().location().toString())) return;
         var source = BlockPos.of(tag.getLong("ufoWirelessSource"));
@@ -34,7 +38,7 @@ public final class QuantumWirelessRenderer {
         pose.translate(-camera.x, -camera.y, -camera.z);
         var buffers = mc.renderBuffers().bufferSource();
         var cube = buffers.getBuffer(QuantumWirelessRenderTypes.SOURCE);
-        for (var side : Direction.values()) {
+        for (var side : DIRECTIONS) {
             Vec3 center = Vec3.atCenterOf(source).add(side.getStepX() * .25, side.getStepY() * .25, side.getStepZ() * .25);
             quad(pose, cube, center, side, .25, 1, 1, 0, .5F);
         }
@@ -48,8 +52,8 @@ public final class QuantumWirelessRenderer {
             var destination = BlockPos.of(link.getLong("pos"));
             if (!mc.level.hasChunk(SectionPos.blockToSectionCoord(destination.getX()), SectionPos.blockToSectionCoord(destination.getZ())) || source.distSqr(destination) > (double) range * range) continue;
             if (mc.hitResult instanceof BlockHitResult hit && hit.getBlockPos().equals(destination)
-                    && hit.getDirection() == Direction.values()[face]) lookingAtLinkedFace = true;
-            draw(pose, source, destination, Direction.values()[face], 0, .5F, 1);
+                    && hit.getDirection() == DIRECTIONS[face]) lookingAtLinkedFace = true;
+            draw(pose, source, destination, DIRECTIONS[face], 0, .5F, 1);
         }
         if (!lookingAtLinkedFace && mc.hitResult instanceof BlockHitResult hit && !hit.getBlockPos().equals(source)
                 && source.distSqr(hit.getBlockPos()) <= (double) range * range

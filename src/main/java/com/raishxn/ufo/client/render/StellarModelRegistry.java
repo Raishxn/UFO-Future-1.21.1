@@ -70,6 +70,11 @@ public class StellarModelRegistry {
         return null;
     }
 
+    /** A resource reload bakes new models; drop the ones cached from the previous bake. */
+    public static void onBakingCompleted(ModelEvent.BakingCompleted event) {
+        clearCache();
+    }
+
     /**
      * Clear the model cache - should be called on resource reload
      */
