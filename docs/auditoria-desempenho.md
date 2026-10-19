@@ -1,6 +1,6 @@
 # Auditoria de desempenho — UFO Future
 
-Data: 2026-10-18 · base: `36fed36` (3.0.0, AE2 19.2.18) · mudanças **sem commit**.
+Data: 2026-10-18 · base: `36fed36` (3.0.0, AE2 19.2.18) · rodada 1 em `7ccf92d`; rodada 2 nos commits seguintes.
 Relatório irmão (biblioteca): `../RaishxCore/docs/auditoria-desempenho.md`.
 
 ## Resumo
@@ -9,8 +9,8 @@ O UFO já tem boa disciplina de tick: re-scan de estrutura só quando sujo, cach
 (100 ticks), sync de cliente com hash e cadência de 5 ticks, `IGridTickable` dormindo quando
 ocioso (Grid Link, DMA, hatches), limitador de aceleração externa e métricas por máquina.
 Os achados abaixo são o que ainda custava trabalho proporcional ao tamanho da estrutura, ao
-número de jogadores ou a cada frame. Foram aplicadas 7 mudanças seguras; 7 propostas
-ficam para decisão.
+número de jogadores ou a cada frame. Rodada 1: 7 mudanças seguras. Rodada 2 (aprovada): as
+propostas P1–P5 implementadas, P6 descartada após análise, P7 (medição) feita para o holograma.
 
 Verificação depois das mudanças:
 
@@ -19,10 +19,14 @@ Verificação depois das mudanças:
 | `./gradlew test` (unitários UFO) | 256/256 | 256/256 |
 | `./gradlew runGameTestServer` (UFO, inclui RaishxCore do working tree) | — | 57/57 |
 | `compileSoakTestJava compileLoadTestJava compileGameTestJava` (`-Werror`) | — | ok |
+| Rodada 2: `test` / `runGameTestServer` | — | 256/256 · 57/57 |
+| Rodada 2: `runSoakGameTestServer` | — | 2/2 |
+| Rodada 2: `runLoadGameTestServer` (102 Singularities ativas, 10 705 ticks) | — | 2/2 · 0,667 ms/tick |
+| Rodada 2: `runHologramClient` (frame time do holograma) | 7,15 ms/frame | 0,83 ms/frame |
 
-Não houve medição em jogo (perfilador/spark): os ganhos abaixo são contagens de operações
-tiradas do código, não tempos medidos. As suites `runSoakGameTestServer`/`runLoadGameTestServer`
-não foram executadas.
+Fora o holograma (medido com `runHologramClient`), os ganhos são contagens de operações tiradas
+do código, não tempos medidos: não houve perfil com spark. O load test não tem número de antes
+para comparar; o 0,667 ms/tick fica como referência para as próximas rodadas.
 
 ## Achados priorizados
 
@@ -37,12 +41,13 @@ Impacto: A = alto, M = médio, B = baixo. Risco da mudança proposta.
 | 5 | TPS | `HazardHandler` | `LOGGER.info` 3× por segundo por jogador segurando item perigoso (I/O de log na thread do servidor). | B | nulo | **feito** |
 | 6 | FPS | `QuantumWirelessRenderer#render` | `CustomData.copyTag()` a cada frame enquanto a ferramenta está na mão: cópia profunda do NBT, com até 1024 links; mais 2 clones de `Direction.values()` por link. | M | B | **feito** |
 | 7 | FPS | `StellarModelRegistry.clearCache()` nunca chamado | Após F3+T o renderer do Nexus mantinha os `BakedModel` do bake anterior (memória retida, modelo velho). | B | B | **feito** |
-| 8 | FPS | `GhostHologramRenderer#onRenderLevelStage` (`client/GhostHologramRenderer.java:148`) | Com o holograma ligado, re-tessela **cada bloco fantasma a cada frame** via `renderBatched` (milhares de blocos no Stellar Nexus 35×34×35) + 1 `getBlockState` por bloco. | A (quando ligado) | M | proposta P1 |
-| 9 | TPS | `AggregateCraftingExecutor.dispatch` (`crafting/AggregateCraftingExecutor.java:50`) | Roda em **todo tick de toda CPU de crafting** (mixin em `CraftingCpuLogic`), mesmo em grids sem provedor agregado: até 256 sondagens com `getProviders` e `System.nanoTime()`, e pula `offset` entradas do mapa a cada chamada (O(n) só para retomar). | M | M | proposta P2 |
-| 10 | TPS | `StellarNexusControllerBE#serverTick` auto-start (`block/entity/StellarNexusControllerBE.java:587`) | Com auto-start ligado e insumos faltando, `startOperation()` → `getStartErrors()` roda todo tick: N extrações SIMULATE no ME + vários `Component`/`String.format`. | M | M (muda o momento do reinício) | proposta P3 |
-| 11 | TPS | `ModBlockEntities#tickMegaCraftingUnit` (`init/ModBlockEntities.java:61`) | Cada bloco de um cluster de crafting UFO **não formado** chama `updateMultiBlock` a cada 20 ticks; cada chamada varre o cluster → O(N²) a cada segundo em clusters inválidos permanentes. | M | M | proposta P4 |
-| 12 | TPS | `QuantumInterfaceBlockEntity#serverTick` (`block/entity/QuantumInterfaceBlockEntity.java:108`) | No modo rápido, recria `createExternalStorageStrategies` (mapa + wrappers) para até 4 alvos **todo tick**. | M | M | proposta P5 |
-| 13 | TPS | `MachinePerformanceRegistry#recordTick` (`diagnostic/MachinePerformanceRegistry.java:17`) | `synchronized` + lookup em `LinkedHashMap` por máquina por tick, só para diagnóstico. | B | B | proposta P6 |
+| 8 | FPS | `GhostHologramRenderer#onRenderLevelStage` | Com o holograma ligado, re-tessela **cada bloco fantasma a cada frame** via `renderBatched` (1820 blocos no Stellar Nexus) + 1 `getBlockState` por bloco. Medido: **6,6 ms de CPU por frame**. | A (quando ligado) | M | **feito (P1)** |
+| 9 | TPS | `AggregateCraftingExecutor.dispatch` | Roda em **todo tick de toda CPU de crafting** (mixin em `CraftingCpuLogic`), mesmo em grids sem provedor agregado: até 256 sondagens com `getProviders` e `System.nanoTime()`. | M | B | **feito (P2)** |
+| 10 | TPS | `StellarNexusControllerBE#serverTick` auto-start | Com auto-start ligado e algo bloqueando, `startOperation()` → `getStartErrors()` roda todo tick: todas as mensagens + N extrações SIMULATE no ME. | M | B | **feito (P3)**, sem mudar o tick do reinício |
+| 11a | TPS | `ModBlockEntities#tickMegaCraftingUnit` — posse do Nexus | Achado na rodada 2: os módulos do Nexus ficam não formados de propósito, e `deferVanillaFormation` (lookup do controlador + `canOwnModuleAt`, 2 lookups de chunk) rodava **todo tick para cada módulo**, antes do escalonamento de 20 ticks. | M | B | **feito (P4)** |
+| 11b | TPS | `ModBlockEntities#tickMegaCraftingUnit` — clusters inválidos | Cada bloco de um cluster UFO **não formado** chama `updateMultiBlock` a cada 20 ticks; cada chamada varre o cluster → O(N²)/s em clusters inválidos permanentes. O retry existe para recuperar CPUs no reload (`7ed0327`). | B | M | pendente (raro: só clusters inválidos) |
+| 12 | TPS | `QuantumInterfaceBlockEntity#serverTick` | No modo rápido, recriava `createExternalStorageStrategies` (mapa + caches de capability) para até 4 alvos **todo tick**. | M | B | **feito (P5)** |
+| 13 | TPS | `MachinePerformanceRegistry#recordTick` | `synchronized` + lookup em `LinkedHashMap` por máquina por tick. Sempre não-contendido (tudo na thread do servidor): dezenas de ns por máquina. | B | — | descartado (P6) |
 | 14 | FPS | `StellarNexusRenderer` | `shouldRenderOffScreen=true`, distância 256 e `AABB` nova por frame. A malha é pequena (OBJ ≈ 10 KB); custo aceitável. | B | — | sem ação |
 
 Verificados e sem problema relevante: `QuantumGridLinkBE`/`MassiveOutputHatchBE`/DMA (`IGridTickable`
@@ -78,7 +83,54 @@ perfil de catalisador e sync com hash já existiam), `getUpdateTag` dos controla
 Mudança relacionada no RaishxCore (afeta o UFO em jogo): o pool compartilhado do Nexus não força
 mais o AE2 a recalcular `currentlyCrafting` em todo tick; ver o relatório do Core.
 
-## Propostas pendentes (precisam de confirmação)
+## Rodada 2 — o que foi mudado
+
+8. **Holograma em buffer de GPU (P1)** — `GhostHologramRenderer` tessela os blocos visíveis uma vez
+   num `VertexBuffer` (mesma `RenderType.translucent()`, mesmas matrizes que o `BufferUploader` usa no
+   caminho imediato) e só redesenha o buffer. Os quads translúcidos são reordenados quando a câmera
+   anda mais de 1 bloco. A malha é reconstruída quando o conjunto de fantasmas visíveis muda
+   (checado por tick em vez de por frame; reconstrução no máximo a cada 10 ticks) e a cada 10 s para
+   atualizar luz e culling de faces. O buffer é liberado ao desligar o holograma ou trocar de mundo.
+   Diferenças visuais possíveis: um fantasma pode continuar visível até 0,5 s depois de um bloco ser
+   colocado no lugar, e a luz/culling dele pode ficar até 10 s desatualizada.
+9. **Executor agregado (P2)** — `AggregateCraftingExecutor.mayHaveAggregateProviders(grid)` pula o
+   `dispatch` em grids sem `QuantumGridLinkBE` (o único `IAggregateCraftingProvider`). CPUs sem grid
+   (jobs virtuais do Nexus) continuam sondando. A lista precisa acompanhar novas implementações.
+10. **Auto-start do Stellar Nexus (P3)** — `getStartErrors()` virou `collectStartErrors(firstOnly)`;
+    o auto-start chama `hasStartBlocker()`, que para no primeiro bloqueio (antes das simulações no ME
+    se o bloqueio for energia, cooldown, tier etc.) e só então `startOperation()`, que revalida tudo.
+    O tick em que a máquina reinicia não muda; a GUI continua recebendo a lista completa.
+11. **Posse dos módulos do Nexus (P4)** — em `tickMegaCraftingUnit`, a checagem de posse só roda no
+    tick escalonado da unidade. As tentativas de formação acontecem nos mesmos ticks; uma posse órfã
+    (controlador sumiu) é limpa no tick escalonado, até 19 ticks depois. A liberação normal pelo
+    controlador (`releaseOwnedModules`) já forma o cluster na hora.
+12. **Quantum Interface (P5)** — as estratégias externas ficam em cache por (posição, face), como no
+    storage bus do AE2; elas resolvem a capability por `BlockCapabilityCache`, então seguem o alvo. O
+    cache é limpo quando passa de `max(16, 2 × alvos)` entradas.
+
+Ferramenta nova (só desenvolvimento): `./gradlew runHologramClient` abre um cliente numa cópia do
+mundo de smoke, coloca um Stellar Nexus, mede os frames com o holograma desligado, com o buffer novo
+e com o caminho antigo reproduzido no próprio teste, e salva screenshots em `run/screenshots`.
+
+### Medição do holograma (P1)
+
+Stellar Nexus, 1820 blocos fantasmas visíveis, 10 s por fase após 4 s de aquecimento, sem limite de
+FPS, 1920×1080 (`runHologramClient`, máquina local):
+
+| Fase | FPS | ms/frame | CPU do laço do holograma |
+|---|---:|---:|---:|
+| holograma desligado | 1395 | 0,72 | — |
+| buffer novo | 1205 | 0,83 | (incluso nos 0,83) |
+| caminho antigo | 140 | 7,15 | 6,59 ms/frame |
+
+As screenshots do buffer novo e do caminho antigo saíram iguais.
+
+## Propostas da rodada 1 — status
+
+P1, P2, P3 e P5 implementadas (acima); P4 implementada na forma 11a, 11b continua pendente;
+P6 descartada; P7 feita (holograma medido; soak/load executados — ver Verificação).
+
+Texto original das propostas, para referência:
 
 - **P1 — Holograma fantasma em buffer.** Tesselar os blocos uma vez num `VertexBuffer`/`MeshData`
   e redesenhar o buffer; reconstruir quando um bloco do footprint mudar (checagem a cada N ticks ou
