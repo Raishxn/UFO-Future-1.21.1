@@ -583,7 +583,9 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             // Auto-Restart logic
             if (!this.running && !this.pendingOutputs.hasPending()
                     && this.activeRecipeId != null && this.cooldownTimer == 0) {
-                if (this.autoStart) {
+                // startOperation() re-validates; this only skips building every message and
+                // simulating every input on the ticks where something already blocks the start.
+                if (this.autoStart && !hasStartBlocker()) {
                     startOperation();
                 }
             }
@@ -635,20 +637,33 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
      * of error messages. An empty list means the simulation can start.
      */
     public List<Component> getStartErrors() {
+        return collectStartErrors(false);
+    }
+
+    /** Auto-start only needs to know whether anything blocks the start; stop at the first blocker. */
+    private boolean hasStartBlocker() {
+        return !collectStartErrors(true).isEmpty();
+    }
+
+    private List<Component> collectStartErrors(boolean firstOnly) {
         List<Component> errors = new ArrayList<>();
 
         if (!this.assembled) {
             errors.add(UfoText.literal("gui.ufo.text.c_structure_not_assembled"));
+            if (firstOnly) return errors;
         }
         if (this.running) {
             errors.add(UfoText.literal("gui.ufo.text.c_already_in_operation"));
+            if (firstOnly) return errors;
         }
         if (this.pendingOutputs.hasPending()) {
             errors.add(UfoText.literal("gui.ufo.text.c_output_storage_blocked"));
+            if (firstOnly) return errors;
         }
         if (this.cooldownTimer > 0) {
             int secLeft = this.cooldownTimer / 20;
             errors.add(UfoText.literal("gui.ufo.text.c_cooling_down_ss_remaining", secLeft));
+            if (firstOnly) return errors;
         }
         if (this.activeRecipeId == null) {
             errors.add(UfoText.literal("gui.ufo.text.c_no_simulation_program_selected"));
@@ -668,6 +683,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
         if (this.fieldLevel < recipe.getFieldTier()) {
             errors.add(UfoText.literal("gui.ufo.text.c_field_generator_too_low_mk_s_need_mk_s",
                     toRoman(this.fieldLevel), toRoman(recipe.getFieldTier())));
+            if (firstOnly) return errors;
         }
 
         // Compute effective costs (safe mode = 2x, overclock = 8x)
@@ -684,6 +700,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             String safeNote = this.safeMode ? UfoText.str("gui.ufo.text.7_2x_safe_mode") : "";
             errors.add(UfoText.literal("gui.ufo.text.c_energy_s_s_ae_s", formatAmount(this.energyBuffer),
                     formatAmount(effectiveEnergyCost), safeNote));
+            if (firstOnly) return errors;
         }
 
         // Fuel liquid check (from ME storage)
@@ -691,11 +708,13 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
             AENetworkedBlockEntity nodeBE = getConnectedNetworkNode();
             if (nodeBE == null || nodeBE.getActionableNode() == null || nodeBE.getActionableNode().getGrid() == null) {
                 errors.add(UfoText.literal("gui.ufo.text.c_no_me_network_connection"));
+                if (firstOnly) return errors;
             } else {
                 ResourceLocation fuelRL = ResourceLocation.parse(recipe.getFuelFluid());
                 Fluid fuelFluid = BuiltInRegistries.FLUID.get(fuelRL);
                 if (fuelFluid == null || fuelFluid == net.minecraft.world.level.material.Fluids.EMPTY) {
                     errors.add(UfoText.literal("gui.ufo.text.c_invalid_fuel_fluid_type_s", fuelRL));
+                    if (firstOnly) return errors;
                 } else {
                     AEFluidKey fuelKey = AEFluidKey.of(fuelFluid);
                     MEStorage storage = nodeBE.getActionableNode().getGrid().getStorageService().getInventory();
@@ -706,6 +725,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                         String safeNote = this.safeMode ? UfoText.str("gui.ufo.text.7_2x_safe_mode") : "";
                         errors.add(UfoText.literal("gui.ufo.text.c_fuel_s_s_mb_f_s_s", formatAmount(available),
                                 formatAmount(effectiveFuelAmount), fluidName, safeNote));
+                        if (firstOnly) return errors;
                     }
                 }
             }
@@ -729,6 +749,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                         }
                         errors.add(UfoText.literal("gui.ufo.text.c_missing_s_sx_f_s", formatAmount(available),
                                 formatAmount(req.getAmount()), itemName));
+                        if (firstOnly) return errors;
                     }
                 }
             }
@@ -745,6 +766,7 @@ public class StellarNexusControllerBE extends BlockEntity implements IMultiblock
                         }
                         errors.add(UfoText.literal("gui.ufo.text.c_missing_s_s_mb_f_s", formatAmount(available),
                                 formatAmount(req.getAmount()), fluidName));
+                        if (firstOnly) return errors;
                     }
                 }
             }
