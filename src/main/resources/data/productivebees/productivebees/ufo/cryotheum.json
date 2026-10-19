@@ -1,0 +1,14 @@
+{
+  "primaryColor": "#7fd6f5",
+  "secondaryColor": "#1f5f8b",
+  "tertiaryColor": "#c9f1ff",
+  "particleColor": "#9fe6ff",
+  "flowerItem": "ufo:dust_blizz",
+  "size": 0.9,
+  "selfbreed": true,
+  "renderer": "default",
+  "attributes": {
+    "productivity": "productivity.medium",
+    "weather_tolerance": "weather_tolerance.any"
+  }
+}

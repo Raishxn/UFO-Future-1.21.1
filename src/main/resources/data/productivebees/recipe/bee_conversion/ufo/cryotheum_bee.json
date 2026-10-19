@@ -1,0 +1,19 @@
+{
+  "type": "productivebees:bee_conversion",
+  "source": "productivebees:frosty",
+  "result": "productivebees:cryotheum",
+  "chance": 0.1,
+  "item": {
+    "item": "ufo:dust_blizz"
+  },
+  "neoforge:conditions": [
+    {
+      "type": "productivebees:bee_exists",
+      "bee": "productivebees:frosty"
+    },
+    {
+      "type": "productivebees:bee_exists",
+      "bee": "productivebees:cryotheum"
+    }
+  ]
+}
