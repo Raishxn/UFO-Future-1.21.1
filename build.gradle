@@ -321,6 +321,23 @@ def prepareVisibilityWorld = tasks.register('prepareVisibilityWorld', Sync) {
 }
 tasks.named('runVisibilityClient') { dependsOn prepareVisibilityWorld }
 
+// Development-only: frame time of the ghost hologram (cached mesh vs the former per-frame path).
+neoForge.runs {
+    hologramClient {
+        client()
+        gameDirectory = project.file('run')
+        loadedMods = [neoForge.mods.ufo, neoForge.mods.ufo_tests]
+        systemProperty 'ufo.hologramSmoke', 'true'
+        programArguments.addAll '--quickPlaySingleplayer', 'ufo-hologram-smoke'
+    }
+}
+def prepareHologramWorld = tasks.register('prepareHologramWorld', Sync) {
+    from 'run/saves/ufo-visibility-smoke'
+    exclude 'session.lock'
+    into 'run/saves/ufo-hologram-smoke'
+}
+tasks.named('runHologramClient') { dependsOn prepareHologramWorld }
+
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
