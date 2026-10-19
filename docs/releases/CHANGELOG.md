@@ -12,6 +12,20 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+## [3.0.1] - 2026-10-18
+
+### Bug Fixes
+
+- Atualizada a dependência RaishxCore para 0.2.2: o planejador de crafting não falha mais com `status=TIMED_OUT` quando falta material na rede; a busca exata ficou limitada e devolve o plano com a falta em vez de estourar o prazo.
+- O cache de modelos do Stellar Nexus é limpo depois de recarregar recursos (F3+T), em vez de manter os modelos do carregamento anterior.
+
+### Implementations
+
+- Desempenho de servidor: os controladores paralelos (QMF, Cryoforge, Slicer, Processor Assembler) não percorrem mais a estrutura inteira a cada tick para achar o Pattern Hatch; o RaishxCore não força mais o AE2 a recalcular os itens em crafting a cada tick com o Nexus ocupado; módulos do Nexus, CPUs de crafting sem Grid Link, auto-start do Stellar Nexus, Quantum Interface, células de energia e módulos de armadura fazem menos trabalho por tick.
+- Desempenho de cliente: o holograma de estrutura é desenhado de um buffer na GPU (no Stellar Nexus, de 7,15 para 0,83 ms por frame) e a ferramenta Quantum Wireless não copia mais o NBT do item a cada frame.
+- Planejador do RaishxCore 0.2.2 muito mais rápido em planos grandes (passe agregado, reparo de faltas, cone local).
+- Relatório da auditoria em `docs/auditoria-desempenho.md`.
+
 ## [3.0.0] - 2026-10-12
 
 ### Bug Fixes
