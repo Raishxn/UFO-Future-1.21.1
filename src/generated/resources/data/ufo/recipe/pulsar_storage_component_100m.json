@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ufo:hyper_dense_component_matrix"
+    },
+    {
+      "item": "ufo:pulsar_storage_component_40m"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:pulsar_storage_component_100m"
+  }
+}

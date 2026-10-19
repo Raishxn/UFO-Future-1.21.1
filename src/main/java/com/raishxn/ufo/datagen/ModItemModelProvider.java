@@ -166,27 +166,30 @@ public class ModItemModelProvider extends ItemModelProvider {
             basicItem(ModCellItems.CELL_COMPONENT_250M.getId());
             basicItem(ModCellItems.CELL_COMPONENT_750M.getId());
             basicItem(ModCellItems.CELL_COMPONENT_INFINITY.getId());
+            ModCellItems.whiteDwarfComponents().forEach(component -> basicItem(component.getId()));
+            ModCellItems.neutronStarComponents().forEach(component -> basicItem(component.getId()));
+            ModCellItems.pulsarComponents().forEach(component -> basicItem(component.getId()));
 
             // Item Cells
-            cellModel(ModCellItems.ITEM_CELL_40M, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING, ModCellItems.CELL_COMPONENT_40M);
-            cellModel(ModCellItems.ITEM_CELL_100M, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING, ModCellItems.CELL_COMPONENT_100M);
-            cellModel(ModCellItems.ITEM_CELL_250M, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING, ModCellItems.CELL_COMPONENT_250M);
-            cellModel(ModCellItems.ITEM_CELL_750M, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING, ModCellItems.CELL_COMPONENT_750M);
-            cellModel(ModCellItems.ITEM_CELL_SINGULARITY, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING, ModCellItems.CELL_COMPONENT_INFINITY);
+            cellModel(ModCellItems.ITEM_CELL_40M, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING, "storage_cell_side_40m");
+            cellModel(ModCellItems.ITEM_CELL_100M, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING, "storage_cell_side_100m");
+            cellModel(ModCellItems.ITEM_CELL_250M, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING, "storage_cell_side_250m");
+            cellModel(ModCellItems.ITEM_CELL_750M, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING, "storage_cell_side_750m");
+            cellModel(ModCellItems.ITEM_CELL_SINGULARITY, ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING, "storage_cell_side_infinity");
 
             // Fluid Cells
-            cellModel(ModCellItems.FLUID_CELL_40M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, ModCellItems.CELL_COMPONENT_40M);
-            cellModel(ModCellItems.FLUID_CELL_100M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, ModCellItems.CELL_COMPONENT_100M);
-            cellModel(ModCellItems.FLUID_CELL_250M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, ModCellItems.CELL_COMPONENT_250M);
-            cellModel(ModCellItems.FLUID_CELL_750M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, ModCellItems.CELL_COMPONENT_750M);
-            cellModel(ModCellItems.FLUID_CELL_SINGULARITY, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, ModCellItems.CELL_COMPONENT_INFINITY);
+            cellModel(ModCellItems.FLUID_CELL_40M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, "storage_cell_side_40m");
+            cellModel(ModCellItems.FLUID_CELL_100M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, "storage_cell_side_100m");
+            cellModel(ModCellItems.FLUID_CELL_250M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, "storage_cell_side_250m");
+            cellModel(ModCellItems.FLUID_CELL_750M, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, "storage_cell_side_750m");
+            cellModel(ModCellItems.FLUID_CELL_SINGULARITY, ModCellItems.NEUTRON_FLUID_CELL_HOUSING, "storage_cell_side_infinity");
 
             // Chemical Cells
-            cellModel(ModCellItems.CHEMICAL_CELL_40M, ModCellItems.PULSAR_CELL_HOUSING, ModCellItems.CELL_COMPONENT_40M);
-            cellModel(ModCellItems.CHEMICAL_CELL_100M, ModCellItems.PULSAR_CELL_HOUSING, ModCellItems.CELL_COMPONENT_100M);
-            cellModel(ModCellItems.CHEMICAL_CELL_250M, ModCellItems.PULSAR_CELL_HOUSING, ModCellItems.CELL_COMPONENT_250M);
-            cellModel(ModCellItems.CHEMICAL_CELL_750M, ModCellItems.PULSAR_CELL_HOUSING, ModCellItems.CELL_COMPONENT_750M);
-            cellModel(ModCellItems.CHEMICAL_CELL_SINGULARITY, ModCellItems.PULSAR_CELL_HOUSING, ModCellItems.CELL_COMPONENT_INFINITY);
+            cellModel(ModCellItems.CHEMICAL_CELL_40M, ModCellItems.PULSAR_CELL_HOUSING, "storage_cell_side_40m");
+            cellModel(ModCellItems.CHEMICAL_CELL_100M, ModCellItems.PULSAR_CELL_HOUSING, "storage_cell_side_100m");
+            cellModel(ModCellItems.CHEMICAL_CELL_250M, ModCellItems.PULSAR_CELL_HOUSING, "storage_cell_side_250m");
+            cellModel(ModCellItems.CHEMICAL_CELL_750M, ModCellItems.PULSAR_CELL_HOUSING, "storage_cell_side_750m");
+            cellModel(ModCellItems.CHEMICAL_CELL_SINGULARITY, ModCellItems.PULSAR_CELL_HOUSING, "storage_cell_side_infinity");
 
 
         dynamicBucketItem(ModItems.NEUTRON_STAR_FRAGMENT_BUCKET, ModFluids.SOURCE_NEUTRON_STAR_FRAGMENT_FLUID);
@@ -228,10 +231,10 @@ public class ModItemModelProvider extends ItemModelProvider {
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
                 .fluid(fluid.get());
     }
-    private void cellModel(DeferredHolder<Item, ? extends Item> cell, DeferredHolder<Item, ? extends Item> housing, DeferredHolder<Item, ? extends Item> component) {
+    private void cellModel(DeferredHolder<Item, ? extends Item> cell, DeferredHolder<Item, ? extends Item> housing, String sideTexture) {
         withExistingParent(cell.getId().getPath(), ResourceLocation.fromNamespaceAndPath("minecraft", "item/generated"))
                 .texture("layer0", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/" + housing.getId().getPath())) // Camada base: o housing
-                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/" + component.getId().getPath())) // Camada do meio: o "side"
+                .texture("layer1", ResourceLocation.fromNamespaceAndPath(UfoMod.MOD_ID, "item/" + sideTexture)) // Camada do meio: o "side" na cor do tier
                 .texture("layer2", UFO_LED_TEXTURE);// Camada de cima: o LED do AE2
     }
     private void infinityResourceCellModel(DeferredHolder<Item, ? extends Item> cell) {

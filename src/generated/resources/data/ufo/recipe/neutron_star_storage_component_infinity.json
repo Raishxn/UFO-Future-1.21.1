@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ufo:cosmic_string_component_matrix"
+    },
+    {
+      "item": "ufo:neutron_star_storage_component_750m"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:neutron_star_storage_component_infinity"
+  }
+}

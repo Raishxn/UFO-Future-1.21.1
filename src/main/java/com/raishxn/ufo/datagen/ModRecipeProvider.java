@@ -536,23 +536,44 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_item", has(ModItems.PULSAR_FRAGMENT_INGOT.get()))
                 .save(c.withConditions(new ModLoadedCondition("mekanism")));
 
-        this.buildCellAssembly(c, ModCellItems.ITEM_CELL_40M.get(), ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get(), ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c, ModCellItems.ITEM_CELL_100M.get(), ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get(), ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c, ModCellItems.ITEM_CELL_250M.get(), ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get(), ModItems.TESSERACT_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c, ModCellItems.ITEM_CELL_750M.get(), ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get(), ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c, ModCellItems.ITEM_CELL_SINGULARITY.get(), ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get(), ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
-        
-        this.buildCellAssembly(c, ModCellItems.FLUID_CELL_40M.get(), ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get(), ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c, ModCellItems.FLUID_CELL_100M.get(), ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get(), ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c, ModCellItems.FLUID_CELL_250M.get(), ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get(), ModItems.TESSERACT_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c, ModCellItems.FLUID_CELL_750M.get(), ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get(), ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c, ModCellItems.FLUID_CELL_SINGULARITY.get(), ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get(), ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
+        var matrices = java.util.List.<ItemLike>of(ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get(),
+                ModItems.HYPER_DENSE_COMPONENT_MATRIX.get(), ModItems.TESSERACT_COMPONENT_MATRIX.get(),
+                ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get(), ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
+        var mekanism = c.withConditions(new ModLoadedCondition("mekanism"));
+        this.buildCellFamily(c, ModCellItems.whiteDwarfComponents(), matrices, ModItems.WHITE_DWARF_FRAGMENT_INGOT.get(),
+                ModCellItems.WHITE_DWARF_ITEM_CELL_HOUSING.get(), java.util.List.of(ModCellItems.ITEM_CELL_40M.get(),
+                        ModCellItems.ITEM_CELL_100M.get(), ModCellItems.ITEM_CELL_250M.get(),
+                        ModCellItems.ITEM_CELL_750M.get(), ModCellItems.ITEM_CELL_SINGULARITY.get()));
+        this.buildCellFamily(c, ModCellItems.neutronStarComponents(), matrices, ModItems.NEUTRON_STAR_FRAGMENT_INGOT.get(),
+                ModCellItems.NEUTRON_FLUID_CELL_HOUSING.get(), java.util.List.of(ModCellItems.FLUID_CELL_40M.get(),
+                        ModCellItems.FLUID_CELL_100M.get(), ModCellItems.FLUID_CELL_250M.get(),
+                        ModCellItems.FLUID_CELL_750M.get(), ModCellItems.FLUID_CELL_SINGULARITY.get()));
+        this.buildCellFamily(mekanism, ModCellItems.pulsarComponents(), matrices, ModItems.PULSAR_FRAGMENT_INGOT.get(),
+                ModCellItems.PULSAR_CELL_HOUSING.get(), java.util.List.of(ModCellItems.CHEMICAL_CELL_40M.get(),
+                        ModCellItems.CHEMICAL_CELL_100M.get(), ModCellItems.CHEMICAL_CELL_250M.get(),
+                        ModCellItems.CHEMICAL_CELL_750M.get(), ModCellItems.CHEMICAL_CELL_SINGULARITY.get()));
+    }
 
-        this.buildCellAssembly(c.withConditions(new ModLoadedCondition("mekanism")), ModCellItems.CHEMICAL_CELL_40M.get(), ModCellItems.PULSAR_CELL_HOUSING.get(), ModItems.PHASE_SHIFT_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c.withConditions(new ModLoadedCondition("mekanism")), ModCellItems.CHEMICAL_CELL_100M.get(), ModCellItems.PULSAR_CELL_HOUSING.get(), ModItems.HYPER_DENSE_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c.withConditions(new ModLoadedCondition("mekanism")), ModCellItems.CHEMICAL_CELL_250M.get(), ModCellItems.PULSAR_CELL_HOUSING.get(), ModItems.TESSERACT_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c.withConditions(new ModLoadedCondition("mekanism")), ModCellItems.CHEMICAL_CELL_750M.get(), ModCellItems.PULSAR_CELL_HOUSING.get(), ModItems.EVENT_HORIZON_COMPONENT_MATRIX.get());
-        this.buildCellAssembly(c.withConditions(new ModLoadedCondition("mekanism")), ModCellItems.CHEMICAL_CELL_SINGULARITY.get(), ModCellItems.PULSAR_CELL_HOUSING.get(), ModItems.COSMIC_STRING_COMPONENT_MATRIX.get());
+    /**
+     * Components climb one tier at a time: the first binds the Phase Shift matrix to the family's fragment ingot
+     * (which keeps the three families' recipes apart), every later one binds its tier's matrix to the previous
+     * component of the same family. The cell is housing plus component.
+     */
+    private void buildCellFamily(RecipeOutput c, java.util.List<? extends net.neoforged.neoforge.registries.DeferredHolder<Item, Item>> components,
+                                 java.util.List<ItemLike> matrices, ItemLike ingot, ItemLike housing,
+                                 java.util.List<? extends ItemLike> cells) {
+        for (int tier = 0; tier < components.size(); tier++) {
+            ItemLike component = components.get(tier).get();
+            var recipe = ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, component)
+                    .requires(matrices.get(tier));
+            if (tier == 0) {
+                recipe.requires(ingot);
+            } else {
+                recipe.requires(components.get(tier - 1).get());
+            }
+            recipe.unlockedBy("has_matrix", has(matrices.get(tier))).save(c);
+            this.buildCellAssembly(c, cells.get(tier), housing, component);
+        }
     }
 
     private void buildCellAssembly(RecipeOutput c, ItemLike cell, ItemLike housing, ItemLike component) {
@@ -1099,7 +1120,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requiredTier(3)
                 .save(c);
 
-        UniversalMultiblockRecipeBuilder.create("universal/qmf/stable_coolant_t3", UniversalMultiblockMachineKind.QMF)
+        UniversalMultiblockRecipeBuilder.create("universal/qmf/stable_coolant_t2", UniversalMultiblockMachineKind.QMF)
                 .inputItem(Items.BLUE_ICE, 256)
                 .inputItem(ModItems.OBSIDIAN_MATRIX.get(), 64)
                 .inputItem(ModItems.QUANTUM_ANOMALY.get(), 16)
@@ -1107,7 +1128,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .outputFluid(ModFluids.SOURCE_STABLE_COOLANT.get(), 128000)
                 .energy(50000000)
                 .time(9600)
-                .requiredTier(3)
+                .requiredTier(2)
                 .save(c);
 
         UniversalMultiblockRecipeBuilder.create("universal/qmf/bose_einstein_condensate", UniversalMultiblockMachineKind.QMF)
@@ -1157,7 +1178,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .requiredTier(1)
                 .save(c);
 
-        UniversalMultiblockRecipeBuilder.create("universal/quantum_cryoforge/stable_coolant_t3", UniversalMultiblockMachineKind.QUANTUM_CRYOFORGE)
+        UniversalMultiblockRecipeBuilder.create("universal/quantum_cryoforge/stable_coolant_t2", UniversalMultiblockMachineKind.QUANTUM_CRYOFORGE)
                 .inputItem(Items.BLUE_ICE, 256)
                 .inputItem(ModItems.OBSIDIAN_MATRIX.get(), 64)
                 .inputItem(ModItems.QUANTUM_ANOMALY.get(), 16)
@@ -1165,7 +1186,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .outputFluid(ModFluids.SOURCE_STABLE_COOLANT.get(), 128000)
                 .energy(50000000)
                 .time(9600)
-                .requiredTier(3)
+                .requiredTier(2)
                 .save(c);
 
         UniversalMultiblockRecipeBuilder.create("universal/quantum_cryoforge/bose_einstein_condensate", UniversalMultiblockMachineKind.QUANTUM_CRYOFORGE)

@@ -172,6 +172,13 @@ public class ModCreativeModeTabs {
                             output.accept(ModCellItems.PULSAR_CELL_HOUSING.get());
                         }
 
+                        // --- STORAGE COMPONENTS POR FAMÍLIA (de ModCellItems) ---
+                        ModCellItems.whiteDwarfComponents().forEach(component -> output.accept(component.get()));
+                        ModCellItems.neutronStarComponents().forEach(component -> output.accept(component.get()));
+                        if (!ModCellItems.hideWithoutMekanism(ModCellItems.PULSAR_COMPONENT_40M.get())) {
+                            ModCellItems.pulsarComponents().forEach(component -> output.accept(component.get()));
+                        }
+
                         // --- ITEM CELLS: WHITE DWARF (de ModCellItems) ---
                         output.accept(ModCellItems.ITEM_CELL_40M.get());
                         output.accept(ModCellItems.ITEM_CELL_100M.get());

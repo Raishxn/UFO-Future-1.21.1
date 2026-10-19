@@ -2,7 +2,13 @@
   "type": "ae2:storage_cell_disassembly",
   "cell": "ufo:white_dwarf_cell_echo",
   "cell_disassembly_items": [
-    {"id": "ufo:white_dwarf_item_cell_housing", "count": 1},
-    {"id": "ufo:phase_shift_component_matrix", "count": 1}
+    {
+      "id": "ufo:white_dwarf_item_cell_housing",
+      "count": 1
+    },
+    {
+      "id": "ufo:white_dwarf_storage_component_40m",
+      "count": 1
+    }
   ]
 }

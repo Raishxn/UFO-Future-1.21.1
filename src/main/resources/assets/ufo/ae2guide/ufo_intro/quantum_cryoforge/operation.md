@@ -17,7 +17,7 @@ Generator tier installed in the structure.
 - Establish the early Gelid Cryotheum route first.
 - Upgrade every field position together; a single lower tier prevents the
   intended higher machine tier.
-- Stable Coolant is a **MK3 Cryoforge** recipe.
+- Stable Coolant is a **MK2 Cryoforge** recipe.
 - Use the produced high-density coolant to stabilize larger parallel workloads.
 
 ## Port Planning

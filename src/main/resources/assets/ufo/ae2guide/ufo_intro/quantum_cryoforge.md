@@ -35,9 +35,9 @@ The **Quantum Cryoforge** is the universal multiblock dedicated to large-scale c
 
 ## Stable Coolant Gate
 
-Stable Coolant is a **MK3 Quantum Cryoforge** recipe.
+Stable Coolant is a **MK2 Quantum Cryoforge** recipe, so it is ready when MK2 machines start asking for it.
 
-Replace every field generator position with **MK3 Stellar Field Generators** before expecting the Stable Coolant recipe to run. Gelid Cryotheum remains the early coolant path.
+Replace every field generator position with **MK2 Stellar Field Generators** (or higher) before expecting the Stable Coolant recipe to run. Gelid Cryotheum remains the early coolant path.
 
 Use JEI Alternatives when placing hatches and fields. The structure scanner can
 identify a single lower-tier or invalid field that silently reduces/blocks the

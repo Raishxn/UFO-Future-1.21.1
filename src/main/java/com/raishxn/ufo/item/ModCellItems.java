@@ -37,7 +37,26 @@ public final class ModCellItems {
     public static final StorageTier TIER_750M = new StorageTier(14, "750m", 750_000_000, 7.0D, CELL_COMPONENT_750M);
     public static final StorageTier TIER_INFINITY = new StorageTier(15, "infinity", Integer.MAX_VALUE, 7.5D, CELL_COMPONENT_INFINITY);
 
-    
+
+    // Per-family storage components: what each family's cell is assembled from, one per tier.
+    public static final DeferredHolder<Item, Item> WHITE_DWARF_COMPONENT_40M = familyComponent("white_dwarf", "40m", 40 * 1024);
+    public static final DeferredHolder<Item, Item> WHITE_DWARF_COMPONENT_100M = familyComponent("white_dwarf", "100m", 100 * 1024);
+    public static final DeferredHolder<Item, Item> WHITE_DWARF_COMPONENT_250M = familyComponent("white_dwarf", "250m", 250 * 1024);
+    public static final DeferredHolder<Item, Item> WHITE_DWARF_COMPONENT_750M = familyComponent("white_dwarf", "750m", 750 * 1024);
+    public static final DeferredHolder<Item, Item> WHITE_DWARF_COMPONENT_INFINITY = familyComponent("white_dwarf", "infinity", Integer.MAX_VALUE);
+
+    public static final DeferredHolder<Item, Item> NEUTRON_STAR_COMPONENT_40M = familyComponent("neutron_star", "40m", 40 * 1024);
+    public static final DeferredHolder<Item, Item> NEUTRON_STAR_COMPONENT_100M = familyComponent("neutron_star", "100m", 100 * 1024);
+    public static final DeferredHolder<Item, Item> NEUTRON_STAR_COMPONENT_250M = familyComponent("neutron_star", "250m", 250 * 1024);
+    public static final DeferredHolder<Item, Item> NEUTRON_STAR_COMPONENT_750M = familyComponent("neutron_star", "750m", 750 * 1024);
+    public static final DeferredHolder<Item, Item> NEUTRON_STAR_COMPONENT_INFINITY = familyComponent("neutron_star", "infinity", Integer.MAX_VALUE);
+
+    public static final DeferredHolder<Item, Item> PULSAR_COMPONENT_40M = familyComponent("pulsar", "40m", 40 * 1024);
+    public static final DeferredHolder<Item, Item> PULSAR_COMPONENT_100M = familyComponent("pulsar", "100m", 100 * 1024);
+    public static final DeferredHolder<Item, Item> PULSAR_COMPONENT_250M = familyComponent("pulsar", "250m", 250 * 1024);
+    public static final DeferredHolder<Item, Item> PULSAR_COMPONENT_750M = familyComponent("pulsar", "750m", 750 * 1024);
+    public static final DeferredHolder<Item, Item> PULSAR_COMPONENT_INFINITY = familyComponent("pulsar", "infinity", Integer.MAX_VALUE);
+
     // Item Cells: White Dwarf (Cores base cinza)
     public static final DeferredHolder<Item, AEBigIntegerCellItem> ITEM_CELL_40M = ITEMS.register("white_dwarf_cell_echo",
             () -> new AnimatedAEBigIntegerCellItem(new Item.Properties().stacksTo(1), TIER_40M.idleDrain(), AEKeyType.items(), TIER_40M, "item.ufo.white_dwarf_item_cell", "ufo.cell_tier.echo", new ChatFormatting[]{ChatFormatting.WHITE, ChatFormatting.GRAY, ChatFormatting.DARK_GRAY}, ChatFormatting.RED, ChatFormatting.GOLD, ChatFormatting.RED));
@@ -80,10 +99,33 @@ public final class ModCellItems {
         return ITEMS.register(id, () -> new StorageComponentItem(new Item.Properties(), kibiBytes));
     }
 
+    private static DeferredHolder<Item, Item> familyComponent(String family, String idSuffix, int kibiBytes) {
+        return ITEMS.register(family + "_storage_component_" + idSuffix,
+                () -> new StorageComponentItem(new Item.Properties(), kibiBytes));
+    }
+
+    /** Components in tier order (40M, 100M, 250M, 750M, Infinity) for one family. */
+    public static java.util.List<DeferredHolder<Item, Item>> whiteDwarfComponents() {
+        return java.util.List.of(WHITE_DWARF_COMPONENT_40M, WHITE_DWARF_COMPONENT_100M, WHITE_DWARF_COMPONENT_250M,
+                WHITE_DWARF_COMPONENT_750M, WHITE_DWARF_COMPONENT_INFINITY);
+    }
+
+    public static java.util.List<DeferredHolder<Item, Item>> neutronStarComponents() {
+        return java.util.List.of(NEUTRON_STAR_COMPONENT_40M, NEUTRON_STAR_COMPONENT_100M, NEUTRON_STAR_COMPONENT_250M,
+                NEUTRON_STAR_COMPONENT_750M, NEUTRON_STAR_COMPONENT_INFINITY);
+    }
+
+    public static java.util.List<DeferredHolder<Item, Item>> pulsarComponents() {
+        return java.util.List.of(PULSAR_COMPONENT_40M, PULSAR_COMPONENT_100M, PULSAR_COMPONENT_250M,
+                PULSAR_COMPONENT_750M, PULSAR_COMPONENT_INFINITY);
+    }
+
     public static java.util.List<Item> chemicalStorageItems() {
         return java.util.List.of(PULSAR_CELL_HOUSING.get(), CHEMICAL_CELL_40M.get(),
                 CHEMICAL_CELL_100M.get(), CHEMICAL_CELL_250M.get(),
-                CHEMICAL_CELL_750M.get(), CHEMICAL_CELL_SINGULARITY.get());
+                CHEMICAL_CELL_750M.get(), CHEMICAL_CELL_SINGULARITY.get(),
+                PULSAR_COMPONENT_40M.get(), PULSAR_COMPONENT_100M.get(), PULSAR_COMPONENT_250M.get(),
+                PULSAR_COMPONENT_750M.get(), PULSAR_COMPONENT_INFINITY.get());
     }
 
     public static boolean hideWithoutMekanism(Item item) {

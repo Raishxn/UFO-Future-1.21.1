@@ -371,7 +371,7 @@ ServerEvents.recipes(event => {
   event.custom({
     type: 'ufo:universal_multiblock',
     machine: 'quantum_cryoforge',
-    recipe_name: 'kubejs/quantum_cryoforge/stable_coolant_t3',
+    recipe_name: 'kubejs/quantum_cryoforge/stable_coolant_t2',
     item_inputs: [
       {
         ingredient: { item: 'minecraft:blue_ice' },
@@ -402,8 +402,8 @@ ServerEvents.recipes(event => {
     fluid_output_amount: 128000,
     energy: 50000000,
     time: 9600,
-    required_tier: 3
-  }).id('kubejs:quantum_cryoforge_stable_coolant_t3')
+    required_tier: 2
+  }).id('kubejs:quantum_cryoforge_stable_coolant_t2')
 })
 ```
 

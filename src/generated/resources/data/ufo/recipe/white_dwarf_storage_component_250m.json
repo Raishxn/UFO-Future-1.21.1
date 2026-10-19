@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ufo:tesseract_component_matrix"
+    },
+    {
+      "item": "ufo:white_dwarf_storage_component_100m"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:white_dwarf_storage_component_250m"
+  }
+}

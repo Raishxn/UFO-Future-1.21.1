@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ufo:phase_shift_component_matrix"
+    },
+    {
+      "item": "ufo:white_dwarf_fragment_ingot"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "ufo:white_dwarf_storage_component_40m"
+  }
+}

@@ -36,7 +36,7 @@
     }
   ],
   "machine": "qmf",
-  "recipe_name": "universal/qmf/stable_coolant_t3",
-  "required_tier": 3,
+  "recipe_name": "universal/qmf/stable_coolant_t2",
+  "required_tier": 2,
   "time": 9600
 }
