@@ -26,7 +26,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** First Quantum Interface transport slice: 36 stock slots and bounded, fair remote I/O. */
 public class QuantumInterfaceBlockEntity extends InterfaceBlockEntity implements QuantumWirelessHost {
@@ -39,6 +41,12 @@ public class QuantumInterfaceBlockEntity extends InterfaceBlockEntity implements
     private int stockCursor;
     private long unlimitedSlots;
     private final TickAccelerationLimiter tickAccelerationLimiter = new TickAccelerationLimiter();
+    /*
+     * External storage strategies per target face, created once like AE2's storage bus does; each
+     * strategy resolves its capability through a BlockCapabilityCache, so it follows the target.
+     * Recreating them for up to four targets every tick (fast mode) allocated a map and caches per call.
+     */
+    private final Map<StrategyTarget, Map<appeng.api.stacks.AEKeyType, appeng.api.behaviors.ExternalStorageStrategy>> externalStrategies = new HashMap<>();
 
     public long unlimitedSlots() { return unlimitedSlots; }
     public void toggleUnlimited(int slot) {
@@ -105,7 +113,7 @@ public class QuantumInterfaceBlockEntity extends InterfaceBlockEntity implements
             }
             // Charge a bounded operation cost, separate from energy used by the destination.
             if (grid.getEnergyService().extractAEPower(1, Actionable.MODULATE, PowerMultiplier.CONFIG) < 1) return;
-            for (var entry : StackWorldBehaviors.createExternalStorageStrategies((net.minecraft.server.level.ServerLevel) level, pos, face).entrySet()) {
+            for (var entry : externalStrategies((net.minecraft.server.level.ServerLevel) level, pos, face).entrySet()) {
                 var remote = entry.getValue().createWrapper(false, this::setChanged);
                 if (remote == null) continue;
                 if (autoExport) exportTo(remote, network, source, entry.getKey());
@@ -115,6 +123,19 @@ public class QuantumInterfaceBlockEntity extends InterfaceBlockEntity implements
             }
             if (pendingReturn != null) return;
         }
+    }
+
+    private Map<appeng.api.stacks.AEKeyType, appeng.api.behaviors.ExternalStorageStrategy> externalStrategies(
+            net.minecraft.server.level.ServerLevel serverLevel, BlockPos pos, Direction face) {
+        // Links can be retargeted; keep the cache bounded by the targets actually in use.
+        if (externalStrategies.size() > Math.max(16, (links.enabled() ? links.size() : 6) * 2)) {
+            externalStrategies.clear();
+        }
+        return externalStrategies.computeIfAbsent(new StrategyTarget(pos.asLong(), face),
+                ignored -> StackWorldBehaviors.createExternalStorageStrategies(serverLevel, pos.immutable(), face));
+    }
+
+    private record StrategyTarget(long pos, Direction face) {
     }
 
     private void exportTo(MEStorage remote, MEStorage network, IActionSource source, appeng.api.stacks.AEKeyType type) {
