@@ -3,6 +3,7 @@ package com.raishxn.ufo.crafting;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.crafting.IPatternDetails;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.stacks.AEKey;
@@ -12,6 +13,7 @@ import appeng.crafting.execution.CraftingCpuHelper;
 import appeng.crafting.inv.ListCraftingInventory;
 import appeng.me.service.CraftingService;
 import com.raishxn.ufo.api.crafting.IAggregateCraftingProvider;
+import com.raishxn.ufo.block.entity.QuantumGridLinkBE;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,6 +21,7 @@ import java.util.function.BiConsumer;
 import java.util.function.ObjLongConsumer;
 import java.util.function.ToLongFunction;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 /** Executes homogeneous crafting work in O(pattern inputs + outputs), independent of copy count. */
 public final class AggregateCraftingExecutor {
@@ -26,6 +29,14 @@ public final class AggregateCraftingExecutor {
     private static final long MAX_CALL_NANOS = 2_000_000L;
 
     private AggregateCraftingExecutor() {
+    }
+
+    /**
+     * False only when {@code grid} has none of the machines that implement
+     * {@link IAggregateCraftingProvider}; keep this list in step with the implementations.
+     */
+    public static boolean mayHaveAggregateProviders(@Nullable IGrid grid) {
+        return grid == null || grid.getMachineNodes(QuantumGridLinkBE.class).iterator().hasNext();
     }
 
     public static Result dispatch(

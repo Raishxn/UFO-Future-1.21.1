@@ -47,7 +47,11 @@ public abstract class MixinAggregateCraftingCpuLogic {
 
         int aggregateBudget = Math.min(remainingOperations,
                 UFO_MAX_AGGREGATE_OPERATIONS_PER_TICK - ufo$aggregateOperations);
-        if (job != null && aggregateBudget > 0) {
+        // Every CPU on every grid passes through here each tick; skip the task probing on grids
+        // that cannot hold an aggregate provider. A CPU without a grid (virtual Nexus job CPUs)
+        // keeps the probing.
+        if (job != null && aggregateBudget > 0
+                && AggregateCraftingExecutor.mayHaveAggregateProviders(cluster.getGrid())) {
             AccessorExecutingCraftingJob jobAccess = (AccessorExecutingCraftingJob) job;
             InvokerElapsedTimeTracker tracker = (InvokerElapsedTimeTracker) jobAccess.ufo$getTimeTracker();
             AggregateCraftingExecutor.Result result = AggregateCraftingExecutor.dispatch(
