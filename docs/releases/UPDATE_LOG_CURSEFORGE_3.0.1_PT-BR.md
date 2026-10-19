@@ -1,6 +1,13 @@
 # UFO Future 3.0.1
 
-Uma versão de desempenho para servidor e cliente, com o RaishxCore 0.2.2.
+Novos componentes de armazenamento por família, uma rodada de desempenho para servidor e cliente, e o RaishxCore 0.2.2.
+
+## Conteúdo novo
+
+- **Componentes de armazenamento por família.** White Dwarf, Neutron Star e Pulsar agora têm componentes próprios de 40M, 100M, 250M, 750M e Infinito, com texturas animadas. O primeiro componente junta a Phase Shift Component Matrix ao lingote de fragmento da família; cada tier seguinte junta a matriz do tier ao componente anterior da mesma família. A célula é carcaça + componente, e desmontá-la devolve os dois (os Pulsar Chambers agora também podem ser desmontados, com Mekanism). Células já existentes continuam funcionando.
+- Novas texturas das carcaças de células White Dwarf, Neutron Star e Pulsar.
+- O Stable Coolant agora é receita MK2 no Quantum Cryoforge e no QMF (antes MK3), disponível quando as máquinas MK2 começam a pedi-lo. Guia e exemplos de KubeJS atualizados.
+- Abelha de Cryotheum para Productive Bees (somente com o mod instalado).
 
 ## Correções
 

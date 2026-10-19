@@ -21,6 +21,10 @@ Fluxo combinado daqui para frente:
 
 ### Implementations
 
+- Componentes de armazenamento por família: White Dwarf, Neutron Star e Pulsar ganharam componentes próprios de 40M, 100M, 250M, 750M e Infinito, com texturas animadas. O primeiro componente junta a Phase Shift Component Matrix ao lingote de fragmento da família; cada tier seguinte junta a matriz do tier ao componente anterior da mesma família. A célula é carcaça + componente, e a desmontagem devolve carcaça + componente (os Pulsar Chambers agora também podem ser desmontados, com Mekanism). Células já existentes continuam funcionando.
+- Novas texturas das carcaças de células (White Dwarf, Neutron Star e Pulsar).
+- Stable Coolant passou para MK2 no Quantum Cryoforge e no QMF (antes MK3), disponível quando as máquinas MK2 começam a pedi-lo; guia e exemplos de KubeJS atualizados.
+- Abelha de Cryotheum para Productive Bees (somente com o mod instalado).
 - Desempenho de servidor: os controladores paralelos (QMF, Cryoforge, Slicer, Processor Assembler) não percorrem mais a estrutura inteira a cada tick para achar o Pattern Hatch; o RaishxCore não força mais o AE2 a recalcular os itens em crafting a cada tick com o Nexus ocupado; módulos do Nexus, CPUs de crafting sem Grid Link, auto-start do Stellar Nexus, Quantum Interface, células de energia e módulos de armadura fazem menos trabalho por tick.
 - Desempenho de cliente: o holograma de estrutura é desenhado de um buffer na GPU (no Stellar Nexus, de 7,15 para 0,83 ms por frame) e a ferramenta Quantum Wireless não copia mais o NBT do item a cada frame.
 - Planejador do RaishxCore 0.2.2 muito mais rápido em planos grandes (passe agregado, reparo de faltas, cone local).
