@@ -51,13 +51,16 @@ public class ModBlockEntities {
             net.minecraft.core.BlockPos pos,
             BlockState state,
             CraftingBlockEntity blockEntity) {
-        if (!(level instanceof ServerLevel) || blockEntity.isFormed()
-                || com.raishxn.ufo.api.ae.NexusCraftingUnitOwnership.deferVanillaFormation(blockEntity)) {
+        if (!(level instanceof ServerLevel) || blockEntity.isFormed()) {
             return;
         }
 
+        // Nexus modules stay unformed on purpose, so the ownership check (a controller lookup and
+        // module-space test) ran for every module on every tick. Only the staggered retry tick
+        // needs it; an orphaned ownership is now cleared on that tick instead of the next one.
         long stagger = Math.floorMod(pos.asLong(), 20);
-        if ((level.getGameTime() + stagger) % 20 == 0) {
+        if ((level.getGameTime() + stagger) % 20 == 0
+                && !com.raishxn.ufo.api.ae.NexusCraftingUnitOwnership.deferVanillaFormation(blockEntity)) {
             blockEntity.updateMultiBlock(pos);
         }
     }
