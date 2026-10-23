@@ -80,7 +80,8 @@ public final class UfoRecipeTypeContributions implements RecipeTypeMappingSuppli
         }
         builder.addBottom(LytParagraph.of(Component.translatable(
                 "jei.ufo.stellar_simulation.energy_detail",
-                String.format(Locale.ROOT, "%,d", recipe.getEnergy())).getString()
+                String.format(Locale.ROOT, "%,d", (long) Math.ceil(recipe.getEnergy()
+                        * com.raishxn.ufo.UFOConfig.recipeEnergyMultiplier()))).getString()
                 + "   "
                 + Component.translatable(
                         "jei.ufo.stellar_simulation.time",

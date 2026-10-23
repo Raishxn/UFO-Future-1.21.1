@@ -113,7 +113,7 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
         guiGraphics.fill(9, 81, 100, 91, 0xFF101010);
 
         var font = net.minecraft.client.Minecraft.getInstance().font;
-        String energyText = "AE " + formatEnergy(recipe.getEnergy());
+        String energyText = "AE " + formatEnergy(scaledEnergy(recipe.getEnergy()));
         guiGraphics.fillGradient(
                 ENERGY_BAR_X,
                 ENERGY_BAR_Y,
@@ -134,7 +134,7 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
         if (mouseX >= ENERGY_BAR_X && mouseX <= ENERGY_BAR_X + ENERGY_BAR_W
                 && mouseY >= ENERGY_BAR_Y && mouseY <= ENERGY_BAR_Y + ENERGY_BAR_H) {
             tooltip.addAll(List.of(
-                    UfoText.literal("gui.ufo.text.energy_s", formatEnergy(recipe.getEnergy())),
+                    UfoText.literal("gui.ufo.text.energy_s", formatEnergy(scaledEnergy(recipe.getEnergy()))),
                     UfoText.literal("gui.ufo.text.base_time_ss_s_ticks", recipe.getTime() / 20.0, recipe.getTime()),
                     UfoText.literal("gui.ufo.text.required_tier_mk_s", recipe.getRequiredTier())
             ));
@@ -147,6 +147,11 @@ public class QmfRecipeCategory implements IRecipeCategory<QMFRecipe> {
                     UfoText.literal("gui.ufo.text.required_tier_mk_s", recipe.getRequiredTier())
             ));
         }
+    }
+
+    /** The recipe's base cost as the server charges it (before tier and catalyst modifiers). */
+    private static long scaledEnergy(long energy) {
+        return (long) Math.ceil(energy * com.raishxn.ufo.UFOConfig.recipeEnergyMultiplier());
     }
 
     private static String formatEnergy(long energy) {

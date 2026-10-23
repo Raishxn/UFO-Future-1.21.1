@@ -155,7 +155,7 @@ public class DimensionalMatterAssemblerRecipeCategory implements IRecipeCategory
         guiGraphics.fill(9, 81, 100, 91, 0xFF101010); // Lighly offset black
         
         var font = Minecraft.getInstance().font;
-        String energyText = "⚡ " + formatEnergy(recipe.getEnergy());
+        String energyText = "⚡ " + formatEnergy(scaledEnergy(recipe.getEnergy()));
 
         // Blue energy gradient fill
         guiGraphics.fillGradient(
@@ -183,7 +183,7 @@ public class DimensionalMatterAssemblerRecipeCategory implements IRecipeCategory
             int baseTicks = recipe.getTime();
             double seconds = baseTicks / 20.0;
             tooltip.addAll(List.of(
-                    UfoText.literal("gui.ufo.text.energy_s", formatEnergy(recipe.getEnergy())),
+                    UfoText.literal("gui.ufo.text.energy_s", formatEnergy(scaledEnergy(recipe.getEnergy()))),
                     UfoText.literal("gui.ufo.text.base_time_ss_s_ticks", seconds, baseTicks),
                     UfoText.literal("gui.ufo.text.7chrono_catalysts_reduce_processing_time")
             ));
@@ -205,6 +205,11 @@ public class DimensionalMatterAssemblerRecipeCategory implements IRecipeCategory
      * Formats energy values into human-readable strings.
      * K = thousands, M = millions, G = billions
      */
+    /** The recipe's base cost as the server charges it (before tier and catalyst modifiers). */
+    private static int scaledEnergy(int energy) {
+        return (int) Math.ceil(energy * com.raishxn.ufo.UFOConfig.recipeEnergyMultiplier());
+    }
+
     private static String formatEnergy(int energy) {
         if (energy >= 1_000_000_000) {
             double val = energy / 1_000_000_000.0;

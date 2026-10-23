@@ -101,12 +101,24 @@ public class AppliedFluxPlugin {
             return;
         }
         try {
+            // Only pull what the buffer can take: extracting the full rate and putting the
+            // remainder back costs two ME storage operations per machine every tick.
+            int room = cap.receiveEnergy(afRate, true);
+            if (room <= 0) {
+                return;
+            }
             var storage = grid.getStorageService();
 
             var extracted =
-                    storage.getInventory().extract(FluxKey.of(EnergyType.FE), afRate, Actionable.MODULATE, source);
+                    storage.getInventory().extract(FluxKey.of(EnergyType.FE), room, Actionable.MODULATE, source);
+            if (extracted <= 0) {
+                return;
+            }
             var inserted = cap.receiveEnergy((int) extracted, false);
-            storage.getInventory().insert(FluxKey.of(EnergyType.FE), extracted - inserted, Actionable.MODULATE, source);
+            if (extracted > inserted) {
+                storage.getInventory().insert(
+                        FluxKey.of(EnergyType.FE), extracted - inserted, Actionable.MODULATE, source);
+            }
         } catch (Throwable failure) {
             disableAfterFailure("rechargeEnergyStorage", failure);
         }

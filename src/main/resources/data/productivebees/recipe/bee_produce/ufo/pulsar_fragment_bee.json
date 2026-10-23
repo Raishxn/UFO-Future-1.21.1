@@ -1,0 +1,21 @@
+{
+  "type": "productivebees:advanced_beehive",
+  "ingredient": "productivebees:pulsar_fragment",
+  "results": [
+    {
+      "item": {
+        "type": "productivebees:component",
+        "components": {
+          "productivebees:bee_type": "productivebees:pulsar_fragment"
+        },
+        "items": "productivebees:configurable_honeycomb"
+      }
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "productivebees:bee_exists",
+      "bee": "productivebees:pulsar_fragment"
+    }
+  ]
+}

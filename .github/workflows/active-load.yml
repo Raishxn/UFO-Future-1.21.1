@@ -18,6 +18,16 @@ on:
         required: true
         default: '50'
         type: string
+      dma_machines:
+        description: Early-game Dimensional Matter Assembler fleet size (1-1024)
+        required: true
+        default: '256'
+        type: string
+      dma_ticks:
+        description: Powered DMA ticks before the starved and Applied Flux phases (1-1000000)
+        required: true
+        default: '2000'
+        type: string
 
 jobs:
   active-fleet:
@@ -55,7 +65,13 @@ jobs:
           LOAD_MACHINES: ${{ inputs.machines }}
           LOAD_TICKS: ${{ inputs.ticks }}
           LOAD_MAX_AVERAGE_TICK_MILLIS: ${{ inputs.max_average_tick_millis }}
+          DMA_MACHINES: ${{ inputs.dma_machines }}
+          DMA_TICKS: ${{ inputs.dma_ticks }}
         run: |
+          [[ "$DMA_MACHINES" =~ ^[1-9][0-9]*$ ]]
+          [[ "$DMA_TICKS" =~ ^[1-9][0-9]*$ ]]
+          (( DMA_MACHINES <= 1024 ))
+          (( DMA_TICKS <= 1000000 ))
           [[ "$LOAD_MACHINES" =~ ^[1-9][0-9]*$ ]]
           [[ "$LOAD_TICKS" =~ ^[1-9][0-9]*$ ]]
           [[ "$LOAD_MAX_AVERAGE_TICK_MILLIS" =~ ^[0-9]+([.][0-9]+)?$ ]]
@@ -66,11 +82,16 @@ jobs:
           LOAD_MACHINES: ${{ inputs.machines }}
           LOAD_TICKS: ${{ inputs.ticks }}
           LOAD_MAX_AVERAGE_TICK_MILLIS: ${{ inputs.max_average_tick_millis }}
+          DMA_MACHINES: ${{ inputs.dma_machines }}
+          DMA_TICKS: ${{ inputs.dma_ticks }}
         run: >-
           ./gradlew runLoadGameTestServer
           "-PloadMachines=$LOAD_MACHINES"
           "-PloadTicks=$LOAD_TICKS"
           "-PloadMaxAverageTickMillis=$LOAD_MAX_AVERAGE_TICK_MILLIS"
+          "-PdmaLoadMachines=$DMA_MACHINES"
+          "-PdmaLoadTicks=$DMA_TICKS"
+          "-PdmaLoadMaxAverageTickMillis=$LOAD_MAX_AVERAGE_TICK_MILLIS"
           --stacktrace
 
       # runLoadGameTestServer exits 0 when the mod fails to load, so the workload would otherwise

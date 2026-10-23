@@ -1331,7 +1331,8 @@ public abstract class AbstractParallelMultiblockControllerBE extends AbstractSim
         long batchEnergy = state.getBatchScale().ceil(recipe.energy());
         long tierAdjustedEnergy = MultiblockTierScaling.adjustedEnergy(
                 batchEnergy, this.machineTier, recipe.requiredTier());
-        return Math.max(1L, (long) Math.ceil(tierAdjustedEnergy * catalystProfile.energyMultiplier()));
+        return Math.max(1L, (long) Math.ceil(tierAdjustedEnergy * catalystProfile.energyMultiplier()
+                * com.raishxn.ufo.UFOConfig.recipeEnergyMultiplier()));
     }
 
     private long getMaximumAdjustedItemOutputAmount(long baseAmount, CatalystProfile catalystProfile) {

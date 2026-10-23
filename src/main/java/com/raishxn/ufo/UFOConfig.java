@@ -16,6 +16,39 @@ public class UFOConfig {
             .comment("ME Infinity Cell idle energy cost (unit: AE/t)")
             .defineInRange("item.infinity_cell_energy_cost", 8.0, 0.1, 64.0);
 
+    /**
+     * Productive Bees stellar fragment bees. Common (not server) config because datapacks load
+     * before server configs; the recipes are generated from these values on every datapack load,
+     * so editing the file and running /reload applies them.
+     */
+    public record FragmentBeeSettings(ModConfigSpec.DoubleValue conversionChance,
+                                      ModConfigSpec.DoubleValue nuggetChance,
+                                      ModConfigSpec.IntValue nuggetMax) {
+    }
+
+    public static final Map<String, FragmentBeeSettings> FRAGMENT_BEES = new java.util.LinkedHashMap<>();
+
+    static {
+        // family, conversion chance, nugget chance
+        Object[][] defaults = {
+                {"white_dwarf_fragment", 0.08, 0.15},
+                {"neutron_star_fragment", 0.05, 0.10},
+                {"pulsar_fragment", 0.03, 0.06},
+        };
+        for (Object[] entry : defaults) {
+            String family = (String) entry[0];
+            BUILDER.push("compat.productivebees." + family);
+            FRAGMENT_BEES.put(family, new FragmentBeeSettings(
+                    BUILDER.comment("Chance per fed ingot that the parent bee converts into this bee (0-1).")
+                            .defineInRange("conversionChance", (double) entry[1], 0.0, 1.0),
+                    BUILDER.comment("Chance that a centrifuged comb yields nuggets (0-1).")
+                            .defineInRange("nuggetChance", (double) entry[2], 0.0, 1.0),
+                    BUILDER.comment("Maximum nuggets per successful roll (at least one).")
+                            .defineInRange("nuggetMax", 1, 1, 64)));
+            BUILDER.pop(3);
+        }
+    }
+
     public static final ModConfigSpec SPEC = BUILDER.build();
 
     private static final ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
@@ -80,6 +113,11 @@ public class UFOConfig {
                     "Off by default because AE2 and CPU addons do not throttle dispatch by stored energy.",
                     "Only meaningful when nexus.ignorePatternEnergy is false and the network cannot sustain the craft drain.")
             .define("nexus.energyThrottle", false);
+    public static final ModConfigSpec.DoubleValue RECIPE_ENERGY_MULTIPLIER = SERVER_BUILDER
+            .comment("Multiplier on the AE cost of Dimensional Matter Assembler and parallel multiblock recipes",
+                    "(QMF, Cryoforge, Slicer, Processor Assembler). Applied after tier and catalyst modifiers.",
+                    "Keeps power a secondary constraint for crafting; set to 1.0 to restore the full recipe cost.")
+            .defineInRange("machines.recipeEnergyMultiplier", 0.25, 0.0, 4.0);
 
     /**
      * Operator caps for the armor module settings. The enum maximum stays the design limit the
@@ -162,6 +200,11 @@ public class UFOConfig {
     /** Whether low grid buffers throttle the Nexus dispatch window. Disabled by default. */
     public static boolean nexusEnergyThrottleEnabled() {
         return SERVER_SPEC.isLoaded() && NEXUS_ENERGY_THROTTLE.get();
+    }
+
+    /** Multiplier on DMA and parallel multiblock recipe energy. Safe before server config loading. */
+    public static double recipeEnergyMultiplier() {
+        return SERVER_SPEC.isLoaded() ? RECIPE_ENERGY_MULTIPLIER.get() : 0.25;
     }
 
     private static boolean isResourceLocation(Object value) {

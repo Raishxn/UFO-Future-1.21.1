@@ -176,7 +176,7 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
         int tierX = CONTROLLER_X + 8 - font.width(tierText) / 2;
         guiGraphics.drawString(font, tierText, tierX, CONTROLLER_Y + 18, 0xFFFFD966, true);
 
-        String energyText = "AE " + formatEnergy(recipe.getEnergy());
+        String energyText = "AE " + formatEnergy(scaledEnergy(recipe.getEnergy()));
         guiGraphics.fillGradient(
                 ENERGY_BAR_X,
                 ENERGY_BAR_Y,
@@ -198,7 +198,7 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
         if (mouseX >= ENERGY_BAR_X && mouseX <= ENERGY_BAR_X + ENERGY_BAR_W
                 && mouseY >= ENERGY_BAR_Y && mouseY <= ENERGY_BAR_Y + ENERGY_BAR_H) {
             tooltip.addAll(List.of(
-                    UfoText.literal("gui.ufo.text.energy_s", formatEnergy(recipe.getEnergy())),
+                    UfoText.literal("gui.ufo.text.energy_s", formatEnergy(scaledEnergy(recipe.getEnergy()))),
                     UfoText.literal("gui.ufo.text.base_time_ss_s_ticks", recipe.getTime() / 20.0, recipe.getTime()),
                     UfoText.literal("gui.ufo.text.required_tier_mk_s", recipe.getRequiredTier())
             ));
@@ -230,6 +230,11 @@ public class UniversalMultiblockRecipeCategory implements IRecipeCategory<Univer
             case QUANTUM_PROCESSOR_ASSEMBLER -> MultiblockBlocks.QUANTUM_PROCESSOR_ASSEMBLER_CONTROLLER.get().asItem().getDefaultInstance();
             case QUANTUM_CRYOFORGE -> MultiblockBlocks.QUANTUM_CRYOFORGE_CONTROLLER.get().asItem().getDefaultInstance();
         };
+    }
+
+    /** The recipe's base cost as the server charges it (before tier and catalyst modifiers). */
+    private static long scaledEnergy(long energy) {
+        return (long) Math.ceil(energy * com.raishxn.ufo.UFOConfig.recipeEnergyMultiplier());
     }
 
     private static String formatEnergy(long energy) {

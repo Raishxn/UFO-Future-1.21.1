@@ -848,6 +848,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             }
         }
         long startedAt = System.nanoTime();
+        boolean stalledOnPower = false;
         try {
         if (this.dirty) {
             // Check if running recipe is still valid
@@ -911,6 +912,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                 final double powerConsumption = this.hasCreativeCatalyst
                         ? 0
                         : Math.max(0, (double) getTask().getEnergy() * this.currentPowerMultiplier
+                                * com.raishxn.ufo.UFOConfig.recipeEnergyMultiplier()
                                 * wirelessBonus.energy() * speedFactor / Math.max(1, recipeTime));
                 final double powerThreshold = powerConsumption - 0.01;
 
@@ -960,6 +962,7 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
                 }
             });
             this.setWorking(didWork[0]);
+            stalledOnPower = !didWork[0];
             if (didWork[0]) {
                 if (!hasCreativeCatalyst) com.raishxn.ufo.wireless.QuantumWirelessActivity.markProgress(this);
                 this.wirelessHeatWork += (getProcessingTime() - progressBefore) / thermalBase[0] * wirelessBonus.heat();
@@ -1032,6 +1035,11 @@ public class DimensionalMatterAssemblerBlockEntity extends AENetworkedPoweredBlo
             return TickRateModulation.URGENT;
         }
 
+        if (stalledOnPower && this.hasCraftWork()) {
+            // Without power the job cannot advance; back off instead of polling the
+            // energy service every tick. The first tick that makes progress returns URGENT.
+            return TickRateModulation.SLOWER;
+        }
         return this.hasCraftWork()
                 ? TickRateModulation.URGENT
                 : this.hasAutoExportWork() ? TickRateModulation.SLOWER : TickRateModulation.SLEEP;

@@ -1,0 +1,22 @@
+{
+  "primaryColor": "#3fe0e8",
+  "secondaryColor": "#5a1f8c",
+  "tertiaryColor": "#c48bff",
+  "particleColor": "#7ff7ff",
+  "flowerBlock": "ufo:pulsar_fragment_block",
+  "size": 0.8,
+  "selfbreed": false,
+  "fireproof": true,
+  "renderer": "default_crystal",
+  "attributes": {
+    "productivity": "productivity.normal",
+    "endurance": "endurance.weak",
+    "weather_tolerance": "weather_tolerance.any"
+  },
+  "conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ufo"
+    }
+  ]
+}

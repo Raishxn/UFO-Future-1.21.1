@@ -12,6 +12,18 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+### Bug Fixes
+
+- DMA com Applied Flux: a recarga do buffer não extrai mais `Integer.MAX_VALUE` FE do ME e reinsere o resto a cada tick; agora puxa só o que cabe no buffer e não toca no ME com o buffer cheio (eram duas operações de storage por DMA por tick).
+- DMA sem energia: em vez de consultar a energia da rede todo tick, a máquina desacelera o tick (até 1 s) enquanto não consegue progredir e volta ao ritmo normal no primeiro tick com energia.
+
+### Implementations
+
+- Nova config de servidor `machines.recipeEnergyMultiplier` (padrão 0.25): multiplica o custo de AE das receitas da DMA e dos multiblocos paralelos (QMF, Cryoforge, Slicer, Processor Assembler). Energia passa a ser restrição secundária nos crafts; 1.0 restaura o custo antigo. JEI e guia mostram o custo já multiplicado.
+- Abelhas de fragmento estelar para Productive Bees (somente com o mod instalado): White Dwarf (Netherite Bee + lingote, 8%), Neutron Star (White Dwarf Bee + lingote, 5%) e Pulsar (Neutron Star Bee + lingote, 3%). Não se reproduzem entre si, exigem o bloco do fragmento como flor e o favo dá pepita com chance baixa (15%, 10%, 6%).
+- Chances das abelhas de fragmento configuráveis em `config/ufo/common.toml` (`compat.productivebees.<família>`: `conversionChance`, `nuggetChance`, `nuggetMax`). As receitas de conversão e centrífuga vêm de um datapack embutido gerado a partir da config; editar o arquivo e rodar `/reload` aplica os valores. Datapacks/KubeJS de modpack continuam podendo sobrescrever os mesmos ids.
+- Teste automatizado de TPS do early game (`DmaFleetLoadGameTests`, roda em todo push no `runLoadGameTestServer`): frota de 64 DMAs com receita real; além do orçamento de tempo, falha se uma DMA sem energia continuar consultando a rede todo tick ou se DMAs com buffer cheio tocarem o FE do Applied Flux. Parâmetros `-PdmaLoadMachines`, `-PdmaLoadTicks`, `-PdmaLoadMaxAverageTickMillis`; o workflow manual "Active load" aceita `dma_machines`/`dma_ticks`. Relatório em `run-load/ufo-diagnostics/dma-fleet-load.json`.
+
 ## [3.0.1] - 2026-10-18
 
 ### Bug Fixes

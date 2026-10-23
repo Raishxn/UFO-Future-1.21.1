@@ -1,0 +1,22 @@
+{
+  "primaryColor": "#4b5fd6",
+  "secondaryColor": "#1b1f4f",
+  "tertiaryColor": "#9aa8ff",
+  "particleColor": "#6f7cff",
+  "flowerBlock": "ufo:neutron_star_fragment_block",
+  "size": 0.8,
+  "selfbreed": false,
+  "fireproof": true,
+  "renderer": "default_crystal",
+  "attributes": {
+    "productivity": "productivity.normal",
+    "endurance": "endurance.weak",
+    "weather_tolerance": "weather_tolerance.any"
+  },
+  "conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ufo"
+    }
+  ]
+}

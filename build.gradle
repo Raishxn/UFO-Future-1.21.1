@@ -295,6 +295,10 @@ neoForge.runs {
         systemProperty 'ufo.nexus.loadTicks', providers.gradleProperty('nexusLoadTicks').orElse('1000').get()
         systemProperty 'ufo.nexus.loadMaxAverageTickMillis',
                 providers.gradleProperty('nexusLoadMaxAverageTickMillis').orElse('50').get()
+        systemProperty 'ufo.dma.loadMachines', providers.gradleProperty('dmaLoadMachines').orElse('64').get()
+        systemProperty 'ufo.dma.loadTicks', providers.gradleProperty('dmaLoadTicks').orElse('600').get()
+        systemProperty 'ufo.dma.loadMaxAverageTickMillis',
+                providers.gradleProperty('dmaLoadMaxAverageTickMillis').orElse('50').get()
         logLevel = org.slf4j.event.Level.INFO
     }
 }
