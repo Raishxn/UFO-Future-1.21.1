@@ -12,6 +12,8 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+## [3.0.2] - 2026-10-23
+
 ### Bug Fixes
 
 - DMA com Applied Flux: a recarga do buffer não extrai mais `Integer.MAX_VALUE` FE do ME e reinsere o resto a cada tick; agora puxa só o que cabe no buffer e não toca no ME com o buffer cheio (eram duas operações de storage por DMA por tick).
