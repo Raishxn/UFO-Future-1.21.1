@@ -34,6 +34,8 @@ public final class ProductiveBeeGameTests {
         var egg = BuiltInRegistries.ITEM.get(ResourceLocation.parse("productivebees:spawn_egg_configurable_bee"));
         var type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse("productivebees:configurable_bee"));
         var bees = new ArrayList<Entity>();
+        // Up to nine bees on a 3x3 grid inside the 5x3x5 template; bees outside it are
+        // cleared by neighbouring tests.
         String[] variants = {"scrap", "scrap_box", "matter_ball", "cryotheum",
                 "white_dwarf_fragment", "neutron_star_fragment", "pulsar_fragment"};
         for (int i = 0; i < variants.length; i++) {
@@ -43,7 +45,7 @@ public final class ProductiveBeeGameTests {
             data.putString("type", "productivebees:" + variants[i]);
             stack.set(DataComponents.ENTITY_DATA, CustomData.of(data));
             Entity bee = type.spawn(helper.getLevel(), stack, null,
-                    helper.absolutePos(new BlockPos(i * 2, 2, 1)), MobSpawnType.SPAWN_EGG, true, false);
+                    helper.absolutePos(new BlockPos(i % 3 * 2, 2, i / 3 * 2)), MobSpawnType.SPAWN_EGG, true, false);
             helper.assertTrue(bee != null, "Failed to spawn UFO bee: " + variants[i]);
             bees.add(bee);
         }
