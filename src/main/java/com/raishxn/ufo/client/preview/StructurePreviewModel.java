@@ -22,11 +22,13 @@ import java.util.Map;
 
 /** Immutable client model shared by structure viewers and future build planning. */
 public record StructurePreviewModel(ResourceLocation id, Component title, int sizeX, int sizeY, int sizeZ,
-                                    List<Cell> cells, List<Material> materials, List<ItemStack> focusStacks) {
+                                    List<Cell> cells, List<Material> materials, List<ItemStack> focusStacks,
+                                    ItemStack controllerStack) {
     public StructurePreviewModel {
         cells = List.copyOf(cells);
         materials = List.copyOf(materials);
         focusStacks = focusStacks.stream().map(ItemStack::copy).toList();
+        controllerStack = controllerStack.copyWithCount(1);
     }
 
     public static StructurePreviewModel from(MultiblockControllerDefinitions.PreviewEntry entry) {
@@ -72,7 +74,8 @@ public record StructurePreviewModel(ResourceLocation id, Component title, int si
                 .sorted(Comparator.comparingInt(Material::count).reversed()).toList();
         List<ItemStack> focus = focusBlocks.stream().map(block -> block.asItem().getDefaultInstance())
                 .filter(stack -> !stack.isEmpty()).toList();
-        return new StructurePreviewModel(entry.id(), definition.name(), sizeX, sizeY, sizeZ, cells, sorted, focus);
+        return new StructurePreviewModel(entry.id(), definition.name(), sizeX, sizeY, sizeZ, cells, sorted, focus,
+                entry.iconStack());
     }
 
     /** Matches AE2LT's semantic shell flag instead of treating a sparse template's volume boundary as its shell. */

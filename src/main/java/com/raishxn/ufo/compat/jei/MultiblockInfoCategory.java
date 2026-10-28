@@ -17,6 +17,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /** Native JEI structure page; deliberately independent from LDLib/Glodium. */
@@ -45,7 +46,17 @@ public final class MultiblockInfoCategory implements IRecipeCategory<StructurePr
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, StructurePreviewModel recipe, IFocusGroup focuses) {
-        builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addItemStacks(recipe.focusStacks());
+        // Block counts as inputs and the controller as output, so AE2's pattern transfer encodes the whole build.
+        for (StructurePreviewModel.Material material : recipe.materials()) {
+            if (ItemStack.isSameItemSameComponents(material.stack(), recipe.controllerStack())) continue;
+            builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
+                    .addItemStack(material.stack().copyWithCount(material.count()));
+        }
+        if (!recipe.controllerStack().isEmpty()) {
+            builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addItemStack(recipe.controllerStack());
+        }
+        // Alternatives stay reachable from JEI lookups without polluting the encoded pattern.
+        builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST).addItemStacks(recipe.focusStacks());
         builder.moveRecipeTransferButton(WIDTH + 4, HEIGHT - 14);
     }
 
