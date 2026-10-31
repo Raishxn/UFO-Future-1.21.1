@@ -12,6 +12,7 @@ import appeng.me.service.CraftingService;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.raishxn.ufo.UFOConfig;
+import com.raishxn.ufo.api.ae.NexusVirtualCraftingClusterBridge;
 import com.raishxn.ufo.crafting.AggregateCraftingExecutor;
 import com.raishxn.ufo.crafting.CraftingCpuTickBudget;
 import net.minecraft.world.level.Level;
@@ -93,8 +94,15 @@ public abstract class MixinAggregateCraftingCpuLogic {
         // provider for the same pattern keeps making progress instead of deadlocking
         // behind a full aggregate route queue.
         // AE2 re-enters this call until the window is spent, so returning 0 is what ends the tick.
-        if (!UFO_TICK_BUDGET.mayAttempt(ufo$pushAttempts)) return 0;
+        if (!ufo$mayPush()) return 0;
         return original.call(self, remainingOperations, craftingService, energyService, level);
+    }
+
+    /** Nexus job CPUs are excluded: the pool enforces its own operator dispatch ceiling. */
+    @Unique
+    private boolean ufo$mayPush() {
+        return ((NexusVirtualCraftingClusterBridge) (Object) cluster).ufo$isVirtualCpu()
+                || UFO_TICK_BUDGET.mayAttempt(ufo$pushAttempts);
     }
 
     /**
@@ -110,7 +118,7 @@ public abstract class MixinAggregateCraftingCpuLogic {
                             + "(Lappeng/api/crafting/IPatternDetails;[Lappeng/api/stacks/KeyCounter;)Z"))
     private boolean ufo$budgetPush(ICraftingProvider provider, IPatternDetails details, KeyCounter[] inputs,
             Operation<Boolean> original) {
-        if (!UFO_TICK_BUDGET.mayAttempt(ufo$pushAttempts)) return false;
+        if (!ufo$mayPush()) return false;
         ufo$pushAttempts++;
         return original.call(provider, details, inputs);
     }

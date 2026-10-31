@@ -12,7 +12,7 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
-## [3.0.3] - 2026-10-31
+## [3.0.4] - 2026-10-31
 
 ### Bug Fixes
 

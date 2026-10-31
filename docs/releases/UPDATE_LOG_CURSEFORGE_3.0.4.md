@@ -1,10 +1,10 @@
-# UFO Future 3.0.3
+# UFO Future 3.0.4
 
 Fixes server freezes on large crafting jobs with mega co-processors.
 
 ## Bug fixes
 
-- **Server freeze on large crafting jobs.** Crafting CPUs with mega co-processors could spend an entire server tick pushing patterns into slow targets such as Mekanism machines, until the watchdog shut the server down. All AE2 crafting CPUs now share a time budget per tick; remaining work continues on the next tick, and every CPU still gets a few pushes per tick. Jobs that push into slow targets may take longer to finish.
+- **Server freeze on large crafting jobs.** Crafting CPUs with mega co-processors could spend an entire server tick pushing patterns into slow targets such as Mekanism machines, until the watchdog shut the server down. AE2 crafting CPUs now share a time budget per tick; remaining work continues on the next tick, and every CPU still gets a few pushes per tick. Jobs that push into slow targets may take longer to finish.
 - **New server option** `performance.craftingCpuTickBudgetMillis` (default **10**, range 1-1000). Lower values favour TPS, higher values favour crafting speed.
 - **JEI:** multiblock structure pages can now be encoded in AE2 as processing patterns, with the structure blocks as inputs and the controller as output.
 

@@ -1,10 +1,10 @@
-# UFO Future 3.0.3
+# UFO Future 3.0.4
 
 Corrige travamentos do servidor em jobs grandes de crafting com mega co-processadores.
 
 ## Correções
 
-- **Travamento do servidor em jobs grandes.** CPUs de crafting com mega co-processadores podiam gastar um tick inteiro empurrando padrões para alvos lentos, como máquinas Mekanism, até o watchdog derrubar o servidor. Agora todas as CPUs de crafting do AE2 dividem um orçamento de tempo por tick; o restante continua no tick seguinte, e cada CPU ainda faz alguns pushes por tick. Jobs com alvos lentos podem demorar mais para terminar.
+- **Travamento do servidor em jobs grandes.** CPUs de crafting com mega co-processadores podiam gastar um tick inteiro empurrando padrões para alvos lentos, como máquinas Mekanism, até o watchdog derrubar o servidor. Agora as CPUs de crafting do AE2 dividem um orçamento de tempo por tick; o restante continua no tick seguinte, e cada CPU ainda faz alguns pushes por tick. Jobs com alvos lentos podem demorar mais para terminar.
 - **Nova opção de servidor** `performance.craftingCpuTickBudgetMillis` (padrão **10**, de 1 a 1000). Valores menores favorecem o TPS; maiores, a velocidade de crafting.
 - **JEI:** páginas de estrutura de multibloco agora podem ser codificadas no AE2 como padrões de processamento, com os blocos da estrutura como entradas e o controlador como saída.
 

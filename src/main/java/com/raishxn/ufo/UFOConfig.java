@@ -98,7 +98,8 @@ public class UFOConfig {
             .comment("Maximum updates a UFO ticked block entity may run in one real game tick when an external mod accelerates it. Limits TPS cost while preserving up to this much acceleration.")
             .defineInRange("performance.maxExternalAccelerationTicksPerGameTick", 64, 1, 256);
     public static final ModConfigSpec.IntValue CRAFTING_CPU_TICK_BUDGET_MILLIS = SERVER_BUILDER
-            .comment("Milliseconds all AE2 crafting CPUs may spend pushing patterns per server tick, shared between them.",
+            .comment("Milliseconds AE2 crafting CPUs may spend pushing patterns per server tick, shared between them.",
+                    "Quantum Computation Nexus jobs use nexus.maxPatternDispatchesPerTick instead.",
                     "Work past the budget resumes next tick, so a lower value trades crafting speed for TPS.",
                     "Each CPU still gets a few pushes per tick so no job starves.")
             .defineInRange("performance.craftingCpuTickBudgetMillis", 10, 1, 1_000);

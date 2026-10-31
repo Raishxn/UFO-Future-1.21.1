@@ -34,6 +34,11 @@ public abstract class MixinNexusVirtualCraftingCluster implements NexusVirtualCr
     }
 
     @Override
+    public boolean ufo$isVirtualCpu() {
+        return ufo$virtualHost != null;
+    }
+
+    @Override
     public void ufo$setVirtualCoProcessors(int coProcessors) {
         if (ufo$virtualHost != null) this.accelerator = Math.max(0, coProcessors);
     }

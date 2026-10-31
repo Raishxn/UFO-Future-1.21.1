@@ -4,4 +4,5 @@ package com.raishxn.ufo.api.ae;
 public interface NexusVirtualCraftingClusterBridge {
     void ufo$configureVirtualCpu(NexusVirtualCpuHost host, long storage, int coProcessors);
     void ufo$setVirtualCoProcessors(int coProcessors);
+    boolean ufo$isVirtualCpu();
 }
