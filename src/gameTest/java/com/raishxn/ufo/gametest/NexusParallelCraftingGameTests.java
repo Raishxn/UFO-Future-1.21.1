@@ -20,6 +20,7 @@ import appeng.crafting.CraftingPlan;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.me.service.CraftingService;
 import com.mojang.logging.LogUtils;
+import com.raishxn.ufo.UFOConfig;
 import com.raishxn.ufo.api.ae.NexusVirtualCpuHost;
 import com.raishxn.ufo.api.ae.NexusVirtualCraftingClusterBridge;
 import com.raishxn.ufo.crafting.NexusSharedCraftingCpuPool;
@@ -116,13 +117,23 @@ public final class NexusParallelCraftingGameTests {
                             "AE2 baseline CPU rejected job");
                     normal.add(cpu);
                 }
-                for (int tick = 0; tick < ROUNDS; tick++) pool.tickCraftingLogic(energy, service);
-                long nexusPushes = provider.pushes;
-                provider.pushes = 0;
-                for (int tick = 0; tick < ROUNDS; tick++) {
-                    for (var cpu : normal) cpu.craftingLogic.tickCraftingLogic(energy, service);
+                // Every simulated round runs inside one real server tick, so the shared tick budget
+                // would cut this fixture off; it measures lanes, not time.
+                int tickBudgetMillis = UFOConfig.CRAFTING_CPU_TICK_BUDGET_MILLIS.get();
+                UFOConfig.CRAFTING_CPU_TICK_BUDGET_MILLIS.set(1_000);
+                long nexusPushes;
+                long normalPushes;
+                try {
+                    for (int tick = 0; tick < ROUNDS; tick++) pool.tickCraftingLogic(energy, service);
+                    nexusPushes = provider.pushes;
+                    provider.pushes = 0;
+                    for (int tick = 0; tick < ROUNDS; tick++) {
+                        for (var cpu : normal) cpu.craftingLogic.tickCraftingLogic(energy, service);
+                    }
+                    normalPushes = provider.pushes;
+                } finally {
+                    UFOConfig.CRAFTING_CPU_TICK_BUDGET_MILLIS.set(tickBudgetMillis);
                 }
-                long normalPushes = provider.pushes;
                 LogUtils.getLogger().info("NEXUS_PARALLEL_REGRESSION lowPercentage={} jobs=4 totalCoProcessors=16384 rounds={} nexusPushes={} ae2BaselinePushes={}",
                         lowPercentage, ROUNDS, nexusPushes, normalPushes);
                 // The fixture itself: four CPUs with 4,096 lanes each push 4,097 per four-tick window.

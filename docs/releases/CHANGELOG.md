@@ -12,6 +12,14 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+## [3.0.3] - 2026-10-31
+
+### Bug Fixes
+
+- CPUs de crafting do AE2 com mega co-processadores não travam mais o servidor em jobs grandes (watchdog de 60 s com alvos lentos, como máquinas Mekanism): os pushes de padrões agora dividem um orçamento de tempo por tick (`performance.craftingCpuTickBudgetMillis`, padrão 10 ms) e o restante continua no tick seguinte.
+- JEI: páginas de estrutura de multibloco agora podem ser codificadas pelo AE2 como padrões de processamento, com os blocos como entradas e o controlador como saída.
+- RaishxCore 0.2.3 passa a ser exigido, com a correção do planner para AE2 Lightning Tech.
+
 ## [3.0.2] - 2026-10-23
 
 ### Bug Fixes

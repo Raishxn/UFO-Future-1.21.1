@@ -97,6 +97,11 @@ public class UFOConfig {
     public static final ModConfigSpec.IntValue MAX_EXTERNAL_ACCELERATION_TICKS = SERVER_BUILDER
             .comment("Maximum updates a UFO ticked block entity may run in one real game tick when an external mod accelerates it. Limits TPS cost while preserving up to this much acceleration.")
             .defineInRange("performance.maxExternalAccelerationTicksPerGameTick", 64, 1, 256);
+    public static final ModConfigSpec.IntValue CRAFTING_CPU_TICK_BUDGET_MILLIS = SERVER_BUILDER
+            .comment("Milliseconds all AE2 crafting CPUs may spend pushing patterns per server tick, shared between them.",
+                    "Work past the budget resumes next tick, so a lower value trades crafting speed for TPS.",
+                    "Each CPU still gets a few pushes per tick so no job starves.")
+            .defineInRange("performance.craftingCpuTickBudgetMillis", 10, 1, 1_000);
     public static final ModConfigSpec.IntValue NEXUS_MAX_PATTERN_DISPATCHES_PER_TICK = SERVER_BUILDER
             .comment("Pattern dispatches the Quantum Computation Nexus shares between all active jobs per tick.",
                     "Newly loaded jobs ramp up over four ticks, so this is also the per-tick safety ceiling.",
@@ -188,6 +193,10 @@ public class UFOConfig {
     }
 
     /** Dispatch ceiling shared by all Quantum Computation Nexus jobs. Safe before server config loading. */
+    public static int craftingCpuTickBudgetMillis() {
+        return SERVER_SPEC.isLoaded() ? CRAFTING_CPU_TICK_BUDGET_MILLIS.get() : 10;
+    }
+
     public static int maxNexusPatternDispatchesPerTick() {
         return SERVER_SPEC.isLoaded() ? NEXUS_MAX_PATTERN_DISPATCHES_PER_TICK.get() : 16_384;
     }
