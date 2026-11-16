@@ -40,7 +40,7 @@ Destinos AE já conectados a outra rede com mais de um nó são recusados. Dispo
 - Retorno remoto de crafting coordenado com a hatch: usar os caminhos de saída existentes ou a interface, evitando dois caminhos concorrentes.
 - Validação visual e funcional em mundo com 10+ máquinas, reinícios, chunks descarregados e rede cheia.
 
-A ferramenta utiliza a textura original `quantum_wireless_tool.png`, exatamente 16×16 com transparência. Mockup e prompts estão em `docs/art/`. Nenhuma textura da ferramenta AE2LT foi copiada.
+A ferramenta utiliza a textura original `quantum_wireless_tool.png`, exatamente 16×16 com transparência. Nenhuma textura da ferramenta AE2LT foi copiada.
 
 ## Verificação automatizada
 
