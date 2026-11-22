@@ -1,21 +1,27 @@
 package com.raishxn.ufo.block;
 
-import appeng.block.AEBaseEntityBlock;
 import com.raishxn.ufo.api.multiblock.EntropicMachineLocator;
 import com.raishxn.ufo.api.multiblock.IEntropicMachineController;
 import com.raishxn.ufo.block.entity.EntropicMachinePartBE;
+import com.raishxn.ufo.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class EntropicMachineShellBlock extends AEBaseEntityBlock<EntropicMachinePartBE> {
+public class EntropicMachineShellBlock extends Block implements EntityBlock {
     public EntropicMachineShellBlock(BlockBehaviour.Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public EntropicMachinePartBE newBlockEntity(BlockPos pos, BlockState state) {
+        return new EntropicMachinePartBE(ModBlockEntities.ENTROPIC_MACHINE_PART_BE.get(), pos, state);
     }
 
     @Override
