@@ -248,32 +248,14 @@ public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raish
                 return type;
             });
 
-    // Unchecked by contract: AE2's AEBaseEntityBlock#setBlockEntity and the raw DeferredBlock
-    // casts inside these registrations are erased at this API boundary.
-    @SuppressWarnings("unchecked")
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<com.raishxn.ufo.block.entity.EntropicMachinePartBE>> ENTROPIC_MACHINE_PART_BE =
-            BLOCK_ENTITIES.register("entropic_machine_part", () -> {
-                final java.util.concurrent.atomic.AtomicReference<BlockEntityType<com.raishxn.ufo.block.entity.EntropicMachinePartBE>> typeHolder = new java.util.concurrent.atomic.AtomicReference<>();
-                var type = BlockEntityType.Builder.of(
-                        (pos, state) -> new com.raishxn.ufo.block.entity.EntropicMachinePartBE(typeHolder.get(), pos, state),
+            BLOCK_ENTITIES.register("entropic_machine_part", () ->
+                BlockEntityType.Builder.of(
+                        (pos, state) -> new com.raishxn.ufo.block.entity.EntropicMachinePartBE(
+                                ModBlockEntities.ENTROPIC_MACHINE_PART_BE.get(), pos, state),
                         com.raishxn.ufo.block.MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get(),
                         com.raishxn.ufo.block.MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()
-                ).build(null);
-                typeHolder.set(type);
-                ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.ENTROPY_ASSEMBLER_CORE_CASING.get()).setBlockEntity(
-                        (Class) com.raishxn.ufo.block.entity.EntropicMachinePartBE.class,
-                        (BlockEntityType) type,
-                        null,
-                        null
-                );
-                ((appeng.block.AEBaseEntityBlock<?>) com.raishxn.ufo.block.MultiblockBlocks.ENTROPY_SINGULARITY_CASING.get()).setBlockEntity(
-                        (Class) com.raishxn.ufo.block.entity.EntropicMachinePartBE.class,
-                        (BlockEntityType) type,
-                        null,
-                        null
-                );
-                return type;
-            });
+                ).build(null));
 
     // ═══════════════════════════════════════════════════════════
     //  STELLAR NEXUS — Block Entities
