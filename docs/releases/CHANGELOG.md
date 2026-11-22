@@ -12,6 +12,13 @@ Fluxo combinado daqui para frente:
 
 ## [Unreleased]
 
+## [3.0.5] - 2026-11-22
+
+### Bug Fixes
+
+- Stellar Nexus: Entropy Singularity Casings e Entropy Assembler Core Casings não criam mais nós no grid do AE2 (num servidor com 15 Nexus, `Grid.onLevelEndTick` caiu de ~160 ms para ~5 ms por tick). As casings não conduzem mais rede ME; conecte o ME pelas hatches do Nexus.
+- O vínculo das casings com o controlador agora é lido corretamente ao carregar o chunk.
+
 ## [3.0.4] - 2026-10-31
 
 ### Bug Fixes
